@@ -10,22 +10,11 @@
     {{-- website icon --}}
     <link rel="icon" href="{{ asset('/image/rweb_icon.png') }}" type="image/x-icon">
 
-    {{-- for dev purpose --}}
+    {{-- for development purpose --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    {{-- for deployment (tailwindconfig) --}}
+    {{-- for production (tailwindconfig) --}}
     {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
-
-    {{-- font --}}
-    {{-- <style>
-        @font-face {
-            font-family: "Proxima Nova";
-            src: ("{{ asset('fonts/proximanova_regular.ttf') }}") format("truetype");
-            font-weight: normal;
-            font-style: normal;
-        }
-    </style> --}}
-
 
     {{-- custom tailwind css here: --}}
     {{-- <script>
@@ -50,7 +39,23 @@
         }
     </script> --}}
 
+    {{-- colors --}}
     <style>
+        .gradient {
+            background: linear-gradient(to right, #F57D11, rgba(245, 125, 17, 0.7), #F53C11);
+            transition: background 0.3s ease-in;
+        }
+
+        .gradient:hover {
+            background: #F53C11;
+        }
+
+        .animate-transition {}
+
+        .bg-dim-blue {
+            background-color: #1f2835;
+        }
+
         .text-dim-blue {
             color: #1f2835;
         }
@@ -59,11 +64,15 @@
             background-color: #f58e12;
         }
 
+        .text-light-orange {
+            color: #f58e12;
+        }
+
         .bg-custom-orange {
             background-color: #f56d11;
         }
 
-        hr {
+        .text-custom-orange {
             color: #f56d11;
         }
     </style>
@@ -108,7 +117,7 @@
     </style>
 </head>
 
-<body class="text-dim-blue tracking-wide font-proxima-nova">
+<body class="text-dim-blue tracking-wide">
 
     {{-- admin / front-end --}}
     @if (Request::routeIs('admin.front-end.dashboard') || Request::routeIs('admin.front-end.project-development'))
@@ -129,7 +138,7 @@
             </section>
         </main>
     @else
-        <main>
+        <main class="bg-white h-auto w-full">
             {{ $slot }}
         </main>
     @endif

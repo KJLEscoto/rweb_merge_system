@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use PHPUnit\TextUI\XmlConfiguration\Group;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,5 +19,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::view('/admin/front-end/dashboard', 'admin.front-end.dashboard')->name('admin.front-end.dashboard');
-Route::view('/admin/front-end/project-development', 'admin.front-end.project-development')->name('admin.front-end.project-development');
+Route::middleware('guest')->group(function () {
+    Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('show.admin.login');
+    Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::view('/admin/front-end/dashboard', 'admin.front-end.dashboard')->name('admin.front-end.dashboard');
+    Route::view('/admin/front-end/project-development', 'admin.front-end.project-development')->name('admin.front-end.project-development');
+});
