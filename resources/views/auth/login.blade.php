@@ -18,7 +18,7 @@
                         <img src="{{ asset('image/rweb_logo.png') }}" class="w-auto h-14">
                     </div>
 
-                    <h1 class="font-semibold text-2xl text-center text-custom-orange">Admin Login</h1>
+                    <h1 class="font-semibold text-2xl text-center text-[#f56d11]">Admin Login</h1>
 
                     <x-form.input big label="Email" name_id="email_address" value=""
                         placeholder="admin@email.com" />

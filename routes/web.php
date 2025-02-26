@@ -25,6 +25,8 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::view('/admin/front-end/dashboard', 'admin.front-end.dashboard')->name('admin.front-end.dashboard');
-    Route::view('/admin/front-end/project-development', 'admin.front-end.project-development')->name('admin.front-end.project-development');
 });
+
+
+Route::view('/admin/front-end/dashboard', 'admin.front-end.dashboard')->name('admin.front-end.dashboard');
+Route::view('/admin/front-end/project-development', 'admin.front-end.project-development')->name('admin.front-end.project-development');
