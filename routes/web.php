@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::view('/admin/front-end/dashboard', 'admin.front-end.dashboard')->name('admin.front-end.dashboard');
+Route::view('/admin/front-end/project-development', 'admin.front-end.project-development')->name('admin.front-end.project-development');
