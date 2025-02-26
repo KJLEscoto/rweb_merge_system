@@ -4,29 +4,43 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = [];
+
+    // protected $fillable = [
+    //     'firstname',
+    //     'middlename',
+    //     'lastname',
+    //     'email',
+    //     'password',
+    //     'phone',
+    //     'gender',
+    //     'address',
+    //     'school',
+    //     'starting_date',
+    //     'emergency_fullname',
+    //     'emergency_contact',
+    //     'emergency_address',
+    //     'qr_code',
+    // ];
 
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = [
         'password',
@@ -34,11 +48,45 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
+     * Get the attributes that should be cast.
      *
-     * @var array<string, string>
+     * @return array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+
+    public function history():HasMany
+    {
+        return $this->hasMany(Histories::class, 'user_id');
+    }
+    
+    public function search($query)
+    {
+        return empty($query) ? $this->query() : $this->query()->where('firstname', 'like', "%{$query}%")
+        ->orWhere('lastname', 'like', "%{$query}%")
+        ->orWhere('student_no', 'like', "%{$query}%");
+    }
+
+    public function downloadRequests()
+    {
+        return $this->hasMany(DtrDownloadRequest::class, 'user_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class,'user_id');
+    }
+
+    public function profiles(){
+        return $this->belongsTo(Profile::class, 'profile_id');
+    }
+
+    public function schools(){
+        return $this->belongsTo(School::class, 'school_id');
+    }
 }

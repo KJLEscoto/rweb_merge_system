@@ -8,7 +8,7 @@
     'small' => false,
     'big' => false,
     'hidden' => false,
-    'options' => [],
+    'options' => [], // Dropdown options
     'disabled' => false,
 ])
 
