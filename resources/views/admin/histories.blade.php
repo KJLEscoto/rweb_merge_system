@@ -1,12 +1,15 @@
+<head>
+    <title>{{ env('APP_NAME') }} | DTR | History</title>
 
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<meta name="app-url" content="{{ config('app.url') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="app-url" content="{{ config('app.url') }}">
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-<x-main-layout>
-    <div class="h-auto w-full flex flex-col gap-5">
+<x-main-layout breadcumb="DTR" page="History">
+    <div class="h-auto w-full flex flex-col gap-5 px-10 py-10">
         <section class="flex lg:flex-row flex-col items-center justify-between w-full gap-5">
             <div class="lg:!w-1/2 w-full">
                 <x-form.input id="search" name_id="search" placeholder="Search" small />
@@ -14,23 +17,26 @@
 
             <div class="flex items-center gap-2">
                 <div>
-                    <input class="px-5 py-2 rounded-full cursor-pointer border border-gray-200" type="month" id="month">
+                    <input class="px-5 py-2 rounded-full cursor-pointer border border-gray-200" type="month"
+                        id="month">
                 </div>
 
 
-                <button class="px-8 px-16 py-3 my-3 mx-3 rounded-full relative overflow-hidden font-medium text-white flex items-end justify-end gap-2 animate-transition bg-gradient-to-r from-[#F57D11] via-[#F57D11]/70 to-[#F53C11] hover:bg-[#F53C11] disabled:opacity-50 lg:text-sm text-xs cursor-pointer " name="" type="button" 
-                    onclick="window.location.href='{{ route('admin.histories.create') }}'">
+                <button
+                    class="px-8 px-16 py-3 my-3 mx-3 rounded-full relative overflow-hidden font-medium text-white flex items-end justify-end gap-2 animate-transition bg-gradient-to-r from-[#F57D11] via-[#F57D11]/70 to-[#F53C11] hover:bg-[#F53C11] disabled:opacity-50 lg:text-sm text-xs cursor-pointer "
+                    name="" type="button"
+                    onclick="window.location.href='{{ route('admin.dtr.histories.create') }}'">
                     <p>Add Histories</p>
                 </button>
             </div>
 
         </section>
 
-        @if(session('success'))
+        @if (session('success'))
             <x-modal.flash-msg msg="success" />
         @endif
 
-        @if(session('error'))
+        @if (session('error'))
             <x-modal.flash-msg msg="error" />
         @endif
 
@@ -38,7 +44,8 @@
             <div class="overflow-x-auto bg-white rounded-lg shadow-md">
                 <table id="recordsTable" class="w-full border-collapse border border-gray-300">
                     <thead>
-                        <tr class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
+                        <tr
+                            class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
                             <th>Name</th>
                             <th>Email</th>
                             <th>Description</th>
@@ -51,18 +58,22 @@
                             @if ($record['history'] != null)
                                 <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap">
                                     <td class="capitalize">
-                                        {{ $record['user']->firstname }} {{ substr($record['user']->middlename, 0, 1) }}. {{ $record['user']->lastname }}
+                                        {{ $record['user']->firstname }}
+                                        {{ substr($record['user']->middlename, 0, 1) }}. {{ $record['user']->lastname }}
                                     </td>
                                     <td>{{ $record['user']->email }}</td>
                                     <td>
-                                        <span class="text-sm font-semibold 
-                                            {{ $record['history']->description === 'time in' ? 
-                                                (isset($record['history']->extra_description) && $record['history']->extra_description === 'late' ? 'text-red-500 font-bold' : 'text-green-500') 
+                                        <span
+                                            class="text-sm font-semibold 
+                                            {{ $record['history']->description === 'time in'
+                                                ? (isset($record['history']->extra_description) && $record['history']->extra_description === 'late'
+                                                    ? 'text-red-500 font-bold'
+                                                    : 'text-green-500')
                                                 : 'text-red-500' }}">
-                                            
-                                            {{ $record['history']->description }} 
-                                            @if(isset($record['history']->extra_description)) 
-                                                ({{ $record['history']->extra_description }}) 
+
+                                            {{ $record['history']->description }}
+                                            @if (isset($record['history']->extra_description))
+                                                ({{ $record['history']->extra_description }})
                                             @endif
                                         </span>
                                     </td>
@@ -70,10 +81,14 @@
                                         {{ \Carbon\Carbon::parse($record['history']->datetime)->format('F d - h:i A') }}
                                     </td>
                                     <td>
-                                        <button class="flex items-center px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 3.487a2.25 2.25 0 013.182 3.183L8.476 18.238a4.5 4.5 0 01-1.751 1.13l-3.272 1.092a.375.375 0 01-.484-.485l1.092-3.271a4.5 4.5 0 011.13-1.752L16.862 3.487z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25L15.75 4.5" />
+                                        <button
+                                            class="flex items-center px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M16.862 3.487a2.25 2.25 0 013.182 3.183L8.476 18.238a4.5 4.5 0 01-1.751 1.13l-3.272 1.092a.375.375 0 01-.484-.485l1.092-3.271a4.5 4.5 0 011.13-1.752L16.862 3.487z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M19.5 8.25L15.75 4.5" />
                                             </svg>
                                             Edit
                                         </button>
@@ -82,7 +97,7 @@
                             @endif
                         @endforeach
                     </tbody>
-                    
+
                 </table>
             </div>
 
@@ -105,10 +120,9 @@
 </x-main-layout>
 
 <script>
-
     const APP_URL = document.querySelector('meta[name="app-url"]').getAttribute("content");
 
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
@@ -140,32 +154,39 @@
                     recordsBody.innerHTML = '';
 
                     for (let record of data.records) {
-    let row = document.createElement('tr');
-    row.classList.add('border', 'hover:bg-gray-100');
+                        let row = document.createElement('tr');
+                        row.classList.add('border', 'hover:bg-gray-100');
 
-    let isLate = record.history.extra_description && record.history.extra_description === 'late';
-    let descriptionClass = '';
+                        let isLate = record.history.extra_description && record.history
+                            .extra_description === 'late';
+                        let descriptionClass = '';
 
-    let descriptionText = record.history.description;
-    if (isLate && record.history.description === 'time in') {
-        descriptionText += ' | Late';
-    }
+                        let descriptionText = record.history.description;
+                        if (isLate && record.history.description === 'time in') {
+                            descriptionText += ' | Late';
+                        }
 
-    if (record.history.description === 'time in') {
-        descriptionClass = isLate ? 'text-red-600 font-bold' : 'text-green-600';
-    } else {
-        descriptionClass = 'text-red-600';
-    }
+                        if (record.history.description === 'time in') {
+                            descriptionClass = isLate ? 'text-red-600 font-bold' : 'text-green-600';
+                        } else {
+                            descriptionClass = 'text-red-600';
+                        }
 
-    let formattedDate = new Date(record.history.datetime)
-        .toLocaleString('en-US', { month: 'long', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true });
+                        let formattedDate = new Date(record.history.datetime)
+                            .toLocaleString('en-US', {
+                                month: 'long',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true
+                            });
 
-    // Generate edit link dynamically using APP_URL
-    const editRouteBase = "{{ route('admin.histories.edit', ':id') }}";
-    
-    let editUrl = editRouteBase.replace(':id', record.history.id);
+                        // Generate edit link dynamically using APP_URL
+                        const editRouteBase = "{{ route('admin.dtr.histories.edit', ':id') }}";
 
-    row.innerHTML = `
+                        let editUrl = editRouteBase.replace(':id', record.history.id);
+
+                        row.innerHTML = `
         <td class="px-6 py-4 capitalize text-nowrap">
             ${record.user.firstname} ${(record.user.middlename).substring(0, 1)}. ${record.user.lastname}
         </td>
@@ -186,8 +207,8 @@
         </td>
     `;
 
-    recordsBody.appendChild(row);
-}
+                        recordsBody.appendChild(row);
+                    }
 
 
                     paginationInfo.textContent =
@@ -202,7 +223,7 @@
                 .catch(error => console.error('Error:', error));
         }
 
-        document.getElementById('search').addEventListener('keyup', function () {
+        document.getElementById('search').addEventListener('keyup', function() {
             let searchQuery = this.value;
             let selectedMonth = document.getElementById('month').value;
             if (searchQuery.length > 2 || searchQuery.length === 0) {
@@ -211,14 +232,14 @@
             }
         });
 
-        document.getElementById('month').addEventListener('change', function () {
+        document.getElementById('month').addEventListener('change', function() {
             let selectedMonth = this.value;
             let searchQuery = document.getElementById('search').value;
             currentPage = 1;
             fetchRecords(searchQuery, selectedMonth, currentPage);
         });
 
-        document.getElementById('prev-page').addEventListener('click', function () {
+        document.getElementById('prev-page').addEventListener('click', function() {
             if (currentPage > 1) {
                 currentPage--;
                 let searchQuery = document.getElementById('search').value;
@@ -227,7 +248,7 @@
             }
         });
 
-        document.getElementById('next-page').addEventListener('click', function () {
+        document.getElementById('next-page').addEventListener('click', function() {
             if (currentPage * perPage < totalRecords) {
                 currentPage++;
                 let searchQuery = document.getElementById('search').value;

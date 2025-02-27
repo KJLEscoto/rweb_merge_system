@@ -19,107 +19,102 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Broadcast;
 
-// Route::get('/register', function () {
-//     return view('auth.register');
-// })->name('show.register');
-
 Route::get('/', function () {
     return view('welcome');
 })->name('landing.page');
 
-// Route::get('/dashboard', function () {
-//     return view('users.dashboard');
-// })->name('show.users-dashboard');
+// For smm operations
+Route::view('/admin/smm/dashboard', 'admin.smm.dashboard')->name('admin.smm.dashboard');
 
-// Route::get('/settings', function () {
-//     return view('users.settings');
-// })->name('show.users-settings');
+// For front-end operations
+Route::view('/admin/front-end/dashboard', 'admin.front-end.dashboard')->name('admin.front-end.dashboard');
+Route::view('/admin/front-end/project-development', 'admin.front-end.project-development.index')->name('admin.front-end.project-development');
+Route::view('/admin/front-end/project-development/1', 'admin.front-end.project-development.show')->name('admin.front-end.project-development.show');
+Route::view('/admin/front-end/profile', 'admin.front-end.profile.index')->name('admin.front-end.profile');
+Route::view('/admin/front-end/profile/edit', 'admin.front-end.profile.edit')->name('admin.front-end.profile.edit');
+Route::view('/admin/front-end/revision-checklist', 'admin.front-end.revision-checklist.index')->name('admin.front-end.revision-checklist');
+Route::view('/admin/front-end/revision-checklist/create', 'admin.front-end.revision-checklist.create')->name('admin.front-end.revision-checklist.create');
+Route::view('/admin/front-end/promotions', 'admin.front-end.promotions')->name('admin.front-end.promotions');
+Route::view('/admin/front-end/instructions-manual', 'admin.front-end.instructions-manual')->name('admin.front-end.instructions-manual');
 
-
-
-// Route::get('/admin/dashboard', function () {
-//     return view('admin.dashboard');
-// })->name('show.admin-dashboard');
 
 Route::middleware('guest')->group(function () {
 
     //users page transition
     Route::get('/users', [UserController::class, 'showUsers'])->name('show.users');
-    //login page transition
-    //Route::get('/login', [AuthController::class, 'showLogin'])->name('show.login');
-    //login admin login page transition
-    //Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('show.admin.login');
+
     //register page transition
     Route::get('/register', [AuthController::class, 'showRegister'])->name('show.register');
 
     //login post method
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('show.login');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/register', [AuthController::class, 'register'])->name('register');
+    Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('show.admin.login');
     Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login');
 });
 
 //register post method
 
-Route::middleware(['auth', 'user_role:admin'])->group(function (){
+Route::middleware(['auth', 'user_role:admin'])->group(function () {
 
-    //Route::resource('admin.schools', SchoolController::class);
-    Route::get('/admin/dtr/schools', [SchoolController::class, 'index'])->name('admin.schools');
-    
-    Route::get('/admin/dtr/schools/{id}', [SchoolController::class, 'show'])->name('admin.schools.show');
-    Route::put('/admin/dtr/schools/{id}', [SchoolController::class, 'update'])->name('admin.schools.show.update');
-    
-    Route::get('/admin/dtr/dashboard', [UserController::class, 'showAdminDashboard'])->name('admin.dashboard');
-    Route::get('/admin/dtr/users', [UserController::class, 'showAdminUsers'])->name('admin.users');
-    
+    //Route::resource('admin.dtr.schools', SchoolController::class);
+    Route::get('/admin/dtr/schools', [SchoolController::class, 'index'])->name('admin.dtr.schools');
+
+    Route::get('/admin/dtr/schools/{id}', [SchoolController::class, 'show'])->name('admin.dtr.schools.show');
+    Route::put('/admin/dtr/schools/{id}', [SchoolController::class, 'update'])->name('admin.dtr.schools.show.update');
+
+    Route::get('/admin/dtr/dashboard', [UserController::class, 'showAdminDashboard'])->name('admin.dtr.dashboard');
+    Route::get('/admin/dtr/interns', [UserController::class, 'showAdminUsers'])->name('admin.dtr.interns');
+
     //admin user dtr page
-    
-    Route::get('/admin/dtr/users/dtr/create', [AuthController::class, 'showAdminUsersCreate'])->name('admin.users.create');
 
-    Route::post('/admin/dtr/users/dtr/create', [AuthController::class, 'showAdminUsersCreatePost'])->name('admin.users.create.post');
+    Route::get('/admin/dtr/interns/create', [AuthController::class, 'showAdminUsersCreate'])->name('admin.dtr.interns.create');
+
+    Route::post('/admin/dtr/interns/create', [AuthController::class, 'showAdminUsersCreatePost'])->name('admin.dtr.interns.create.post');
 
     //users specific profile
-    Route::get('/admin/dtr/users/{id}', [UserController::class, 'showUserDetails'])->name('admin.users.details');
-    
-    Route::get('/admin/dtr/users/{id}/edit', [UserController::class, 'showEditUsers'])->name('admin.users.details.edit');
-    
-    Route::post('/admin/dtr/users/{id}/edit', [UserController::class, 'showEditUsersPost'])->name('admin.users.details.edit.post');
-    
-    Route::get('/admin/dtr/users/{id}/dtr', [DtrSummaryController::class, 'showAdminUserDtr'])->name('admin.users.dtr');
-    
-    Route::post('/admin/dtr/users/{id}/dtr/post', [DtrSummaryController::class, 'ShowAdminUserDtrPagination'])->name('admin.users.dtr.post');
-    
-    
+    Route::get('/admin/dtr/interns/{id}', [UserController::class, 'showUserDetails'])->name('admin.dtr.interns.details');
+
+    Route::get('/admin/dtr/interns/{id}/edit', [UserController::class, 'showEditUsers'])->name('admin.dtr.interns.details.edit');
+
+    Route::post('/admin/dtr/interns/{id}/edit', [UserController::class, 'showEditUsersPost'])->name('admin.dtr.interns.details.edit.post');
+
+    Route::get('/admin/dtr/interns/{id}/dtr', [DtrSummaryController::class, 'showAdminUserDtr'])->name('admin.dtr.interns.dtr');
+
+    Route::post('/admin/dtr/interns/{id}/dtr/post', [DtrSummaryController::class, 'ShowAdminUserDtrPagination'])->name('admin.dtr.interns.dtr.post');
+
     //admin history
-    Route::get('/admin/dtr/history', [UserController::class, 'showAdminHistory'])->name('admin.histories');
-    Route::get('/admin/dtr/history/create', [UserController::class, 'showAdminCreateHistory'])->name('admin.histories.create');
-    Route::post('/admin/dtr/history/create', [UserController::class, 'createAdminHistory'])->name('admin.histories.create.post');
-    Route::get('/admin/dtr/history/{id}/edit', [UserController::class, 'showAdminHistoryEdit'])->name('admin.histories.edit');
-    Route::put('/admin/dtr/history/{id}/edit', [UserController::class, 'editAdminHistory'])->name('admin.histories.edit.post');
-    
+    Route::get('/admin/dtr/history', [UserController::class, 'showAdminHistory'])->name('admin.dtr.histories');
+    Route::get('/admin/dtr/history/create', [UserController::class, 'showAdminCreateHistory'])->name('admin.dtr.histories.create');
+    Route::post('/admin/dtr/history/create', [UserController::class, 'createAdminHistory'])->name('admin.dtr.histories.create.post');
+    Route::get('/admin/dtr/history/{id}/edit', [UserController::class, 'showAdminHistoryEdit'])->name('admin.dtr.histories.edit');
+    Route::put('/admin/dtr/history/{id}/edit', [UserController::class, 'editAdminHistory'])->name('admin.dtr.histories.edit.post');
+
     //admin profile
-    Route::get('/admin/dtr/profile', [UserController::class, 'showAdminProfile'])->name('admin.profile');
-    
-    Route::get('/admin/dtr/approvals', [UserController::class, 'showAdminApprovals'])->name('admin.approvals');
-    
-    Route::get('/admin/dtr/approvals/{id}', [DtrSummaryController::class, 'showAdminUserApprovalDtr'])->name('admin.approvals.show');
-    
+    Route::get('/admin/dtr/profile', [UserController::class, 'showAdminProfile'])->name('admin.dtr.profile');
+
+    Route::get('/admin/dtr/approvals', [UserController::class, 'showAdminApprovals'])->name('admin.dtr.approvals');
+
+    Route::get('/admin/dtr/approvals/{id}', [DtrSummaryController::class, 'showAdminUserApprovalDtr'])->name('admin.dtr.approvals.show');
+
     Route::post('/admin-dtr-approve', [DtrDownloadRequestController::class, 'approve'])->name('admin.dtr.approve');
-    
+
     Route::post('/admin-dtr-batch-approve', [DtrDownloadRequestController::class, 'batchApprove'])->name('admin.dtr.batch.approve');
     Route::post('/admin-dtr-decline', [DtrDownloadRequestController::class, 'decline'])->name('admin.dtr.decline');
     Route::post('/admin-dtr-batch-decline', [DtrDownloadRequestController::class, 'batchDecline'])->name('admin.dtr.batch.decline');
 
-    Route::get('/read-notifications-index', [NotificationController::class, 'readAdminNotification'])->name('admin.recieve.notification');
-    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'readAdminNotification'])->name('admin.recieve.notification');
+    Route::get('/read-notifications-index', [NotificationController::class, 'readAdminNotification'])->name('admin.dtr.recieve.notification');
+    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'readAdminNotification'])->name('admin.dtr.recieve.notification');
 
     //scanner user validation data
-    Route::get('scanner/{qr_code}', [UserController::class, 'AdminScannerValidation'])->name('admin.scanner.validation');
-    Route::post('/history', [UserController::class, 'AdminScannerTimeCheck'])->name('admin.history.time.check');
-    Route::post('/admin/dtr/history/search', [SearchController::class, 'searchHistory'])->name('admin.history.search');
+    Route::get('scanner/{qr_code}', [UserController::class, 'AdminScannerValidation'])->name('admin.dtr.scanner.validation');
+    Route::post('/history', [UserController::class, 'AdminScannerTimeCheck'])->name('admin.dtr.history.time.check');
+    Route::post('/admin/dtr/history/search', [SearchController::class, 'searchHistory'])->name('admin.dtr.history.search');
 });
 
-Route::view('/admin/dtr/school/create', 'admin.schools.create')->name('admin.schools.create');
-Route::post('/admin/dtr/schools/create/post', [SchoolController::class, 'store'])->name('admin.schools.create.post');
+Route::view('/admin/dtr/school/create', 'admin.dtr.schools.create')->name('admin.dtr.schools.create');
+Route::post('/admin/dtr/schools/create/post', [SchoolController::class, 'store'])->name('admin.dtr.schools.create.post');
 
 Route::middleware(['auth', 'user_role:user'])->group(function () {
 
@@ -128,21 +123,6 @@ Route::middleware(['auth', 'user_role:user'])->group(function () {
 
     //user settings
     Route::get('/settings', [UserController::class, 'showSettings'])->name('users.settings');
-
-    //user index page
-    // Route::get('/users', [UserController::class, 'index'])->name('users.profile.index');
-
-
-    //admin scanner
-    //Route::get('/admin/scanner', [UserController::class, 'showAdminScanner'])->name('admin.scanner');
-    //admin user index page
-
-
-    //admin profile
-    //Route::get('/profile/{id}', [UserController::class, 'showProfile'])->name('user.profile');
-
-    //admin dtr page
-    //Route::get('/admin/dtr', [DtrSummaryController::class, 'showAdminSingleUserDtr'])->name('admin.users.dtr');
 
     //dtr page
     Route::get('/intern/dtr', [DtrSummaryController::class, 'showUserDtr'])->name('users.dtr');
@@ -162,7 +142,7 @@ Route::middleware(['auth', 'user_role:user'])->group(function () {
 Route::put('/intern/update', [UserController::class, 'update'])->name('users.settings.update');
 
 //update admin post method
-Route::put('/admin/dtr/update', [UserController::class, 'adminUpdate'])->name('admin.settings.update');
+Route::put('/admin/dtr/update', [UserController::class, 'adminUpdate'])->name('admin.dtr.settings.update');
 
 Route::post('/send-notification', [NotificationController::class, 'sendAdminNotification'])->name('user.send.request.download.notification');
 
@@ -171,7 +151,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 //admin history post method
 Route::post('/download-pdf', [PDFController::class, 'download'])->name('download.pdf');
-Route::post('/admin/dtr/download-pdf', [PDFController::class, 'admin_download'])->name('admin.download.pdf');
+Route::post('/admin/dtr/download-pdf', [PDFController::class, 'admin_download'])->name('admin.dtr.download.pdf');
 
 //forgot-password page transition
 Route::get('/reset-password', [AuthController::class, 'showResetPassword'])->name('show.reset-password');
@@ -179,22 +159,6 @@ Route::get('/reset-password', [AuthController::class, 'showResetPassword'])->nam
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
 //reset-password-validation post method
 Route::post('/reset-password-validation', [EmailController::class, 'EmailResetPasswordValidation'])->name('reset-password-validation');
-
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('show.login');
-
-Route::get('/admin/dtr/login', function () {
-    return view('auth.login');
-})->name('show.admin.login');
-
-//search controller
-// Route::get('/search', function () {
-
-// })->name('search');
-
-//test routes
-
 
 //test routes
 
@@ -238,8 +202,8 @@ Route::post("/pusher/auth", function (Request $request) {
     return response()->json(["message" => "Forbidden"], 403);
 });
 
-Route::view('/read-form', 'admin.files.show')->name('admin.files.show');
-Route::view('/upload-form', 'admin.files.index')->name('admin.files');
+Route::view('/read-form', 'admin.dtr.files.show')->name('admin.dtr.files.show');
+Route::view('/upload-form', 'admin.dtr.files.index')->name('admin.dtr.files');
 Route::view('/forbidden', 'forbidden')->name('forbidden');
 
 //files
@@ -251,11 +215,3 @@ Route::prefix('files')->group(function () {
     Route::get('/{file}', [FileController::class, 'show'])->name('files.show');
     Route::delete('/{file}', [FileController::class, 'destroy'])->name('files.destroy');
 });
-
-// Route::get('/optimize', function () {
-//     Artisan::call('optimize');
-//     Artisan::call('route:cache');
-//     Artisan::call('view:clear');
-//     Artisan::call('cache:clear');
-//     return 1;
-// })->name('system.optimize');

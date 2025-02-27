@@ -235,7 +235,7 @@ class UserController extends Controller
         $dailyAttendance = $history->AllUserDailyAttendance();
         $recentlyAddedUser = $history->AllMonthlyUsers();
 
-        return view('admin.dashboard', [
+        return view('admin.dtr.dashboard', [
             'user' => $users,
             'totalScans' => $totalScan,
             'totalTimeIn' => $totalTimeIn,
@@ -362,137 +362,137 @@ class UserController extends Controller
     }
 
     public function createAdminHistory(Request $request, RankingController $rankingController, HistoryController $historyController)
-{   
-    try {
-        DB::beginTransaction();
-    
-        // Debugging - Check incoming data structure
-        //echo "<pre>";
-        //echo "Incoming Request Data:\n";
-        print_r($request->all());
-    
-        // Validate request to ensure required fields exist
-        $request->validate([
-            'user_fullname' => 'required|array',
-            'history_description' => 'required|array',
-            'history_datetime' => 'required|array',
-        ]);
-    
-        //echo "\nValidation Passed\n";
-    
-        $historyRecords = [];
-        $extra_description = null;
-    
-        // Loop through `user_fullname` array
-        $processedUsers = [];
+    {
+        try {
+            DB::beginTransaction();
 
-        foreach ($request->user_fullname as $index => $userId) {
-            if (!isset($request->history_description[$userId]) || !isset($request->history_datetime[$userId])) {
-                continue; // Skip users with missing history data
+            // Debugging - Check incoming data structure
+            //echo "<pre>";
+            //echo "Incoming Request Data:\n";
+            print_r($request->all());
+
+            // Validate request to ensure required fields exist
+            $request->validate([
+                'user_fullname' => 'required|array',
+                'history_description' => 'required|array',
+                'history_datetime' => 'required|array',
+            ]);
+
+            //echo "\nValidation Passed\n";
+
+            $historyRecords = [];
+            $extra_description = null;
+
+            // Loop through `user_fullname` array
+            $processedUsers = [];
+
+            foreach ($request->user_fullname as $index => $userId) {
+                if (!isset($request->history_description[$userId]) || !isset($request->history_datetime[$userId])) {
+                    continue; // Skip users with missing history data
+                }
+
+                if (in_array($userId, $processedUsers)) {
+                    continue; // Skip duplicate user
+                }
+                $processedUsers[] = $userId;
+
+                foreach ($request->history_description[$userId] as $key => $desc) {
+                    // Convert to lowercase
+                    $desc = strtolower($desc);
+
+                    // Determine extra description
+                    $extra_description = Str::contains($desc, 'late') ? 'late' : null;
+
+                    // Remove " | late" or any variation of "| late" with extra spaces
+                    $desc = preg_replace('/\s*\|\s*late\s*/i', '', $desc);
+
+
+                    //echo "Processing Entry [$key]: Description = '$desc', Extra = '$extra_description'\n";
+
+                    $historyRecords[] = [
+                        'user_id' => $userId,
+                        'description' => trim($desc), // Trim to clean up any remaining spaces
+                        'extra_description' => $extra_description,
+                        'datetime' => $request->history_datetime[$userId][$key] ?? now(),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
             }
 
-            if (in_array($userId, $processedUsers)) {
-                continue; // Skip duplicate user
+            // Insert records in bulk
+            if (!empty($historyRecords)) {
+                DB::table('histories')->insert($historyRecords);
+                //echo "\nInserted " . count($historyRecords) . " records into history table.\n";
+            } else {
+                //echo "\nNo records to insert.\n";
             }
-            $processedUsers[] = $userId;
 
-            foreach ($request->history_description[$userId] as $key => $desc) {
-                // Convert to lowercase
-                $desc = strtolower($desc);
+            DB::commit(); // Commit transaction if everything is successful
 
-                // Determine extra description
-                $extra_description = Str::contains($desc, 'late') ? 'late' : null;
-                
-                // Remove " | late" or any variation of "| late" with extra spaces
-                $desc = preg_replace('/\s*\|\s*late\s*/i', '', $desc);
+            //echo "</pre>";
 
+            return back()->with('success', 'Admin history records saved successfully!');
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback transaction if any error occurs
 
-                //echo "Processing Entry [$key]: Description = '$desc', Extra = '$extra_description'\n";
-
-                $historyRecords[] = [
-                    'user_id' => $userId,
-                    'description' => trim($desc), // Trim to clean up any remaining spaces
-                    'extra_description' => $extra_description,
-                    'datetime' => $request->history_datetime[$userId][$key] ?? now(),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            }
+            return back()->with('error', 'Failed to save history records: ' . $e->getMessage());
         }
-    
-        // Insert records in bulk
-        if (!empty($historyRecords)) {
-            DB::table('histories')->insert($historyRecords);
-            //echo "\nInserted " . count($historyRecords) . " records into history table.\n";
-        } else {
-            //echo "\nNo records to insert.\n";
-        }
-    
-        DB::commit(); // Commit transaction if everything is successful
-    
-        //echo "</pre>";
-    
-        return back()->with('success', 'Admin history records saved successfully!');
-    } catch (\Exception $e) {
-        DB::rollback(); // Rollback transaction if any error occurs
-    
-        return back()->with('error', 'Failed to save history records: ' . $e->getMessage());
     }
-}
 
-public function showAdminHistoryEdit($id, Request $request, RankingController $rankingController, HistoryController $historyController)
-{   
-    // Fetch the history record by ID
-    $history = Histories::with('user')->findOrFail($id); // Automatically returns 404 if not found
-
-    // Pass the data to a view
-    return view('admin.edit-histories', [
-        'history' => $history,
-    ]);
-}
-
-public function editAdminHistory($id, Request $request, RankingController $rankingController, HistoryController $historyController)
-{
-    try {
-        // Start transaction
-        DB::beginTransaction();
-
+    public function showAdminHistoryEdit($id, Request $request, RankingController $rankingController, HistoryController $historyController)
+    {
         // Fetch the history record by ID
-        $history = Histories::findOrFail($id);
+        $history = Histories::with('user')->findOrFail($id); // Automatically returns 404 if not found
 
-        // Validate request data
-        $validatedData = $request->validate([
-            'history_description' => 'required|string|max:255',
-            'history_datetime' => 'required|date',
+        // Pass the data to a view
+        return view('admin.edit-histories', [
+            'history' => $history,
         ]);
-
-        // Default extra value
-        $extra = null;
-
-        // Check and modify history_description
-        if ($validatedData['history_description'] === 'Time In | Late') {
-            $cleanDescription = 'time in'; // Remove '| Late'
-            $extra = 'late'; // Add extra flag
-        } else {
-            $cleanDescription = strtolower($validatedData['history_description']);
-        }
-
-        // Update history record
-        $history->description = $cleanDescription;
-        $history->extra_description = $extra; // Store extra if applicable
-        $history->datetime = $validatedData['history_datetime'];
-        $history->save();
-
-        // Commit transaction
-        DB::commit();
-
-        return redirect()->route('admin.histories')->with('success', 'History record updated successfully.');
-    } catch (\Exception $e) {
-        // Rollback transaction in case of error
-        DB::rollBack();
-        return redirect()->back()->with('error', 'Failed to update history: ' . $e->getMessage());
     }
-}
+
+    public function editAdminHistory($id, Request $request, RankingController $rankingController, HistoryController $historyController)
+    {
+        try {
+            // Start transaction
+            DB::beginTransaction();
+
+            // Fetch the history record by ID
+            $history = Histories::findOrFail($id);
+
+            // Validate request data
+            $validatedData = $request->validate([
+                'history_description' => 'required|string|max:255',
+                'history_datetime' => 'required|date',
+            ]);
+
+            // Default extra value
+            $extra = null;
+
+            // Check and modify history_description
+            if ($validatedData['history_description'] === 'Time In | Late') {
+                $cleanDescription = 'time in'; // Remove '| Late'
+                $extra = 'late'; // Add extra flag
+            } else {
+                $cleanDescription = strtolower($validatedData['history_description']);
+            }
+
+            // Update history record
+            $history->description = $cleanDescription;
+            $history->extra_description = $extra; // Store extra if applicable
+            $history->datetime = $validatedData['history_datetime'];
+            $history->save();
+
+            // Commit transaction
+            DB::commit();
+
+            return redirect()->route('admin.histories')->with('success', 'History record updated successfully.');
+        } catch (\Exception $e) {
+            // Rollback transaction in case of error
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to update history: ' . $e->getMessage());
+        }
+    }
 
     public function showAdminUsers(RankingController $rankingController, HistoryController $historyController)
     {
@@ -501,7 +501,7 @@ public function editAdminHistory($id, Request $request, RankingController $ranki
         $ranking = $rankingController->getRankings();
         $array_daily = $historyController->AllUserDailyAttendance();
 
-        return view('admin.users.index', [
+        return view('admin.dtr.interns.index', [
             'users' => $users,
             'ranking' => $ranking,
             'array_daily' => $array_daily,
@@ -626,18 +626,18 @@ public function editAdminHistory($id, Request $request, RankingController $ranki
                 'emergency_contact_address' => $request['emergency_contact_address'],
                 'status' => $request['status'] ?? 'active',
             ];
-            
+
             // Only update starting_date if it exists in the request
             if (!empty($request['starting_date'])) {
                 $updateData['starting_date'] = $request['starting_date'];
             }
-            
+
             // Only update expiry_date if it exists in the request
             if (!empty($request['expiry_date'])) {
                 $updateData['expiry_date'] = $request['expiry_date'];
             }
-            
-            $user->update($updateData);            
+
+            $user->update($updateData);
 
 
             if (!empty($request['school'])) {
@@ -726,8 +726,8 @@ public function editAdminHistory($id, Request $request, RankingController $ranki
                 'gender' => $request['gender'],
                 'address' => $request['address'],
             ];
-            
-            $user->update($updateData);            
+
+            $user->update($updateData);
             $user->save();
 
             DB::commit();
@@ -781,7 +781,7 @@ public function editAdminHistory($id, Request $request, RankingController $ranki
             ];
         })->sortByDesc('date_requested');
 
-        return view('admin.approvals.index', [
+        return view('admin.dtr.approvals.index', [
             'approvals' => $dtrDownloadRequest,
         ]);
     }

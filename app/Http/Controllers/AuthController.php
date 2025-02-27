@@ -21,7 +21,7 @@ class AuthController extends Controller
     {
         return view('auth.register');
     }
-    
+
     public function register(Request $request, FileController $fileController)
     {
         $data = $request->validate([
@@ -122,8 +122,8 @@ class AuthController extends Controller
         } else {
             // Use external image links based on gender
             $profile_image = ($data['gender'] === 'male')
-            ? 'https://lh3.googleusercontent.com/d/15xbsTPp-MWc48TbxAaZ20wisUWwtQioq' // Image in the public/images folder
-            : 'https://lh3.googleusercontent.com/d/1FU9OpkgA-FTk3RrUnpoY_n5c9F6eQ4lA'; // Image in the public/images folder
+                ? 'https://lh3.googleusercontent.com/d/15xbsTPp-MWc48TbxAaZ20wisUWwtQioq' // Image in the public/images folder
+                : 'https://lh3.googleusercontent.com/d/1FU9OpkgA-FTk3RrUnpoY_n5c9F6eQ4lA'; // Image in the public/images folder
         }
 
         $request->merge([
@@ -216,7 +216,7 @@ class AuthController extends Controller
         $dailyAttendance = $history->AllUserDailyAttendance();
         $recentlyAddedUser = $history->AllMonthlyUsers();
 
-        return redirect()->route('admin.dashboard')->with([
+        return redirect()->route('admin.dtr.dashboard')->with([
             'user' => $users,
             'totalScans' => $totalScan,
             'totalTimeIn' => $totalTimeIn,
@@ -322,7 +322,7 @@ class AuthController extends Controller
 
     public function showAdminUsersCreate()
     {
-        return view('admin.users.create');
+        return view('admin.dtr.interns.create');
     }
 
     public function showAdminUsersCreatePost(Request $request, FileController $fileController)

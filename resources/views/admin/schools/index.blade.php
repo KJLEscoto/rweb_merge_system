@@ -1,4 +1,8 @@
-<x-main-layout>
+<head>
+    <title>{{ env('APP_NAME') }} | DTR | Schools</title>
+</head>
+
+<x-main-layout breadcumb="DTR" page="Schools">
     {{-- @php
         $schools = [
             [
@@ -28,9 +32,9 @@
         ];
     @endphp --}}
 
-    <main class="w-full h-auto flex flex-col lg:!gap-7 gap-5">
+    <main class="w-full h-auto flex flex-col lg:!gap-7 gap-5 px-16 py-10">
         <div class="w-full flex items-center justify-between">
-            <x-button label="Add School" button primary className="px-8" routePath="admin.schools.create" />
+            <x-button label="Add School" button primary className="px-8" routePath="admin.dtr.schools.create" />
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
