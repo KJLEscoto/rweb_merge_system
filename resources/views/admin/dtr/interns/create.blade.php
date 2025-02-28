@@ -94,7 +94,21 @@
     @endif
 
     <main class="h-auto w-full flex flex-col gap-5 px-10 py-10">
-        <div class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
+        <form action="#" method="POST"
+            class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
+            @csrf
+
+            <div class="flex items-center gap-3">
+                <a href="{{ route('admin.dtr.interns') }}"
+                    class="border hover:border-[#f56d11] text-[#f56d11] transition flex items-center gap-1 px-3 py-2 text-sm rounded font-semibold w-fit">
+                    <span class="eva--arrow-back-fill w-4 h-4"></span>
+                    Back
+                </a>
+                <button type="submit"
+                    class="bg-[#f56d11] hover:scale-105 transition text-white px-3 py-2 text-sm rounded font-semibold shadow-md w-fit">
+                    Create Account
+                </button>
+            </div>
 
             <div class="p-10 border border-gray-300 rounded grid grid-cols-3 gap-7">
 
@@ -218,18 +232,6 @@
                         class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
                 </div>
             </div>
-
-            <div class="flex items-center gap-3">
-                <a href="{{ route('admin.dtr.interns') }}"
-                    class="border hover:border-[#f56d11] text-[#f56d11] transition flex items-center gap-1 px-3 py-2 text-sm rounded font-semibold w-fit">
-                    <span class="eva--arrow-back-fill w-4 h-4"></span>
-                    Back
-                </a>
-                <button
-                    class="bg-[#f56d11] hover:scale-105 transition text-white px-3 py-2 text-sm rounded font-semibold shadow-md w-fit">
-                    Create Account
-                </button>
-            </div>
-        </div>
+        </form>
     </main>
 </x-main-layout>

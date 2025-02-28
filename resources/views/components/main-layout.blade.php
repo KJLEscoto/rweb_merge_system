@@ -316,7 +316,7 @@
                         routeName="admin.dtr.approvals" />
                     <x-sidebar-menu icon="fa--users" label="Interns" routeName="admin.dtr.interns" />
                     <x-sidebar-menu icon="mdi--clipboard-text-history" label="History"
-                        routeName="admin.dtr.histories" />
+                        routeName="admin.dtr.history" />
                     <x-sidebar-menu icon="ic--round-school" label="Schools" routeName="admin.dtr.schools" />
                     <x-sidebar-menu icon="fa--user" label="Profile" routeName="admin.dtr.profile" />
                 @endif

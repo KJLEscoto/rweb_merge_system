@@ -4,65 +4,81 @@
 
 <x-main-layout breadcumb="DTR" page="Interns">
     <div class="w-full h-auto flex flex-col gap-5 px-10 pt-10">
-        <section class="flex md:flex-row flex-col-reverse items-center lg:justify-between w-full gap-5">
-            <span class="w-full">
-                <x-form.input name_id="search" placeholder="Search" small />
-            </span>
+        @if ($users->where('role', '!=', 'admin')->first())
+            <section class="flex md:flex-row flex-col-reverse items-center lg:justify-between w-full gap-5">
+                <span class="w-full">
+                    <x-form.input name_id="search" placeholder="Search" small />
+                </span>
 
-            <span class="flex md:justify-end w-full">
-                <x-button primary leftIcon="cuida--user-add-outline" label="Add Intern"
-                    routePath="admin.dtr.interns.create" button className="w-fit" className="px-10" />
-            </span>
-        </section>
-
-        <section class="grid lg:!grid-cols-5 md:grid-cols-4 grid-cols-2 gap-5" id="user-container">
-            @foreach ($users as $user)
-                @if ($user['role'] != 'admin')
-                    <a href="{{ route('admin.users.details', $user->id) }}"
-                        class="p-5 border border-gray-200 rounded-xl cursor-pointer group animate-transition hover:border-[#F57D11] flex flex-col gap-5 items-center justify-center h-auto w-full bg-white user-card"
-                        data-name="{{ strtolower($user->firstname) }}"
-                        data-student_no="{{ strtolower($user->school) }}">
-
-                        <div class="w-auto h-auto">
-
-                            <div class="w-24 h-24 rounded-full border border-[#F57D11] overflow-hidden">
-                                <x-image className="w-full h-full"
-                                    path="{{ optional(\App\Models\File::find(optional(\App\Models\Profile::find($user->profile_id))->file_id))->path .
-                                        '?t=' .
-                                        time() ??
-                                        'resources/img/default-male.png' }}" />
-                            </div>
-
-                        </div>
-                        <div class="text-center mx-auto w-full">
-                            <h1
-                                class="text-sm font-semibold group-hover:text-[#F57D11] animate-transition truncate capitalize">
-                                {{ $user->firstname }} {{ substr($user->middlename, 0, 1) }}. {{ $user->lastname }}</h1>
-                            <p class="text-gray-500 truncate">
-                                {{ \App\Models\School::where('id', $user->school_id)->first()->description ?? 'No school' }}
-                            </p>
-                        </div>
+                <span class="flex md:justify-end w-full">
+                    <a href="{{ route('admin.dtr.interns.create') }}"
+                        class="bg-[#f56d11] hover:scale-105 transition text-white px-3 py-2 text-sm rounded font-semibold shadow-md w-fit flex items-center gap-1">
+                        <span class="ic--round-add w-5 h-5"></span>
+                        Add Intern
                     </a>
-                @endif
-            @endforeach
-        </section>
+                </span>
+            </section>
 
-        <!-- Pagination Controls -->
-        <section class="flex lg:flex-row flex-col gap-3 items-center justify-between w-full">
-            <p class="text-sm text-gray-500">
-                Showing <span id="first-item">1</span> - <span id="last-item">10</span> of <span
-                    id="total-items">{{ count($users) }}</span>
-            </p>
+            <section class="grid lg:!grid-cols-5 md:grid-cols-4 grid-cols-2 gap-5" id="user-container">
+                @foreach ($users as $user)
+                    @if ($user['role'] != 'admin')
+                        <a href="{{ route('admin.users.details', $user->id) }}"
+                            class="p-5 border border-gray-200 rounded-xl cursor-pointer group animate-transition hover:border-[#F57D11] flex flex-col gap-5 items-center justify-center h-auto w-full bg-white user-card"
+                            data-name="{{ strtolower($user->firstname) }}"
+                            data-student_no="{{ strtolower($user->school) }}">
 
-            <div class="flex gap-3 items-center">
-                <button id="prev-page"
-                    class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 hover:bg-[#F57D11] hover:text-white animate-transition disabled:hover:bg-gray-300 disabled:hover:text-current"
-                    disabled>Prev</button>
-                <span id="page-info">Page 1 of </span>
-                <button id="next-page"
-                    class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 hover:bg-[#F57D11] hover:text-white animate-transition disabled:hover:bg-gray-300 disabled:hover:text-current">Next</button>
+                            <div class="w-auto h-auto">
+
+                                <div class="w-24 h-24 rounded-full border border-[#F57D11] overflow-hidden">
+                                    <x-image className="w-full h-full"
+                                        path="{{ optional(\App\Models\File::find(optional(\App\Models\Profile::find($user->profile_id))->file_id))->path .
+                                            '?t=' .
+                                            time() ??
+                                            'resources/img/default-male.png' }}" />
+                                </div>
+
+                            </div>
+                            <div class="text-center mx-auto w-full">
+                                <h1
+                                    class="text-sm font-semibold group-hover:text-[#F57D11] animate-transition truncate capitalize">
+                                    {{ $user->firstname }} {{ substr($user->middlename, 0, 1) }}. {{ $user->lastname }}
+                                </h1>
+                                <p class="text-gray-500 truncate">
+                                    {{ \App\Models\School::where('id', $user->school_id)->first()->description ?? 'No school' }}
+                                </p>
+                            </div>
+                        </a>
+                    @endif
+                @endforeach
+            </section>
+
+            <!-- Pagination Controls -->
+            <section class="flex lg:flex-row flex-col gap-3 items-center justify-between w-full">
+                <p class="text-sm text-gray-500">
+                    Showing <span id="first-item">1</span> - <span id="last-item">10</span> of <span
+                        id="total-items">{{ count($users) }}</span>
+                </p>
+
+                <div class="flex gap-3 items-center">
+                    <button id="prev-page"
+                        class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 hover:bg-[#F57D11] hover:text-white animate-transition disabled:hover:bg-gray-300 disabled:hover:text-current"
+                        disabled>Prev</button>
+                    <span id="page-info">Page 1 of </span>
+                    <button id="next-page"
+                        class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 hover:bg-[#F57D11] hover:text-white animate-transition disabled:hover:bg-gray-300 disabled:hover:text-current">Next</button>
+                </div>
+            </section>
+        @else
+            <div class="w-full h-full flex items-center justify-center flex-col gap-10">
+                <h1 class="text-3xl italic font-semibold">No Interns Yet.</h1>
+                <img draggable="false" class="w-auto h-80" src="{{ asset('image/revisions_empty.png') }}">
+                <a href="{{ route('admin.dtr.interns.create') }}"
+                    class="bg-[#f56d11] hover:scale-105 transition text-white px-3 py-2 text-sm rounded font-semibold shadow-md w-fit flex items-center gap-1">
+                    <span class="ic--round-add w-5 h-5"></span>
+                    Add Intern
+                </a>
             </div>
-        </section>
+        @endif
     </div>
 
     <script>

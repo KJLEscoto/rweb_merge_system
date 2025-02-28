@@ -7,114 +7,131 @@
 
 <x-main-layout breadcumb="DTR" page="Approvals">
 
-    <div class="h-auto w-full flex flex-col gap-5 px-10 py-10">
-        <div class="flex justify-between items-center flex-wrap gap-5 w-full">
-            <span class="lg:!w-1/2 w-full">
-                <x-form.input id="search" name_id="search" placeholder="Search" small />
-            </span>
-            <div class="flex items-center gap-2 flex-wrap">
-                <button id="btn-approve"
-                    class="px-3 py-2 bg-green-500 text-white rounded disabled:opacity-50 flex items-center gap-2"
-                    disabled>
-                    <span class="uil--check w-6 h-6"></span>
-                    <p class="text-sm font-semibold">Approve All</p>
-                </button>
-                <button id="btn-decline"
-                    class="px-3 py-2 bg-red-500 text-white rounded disabled:opacity-50 flex items-center gap-2"
-                    disabled>
-                    <span class="iconamoon--close-light w-6 h-6"></span>
-                    <p class="text-sm font-semibold">Decline All</p>
-                </button>
-                <button id="btn-clear" class="px-3 py-2 bg-gray-500 text-white rounded disabled:opacity-50" disabled>
-                    <p class="text-base font-semibold">Clear Selection</p>
-                </button>
-            </div>
-        </div>
+    @php
+        $pendingApprovals = collect($approvals)->where('status', 'pending');
+    @endphp
 
-        <div class="overflow-x-auto bg-white rounded-lg shadow-md">
-            <table id="recordsTable" class="w-full border-collapse border border-gray-300">
-                <thead>
-                    <tr
-                        class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
-                        <th><input type="checkbox" id="select-all" class="cursor-pointer"></th>
-                        <th>Name</th>
-                        <th>Title</th>
-                        <th>DTR</th>
-                        <th>Date Requested</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
-                    @php
-                        $pendingApprovals = collect($approvals)->where('status', 'pending');
-                    @endphp
+    <div class="h-auto w-full flex flex-col gap-5 px-10 pt-10">
+        @if ($pendingApprovals->isNotEmpty())
+            <div class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
+                <div class="flex justify-between items-center flex-wrap gap-5 w-full">
+                    <section class="w-1/2">
+                        <div class="w-full relative flex items-center">
+                            <span class="meteor-icons--search w-5 h-5 absolute left-3 text-gray-500"></span>
+                            <input type="text" name="search" id="search"
+                                class="pl-10 py-2 pr-4 rounded-lg border border-gray-300 w-full outline-none focus:ring-2 focus:ring-[#f56d11]"
+                                placeholder="Search...">
+                        </div>
+                    </section>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button id="btn-approve"
+                            class="px-3 py-2 bg-green-500 text-white rounded disabled:opacity-50 flex items-center gap-1"
+                            disabled>
+                            <span class="uil--check w-5 h-5"></span>
+                            <p class="text-xs font-semibold">Approve All</p>
+                        </button>
+                        <button id="btn-decline"
+                            class="px-3 py-2 bg-red-500 text-white rounded disabled:opacity-50 flex items-center gap-1"
+                            disabled>
+                            <span class="iconamoon--close-light w-5 h-5"></span>
+                            <p class="text-xs font-semibold">Decline All</p>
+                        </button>
+                        <button id="btn-clear" class="px-3 py-2 bg-gray-500 text-white rounded disabled:opacity-50"
+                            disabled>
+                            <p class="text-sm font-semibold">Clear</p>
+                        </button>
+                    </div>
+                </div>
 
-                    @if ($pendingApprovals->isNotEmpty())
-                        @foreach ($pendingApprovals as $approval)
-                            <tr class="border hover:bg-gray-50 *:px-6 *:py-4 row-item *:text-nowrap"
-                                data-id="{{ $approval['id'] }}">
-                                <td>
-                                    <input type="checkbox" class="row-checkbox cursor-pointer"
-                                        value="{{ $approval['id'] }}">
-                                </td>
-                                <td class="capitalize">{{ $approval['name'] }}</td>
-                                <td>{{ $approval['title'] }}</td>
-                                <td class="font-semibold text-orange-600">
-                                    {{ \Carbon\Carbon::createFromDate($approval['year'], $approval['month'])->format('F Y') }}
-                                </td>
-                                <td>{{ $approval['date_requested'] }}</td>
-                                <td class="hidden">{{ $approval['month'] }}</td>
-                                <td class="hidden">{{ $approval['year'] }}</td>
-                                <td class="hidden">{{ $approval['user_id'] }}</td>
-                                <td class="flex items-center gap-2">
-
-                                    <div class="relative group">
-                                        <button
-                                            class="view-btn px-2 py-1 bg-blue-500 text-white rounded flex items-center justify-center gap-1"
-                                            data-id="{{ $approval['id'] }}">
-                                            <span class="basil--eye-solid w-6 h-6"></span>
-                                            <span
-                                                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition">
-                                                View
-                                            </span>
-                                        </button>
-                                    </div>
-
-                                    <div class="relative group">
-                                        <button
-                                            class="approve-btn px-2 py-1 bg-green-500 text-white rounded flex items-center justify-center gap-1"
-                                            data-id="{{ $approval['id'] }}">
-                                            <span class="uil--check w-6 h-6"></span>
-                                            <span
-                                                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition">
-                                                Approve
-                                            </span>
-                                        </button>
-                                    </div>
-
-                                    <div class="relative group">
-                                        <button
-                                            class="decline-btn px-2 py-1 bg-red-500 text-white rounded flex items-center justify-center gap-1"
-                                            data-id="{{ $approval['id'] }}">
-                                            <span class="iconamoon--close-light w-6 h-6"></span>
-                                            <span
-                                                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition">
-                                                Decline
-                                            </span>
-                                    </div>
-                                </td>
+                <div class="overflow-x-auto bg-white">
+                    <table id="recordsTable" class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr
+                                class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
+                                <th><input type="checkbox" id="select-all" class="cursor-pointer"></th>
+                                <th>Name</th>
+                                <th>Title</th>
+                                <th>DTR</th>
+                                <th>Date Requested</th>
+                                <th>Actions</th>
                             </tr>
-                        @endforeach
-                    @else
-                        <tr class="border text-nowrap text-center">
-                            <td colspan="6" class="text-center py-4 text-sm font-semibold text-gray-600 select-none">
-                                Nothing to see here.
-                            </td>
-                        </tr>
-                    @endif
-                </tbody>
-            </table>
-        </div>
+                        </thead>
+                        <tbody id="table-body">
+                            @if ($pendingApprovals->isNotEmpty())
+                                @foreach ($pendingApprovals as $approval)
+                                    <tr class="border hover:bg-gray-50 *:px-6 *:py-4 row-item *:text-nowrap"
+                                        data-id="{{ $approval['id'] }}">
+                                        <td>
+                                            <input type="checkbox" class="row-checkbox cursor-pointer"
+                                                value="{{ $approval['id'] }}">
+                                        </td>
+                                        <td class="capitalize">{{ $approval['name'] }}</td>
+                                        <td>{{ $approval['title'] }}</td>
+                                        <td class="font-semibold text-orange-600">
+                                            {{ \Carbon\Carbon::createFromDate($approval['year'], $approval['month'])->format('F Y') }}
+                                        </td>
+                                        <td>{{ $approval['date_requested'] }}</td>
+                                        <td class="hidden">{{ $approval['month'] }}</td>
+                                        <td class="hidden">{{ $approval['year'] }}</td>
+                                        <td class="hidden">{{ $approval['user_id'] }}</td>
+                                        <td class="flex items-center gap-2">
+
+                                            <div class="relative group">
+                                                <button
+                                                    class="view-btn px-2 py-1 bg-blue-500 text-white rounded flex items-center justify-center gap-1"
+                                                    data-id="{{ $approval['id'] }}">
+                                                    <span class="basil--eye-solid w-6 h-6"></span>
+                                                    <span
+                                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition">
+                                                        View
+                                                    </span>
+                                                </button>
+                                            </div>
+
+                                            <div class="relative group">
+                                                <button
+                                                    class="approve-btn px-2 py-1 bg-green-500 text-white rounded flex items-center justify-center gap-1"
+                                                    data-id="{{ $approval['id'] }}">
+                                                    <span class="uil--check w-6 h-6"></span>
+                                                    <span
+                                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition">
+                                                        Approve
+                                                    </span>
+                                                </button>
+                                            </div>
+
+                                            <div class="relative group">
+                                                <button
+                                                    class="decline-btn px-2 py-1 bg-red-500 text-white rounded flex items-center justify-center gap-1"
+                                                    data-id="{{ $approval['id'] }}">
+                                                    <span class="iconamoon--close-light w-6 h-6"></span>
+                                                    <span
+                                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition">
+                                                        Decline
+                                                    </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr class="border text-nowrap text-center">
+                                    <td colspan="6"
+                                        class="text-center py-4 text-sm font-semibold text-gray-600 select-none">
+                                        Nothing to see here.
+                                    </td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @else
+            <div class="w-full h-full flex items-center justify-center flex-col gap-10">
+                <h1 class="text-3xl italic font-semibold">No Approvals Yet.</h1>
+                <img draggable="false" class="w-auto h-80" src="{{ asset('image/manuals_empty.png') }}">
+            </div>
+
+        @endif
     </div>
 
     <script>

@@ -137,7 +137,16 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        return view('admin.profile.index', [
+        return view('admin.dtr.profile.index', [
+            'user' => $user,
+        ]);
+    }
+
+    public function showAdminProfileEdit()
+    {
+        $user = Auth::user();
+
+        return view('admin.dtr.profile.edit', [
             'user' => $user,
         ]);
     }
@@ -332,7 +341,7 @@ class UserController extends Controller
 
         //dd($records);
 
-        return view('admin.histories', [
+        return view('admin.dtr.history.index', [
             'records' => $records,
             'ranking' => $ranking,
             'array_daily' => $array_daily,
@@ -355,7 +364,7 @@ class UserController extends Controller
             ];
         }
 
-        return view('admin.create-histories', [
+        return view('admin.dtr.history.create', [
             'records' => $records,
             'users' => $users,
         ]);

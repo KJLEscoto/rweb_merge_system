@@ -18,20 +18,20 @@ class SchoolController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(FileController $fileController): View
-        {
-            $schools = School::with('files')->get()->map(function ($school) {
-                return [
-                    'id' => $school->id,
-                    'image' => $school->files->path ?? '',
-                    'is_featured' => $school->is_featured ?? '',
-                    'name' => $school->description ?? '',
-                ];
-            });
+    {
+        $schools = School::with('files')->get()->map(function ($school) {
+            return [
+                'id' => $school->id,
+                'image' => $school->files->path ?? '',
+                'is_featured' => $school->is_featured ?? '',
+                'name' => $school->description ?? '',
+            ];
+        });
 
-            return view('admin.schools.index', [
-                'schools' => $schools,
-            ]);
-        }
+        return view('admin.dtr.schools.index', [
+            'schools' => $schools,
+        ]);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -59,8 +59,8 @@ class SchoolController extends Controller
                 'name' => 'required|string|max:255',
                 'is_featured' => 'nullable',
                 'file' => 'required|image|mimes:jpg,jpeg,png,gif,webp|max:5120', // 5MB limit
-            ]);            
-    
+            ]);
+
             //pass the image of the logo
             // Check if a file is uploaded
             if ($request->hasFile('file')) {
@@ -68,14 +68,14 @@ class SchoolController extends Controller
                 //$imagePath = $image->store('image', 'public'); // Store in storage/app/public/profile_images
                 //$image = asset('storage/' . $imagePath); // Convert to accessible URL
             }
-    
+
             //send the image link to the controller
             $file_records = $fileController->store($request);
-    
+
             $file_id = $file_records->original['file']->id;
             $file_description = $file_records->original['file']->description;
             $file_description = $file_records->original['file']->type;
-    
+
             $school_record = School::create([
                 'description' => $request->name,
                 'image' => $file_id,
@@ -84,10 +84,9 @@ class SchoolController extends Controller
             ]);
 
             DB::commit();
-            
+
             return redirect()->route('admin.schools')->with('success', 'School added successfully!');
-        }
-        catch(\Exception $ex){
+        } catch (\Exception $ex) {
             DB::rollBack();
             return redirect()->back()->with('invalid', $ex->getMessage());
         }
@@ -100,27 +99,27 @@ class SchoolController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-public function show($id): View
-{
-    $school = School::find($id);
+    public function show($id): View
+    {
+        $school = School::find($id);
 
-    if (!$school) {
-        abort(404, 'School not found');
+        if (!$school) {
+            abort(404, 'School not found');
+        }
+
+        $file = File::where('id', $school->file_id)->first();
+
+        $schoolData = [
+            'id' => $school->id,
+            'image' => $file->path ?? '',
+            'is_featured' => $school->is_featured ?? '',
+            'name' => $school->description ?? '',
+        ];
+
+        return view('admin.schools.show', [
+            'school' => $schoolData,
+        ]);
     }
-
-    $file = File::where('id', $school->file_id)->first();
-
-    $schoolData = [
-        'id' => $school->id,
-        'image' => $file->path ?? '',
-        'is_featured' => $school->is_featured ?? '',
-        'name' => $school->description ?? '',
-    ];
-
-    return view('admin.schools.show', [
-        'school' => $schoolData,
-    ]);
-}
 
 
     /**
@@ -142,61 +141,61 @@ public function show($id): View
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id, FileController $fileController)
-{
-    try {
-        
-        DB::beginTransaction();
-        
-        // Validate input
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'is_featured' => 'nullable',
-            'file' => 'nullable|image|max:5120',
-        ]);
-    
-        // Retrieve the school model properly
-        $school = School::with('files')->find($id);
+    {
+        try {
 
-        if (!$school) {
-            return back()->with('invalid', 'The input is invalid. Please try again!');
-        }
-        
-        // Handle file upload if present
-        if ($request->hasFile('file')) {
-            $file = $request->file('file'); // Use ->file() instead of array access
-            
-            $file_path = File::where('id', $school->file_id)->first();
-            
-            // Check if school has an existing file and update accordingly
-            $fileFormat = $school->file_id === null
-            ? $fileController->store($request)
-            : $fileController->edit($request, $file_path->description);
-            
+            DB::beginTransaction();
+
+            // Validate input
+            $data = $request->validate([
+                'name' => 'required|string|max:255',
+                'is_featured' => 'nullable',
+                'file' => 'nullable|image|max:5120',
+            ]);
+
+            // Retrieve the school model properly
+            $school = School::with('files')->find($id);
+
+            if (!$school) {
+                return back()->with('invalid', 'The input is invalid. Please try again!');
+            }
+
+            // Handle file upload if present
+            if ($request->hasFile('file')) {
+                $file = $request->file('file'); // Use ->file() instead of array access
+
+                $file_path = File::where('id', $school->file_id)->first();
+
+                // Check if school has an existing file and update accordingly
+                $fileFormat = $school->file_id === null
+                    ? $fileController->store($request)
+                    : $fileController->edit($request, $file_path->description);
+
                 // Extract the image URL safely
                 //$image_url = $fileFormat->original['data']['preview_url'] ?? null;
-                
-            $file = File::where('id', $school->file_id)->first();
 
-            $file->update([
-                'description' => $fileFormat->original['data']['id'],
-                'path' => $fileFormat->original['data']['preview_url'],
+                $file = File::where('id', $school->file_id)->first();
+
+                $file->update([
+                    'description' => $fileFormat->original['data']['id'],
+                    'path' => $fileFormat->original['data']['preview_url'],
+                ]);
+            }
+
+            $school->update([
+                'description' => $request['name'],
+                'is_featured' => $request['is_featured'],
             ]);
+
+            DB::commit();
+
+            return redirect()->route('admin.schools')->with('update', 'Updated Successfully! If you uploaded an image, the Admin will review it first.');
+
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return back()->with('invalid', $ex->getMessage());
         }
-        
-        $school->update([
-            'description' => $request['name'],
-            'is_featured' => $request['is_featured'],
-        ]);
-
-        DB::commit();
-
-        return redirect()->route('admin.schools')->with('update', 'Updated Successfully! If you uploaded an image, the Admin will review it first.');
-
-    } catch (\Exception $ex) {
-        DB::rollBack();
-        return back()->with('invalid', $ex->getMessage());
     }
-}
 
 
     /**

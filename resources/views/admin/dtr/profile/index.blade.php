@@ -24,7 +24,7 @@
 
                 <section class="hover:scale-105 transition">
                     <a class="text-sm text-white bg-[#f56d11] px-5 py-2 rounded font-medium"
-                        href="{{ route('admin.front-end.profile.edit') }}">Edit Profile</a>
+                        href="{{ route('admin.dtr.profile.edit') }}">Edit Profile</a>
                 </section>
             </div>
 

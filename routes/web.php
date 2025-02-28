@@ -85,14 +85,15 @@ Route::middleware(['auth', 'user_role:admin'])->group(function () {
     Route::post('/admin/dtr/interns/{id}/dtr/post', [DtrSummaryController::class, 'ShowAdminUserDtrPagination'])->name('admin.dtr.interns.dtr.post');
 
     //admin history
-    Route::get('/admin/dtr/history', [UserController::class, 'showAdminHistory'])->name('admin.dtr.histories');
-    Route::get('/admin/dtr/history/create', [UserController::class, 'showAdminCreateHistory'])->name('admin.dtr.histories.create');
-    Route::post('/admin/dtr/history/create', [UserController::class, 'createAdminHistory'])->name('admin.dtr.histories.create.post');
-    Route::get('/admin/dtr/history/{id}/edit', [UserController::class, 'showAdminHistoryEdit'])->name('admin.dtr.histories.edit');
-    Route::put('/admin/dtr/history/{id}/edit', [UserController::class, 'editAdminHistory'])->name('admin.dtr.histories.edit.post');
+    Route::get('/admin/dtr/history', [UserController::class, 'showAdminHistory'])->name('admin.dtr.history');
+    Route::get('/admin/dtr/history/create', [UserController::class, 'showAdminCreateHistory'])->name('admin.dtr.history.create');
+    Route::post('/admin/dtr/history/create', [UserController::class, 'createAdminHistory'])->name('admin.dtr.history.create.post');
+    Route::get('/admin/dtr/history/{id}/edit', [UserController::class, 'showAdminHistoryEdit'])->name('admin.dtr.history.edit');
+    Route::put('/admin/dtr/history/{id}/edit', [UserController::class, 'editAdminHistory'])->name('admin.dtr.history.edit.post');
 
     //admin profile
     Route::get('/admin/dtr/profile', [UserController::class, 'showAdminProfile'])->name('admin.dtr.profile');
+    Route::get('/admin/dtr/profile/edit', [UserController::class, 'showAdminProfileEdit'])->name('admin.dtr.profile.edit');
 
     Route::get('/admin/dtr/approvals', [UserController::class, 'showAdminApprovals'])->name('admin.dtr.approvals');
 

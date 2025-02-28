@@ -24,59 +24,54 @@
             <x-modal.flash-msg msg="error" />
         @endif
 
-        <button
-            class="lg:!px-8 px-3 my-3 bg-white px-16 py-3 border rounded-full text-[#F57D11] hover:border-[#F57D11] animate-transition flex items-center justify-start gap-2 lg:text-sm text-xs cursor-pointer w-auto"
-            type="button" onclick="window.location.href='{{ route('admin.dtr.histories') }}'">
-            <div class="w-auto h-auto">
-                <span class="eva--arrow-back-fill"></span>
-            </div>
-            <p class="md:block hidden">Back</p>
-        </button>
-
-        <form id="historyForm" action="{{ route('admin.dtr.histories.create.post') }}" method="POST"
-            class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+        <form id="historyForm" action="{{ route('admin.dtr.history.create.post') }}" method="POST"
+            class="bg-white p-6 shadow-lg flex flex-col gap-5 border border-gray-200">
             @csrf
-            @method('POST')
 
-            <h2 class="text-xl font-semibold text-[#F57D11] flex items-center gap-2 py-3 justify-between">
-                <x-form.section-title title="Add a histories" />
-                <button type="submit"
-                    class="px-16 py-3 rounded-full relative overflow-hidden font-medium text-white flex items-center justify-center gap-2 animate-transition bg-gradient-to-r from-[#F57D11] via-[#F57D11]/70 to-[#F53C11] hover:bg-[#F53C11] disabled:opacity-50 lg:text-sm text-xs cursor-pointer mt-3">Submit</button>
-            </h2>
+            <div class="flex w-full justify-between items-start">
 
-            <!-- Container where each selected user gets a separate flex-col -->
-            <div id="userHistoriesContainer" class="flex gap-5 mt-4 overflow-x-auto">
-                <div id="historyContainer" class="flex flex-nowrap gap-5 mt-4 w-full">
-                    <!-- Initial Card -->
-
-                    <div
-                        class="history-card flex flex-col h-fit gap-3 p-4 border rounded-lg shadow-md bg-white relative min-w-[300px]">
-                        <div class="flex flex-col gap-2 px-3 pt-3">
-                            <label class="block text-sm font-medium text-gray-700">User Full Name</label>
-
-                            <select id="userSelect" name="user_fullname[]"
-                                class="user-select w-full p-2 border rounded-lg focus:ring-[#F57D11] focus:border-[#F57D11]"
-                                required>
-                                <option value="" disabled selected>Select a user</option>
-                                @foreach ($users as $user)
-                                    @if ($user->role != 'admin')
-                                        @php
-                                            $userImg =
-                                                optional(\App\Models\File::find($user->profiles->file_id))->path .
-                                                    '?t=' .
-                                                    time() ??
-                                                '';
-                                        @endphp
-                                        <option value="{{ $user->id }}" data-img="{{ $userImg }}">
-                                            {{ $user->firstname }} {{ $user->lastname }}
-                                        </option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
+                <div class="flex flex-col h-fit gap-3 p-4 border bg-white relative min-w-[300px]">
+                    <div class="history-card flex flex-col gap-2 px-3 pt-3">
+                        <select id="userSelect" name="user_fullname[]"
+                            class="user-select w-full p-2 border  focus:ring-[#F57D11] focus:border-[#F57D11]" required>
+                            <option value="" disabled selected>Select a user</option>
+                            @foreach ($users as $user)
+                                @if ($user->role != 'admin')
+                                    @php
+                                        $userImg =
+                                            optional(\App\Models\File::find($user->profiles->file_id))->path .
+                                                '?t=' .
+                                                time() ??
+                                            '';
+                                    @endphp
+                                    <option value="{{ $user->id }}" data-img="{{ $userImg }}">
+                                        {{ $user->firstname }} {{ $user->lastname }}
+                                    </option>
+                                @endif
+                            @endforeach
+                        </select>
                     </div>
                 </div>
+
+                <div class="flex justify-end items-center gap-3">
+                    <a href="{{ route('admin.dtr.history') }}"
+                        class="border hover:border-[#f56d11] text-[#f56d11] transition flex items-center gap-1 px-3 py-2 text-sm rounded font-semibold w-fit">
+                        <span class="eva--arrow-back-fill w-4 h-4"></span>
+                        Back
+                    </a>
+                    <button type="submit"
+                        class="bg-[#f56d11] hover:scale-105 transition text-white px-3 py-2 text-sm rounded font-semibold shadow-md w-fit">
+                        Submit
+                    </button>
+                </div>
             </div>
+
+
+            <div id="userHistoriesContainer" class="flex gap-5 overflow-x-auto">
+                <div id="historyContainer" class="flex flex-nowrap gap-5 mt-4 w-full">
+                </div>
+            </div>
+
         </form>
     </div>
 
