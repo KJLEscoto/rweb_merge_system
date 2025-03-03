@@ -816,7 +816,7 @@ class DtrSummaryController extends Controller
         //I remove the user becausue its just redundant to Auth::user();
         $yearlyTotals = $dtrSummaryController->showUserDtrSummary()['yearlyTotals'];
 
-        return view('admin.approvals.show', [
+        return view('admin.dtr.approvals.show', [
             'id' => $id,
             'user' => $user,
             'yearlyTotals' => $yearlyTotals,
@@ -949,7 +949,7 @@ class DtrSummaryController extends Controller
             ];
         }
 
-        return view('admin.users.dtr', [
+        return view('admin.dtr.interns.dtr', [
             'ranking' => $rankingController->getRankings(),
             'array_daily' => $historyController->AllUserDailyAttendance(),
             'user' => User::find($request->id),
@@ -1093,7 +1093,7 @@ class DtrSummaryController extends Controller
             ];
         }
 
-        return view('admin.users.dtr', [
+        return view('admin.dtr.interns.dtr', [
             'user' => User::find($id),
             'ranking' => $rankingController->getRankings(),
             'array_daily' => $historyController->AllUserDailyAttendance(),

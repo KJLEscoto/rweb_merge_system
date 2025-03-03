@@ -1,14 +1,28 @@
-<x-main-layout>
+<head>
+    <title>{{ env('APP_NAME') }} | DTR | View DTR</title>
+</head>
+
+<x-main-layout breadcumb="DTR / Intern" page="Edit School">
     <div class="mb-5">
-        <x-button routePath="admin.schools" label="Back" tertiary button showLabel="{{ true }}"
+        <x-button routePath="admin.dtr.schools" label="Back" tertiary button showLabel="{{ true }}"
             leftIcon="eva--arrow-back-fill" className="lg:!px-8 px-3 bg-white" />
     </div>
 
     <div class="max-w-lg mx-auto bg-white lg:!p-7 p-5 rounded-lg shadow-md space-y-7">
         <x-form.section-title title="School" />
-        <form action="{{ route('admin.schools.show.update', $school['id']) }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-5">
+        <form action="{{ route('admin.dtr.schools.show.update', $school['id']) }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-5">
             @csrf
             @method('PUT')
+
+            @if (session('success'))
+                <x-modal.flash-msg msg="success" />
+            @elseif (session('update'))
+                <x-modal.flash-msg msg="update" />
+            @elseif ($errors->has('invalid'))
+                <x-modal.flash-msg msg="invalid" />
+            @elseif (session('invalid'))
+                <x-modal.flash-msg msg="invalid" />
+            @endif
 
             <div>
                 <label class="block text-sm font-medium text-gray-700" for="name">School Name</label>

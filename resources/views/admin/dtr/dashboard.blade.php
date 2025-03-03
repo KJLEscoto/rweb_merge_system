@@ -83,7 +83,7 @@
                 </div>
                 <div class="h-full pb-7 w-full bg-white overflow-y-auto border border-gray-200">
                     @forelse ($array_daily as $daily)
-                        <a href="{{ route('admin.users.details', ['id' => $daily['id']]) }}"
+                        <a href="{{ route('admin.dtr.interns.details', ['id' => $daily['id']]) }}"
                             class="px-7 py-5 w-full flex flex-wrap justify-between border-b border-gray-200 bg-white hover:bg-gray-100 items-center cursor-pointer">
                             <div class="flex items-start gap-5 w-full">
 
@@ -232,7 +232,7 @@
                 <div class="h-full w-full bg-white overflow-y-auto border border-gray-200">
                     @forelse ($recentlyAddedUser as $index => $user)
                         @if ($user['role'] != 'admin')
-                            <a href="{{ route('admin.users.details', ['id' => $user['id']]) }}"
+                            <a href="{{ route('admin.dtr.interns.details', ['id' => $user['id']]) }}"
                                 class="px-7 py-5 w-full flex justify-between items-center border-b border-gray-200 hover:bg-gray-100 cursor-pointer">
                                 <div class="flex items-center gap-5 w-1/2">
 

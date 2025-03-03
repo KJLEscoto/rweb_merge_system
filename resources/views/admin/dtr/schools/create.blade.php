@@ -7,6 +7,7 @@
         <div class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
             <form action="{{ route('admin.dtr.schools.create.post') }}" method="POST" enctype="multipart/form-data"
                 class="flex flex-col gap-5">
+
                 <div class="flex items-center gap-3">
                     <a href="{{ route('admin.dtr.schools') }}"
                         class="border hover:border-[#f56d11] text-[#f56d11] transition flex items-center gap-1 px-3 py-2 text-sm rounded font-semibold w-fit">

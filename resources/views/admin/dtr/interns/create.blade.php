@@ -94,7 +94,7 @@
     @endif
 
     <main class="h-auto w-full flex flex-col gap-5 px-10 py-10">
-        <form action="#" method="POST"
+        <form action="{{route('admin.dtr.interns.create.post')}}" method="POST"
             class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
             @csrf
 
@@ -118,19 +118,19 @@
 
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">First Name</h1>
-                    <input type="text" name="first_name" id="first_name" placeholder="Gabby"
+                    <input type="text" name="firstname" id="first_name" placeholder="Gabby"
                         class="border px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11]">
                 </div>
 
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Last Name</h1>
-                    <input type="text" name="last_name" id="last_name" placeholder="Doe"
+                    <input type="text" name="lastname" id="last_name" placeholder="Doe"
                         class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
                 </div>
 
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Middle Name</h1>
-                    <input type="text" name="middle_name" id="middle_name" placeholder="Watson"
+                    <input type="text" name="middlename" id="middle_name" placeholder="Watson"
                         class="border px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11]">
                 </div>
 
@@ -177,15 +177,32 @@
                     <p class="font-semibold text-red-500">Account Information</p>
                 </div>
 
+                @php
+                    $schools = \App\Models\School::get();
+                    $school_options = [];
+
+                    foreach ($schools as $school) {
+                        if (strpos(strtolower($school['description']), 'rweb') !== 0) {
+                            $school_options[] = $school['description'];
+                        }
+                    }
+                @endphp
+
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">School</h1>
-                    <input type="email" name="school" id="school" placeholder="Select"
+                    <select name="school" id="school"
                         class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
+                        <option value="" disabled selected>Select a school</option>
+                        @foreach ($school_options as $school)
+                            <option value="{{ $school }}">{{ $school }}</option>
+                        @endforeach
+                    </select>
                 </div>
+
 
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Student No.</h1>
-                    <input type="password" name="student_no" id="student_no" placeholder="02-0002-362671"
+                    <input type="text" name="student_no" id="student_no" placeholder="02-0002-362671"
                         class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
                 </div>
                 <div class="space-y-1">
@@ -195,7 +212,7 @@
                 </div>
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Email</h1>
-                    <input type="email" name="email_address" id="email_address" placeholder="gabby@email.com"
+                    <input type="email" name="email" id="email_address" placeholder="gabby@email.com"
                         class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
                 </div>
 
@@ -217,17 +234,17 @@
 
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Full Name</h1>
-                    <input type="text" name="emergency_full_name" id="emergency_full_name" placeholder="John Doe"
+                    <input type="text" name="emergency_contact_fullname" id="emergency_full_name" placeholder="John Doe"
                         class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
                 </div>
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Address</h1>
-                    <input type="text" name="emergency_address" id="emergency_address" placeholder="Davao City"
+                    <input type="text" name="emergency_contact_number" id="emergency_address" placeholder="Davao City"
                         class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
                 </div>
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Contact No.</h1>
-                    <input type="text" name="emergency_contact_no" id="emergency_contact_no"
+                    <input type="text" name="emergency_contact_address" id="emergency_contact_no"
                         placeholder="09123456789"
                         class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
                 </div>

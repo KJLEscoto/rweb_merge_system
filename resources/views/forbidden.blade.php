@@ -9,7 +9,7 @@
                         class="rounded bg-black hover:bg-black/80 text-white px-8 py-2 font-semibold text-center">Go
                         Back</a>
                 @elseif (Auth::user()->role === 'admin')
-                    <a href="{{ route('admin.dashboard') }}"
+                    <a href="{{ route('admin.dtr.dashboard') }}"
                         class="rounded bg-black hover:bg-black/80 text-white px-8 py-2 font-semibold text-center">Go
                         Back</a>
                 @else

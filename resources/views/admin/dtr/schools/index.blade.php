@@ -33,6 +33,15 @@
     @endphp --}}
 
     <main class="w-full h-auto flex flex-col lg:!gap-7 gap-5 px-16 py-10">
+        @if (session('success'))
+                <x-modal.flash-msg msg="success" />
+                @elseif (session('update'))
+                    <x-modal.flash-msg msg="update" />
+                @elseif ($errors->has('invalid'))
+                    <x-modal.flash-msg msg="invalid" />
+                @elseif (session('invalid'))
+                    <x-modal.flash-msg msg="invalid" />
+                @endif
         @if ($schools->isNotEmpty())
             <div class="w-full flex items-center justify-between">
                 <x-button label="Add School" button primary className="px-8" routePath="admin.dtr.schools.create" />
@@ -40,7 +49,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 @foreach ($schools as $school)
-                    <a href="{{ route('admin.schools.show', $school['id']) }}"
+                    <a href="{{ route('admin.dtr.schools.show', $school['id']) }}"
                         class="relative bg-white rounded-xl shadow-md lg:!p-7 p-4 flex flex-col items-center justify-between cursor-pointer border border-gray-200 group animate-transition hover:border-[#F57D11]">
 
                         <div class="flex flex-col gap-5 items-center w-full h-full">
@@ -49,7 +58,7 @@
                                     <x-image path="{{ $school['image'] }}" className="w-full h-full" />
                                 </div>
                             </div>
-                            <h2 class="text-lg font-semibold group-hover:text-[#F57D11] animate-transition text-center">
+                            <h2 class="text-lg truncate w-full font-semibold group-hover:text-[#F57D11] animate-transition text-center">
                                 {{ $school['name'] }}
                             </h2>
                         </div>

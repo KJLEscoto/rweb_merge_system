@@ -5,7 +5,11 @@
 <!-- Toastr JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-<x-main-layout>
+<head>
+    <title>{{ env('APP_NAME') }} | DTR | View DTR</title>
+</head>
+
+<x-main-layout breadcumb="DTR / Interns" page="View DTR">
     <main class="w-full">
         {{-- <x-modal.dtr-summary id="dtr-summary-modal" /> --}}
         <div class="flex flex-col gap-5 w-full items-center justify-center pb-5">
@@ -13,7 +17,7 @@
                 class="w-full grid grid-cols-2 text-nowrap gap-5 bg-white p-3 border border-gray-200 shadow-lg sticky top-[125px] z-30 rounded-full max-w-screen-xl mx-auto">
 
                 <section class="col-span-1 flex items-center justify-start">
-                    <x-button routePath="admin.approvals" label="Back" tertiary button showLabel="{{ true }}"
+                    <x-button routePath="admin.dtr.approvals" label="Back" tertiary button showLabel="{{ true }}"
                         leftIcon="eva--arrow-back-fill" className="lg:px-8 px-3" />
                 </section>
 
@@ -233,7 +237,7 @@
         .then(response => {
             if (response.status === 200) {
                 toastr.success(`Request successfully ${action}d`);
-                location.assign("{{ route('admin.approvals') }}");
+                location.assign("{{ route('admin.dtr.approvals') }}");
             } else {
                 alert(`Failed to ${action} request.`);
             }

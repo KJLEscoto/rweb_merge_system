@@ -1,4 +1,4 @@
-@props(['breadcumb', 'page'])
+@props(['breadcumb' => '', 'page' => ''])
 
 <section class="flex flex-col gap-3 select-none">
     <p class="text-xs font-medium">{{ $breadcumb }} / {{ $page }}</p>

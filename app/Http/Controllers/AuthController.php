@@ -207,7 +207,6 @@ class AuthController extends Controller
         $rankingController = new RankingController();
         $ranking = $rankingController->getRankings();
 
-
         $history = new HistoryController();
         $totalScan = $history->TotalScan();
         $totalTimeIn = $history->TotalTimeIn();
@@ -231,16 +230,22 @@ class AuthController extends Controller
 
     private function userLogin(Request $request, $user)
     {
-        if ($user->expiry_date <= Carbon::now()) {
+        if (!is_null($user->expiry_date) && Carbon::parse($user->expiry_date)->lessThanOrEqualTo(Carbon::now())) {
             $user->status = 'inactive';
             $user->save();
             Auth::logout();
 
-            return back()->with('invalid', 'The account is either expired or inactive please contact the administrator for more information.');
+            return back()->with('invalid', 'The account is either expired or inactive. Please contact the administrator for more information.');
         }
 
-        $isStarted = !is_null($user->starting_date) && $user->starting_date <= Carbon::now();
-        $isExpired = !is_null($user->expiry_date) && $user->expiry_date <= Carbon::now();
+        $timezone = 'Asia/Manila';
+
+        $isStarted = !is_null($user->starting_date) &&
+            Carbon::parse($user->starting_date)->timezone($timezone)->startOfDay()->lessThanOrEqualTo(Carbon::now($timezone)->startOfDay());
+
+        $isExpired = !is_null($user->expiry_date) &&
+            Carbon::parse($user->expiry_date)->timezone($timezone)->lessThanOrEqualTo(Carbon::now($timezone));
+
         $isActive = $user->status === 'active';
 
         if ($isStarted && $isActive && !$isExpired) {
@@ -327,7 +332,9 @@ class AuthController extends Controller
 
     public function showAdminUsersCreatePost(Request $request, FileController $fileController)
     {
-        $data = $request->validate([
+        try {
+            DB::beginTransaction();
+$data = $request->validate([
             'firstname' => 'required|string|max:255',
             'middlename' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
@@ -370,6 +377,11 @@ class AuthController extends Controller
         //Generate QR Code
         $qr_code = 'QR' . '_' . Str::random(10) . '_' . Str::random(10);
 
+        $school_id = null;
+        if($data['school'] != null){
+            $school_id = \App\Models\School::where('description', $data['school'])->first()->id;
+        }
+
         //dd($qr_code);
         $user = User::create(
             [
@@ -381,20 +393,28 @@ class AuthController extends Controller
                 'phone' => $data['phone'],
                 'gender' => $data['gender'],
                 'address' => $data['address'],
-                'school' => \App\Models\School::where('id', $data['school'] + 1)->first()->description,
+                'school' => \App\Models\School::where('description', $data['school'])->first()->description,
                 'student_no' => $data['student_no'],
                 'emergency_contact_fullname' => $data['emergency_contact_fullname'],
                 'emergency_contact_number' => $data['emergency_contact_number'],
                 'emergency_contact_address' => $data['emergency_contact_address'],
                 'qr_code' => $qr_code,
                 'expiry_date' => Carbon::now()->addMonths(3),
-                'school_id' => $request->school + 1,
+                'school_id' => $school_id,
                 'profile_id' => $profile_record->id, // Save external image URL or uploaded image URL
             ]
         );
 
+            DB::commit();
+
         return back()->with([
             'success' => 'Account Created Successfully!',
         ]);
+        }
+        catch(\Exception $ex){
+            DB::rollBack();
+            @dd($ex->getMessage());
+        }
+        
     }
 }

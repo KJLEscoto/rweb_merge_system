@@ -1,4 +1,8 @@
-<x-main-layout>
+<head>
+    <title>{{ env('APP_NAME') }} | DTR | Interns Details</title>
+</head>
+
+<x-main-layout breadcumb="DTR / Interns" page="Intern Details">
     <div class="h-auto w-full flex flex-col gap-6">
         {{-- <section class="flex items-center justify-between gap-5">
             <x-button routePath="admin.users" label="Back" tertiary button showLabel="{{ true }}"
@@ -13,12 +17,12 @@
 
         <section
             class="w-full flex items-center justify-between gap-5 bg-white p-3 border border-gray-200 shadow-lg sticky top-[125px] z-30 rounded-full">
-            <x-button routePath="admin.users" label="Back" tertiary button showLabel="{{ true }}"
+            <x-button routePath="admin.dtr.interns" label="Back" tertiary button showLabel="{{ true }}"
                 leftIcon="eva--arrow-back-fill" className="lg:px-8 px-3" />
             <div class="flex items-center gap-2">
-                <x-button tertiary label="View DTR" routePath="admin.users.dtr" :params="['id' => $user->id]" button
+                <x-button tertiary label="View DTR" routePath="admin.dtr.interns.dtr" :params="['id' => $user->id]" button
                     className="px-8 font-semibold" />
-                <x-button primary label="Edit User" button className="px-8" routePath="admin.users.details.edit"
+                <x-button primary label="Edit User" button className="px-8" routePath="admin.dtr.interns.details.edit"
                     :params="['id' => $user->id]" />
             </div>
         </section>

@@ -1,5 +1,8 @@
+<head>
+    <title>{{ env('APP_NAME') }} | DTR | View DTR</title>
+</head>
 
-<x-main-layout>
+<x-main-layout breadcumb="DTR / Interns" page="View DTR">
     <main class="w-full">
         {{-- <x-modal.dtr-summary id="dtr-summary-modal" /> --}}
         <div class="flex flex-col gap-5 w-full items-center justify-center pb-5">

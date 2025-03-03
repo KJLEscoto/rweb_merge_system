@@ -1,4 +1,8 @@
-<x-main-layout>
+<head>
+    <title>{{ env('APP_NAME') }} | DTR | Edit Interns</title>
+</head>
+
+<x-main-layout breadcumb="DTR / Inters" page="Edit Interns">
     <x-modal.forgot-password id="forgot-password-modal" />
     <x-modal.confirmation-email id="confirmation-email-modal" />
     <div class="h-full w-full">
@@ -18,7 +22,7 @@
 
             <div
                 class="w-full flex items-center justify-between gap-5 bg-white p-3 border border-gray-200 shadow-lg sticky top-[120px] z-30 rounded-full">
-                <x-button routePath="admin.users.details" :params="['id' => $user->id]" label="Back" tertiary button
+                <x-button routePath="admin.dtr.interns.details" :params="['id' => $user->id]" label="Back" tertiary button
                     leftIcon="eva--arrow-back-fill" className="px-8" />
                 <x-button primary label="Save Changes" submit leftIcon="eva--save-outline" className="px-6" />
             </div>
@@ -69,8 +73,24 @@
                                 $school_options[$school->id] = $school->description; // Store as key-value pair
                             }
                         @endphp
-                        <x-form.input label="School" name_id="school" placeholder="{{ $user_school->description }}"
-                            small type="select" :options="$school_options" :selected="$user_school->school_id" />
+                        <div>
+                            <h1 class="font-bold text-xs">School</h1>
+                        <select name="school" id="school"
+                            class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
+                            <option value="" disabled>Select a school</option>
+                            
+                            @if ($user_school && $user_school->description)
+                                <option value="{{ $user_school->description }}" selected>{{ $user_school->description }}</option>
+                            @endif
+
+                            @foreach ($school_options as $school)
+                                @if ($school !== ($user_school->description ?? ''))
+                                    <option value="{{ $school }}">{{ $school }}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                        </div>
+
                     </div>
                     <div class="grid grid-cols-2 w-full gap-5">
                         <x-form.input label="Address" type="text" name_id="address" placeholder="Davao City"

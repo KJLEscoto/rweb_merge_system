@@ -215,6 +215,16 @@ class FileController extends Controller
     if (!$accessToken) {
         return response()->json(['error' => 'Failed to retrieve access token'], 500);
     }
+    
+    if (!$request->hasFile('file')) {
+        return response()->json(['error' => 'No file found'], 400);
+    }
+    
+    $file = $request->file('file');
+
+    if (!$file->isValid()) {
+        return response()->json(['error' => 'Uploaded file is not valid'], 400);
+    }
 
     $filePath = $request->file('file')->getPathname();
     $fileMimeType = $request->file('file')->getClientMimeType();

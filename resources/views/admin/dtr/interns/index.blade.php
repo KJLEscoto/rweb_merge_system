@@ -21,8 +21,8 @@
 
             <section class="grid lg:!grid-cols-5 md:grid-cols-4 grid-cols-2 gap-5" id="user-container">
                 @foreach ($users as $user)
-                    @if ($user['role'] != 'admin')
-                        <a href="{{ route('admin.users.details', $user->id) }}"
+                    @if ($user['role'] != 'admin')  
+                        <a href="{{ route('admin.dtr.interns.details', $user->id) }}"
                             class="p-5 border border-gray-200 rounded-xl cursor-pointer group animate-transition hover:border-[#F57D11] flex flex-col gap-5 items-center justify-center h-auto w-full bg-white user-card"
                             data-name="{{ strtolower($user->firstname) }}"
                             data-student_no="{{ strtolower($user->school) }}">
@@ -44,7 +44,8 @@
                                     {{ $user->firstname }} {{ substr($user->middlename, 0, 1) }}. {{ $user->lastname }}
                                 </h1>
                                 <p class="text-gray-500 truncate">
-                                    {{ \App\Models\School::where('id', $user->school_id)->first()->description ?? 'No school' }}
+                                    {{-- {{ \App\Models\School::where('id', $user->school_id)->first()->description ?? 'No school' }} --}}
+                                    {{$user->school}}
                                 </p>
                             </div>
                         </a>

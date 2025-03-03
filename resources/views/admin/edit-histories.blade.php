@@ -1,7 +1,11 @@
-<x-main-layout>
+<head>
+    <title>{{ env('APP_NAME') }} | DTR | View DTR</title>
+</head>
+
+<x-main-layout breadcumb="DTR / Intern" page="Edit History">
     <button class="lg:!px-8 px-3 my-3 bg-white px-16 py-3 border rounded-full text-[#F57D11] hover:border-[#F57D11] animate-transition flex items-center justify-start gap-2 lg:text-sm text-xs cursor-pointer w-auto" 
     type="button" 
-    onclick="window.location.href='{{ route('admin.histories') }}'">
+    onclick="window.location.href='{{ route('admin.dtr.history') }}'">
 <div class="w-auto h-auto">
     <span class="eva--arrow-back-fill"></span>
 </div>
@@ -20,7 +24,7 @@
 
 
         {{-- Edit Form for a Single History Entry --}}
-        <form id="historyForm" action="{{ route('admin.histories.edit.post', ['id' => $history->id]) }}" method="POST" class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+        <form id="historyForm" action="{{ route('admin.dtr.history.edit.post', ['id' => $history->id]) }}" method="POST" class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
             @csrf
             @method('PUT')
 

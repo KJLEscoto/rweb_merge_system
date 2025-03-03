@@ -101,8 +101,6 @@ class EmailController extends Controller
             return redirect()->route('show.login')->with(['invalid' => 'Invalid token!', 'valid' => false]);
         }
 
-
-
         //reset password
         $user = User::where('email', $email)->first();
         $user->password = Hash::make($request->password);

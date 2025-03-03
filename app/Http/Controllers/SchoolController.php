@@ -85,7 +85,7 @@ class SchoolController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.schools')->with('success', 'School added successfully!');
+            return redirect()->route('admin.dtr.schools')->with('success', 'School added successfully!');
         } catch (\Exception $ex) {
             DB::rollBack();
             return redirect()->back()->with('invalid', $ex->getMessage());
@@ -116,7 +116,7 @@ class SchoolController extends Controller
             'name' => $school->description ?? '',
         ];
 
-        return view('admin.schools.show', [
+        return view('admin.dtr.schools.show', [
             'school' => $schoolData,
         ]);
     }
@@ -189,7 +189,7 @@ class SchoolController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.schools')->with('update', 'Updated Successfully! If you uploaded an image, the Admin will review it first.');
+            return redirect()->back()->with('update', 'Updated Successfully! The uploaded image will take a minute to render.');
 
         } catch (\Exception $ex) {
             DB::rollBack();

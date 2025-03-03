@@ -9,15 +9,26 @@
                 <section class="flex items-end gap-5">
                     <div class="w-auto h-auto">
                         <div class="w-32 h-32 overflow-hidden rounded-full">
-                            <img class="w-full h-full object-center" src="{{ asset('image/user.png') }}"
+                            <img class="w-full h-full object-center" src="
+                                {{ \App\Models\File::where('id', 
+                                    $user->profiles->file_id
+                                )->first()->path . '?t=' . time() }}
+                            "
                                 alt="user profile">
                         </div>
                     </div>
 
                     <div>
-                        <h1 class="text-lg font-medium">Gabby Doe</h1>
-                        <p class="text-sm font-medium text-gray-600">Client 1</p>
-                        <p>Makati City</p>
+                        <h1 class="text-lg font-medium">
+                            {{ $user->firstname }}
+                            {{ $user->lastname }}
+                        </h1>
+                        <p class="text-sm font-medium text-gray-600">
+                            {{ $user->role }}
+                        </p>
+                        <p>
+                            {{ $user->status }}
+                        </p>
                     </div>
 
                 </section>
@@ -31,20 +42,28 @@
             <div class="p-10 border border-gray-300 rounded grid grid-cols-3 gap-7">
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">First Name</h1>
-                    <p class="text-gray-600">Gabby</p>
+                    <p class="text-gray-600">
+                        {{ $user->firstname }}
+                    </p>
                 </div>
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Last Name</h1>
-                    <p class="text-gray-600">Doe</p>
+                    <p class="text-gray-600">
+                        {{ $user->lastname }}
+                    </p>
                 </div>
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Middle Name</h1>
-                    <p class="text-gray-600">Watson</p>
+                    <p class="text-gray-600">
+                        {{ $user->middlename }}
+                    </p>
                 </div>
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Gender</h1>
                     <div class="flex items-center gap-1">
-                        <p class="text-gray-600">Female</p>
+                        <p class="text-gray-600">
+                            {{ $user->gender }}
+                        </p>
                         <div class="w-auto h-auto">
                             <span class="ion--female w-4 h-4 text-[#f56d11]"></span>
                         </div>
@@ -53,7 +72,9 @@
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Email</h1>
                     <div class="flex items-center gap-1">
-                        <p class="text-gray-600">gabby@email.com</p>
+                        <p class="text-gray-600">
+                            {{ $user->email }}
+                        </p>
                         <div class="w-auto h-auto">
                             <span class="mdi--email-outline w-4 h-4 text-[#f56d11]"></span>
                         </div>
@@ -62,13 +83,15 @@
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Phone</h1>
                     <div class="flex items-center gap-1">
-                        <p class="text-gray-600">09123456789</p>
+                        <p class="text-gray-600">
+                            {{ $user->phone }}
+                        </p>
                         <div class="w-auto h-auto">
                             <span class="mdi--phone w-4 h-4 text-[#f56d11]"></span>
                         </div>
                     </div>
                 </div>
-                <div class="space-y-1">
+                {{-- <div class="space-y-1">
                     <h1 class="font-bold text-xs">Country</h1>
                     <div class="flex items-center gap-2">
                         <p class="text-gray-600">Philippines</p>
@@ -90,6 +113,17 @@
                     <h1 class="font-bold text-xs">Postal Code</h1>
                     <div class="flex items-center gap-1">
                         <p class="text-gray-600">1200</p>
+                        <div class="w-auto h-auto">
+                            <span class="oui--number w-4 h-4 text-[#f56d11]"></span>
+                        </div>
+                    </div>
+                </div> --}}
+                <div class="space-y-1">
+                    <h1 class="font-bold text-xs">Address</h1>
+                    <div class="flex items-center gap-1">
+                        <p class="text-gray-600">
+                            {{ $user->address }}
+                        </p>
                         <div class="w-auto h-auto">
                             <span class="oui--number w-4 h-4 text-[#f56d11]"></span>
                         </div>

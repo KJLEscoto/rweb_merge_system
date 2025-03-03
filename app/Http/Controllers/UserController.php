@@ -15,7 +15,8 @@ use App\Models\File;
 use App\Models\Profile;
 use App\Models\School;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use function PHPUnit\Framework\isEmpty;
 
@@ -165,7 +166,7 @@ class UserController extends Controller
 
             //return response()->json(['users' => $users], Response::HTTP_INTERNAL_SERVER_ERROR);
             if (!(isset($users))) {
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('admin.dtr.dashboard');
             }
 
             return view('users.profile.edit', [
@@ -495,7 +496,7 @@ class UserController extends Controller
             // Commit transaction
             DB::commit();
 
-            return redirect()->route('admin.histories')->with('success', 'History record updated successfully.');
+            return redirect()->route('admin.dtr.history')->with('success', 'History record updated successfully.');
         } catch (\Exception $e) {
             // Rollback transaction in case of error
             DB::rollBack();
@@ -547,7 +548,7 @@ class UserController extends Controller
         // //get the yearly totals
         // $yearlyTotals = $dtrSummaryController->showAdminUserDtrSummary($request);
 
-        return view('admin.users.show', [
+        return view('admin.dtr.interns.show', [
             'user' => $user,
             'histories' => $histories,
             'downloadRequest' => $downloadRequest,
@@ -650,7 +651,7 @@ class UserController extends Controller
 
 
             if (!empty($request['school'])) {
-                $school = School::where('id', $request['school'])->first();
+                $school = School::where('description', $request['school'])->first();
 
                 if ($school) {
                     $user->update([
@@ -662,13 +663,14 @@ class UserController extends Controller
                 }
             }
 
+            
             $user->save();
-
+            
             DB::commit();
             return redirect()->back()->with('update', 'Updated Successfully! The uploaded image will take a minute to render.');
             //return back()->with('update', 'Updated Successfully!')->with(['image_url' => $image_url]);
         } catch (\Exception $ex) {
-            // @dd($ex->getMessage());
+            @dd($ex->getMessage());
             DB::rollBack();
             return back()->with('invalid', $ex->getMessage());
         }
@@ -677,22 +679,83 @@ class UserController extends Controller
     public function adminUpdate(Request $request, FileController $fileController)
     {
         try {
-            DB::beginTransaction();
-
 
             $data = $request->validate([
                 'file' => 'nullable|image|max:5120',
+                'password' => 'nullable|string|confirmed|min:8',
             ]);
 
-            $user = User::find($request->user_id);
+            DB::beginTransaction();
+            
+            if ($request['type'] === 'removeProfile') {
+                $user = Auth::user();
+
+                // Ensure user has a profile before accessing file_id
+                $fileRecord = File::find(optional($user->profiles)->file_id);
+
+                // Default profile images based on gender
+                $profile_image = ($user->gender === 'male')
+                    ? 'https://lh3.googleusercontent.com/d/15xbsTPp-MWc48TbxAaZ20wisUWwtQioq'
+                    : 'https://lh3.googleusercontent.com/d/1FU9OpkgA-FTk3RrUnpoY_n5c9F6eQ4lA';
+
+                if (!$fileRecord) {
+                    return response()->json(['error' => 'File record not found'], 404);
+                }
+
+                try {
+                    // Download the file from the link
+                    $response = Http::get($profile_image);
+
+                    if ($response->failed()) {
+                        return response()->json(['error' => 'Failed to download file', 'details' => $response->body()], 500);
+                    }
+
+                    // Save the file temporarily
+                    $tempFilePath = tempnam(sys_get_temp_dir(), 'profile_');
+                    file_put_contents($tempFilePath, $response->body());
+
+                    // Convert to Laravel UploadedFile
+                    $file = new \Illuminate\Http\UploadedFile(
+                        $tempFilePath,
+                        'profile.jpg',
+                        'image/jpeg',
+                        null,
+                        true
+                    );
+
+                    // Create a new empty request
+                    $request = new Request();
+
+                    // Manually set the uploaded file
+                    $request->files->set('file', $file);
+                    
+                    // Call the update function directly with the file
+                    //$fileFormat = app(FileController::class)->update(new Request(['file' => $file]), $fileRecord->description);
+                    $fileFormat = $fileController->edit($request, $fileRecord->description);
+                    $image_url = $fileFormat->original['data']['preview_url'] ?? null;
+                    $image_description = $fileFormat->original['data']['id'] ?? null;
+                } catch (\Exception $e) {
+                    return response()->json(['error' => 'File processing failed: ' . $e->getMessage()], 500);
+                }
+
+                // Update the file record
+                $fileRecord->update([
+                    'description' => $image_description,
+                    'path' => $image_url,
+                ]);
+
+                return back()->with('success', 'Profile reset to default successfully.');
+            }
+            
+            $user = User::find(Auth::user()->id);
             if (!$user) {
                 return back()->with('invalid', 'The input is invalid. Please try again!');
             }
-
+            
             $image_url = null;
             $image_description = null;
-
-
+            
+            
             if ($request->hasFile('file')) {
                 $file = $request['file'];
 
@@ -725,7 +788,7 @@ class UserController extends Controller
                     'path' => $image_url,
                 ]);
             }
-
+            
             $updateData = [
                 'firstname' => $request['firstname'],
                 'lastname' => $request['lastname'],
@@ -736,8 +799,15 @@ class UserController extends Controller
                 'address' => $request['address'],
             ];
 
+            // Only update the password if the user provided a new one
+            if (!empty($request['password'])) {
+                $updateData['password'] = Hash::make($request['password']);
+            }
+
+            // @dd($request->all(), $updateData);
+
             $user->update($updateData);
-            $user->save();
+
 
             DB::commit();
             return redirect()->back()->with('update', 'Updated Successfully! The uploaded image will take a minute to render.');
@@ -799,7 +869,7 @@ class UserController extends Controller
     {
         $user = User::where('id', $id)->first();
 
-        return view('admin.users.edit', [
+        return view('admin.dtr.interns.edit', [
             'user' => $user,
         ]);
     }

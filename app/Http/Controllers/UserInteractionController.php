@@ -26,7 +26,7 @@ class UserInteractionController extends Controller
         $user = Auth::user();
 
         if($user->role == 'admin'){
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.dtr.dashboard');
         }
         else{
             return redirect()->route('users.dashboard');
@@ -52,7 +52,7 @@ class UserInteractionController extends Controller
         $user = Auth::user();
 
         if($user->role == 'admin'){
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.dtr.dashboard');
         }
         else{
             return redirect()->route('user.dashboard');

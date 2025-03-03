@@ -154,59 +154,16 @@
         let app_url = ``;
 
         function viewRequest(requestId, month, year) {
-            //window.location.href = `/public/request/${requestId}?&type=view`;
             action = 'view';
-            app_url = `{{ url('/request/${requestId}?&type=${action}') }}`;
+            app_url = `{{ url('/intern/request/${requestId}?&type=${action}') }}`;
             window.location.assign(app_url);
         }
 
-
         function downloadRequest(requestId, month, year) {
-            //window.location.href = `/request/${requestId}?&type=download`;
-            //window.location.assign(`/public/request/${requestId}?&type=download`);
             action = 'download';
-            app_url = "{{ url('/request') }}" + `/${requestId}?type=${action}`;
-            //app_url = `{ !! url('/request/${requestId}?&type=${action}') !! }`;
+            app_url = "{{ url('intern/request') }}" + `/${requestId}?type=${action}`;
             window.open(app_url, '_blank');
         }
-
-    //     function viewRequest(requestId, month, year) {
-    //     axios.post(`/request/${requestId}?&type=view`, {
-    //         requestId: requestId,
-    //         month: month,
-    //         year: year
-    //     })
-    //     .then(response => {
-    //         if (response.data.success) {
-    //             window.location.href = response.data.redirect_url;
-    //         } else {
-    //             console.error('Error:', response.data.message);
-    //         }
-    //     })
-    //     .catch(error => console.error('Error:', error));
-    // }
-
-    // function downloadRequest(requestId, month, year) {
-    //     axios.post(`/request/${requestId}?&type=download`, {
-    //         requestId: requestId,
-    //         month: month,
-    //         year: year
-    //     }, {
-    //         responseType: 'blob' // Ensures proper handling of file downloads
-    //     })
-    //     .then(response => {
-    //         const url = window.URL.createObjectURL(new Blob([response.data]));
-    //         const link = document.createElement('a');
-    //         link.href = url;
-    //         link.setAttribute('download', `request_${requestId}.pdf`); // Change file type as needed
-    //         document.body.appendChild(link);
-    //         link.click();
-    //         link.remove();
-    //     })
-    //     .catch(error => console.error('Download Error:', error));
-    // }
-
-
     </script>
 
 </x-main-layout>

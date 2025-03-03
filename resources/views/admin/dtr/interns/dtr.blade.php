@@ -1,13 +1,17 @@
-<x-main-layout>
+<head>
+    <title>{{ env('APP_NAME') }} | DTR | View DTR</title>
+</head>
+
+<x-main-layout breadcumb="DTR / Interns" page="View DTR">
     <main class="flex flex-col gap-5">
         <section
             class="w-full flex items-center justify-between gap-5 bg-white p-3 border border-gray-200 shadow-lg sticky top-[125px] z-30 rounded-full">
             <section class="lg:col-span-1 flex justify-start items-center">
-                <x-button routePath="admin.users.details" :params="['id' => $user->id]" label="Back" tertiary button
+                <x-button routePath="admin.dtr.interns.details" :params="['id' => $user->id]" label="Back" tertiary button
                     showLabel="{{ true }}" leftIcon="eva--arrow-back-fill" className="lg:px-8 px-3" />
             </section>
             <div class="flex items-center justify-end lg:col-span-1 gap-3">
-                <form action="{{ route('admin.users.dtr.post', ['id' => $user->id]) }}" method="POST" class="inline">
+                <form action="{{ route('admin.dtr.interns.dtr.post', ['id' => $user->id]) }}" method="POST" class="inline">
                     @csrf
                     @method('POST')
                     <input type="month" name="searchDate" id="searchDate"
@@ -145,7 +149,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll("[name='download-pdf-btn']").forEach(button => {
             button.addEventListener('click', function() {
-                fetch("{{ route('admin.download.pdf') }}", {
+                fetch("{{ route('admin.dtr.download.pdf') }}", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

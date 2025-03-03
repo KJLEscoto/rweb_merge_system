@@ -37,7 +37,6 @@ Route::view('/admin/front-end/revision-checklist/create', 'admin.front-end.revis
 Route::view('/admin/front-end/promotions', 'admin.front-end.promotions')->name('admin.front-end.promotions');
 Route::view('/admin/front-end/instructions-manual', 'admin.front-end.instructions-manual')->name('admin.front-end.instructions-manual');
 
-
 Route::middleware('guest')->group(function () {
 
     //users page transition
@@ -55,7 +54,6 @@ Route::middleware('guest')->group(function () {
 });
 
 //register post method
-
 Route::middleware(['auth', 'user_role:admin'])->group(function () {
 
     //Route::resource('admin.dtr.schools', SchoolController::class);

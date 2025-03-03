@@ -154,19 +154,19 @@
                     </section>
 
                     <section class="w-full border-y border-gray-100 py-5">
-                        <x-sidebar-menu route="users.dashboard">
+                        <x-sidebar-menu routeName="users.dashboard" label="Dashboard" icon="akar-icons--dashboard">
                             <span class="akar-icons--dashboard"></span>
                             <p>Dashboard</p>
                         </x-sidebar-menu>
-                        <x-sidebar-menu route="users.dtr">
+                        <x-sidebar-menu routeName="users.dtr" label="DTR" icon="mingcute--paper-line">
                             <span class="mingcute--paper-line"></span>
                             <p>DTR</p>
                         </x-sidebar-menu>
-                        <x-sidebar-menu route="users.request">
+                        <x-sidebar-menu routeName="users.request" label="Request" icon="ph--hand-deposit">
                             <span class="ph--hand-deposit"></span>
                             <p>Request</p>
                         </x-sidebar-menu>
-                        <x-sidebar-menu route="users.settings">
+                        <x-sidebar-menu routeName="users.settings" label="Settings" icon="solar--settings-linear">
                             <span class="solar--settings-linear"></span>
                             <p>Settings</p>
                         </x-sidebar-menu>
@@ -207,19 +207,19 @@
                     </section>
 
                     <section class="w-full border-y border-gray-100 py-5">
-                        <x-sidebar-menu route="users.dashboard">
+                        <x-sidebar-menu routeName="users.dashboard" label="Dashbaord" icon="akar-icons--dashboard">
                             <span class="akar-icons--dashboard"></span>
                             <p>Dashboard</p>
                         </x-sidebar-menu>
-                        <x-sidebar-menu route="users.dtr">
+                        <x-sidebar-menu routeName="users.dtr" label="DTR" icon="mingcute--paper-line">
                             <span class="mingcute--paper-line"></span>
                             <p>DTR</p>
                         </x-sidebar-menu>
-                        <x-sidebar-menu route="users.request">
+                        <x-sidebar-menu routeName="users.request" label="Request" icon="ph--hand-deposit">
                             <span class="ph--hand-deposit"></span>
                             <p>Request</p>
                         </x-sidebar-menu>
-                        <x-sidebar-menu route="users.settings">
+                        <x-sidebar-menu routeName="users.settings" label="Settings" icon="solar--settings-linear">
                             <span class="solar--settings-linear"></span>
                             <p>Settings</p>
                         </x-sidebar-menu>
@@ -285,7 +285,8 @@
 
         {{-- admin layout --}}
     @elseif (Request::routeIs('admin*'))
-        @props(['breadcumb', 'page'])
+        @props(['breadcumb' => '', 'page' => ''])
+        
         <main class="grid grid-cols-12 w-full h-auto">
             <aside class="col-span-3 h-[calc(100vh)] sticky top-0 w-full overflow-auto p-5 shadow-xl bg-white">
                 <div class="flex items-center gap-5 justify-start">
@@ -325,6 +326,7 @@
             <section class="col-span-9 h-auto w-full bg-gray-100 pb-10">
                 <div class="px-16 pt-16">
                     <headers class="w-full flex items-end justify-between">
+                        
                         <x-admin.page-title breadcumb="{{ $breadcumb }}" page="{{ $page }}" />
 
                         <section class="fixed z-40 right-0 top-0">
@@ -353,7 +355,7 @@
                     <x-logo />
                 </div>
                 <nav class="mt-5">
-                    <x-sidebar-menu icon="akar-icons--dashboard" label="Dashboard" routeName="admin.dashboard" />
+                    <x-sidebar-menu icon="akar-icons--dashboard" label="Dashboard" routeName="admin.dtr.dashboard" />
                     {{-- <x-sidebar-menu route="admin.approvals">
                         <div class="w-auto h-auto flex items-center"><span class="lucide--check-check"></span>
                         </div>
@@ -390,7 +392,7 @@
                 </div>
                 <!-- Navigation -->
                 <nav class="mt-10">
-                    <x-sidebar-menu icon="akar-icons--dashboard" label="Dashboard" routeName="admin.dashboard" />
+                    <x-sidebar-menu icon="akar-icons--dashboard" label="Dashboard" routeName="admin.dtr.dashboard" />
                     {{-- <x-sidebar-menu route="admin.approvals">
                         <div class="w-auto h-auto flex items-center"><span class="lucide--check-check"></span>
                         </div>
