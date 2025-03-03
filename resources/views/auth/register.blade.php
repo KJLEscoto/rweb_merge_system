@@ -1,3 +1,7 @@
+<head>
+    <title>{{ env('APP_NAME') }} | Intern Register</title>
+</head>
+
 <x-main-layout>
     <x-form.container routeName="register" className="w-full h-auto bg-white">
         <div class="w-full h-full flex flex-col items-center gap-7 md:!p-10 p-5">
@@ -31,10 +35,10 @@
                             $schools = \App\Models\School::get();
 
                             $school_options = [];
-                            foreach($schools as $school) {
+                            foreach ($schools as $school) {
                                 if (strpos(strtolower($school['description']), 'rweb') !== 0) {
                                     // Add school description to the options if it doesn't start with "Rweb"
-                                    $school_options[] = $school['description'];
+        $school_options[] = $school['description'];
                                 }
                             }
                         @endphp

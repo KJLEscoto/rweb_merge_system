@@ -1,9 +1,9 @@
 <head>
-    <title>{{ env('APP_NAME') }} | DTR | Add Schools</title>
+    <title>{{ env('APP_NAME') }} | DTR | Add School</title>
 </head>
 
-<x-main-layout breadcumb="DTR / Schools" page="Add Schools">
-    <main class="px-16 pt-10">
+<x-main-layout breadcumb="DTR / Schools" page="Add School">
+    <main class="px-10 pt-10">
         <div class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
             <form action="{{ route('admin.dtr.schools.create.post') }}" method="POST" enctype="multipart/form-data"
                 class="flex flex-col gap-5">
@@ -21,35 +21,38 @@
                 </div>
                 @csrf
 
-                <div class="flex items-center gap-5 w-full">
-                    <div class="space-y-1 w-full">
-                        <label class="font-bold text-xs" for="name">School Name</label>
-                        <input type="text" name="name" id="name" required
-                            class="border border-gray-300 px-2 py-1.5 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
+                <div class="flex items-start gap-5 w-full">
+                    <div class="flex flex-col gap-5 w-full">
+                        <div class="space-y-1 w-full">
+                            <label class="font-bold text-xs" for="name">School Name</label>
+                            <input type="text" name="name" id="name" required
+                                class="border border-gray-300 px-2 py-1.5 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
+                        </div>
+
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <span class="text-sm text-gray-500">Featured to login</span>
+                            <div class="relative">
+                                <input type="checkbox" class="sr-only peer" name="is_featured">
+                                <div class="w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-[#F57D11] transition">
+                                </div>
+                                <div
+                                    class="absolute left-1 top-1 w-3 h-3 bg-white rounded-full shadow-md transition-all peer-checked:translate-x-5">
+                                </div>
+                            </div>
+                        </label>
                     </div>
 
                     <div class="space-y-1 w-full">
                         <label class="font-bold text-xs">School Logo</label>
-                        <div id="previewContainer" class="hidden w-full my-2">
-                            <img id="imagePreview" class="w-auto h-20">
-                        </div>
 
                         <input type="file" name="file" accept="image/*" required
                             class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none"
                             onchange="previewImage(event)">
-                    </div>
-                </div>
-
-                <label class="flex items-center space-x-2 cursor-pointer">
-                    <span class="text-sm text-gray-500">Featured to login</span>
-                    <div class="relative">
-                        <input type="checkbox" class="sr-only peer" name="is_featured">
-                        <div class="w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-[#F57D11] transition"></div>
-                        <div
-                            class="absolute left-1 top-1 w-3 h-3 bg-white rounded-full shadow-md transition-all peer-checked:translate-x-5">
+                        <div id="previewContainer" class="hidden w-full my-2">
+                            <img id="imagePreview" class="w-auto h-20">
                         </div>
                     </div>
-                </label>
+                </div>
             </form>
         </div>
     </main>

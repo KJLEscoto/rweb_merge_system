@@ -6,9 +6,15 @@
     <div class="w-full h-auto flex flex-col gap-5 px-10 pt-10">
         @if ($users->where('role', '!=', 'admin')->first())
             <section class="flex md:flex-row flex-col-reverse items-center lg:justify-between w-full gap-5">
-                <span class="w-full">
-                    <x-form.input name_id="search" placeholder="Search" small />
-                </span>
+
+                <section class="w-1/2">
+                    <div class="w-full relative flex items-center">
+                        <span class="meteor-icons--search w-5 h-5 absolute left-3 text-gray-500"></span>
+                        <input type="text" name="search" id="search"
+                            class="pl-10 py-2 pr-4 rounded-lg border border-gray-300 w-full outline-none focus:ring-2 focus:ring-[#f56d11]"
+                            placeholder="Search...">
+                    </div>
+                </section>
 
                 <span class="flex md:justify-end w-full">
                     <a href="{{ route('admin.dtr.interns.create') }}"
@@ -21,7 +27,7 @@
 
             <section class="grid lg:!grid-cols-5 md:grid-cols-4 grid-cols-2 gap-5" id="user-container">
                 @foreach ($users as $user)
-                    @if ($user['role'] != 'admin')  
+                    @if ($user['role'] != 'admin')
                         <a href="{{ route('admin.dtr.interns.details', $user->id) }}"
                             class="p-5 border border-gray-200 rounded-xl cursor-pointer group animate-transition hover:border-[#F57D11] flex flex-col gap-5 items-center justify-center h-auto w-full bg-white user-card"
                             data-name="{{ strtolower($user->firstname) }}"
@@ -45,7 +51,7 @@
                                 </h1>
                                 <p class="text-gray-500 truncate">
                                     {{-- {{ \App\Models\School::where('id', $user->school_id)->first()->description ?? 'No school' }} --}}
-                                    {{$user->school}}
+                                    {{ $user->school }}
                                 </p>
                             </div>
                         </a>

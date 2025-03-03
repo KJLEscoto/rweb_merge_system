@@ -118,7 +118,7 @@ Route::post('/admin/dtr/schools/create/post', [SchoolController::class, 'store']
 Route::middleware(['auth', 'user_role:user'])->group(function () {
 
     //user dashboard
-    Route::get('/dashboard', [UserController::class, 'showUserDashboard'])->name('users.dashboard');
+    Route::get('/intern/dashboard', [UserController::class, 'showUserDashboard'])->name('users.dashboard');
 
     //user settings
     Route::get('/settings', [UserController::class, 'showSettings'])->name('users.settings');

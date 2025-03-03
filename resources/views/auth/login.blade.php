@@ -1,5 +1,9 @@
 {{-- admin login --}}
 @if (Request::routeIs('show.admin.login'))
+
+    <head>
+        <title>{{ env('APP_NAME') }} | Admin Login</title>
+    </head>
     <x-main-layout>
         @if (session('success'))
             <x-modal.flash-msg msg="success" />
@@ -36,6 +40,11 @@
 
     {{-- user/intern login --}}
 @elseif (Request::routeIs('show.login'))
+
+    <head>
+        <title>{{ env('APP_NAME') }} | Intern Login</title>
+    </head>
+
     <x-main-layout>
         <x-modal.forgot-password id="forgot-password-modal" />
         <x-modal.confirmation-email id="confirmation-email-modal" />
@@ -78,7 +87,7 @@
                         <x-button primary label="Login" submit big />
                     </div>
 
-                    <article class="wrapper py-10">
+                    <article class="wrapper py-10 w-full">
                         @php
                             $schools = \App\Models\School::get();
                         @endphp
@@ -87,7 +96,7 @@
                                 @for ($i = 1; $i <= 3; $i++)
                                     @foreach ($schools as $school)
                                         @if ($school['is_featured'] == 'on')
-                                            <x-image className="w-full h-full rounded-lg border"
+                                            <x-image className="w-full h-full rounded-lg border shadow"
                                                 path="{{ \App\Models\File::where('id', $school['file_id'])->first()['path'] }}" />
                                         @endif
                                     @endforeach
@@ -98,7 +107,7 @@
                                 @for ($i = 1; $i <= 3; $i++)
                                     @foreach ($schools as $school)
                                         @if ($school['is_featured'] == 'on')
-                                            <x-image className="w-full h-full rounded-lg border"
+                                            <x-image className="w-full h-full rounded-lg border shadow"
                                                 path="{{ \App\Models\File::where('id', $school['file_id'])->first()['path'] }}" />
                                         @endif
                                     @endforeach

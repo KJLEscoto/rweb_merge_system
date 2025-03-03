@@ -4,13 +4,14 @@
 
 <x-main-layout breadcumb="DTR / Profile" page="Edit Profile">
     <main class="h-auto w-full flex flex-col gap-5 px-10 py-10">
-        <form action="{{ route('admin.dtr.settings.update') }}" method="POST" class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5"
-        enctype="multipart/form-data">
-           @csrf
-           @method('PUT')
+        <form action="{{ route('admin.dtr.settings.update') }}" method="POST"
+            class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5"
+            enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
 
-           @if (session('success'))
-            <x-modal.flash-msg msg="success" />
+            @if (session('success'))
+                <x-modal.flash-msg msg="success" />
             @elseif (session('update'))
                 <x-modal.flash-msg msg="update" />
             @elseif ($errors->has('invalid'))
@@ -23,46 +24,46 @@
                 <section class="flex items-end gap-5">
                     <div class="w-auto h-auto">
                         <div class="w-32 h-32 overflow-hidden rounded-full">
-                            <img
-                            id="imagePreview"
-                            class="w-full h-full object-center" src="{{ \App\Models\File::where('id', 
-                                    $user->profiles->file_id
-                                )->first()->path }}
+                            <img id="imagePreview" class="w-full h-full object-center"
+                                src="{{ \App\Models\File::where('id', $user->profiles->file_id)->first()->path }}
                             "
                                 alt="user profile">
                         </div>
                     </div>
 
                     <div>
-                        <h1 class="text-lg font-medium">
-                            {{ $user->firstname }}
+                        <h1 class="text-lg font-medium capitalize">
+                            {{ $user->firstname }} {{ substr($user->middlename, 0, 1) }}.
                             {{ $user->lastname }}
                         </h1>
-                        <p class="text-sm font-medium text-gray-600">
-                            {{ $user->role }}
-                        </p>
+                        @if ($user->status === 'active')
+                            <p class="text-sm font-medium text-green-500">
+                                {{ $user->status }}
+                            </p>
+                        @else
+                            <p class="text-sm font-medium text-red-500">
+                                {{ $user->status }}
+                            </p>
+                        @endif
                         <p>
-                            {{ $user->status }}
+                            {{ $user->role }}
                         </p>
                     </div>
                 </section>
 
                 <section class="flex items-center gap-3">
                     <input type="file" id="uploadButton" name="file" class="hidden" accept="image/*">
-                        <label for="uploadButton"
-                        class="bg-[#f56d11] hover:scale-105 transition text-white px-3 py-2 text-sm rounded font-semibold shadow-md w-fit">
+                    <label for="uploadButton"
+                        class="bg-[#f56d11] hover:scale-105 cursor-pointer transition text-white px-3 py-2 text-sm rounded font-semibold shadow-md w-fit">
                         Upload Image</label>
-                        <button
-                            type="submit"
-                            name="type"
-                            value="removeProfile"
-                            class="bg-red-500 hover:scale-105 transition text-white px-3 py-2 text-sm rounded font-semibold shadow-md w-fit">
-                            Remove Image
-                        </button>
-                    </section>
-                        
-                    </div>
-                    
+                    <button type="submit" name="type" value="removeProfile"
+                        class="bg-red-500 hover:scale-105 transition text-white px-3 py-2 text-sm rounded font-semibold shadow-md w-fit">
+                        Remove Image
+                    </button>
+                </section>
+
+            </div>
+
             <div class="p-10 border border-gray-300 rounded grid grid-cols-3 gap-7">
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">First Name</h1>
@@ -180,8 +181,8 @@
         document.addEventListener("DOMContentLoaded", function() {
             const uploadButton = document.querySelector("#uploadButton");
             const imagePreview = document.querySelector("#imagePreview");
-    
-            
+
+
             uploadButton.addEventListener("change", function(event) {
                 debugger
                 const file = event.target.files[0];

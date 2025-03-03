@@ -663,9 +663,9 @@ class UserController extends Controller
                 }
             }
 
-            
+
             $user->save();
-            
+
             DB::commit();
             return redirect()->back()->with('update', 'Updated Successfully! The uploaded image will take a minute to render.');
             //return back()->with('update', 'Updated Successfully!')->with(['image_url' => $image_url]);
@@ -686,7 +686,7 @@ class UserController extends Controller
             ]);
 
             DB::beginTransaction();
-            
+
             if ($request['type'] === 'removeProfile') {
                 $user = Auth::user();
 
@@ -728,7 +728,7 @@ class UserController extends Controller
 
                     // Manually set the uploaded file
                     $request->files->set('file', $file);
-                    
+
                     // Call the update function directly with the file
                     //$fileFormat = app(FileController::class)->update(new Request(['file' => $file]), $fileRecord->description);
                     $fileFormat = $fileController->edit($request, $fileRecord->description);
@@ -746,16 +746,16 @@ class UserController extends Controller
 
                 return back()->with('success', 'Profile reset to default successfully.');
             }
-            
+
             $user = User::find(Auth::user()->id);
             if (!$user) {
                 return back()->with('invalid', 'The input is invalid. Please try again!');
             }
-            
+
             $image_url = null;
             $image_description = null;
-            
-            
+
+
             if ($request->hasFile('file')) {
                 $file = $request['file'];
 
@@ -788,7 +788,7 @@ class UserController extends Controller
                     'path' => $image_url,
                 ]);
             }
-            
+
             $updateData = [
                 'firstname' => $request['firstname'],
                 'lastname' => $request['lastname'],

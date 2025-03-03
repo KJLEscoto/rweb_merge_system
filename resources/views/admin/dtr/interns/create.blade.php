@@ -4,97 +4,18 @@
 
 <x-main-layout breadcumb="DTR / Interns" page="Add Intern">
 
-    {{-- <x-form.container routeName="admin.dtr.interns.create.post" method="POST"
-        className="h-auto w-full flex flex-col gap-5 px-10 pt-10">
-        @csrf
-        @method('POST')
-
-        @if (session('success'))
-            <x-modal.flash-msg msg="success" />
-        @endif
-
-        <div
-            class="w-full flex items-center justify-between gap-5 bg-white p-3 border border-gray-200 shadow-lg sticky top-[125px] z-30 rounded-full">
-            <x-button routePath="admin.dtr.interns" label="Back" tertiary button leftIcon="eva--arrow-back-fill"
-                className="px-8" />
-            <x-button primary label="Create Account" submit className="px-6" />
-        </div>
-
-        <div class="flex flex-col lg:!gap-7 gap-5 h-full">
-            <section class="flex flex-col gap-5 w-full p-7 border border-gray-200 rounded-lg bg-white">
-
-                <x-form.section-title title="Personal Information" vectorClass="lg:h-5 h-3" />
-                <div class="grid sm:grid-cols-3 w-full gap-5">
-                    <x-form.input label="First Name" type="text" name_id="firstname" placeholder="John"
-                        labelClass="text-lg font-medium" small />
-                    <x-form.input label="Last Name" type="text" name_id="lastname" placeholder="Doe"
-                        labelClass="text-lg font-medium" small />
-                    <x-form.input label="Middle Name" type="text" name_id="middlename" placeholder="Watson"
-                        labelClass="text-lg font-medium" small />
-                </div>
-                <div class="grid grid-cols-2 w-full gap-5">
-                    <x-form.input label="Gender" name_id="gender" placeholder="Select" small type="select"
-                        :options="['male' => 'Male', 'female' => 'Female']" />
-                    @php
-                        $schools = \App\Models\School::get();
-
-                        $school_options = [];
-                        foreach ($schools as $school) {
-                            if (strpos(strtolower($school['description']), 'rweb') !== 0) {
-        $school_options[] = $school['description'];
-                            }
-                        }
-                    @endphp
-                    <x-form.input label="School" name_id="school" placeholder="Select" small type="select"
-                        :options="$school_options" />
-                </div>
-                <div class="grid grid-cols-2 w-full gap-5">
-                    <x-form.input label="Address" type="text" name_id="address" placeholder="Davao City"
-                        labelClass="text-lg font-medium" small />
-
-                    <x-form.input label="Student No" type="text" name_id="student_no" placeholder="02-0002-60001"
-                        labelClass="text-lg font-medium" small />
-                </div>
-            </section>
-
-            <section class="flex flex-col gap-5 w-full p-7 border border-gray-200 rounded-lg bg-white">
-
-                <x-form.section-title title="Account Information" vectorClass="lg:h-5 h-3" />
-                <div class="grid grid-cols-2 w-full gap-5">
-                    <x-form.input label="Email" name_id="email" placeholder="example@gmail.com"
-                        labelClass="text-lg font-medium" small />
-                    <x-form.input label="Phone" type="text" name_id="phone" placeholder="+63"
-                        labelClass="text-lg font-medium" small />
-                </div>
-                <div class="grid grid-cols-2 w-full gap-5">
-                    <x-form.input label="Password" type="password" name_id="password" placeholder="••••••••"
-                        labelClass="text-lg font-medium" small />
-                    <x-form.input label="Confirm Password" type="password" name_id="password_confirmation"
-                        placeholder="••••••••" labelClass="text-lg font-medium" small />
-                </div>
-            </section>
-
-            <section class="flex flex-col gap-5 w-full p-7 border border-gray-200 rounded-lg bg-white">
-
-                <x-form.section-title title="Emergency Contact" vectorClass="lg:h-5 h-3" />
-                <div class="grid sm:grid-cols-3 w-full gap-5">
-                    <x-form.input label="Full Name" type="text" name_id="emergency_contact_fullname"
-                        placeholder="Johny Doe" labelClass="text-lg font-medium" small />
-                    <x-form.input label="Contact No." type="text" name_id="emergency_contact_number"
-                        placeholder="+63" labelClass="text-lg font-medium" small />
-                    <x-form.input label="Address" type="text" name_id="emergency_contact_address"
-                        placeholder="Davao City" labelClass="text-lg font-medium" small />
-                </div>
-            </section>
-        </div>
-    </x-form.container> --}}
-
     @if (session('success'))
         <x-modal.flash-msg msg="success" />
+    @elseif (session('update'))
+        <x-modal.flash-msg msg="update" />
+    @elseif ($errors->has('invalid'))
+        <x-modal.flash-msg msg="invalid" />
+    @elseif (session('invalid'))
+        <x-modal.flash-msg msg="invalid" />
     @endif
 
     <main class="h-auto w-full flex flex-col gap-5 px-10 py-10">
-        <form action="{{route('admin.dtr.interns.create.post')}}" method="POST"
+        <form action="{{ route('admin.dtr.interns.create.post') }}" method="POST"
             class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
             @csrf
 
@@ -234,12 +155,14 @@
 
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Full Name</h1>
-                    <input type="text" name="emergency_contact_fullname" id="emergency_full_name" placeholder="John Doe"
+                    <input type="text" name="emergency_contact_fullname" id="emergency_full_name"
+                        placeholder="John Doe"
                         class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
                 </div>
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Address</h1>
-                    <input type="text" name="emergency_contact_number" id="emergency_address" placeholder="Davao City"
+                    <input type="text" name="emergency_contact_number" id="emergency_address"
+                        placeholder="Davao City"
                         class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
                 </div>
                 <div class="space-y-1">

@@ -1,10 +1,12 @@
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-<meta name="app-url" content="{{ config('app.url') }}">
+<head>
+    <title>{{ env('APP_NAME') }} | Intern | Request</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <meta name="app-url" content="{{ config('app.url') }}">
+</head>
 
 <x-main-layout>
     <div class="w-full pb-5">
-        <h1 class="lg:!text-2xl md:text-lg text-base mb-5 font-semibold">Requests 
+        <h1 class="lg:!text-2xl md:text-lg text-base mb-5 font-semibold">Requests
             @if ($downloadRequest->count() != 0)
                 ({{ count($downloadRequest) }})
             @endif
@@ -15,9 +17,14 @@
         <div class="flex lg:!flex-row flex-col justify-between gap-5 items-center">
 
             <!-- Search Input -->
-            <div class="lg:!w-1/2 w-full">
-                <x-form.input type="text" name_id="search" placeholder="Search" small />
-            </div>
+            <section class="w-1/2">
+                <div class="w-full relative flex items-center">
+                    <span class="meteor-icons--search w-5 h-5 absolute left-3 text-gray-500"></span>
+                    <input type="text" name="search" id="search"
+                        class="pl-10 py-2 pr-4 rounded-lg border border-gray-300 w-full outline-none focus:ring-2 focus:ring-[#f56d11]"
+                        placeholder="Search...">
+                </div>
+            </section>
 
             <div class="flex">
                 @php
@@ -43,7 +50,8 @@
         <div class="overflow-x-auto bg-white shadow-md rounded-lg mt-5">
             <table id="recordsTable" class="w-full border-collapse border border-gray-300">
                 <thead>
-                    <tr class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
+                    <tr
+                        class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
                         <th>#</th>
                         <th>Title</th>
                         <th>Status</th>
@@ -133,7 +141,6 @@
 
     <!-- JavaScript for Search Filtering -->
     <script>
-
         const APP_URL = document.querySelector('meta[name="app-url"]').getAttribute("content");
 
         document.getElementById('search').addEventListener('input', function() {

@@ -1,3 +1,7 @@
+<head>
+    <title>{{ env('APP_NAME') }} | Intern | Settings</title>
+</head>
+
 <x-main-layout>
     <x-modal.forgot-password id="forgot-password-modal" />
     <x-modal.confirmation-email id="confirmation-email-modal" />

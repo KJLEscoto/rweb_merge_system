@@ -9,25 +9,31 @@
                 <section class="flex items-end gap-5">
                     <div class="w-auto h-auto">
                         <div class="w-32 h-32 overflow-hidden rounded-full">
-                            <img class="w-full h-full object-center" src="
-                                {{ \App\Models\File::where('id', 
-                                    $user->profiles->file_id
-                                )->first()->path . '?t=' . time() }}
+                            <img class="w-full h-full object-center"
+                                src="
+                                {{ \App\Models\File::where('id', $user->profiles->file_id)->first()->path . '?t=' . time() }}
                             "
                                 alt="user profile">
                         </div>
                     </div>
 
                     <div>
-                        <h1 class="text-lg font-medium">
-                            {{ $user->firstname }}
+                        <h1 class="text-lg font-medium capitalize">
+                            {{ $user->firstname }} {{ substr($user->middlename, 0, 1) }}.
                             {{ $user->lastname }}
                         </h1>
-                        <p class="text-sm font-medium text-gray-600">
-                            {{ $user->role }}
-                        </p>
+                        @if ($user->status === 'active')
+                            <p class="text-sm font-medium text-green-500">
+                                {{ $user->status }}
+                            </p>
+                        @else
+                            <p class="text-sm font-medium text-red-500">
+                                {{ $user->status }}
+                            </p>
+                        @endif
+
                         <p>
-                            {{ $user->status }}
+                            {{ $user->role }}
                         </p>
                     </div>
 
@@ -42,19 +48,19 @@
             <div class="p-10 border border-gray-300 rounded grid grid-cols-3 gap-7">
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">First Name</h1>
-                    <p class="text-gray-600">
+                    <p class="text-gray-600 capitalize">
                         {{ $user->firstname }}
                     </p>
                 </div>
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Last Name</h1>
-                    <p class="text-gray-600">
+                    <p class="text-gray-600 capitalize">
                         {{ $user->lastname }}
                     </p>
                 </div>
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Middle Name</h1>
-                    <p class="text-gray-600">
+                    <p class="text-gray-600 capitalize">
                         {{ $user->middlename }}
                     </p>
                 </div>
@@ -65,7 +71,11 @@
                             {{ $user->gender }}
                         </p>
                         <div class="w-auto h-auto">
-                            <span class="ion--female w-4 h-4 text-[#f56d11]"></span>
+                            @if ($user->gender === 'female')
+                                <span class="ion--female w-4 h-4 text-[#f56d11]"></span>
+                            @else
+                                <span class="ic--round-male w-4 h-4 text-[#f56d11]"></span>
+                            @endif
                         </div>
                     </div>
                 </div>

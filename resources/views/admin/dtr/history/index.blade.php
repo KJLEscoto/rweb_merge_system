@@ -12,23 +12,27 @@
     <div class="h-auto w-full flex flex-col gap-5 px-10 py-10">
         @if ($records)
             <section class="flex lg:flex-row flex-col items-center justify-between w-full gap-5">
-                <div class="lg:!w-1/2 w-full">
-                    <x-form.input id="search" name_id="search" placeholder="Search" small />
-                </div>
+                <section class="w-1/2">
+                    <div class="w-full relative flex items-center">
+                        <span class="meteor-icons--search w-5 h-5 absolute left-3 text-gray-500"></span>
+                        <input type="text" name="search" id="search"
+                            class="pl-10 py-2 pr-4 rounded-lg border border-gray-300 w-full outline-none focus:ring-2 focus:ring-[#f56d11]"
+                            placeholder="Search...">
+                    </div>
+                </section>
 
                 <div class="flex items-center gap-2">
                     <div>
-                        <input class="px-5 py-2 rounded-full cursor-pointer border border-gray-200" type="month"
+                        <input class="px-5 py-1.5 rounded cursor-pointer border border-gray-200" type="month"
                             id="month">
+
                     </div>
 
-
-                    <button
-                        class="px-8 px-16 py-3 my-3 mx-3 rounded-full relative overflow-hidden font-medium text-white flex items-end justify-end gap-2 animate-transition bg-gradient-to-r from-[#F57D11] via-[#F57D11]/70 to-[#F53C11] hover:bg-[#F53C11] disabled:opacity-50 lg:text-sm text-xs cursor-pointer "
-                        name="" type="button"
-                        onclick="window.location.href='{{ route('admin.dtr.history.create') }}'">
-                        <p>Add Histories</p>
-                    </button>
+                    <a href="{{ route('admin.dtr.history.create') }}"
+                        class="bg-[#f56d11] hover:scale-105 transition text-white px-3 py-2 text-sm rounded font-semibold shadow-md w-fit flex items-center gap-1">
+                        <span class="ic--round-add w-5 h-5"></span>
+                        Add Histories
+                    </a>
                 </div>
 
             </section>
@@ -83,7 +87,7 @@
                                             {{ \Carbon\Carbon::parse($record['history']->datetime)->format('F d - h:i A') }}
                                         </td>
                                         <td>
-                                            <button
+                                            {{-- <button
                                                 class="flex items-center px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -94,7 +98,15 @@
                                                         d="M19.5 8.25L15.75 4.5" />
                                                 </svg>
                                                 Edit
-                                            </button>
+                                            </button> --}}
+
+                                            <div class="relative group">
+                                                <a href=""
+                                                    class="approve-btn px-2 py-1 bg-blue-500 text-white rounded flex items-center justify-center gap-1">
+                                                    <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
+                                                    <p>Edit</p>
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endif
@@ -210,13 +222,10 @@
         </td>
         <td class="px-6 py-4 text-nowrap">${formattedDate}</td>
         <td>
-            <a href="${editUrl}" 
-                class="flex items-center text-center px-4 mx-5 my-5 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 3.487a2.25 2.25 0 013.182 3.183L8.476 18.238a4.5 4.5 0 01-1.751 1.13l-3.272 1.092a.375.375 0 01-.484-.485l1.092-3.271a4.5 4.5 0 011.13-1.752L16.862 3.487z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25L15.75 4.5" />
-                </svg>
-                Edit
+            <a href="${editUrl}"
+                class=" px-2 py-1 bg-blue-500 w-fit text-white rounded flex items-center justify-center gap-1">
+                <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
+                <p class="text-xs font-medium">Edit</p>
             </a>
         </td>
     `;
@@ -277,5 +286,10 @@
         monthInput.value = currentMonth;
 
         fetchRecords();
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("month").value = "";
     });
 </script>

@@ -1,4 +1,7 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<head>
+    <title>{{ env('APP_NAME') }} | Intern | Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
 
 <x-main-layout>
     <x-modal.qr-code id="qr-code-modal" />
@@ -85,7 +88,7 @@
                 <div class="space-y-2">
                     <section class="flex md:flex-row flex-col items-start flex-wrap text-wrap sm:gap-5 gap-x-2">
                         <h1 class="text-base font-semibold">Phone No.</h1>
-                        <p class=" text-base">+63 {{ $user->phone }}</p>
+                        <p class=" text-base">{{ $user->phone }}</p>
                     </section>
                     <section class="flex md:flex-row flex-col items-start flex-wrap text-wrap sm:gap-5 gap-x-2">
                         <h1 class="text-base font-semibold">Address</h1>
@@ -112,7 +115,7 @@
                     </section>
                     <section class="flex md:flex-row flex-col items-start sm:gap-5 gap-x-2 text-wrap">
                         <h1 class="text-base font-semibold">Contact No.</h1>
-                        <p class=" text-base ">+63 {{ $user->emergency_contact_number }}</p>
+                        <p class=" text-base ">{{ $user->emergency_contact_number }}</p>
                     </section>
                     <section class="flex md:flex-row flex-col items-start sm:gap-5 gap-x-2 text-wrap">
                         <h1 class="text-base font-semibold">Address</h1>

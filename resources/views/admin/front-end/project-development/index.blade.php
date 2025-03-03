@@ -8,7 +8,7 @@
 
             {{-- Search Input --}}
             <section class="w-full">
-                <div class="w-1/2 relative flex items-center">
+                <div class="w-1/2 relative z-0 flex items-center">
                     <span class="meteor-icons--search w-5 h-5 absolute left-3 text-gray-500"></span>
                     <input type="text" name="search" id="search"
                         class="pl-10 py-2 pr-4 rounded-lg border border-gray-300 w-full outline-none focus:ring-2 focus:ring-[#f56d11]"
