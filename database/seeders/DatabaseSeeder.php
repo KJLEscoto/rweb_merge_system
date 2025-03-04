@@ -58,7 +58,7 @@ class DatabaseSeeder extends Seeder
             'emergency_contact_address' => 'Test Emergency Address',
             'role_id' => 1,
         ]);
-        
+
 
         //@dd($request->all());
 
