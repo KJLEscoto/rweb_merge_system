@@ -25,20 +25,19 @@ class UserInteractionController extends Controller
     {
         $user = Auth::user();
 
-        if($user->role == 'admin'){
+        if ($user->role == 'admin') {
             return redirect()->route('admin.dtr.dashboard');
-        }
-        else{
+        } else {
             return redirect()->route('users.dashboard');
         }
     }
-    
+
     public function scanner()
     {
         $user = Auth::user();
 
         //check authentication
-        if(!Auth::check()){
+        if (!Auth::check()) {
             return redirect()->route('login');
         }
         //nothing to show here
@@ -51,10 +50,9 @@ class UserInteractionController extends Controller
         //role
         $user = Auth::user();
 
-        if($user->role == 'admin'){
+        if ($user->role == 'admin') {
             return redirect()->route('admin.dtr.dashboard');
-        }
-        else{
+        } else {
             return redirect()->route('user.dashboard');
         }
     }
@@ -64,10 +62,9 @@ class UserInteractionController extends Controller
     {
         $user = Auth::user();
 
-        if($user->role == 'admin'){
+        if ($user->role == 'admin') {
             return redirect()->route('admin.settings', compact($user));
-        }
-        else{
+        } else {
             return redirect()->route('user.settings', compact($user));
         }
     }

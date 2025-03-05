@@ -16,18 +16,18 @@ class ClientHistoryController extends Controller
         $job_drafts = JobDraft::where('client_id', $authuser->id)
             ->with('jobOrder', 'contentWriter', 'graphicDesigner', 'client') // Corrected ->with() usage
             ->get();
-        return view('pages.client.history.index', compact('job_drafts'));
+        return view('admin.smm.client.history.index', compact('job_drafts'));
     }
     public function show($id)
     {
         $job_draft = JobDraft::with('jobOrder.issuer', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.client.history.show', compact('job_draft'));
+        return view('admin.smm.client.history.show', compact('job_draft'));
     }
     public function downloadPDF($id)
     {
         $job_draft = JobDraft::with('jobOrder.issuer', 'contentWriter', 'graphicDesigner', 'client')->find($id);
 
-        $pdf = Pdf::loadView('pages.client.history.show', compact('job_draft'));
+        $pdf = Pdf::loadView('admin.smm.client.history.show', compact('job_draft'));
 
         return $pdf->download('job_order_' . $id . '.pdf');
     }

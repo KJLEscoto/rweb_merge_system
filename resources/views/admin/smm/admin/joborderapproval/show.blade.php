@@ -35,7 +35,7 @@
     <div class="h-auto gap-8 m-4 lg:m-10 p-4 lg:p-10 relative bg-white"
         style="box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.3); border-radius: 8px;">
         <div class="rounded-md text-white flex justify-end mb-10">
-            <a href="{{ url('/operation') }}"
+            <a href="{{ url('/admin/smm/operation') }}"
                 class="w-fit px-4 py-1 bg-[#fa7011] rounded hover:bg-[#d95f0a] transition duration-200">
                 Back
             </a>
@@ -93,7 +93,7 @@
                         </div>
                     </div>
 
-                    <form action="{{ url('/operation/update/' . $job_draft->id) }}" method="POST"
+                    <form action="{{ url('/admin/smm/operation/update/' . $job_draft->id) }}" method="POST"
                         enctype="multipart/form-data" id="approvalForm">
                         @csrf
                         @method('PUT')
@@ -187,7 +187,7 @@
     <div id="declineModal" class="fixed inset-0 flex items-center justify-center hidden bg-gray-500 bg-opacity-50 z-50">
         <div class="bg-white p-6 rounded-md w-[50%]">
             <h2 class="text-xl font-bold mb-4">Decline Job Order</h2>
-            <form action="{{ url('/operation/decline/' . $job_draft->id) }}" method="POST" id="declineForm">
+            <form action="{{ url('/admin/smm/operation/decline/' . $job_draft->id) }}" method="POST" id="declineForm">
                 @csrf
                 <div class="mb-4">
                     <label for="declineReason" class="block text-sm font-semibold mb-2">Reason for Decline:</label>

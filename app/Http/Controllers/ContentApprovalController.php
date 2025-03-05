@@ -18,19 +18,19 @@ class ContentApprovalController extends Controller
             ->with('jobOrder', 'contentWriter', 'graphicDesigner', 'client') // Corrected ->with() usage
             ->get();
 
-        return view('pages.content_writer.joborder.list', compact('job_drafts'));
+        return view('admin.smm.content_writer.joborder.list', compact('job_drafts'));
     }
 
     public function show($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.content_writer.joborder.show', compact('job_draft'));
+        return view('admin.smm.content_writer.joborder.show', compact('job_draft'));
     }
 
     public function create($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.content_writer.joborder.create', compact('job_draft'));
+        return view('admin.smm.content_writer.joborder.create', compact('job_draft'));
     }
 
     public function store(Request $request, $id)
@@ -52,7 +52,7 @@ class ContentApprovalController extends Controller
     public function edit($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.content_writer.joborder.edit', compact('job_draft'));
+        return view('admin.smm.content_writer.joborder.edit', compact('job_draft'));
     }
 
     public function update(Request $request, $id)

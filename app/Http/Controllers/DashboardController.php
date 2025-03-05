@@ -11,7 +11,7 @@ class DashboardController extends Controller
     {
 
         $user = auth()->user();
-        $user_role = $user->role->id;
+        $user_role = $user->role_id;
 
         if ($user_role == 1) {
             $job_drafts = JobDraft::with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
@@ -21,7 +21,7 @@ class DashboardController extends Controller
                 ->take(5) // Get the latest 5 data
                 ->get();
 
-            return view('dashboard', compact('job_drafts'));
+            return view('admin.smm.dashboard', compact('job_drafts'));
         } elseif ($user_role == 2) {
             $job_drafts = JobDraft::with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
                 ->whereNotIn('status', ["pending", "Revision", 'Waiting for Content Writer Approval', 'Waiting for Graphic Designer Approval'])
@@ -57,7 +57,7 @@ class DashboardController extends Controller
                 ->take(5) // Eloquent's alternative to limit()
                 ->get();
 
-            return view('dashboard', compact('job_drafts', 'job_drafts_revisions', 'my_tasks')); // Include both variables
+            return view('admin.smm.dashboard', compact('job_drafts', 'job_drafts_revisions', 'my_tasks')); // Include both variables
         } elseif ($user_role == 3) {
             $job_drafts = JobDraft::with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
                 ->whereNot('status', 'Revision')
@@ -74,7 +74,7 @@ class DashboardController extends Controller
                 ->orderBy('id', 'desc') // Sort by id descending
                 ->take(5) // Get the latest 5 data
                 ->get();
-            return view('dashboard', compact('job_drafts', 'job_drafts_revisions'));
+            return view('admin.smm.dashboard', compact('job_drafts', 'job_drafts_revisions'));
         } elseif ($user_role == 4) {
             $job_drafts = JobDraft::with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
                 ->whereNot('status', 'Revision')
@@ -92,7 +92,7 @@ class DashboardController extends Controller
                 ->take(5) // Get the latest 5 data
                 ->get();
 
-            return view('dashboard', compact('job_drafts', 'job_drafts_revisions'));
+            return view('admin.smm.dashboard', compact('job_drafts', 'job_drafts_revisions'));
         } elseif ($user_role == 5) {
             $job_drafts = JobDraft::with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
                 ->whereIn('status', ['Submitted to Client', 'completed', 'Submitted to Top Manager'])
@@ -100,7 +100,7 @@ class DashboardController extends Controller
                 ->take(5) // Get the latest 5 data
                 ->get();
 
-            return view('dashboard', compact('job_drafts'));
+            return view('admin.smm.dashboard', compact('job_drafts'));
         } elseif ($user_role == 6) {
             $job_drafts = JobDraft::with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
                 ->whereNotIn('status', ['pending', 'Submitted to Operations', 'Revision', 'Waiting for Content Writer Approval', 'Waiting for Graphic Designer Approval'])
@@ -137,10 +137,10 @@ class DashboardController extends Controller
                 ->get();
 
 
-            return view('dashboard', compact('job_drafts', 'job_drafts_revisions', 'my_tasks')); // Include both variables
+            return view('admin.smm.dashboard', compact('job_drafts', 'job_drafts_revisions', 'my_tasks')); // Include both variables
         } elseif ($user_role == 7) {
             $job_drafts = [];
-            return view('dashboard', compact('job_drafts')); // Include both variables
+            return view('admin.smm.dashboard', compact('job_drafts')); // Include both variables
         }
     }
 }

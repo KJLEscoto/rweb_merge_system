@@ -12,13 +12,13 @@
         <x-success />
     @endif
     {{-- Search Bar --}}
-    {{-- <a href="{{ url('joborder/create') }}">
+    {{-- <a href="{{ url('admin/smm/joborder/create') }}">
         <div class="bg-[#fa7011] w-fit block text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center lg:hidden">
             <i class="fa-solid fa-plus"></i>
         </div>
     </a> --}}
     <div class="w-full h-fit flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-        {{-- <a href="{{ url('joborder/create') }}">
+        {{-- <a href="{{ url('admin/smm/joborder/create') }}">
             <div class="bg-[#fa7011] hidden text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center w-full md:w-auto lg:block">
                 Create New Job Order
             </div>
@@ -58,12 +58,12 @@
                         <td class="px-6 py-3">{{ $job_draft->status }}</td>
                         <td class="px-6 py-3">
                             <div class="flex space-x-2">
-                                <a href="{{ url('joborder/edit/' . $job_draft->id) }}">
+                                <a href="{{ url('admin/smm/joborder/edit/' . $job_draft->id) }}">
                                     <button class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
                                         Edit
                                     </button>
                                 </a>
-                                <a href="{{ url('joborder/show/' . $job_draft->id) }}">
+                                <a href="{{ url('admin/smm/joborder/show/' . $job_draft->id) }}">
                                     <button class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
                                         Show
                                     </button>

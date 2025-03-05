@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Histories;
 use App\Models\Profile;
+use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
@@ -24,67 +25,82 @@ class AuthController extends Controller
 
     public function register(Request $request, FileController $fileController)
     {
-        $data = $request->validate([
-            'firstname' => 'required|string|max:255',
-            'middlename' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'required|string|max:255',
-            'gender' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'school' => 'required|string|max:255',
-            'student_no' => 'required|string|max:255',
+        try {
 
-            'emergency_contact_fullname' => 'required|string|max:255',
-            'emergency_contact_number' => 'required|string|max:255',
-            'emergency_contact_address' => 'required|string|max:255',
+            DB::beginTransaction();
 
-            'password' => 'required|string|min:8|confirmed',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image file
-        ]);
+            $data = $request->validate([
+                'firstname' => 'required|string|max:255',
+                'middlename' => 'required|string|max:255',
+                'lastname' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'phone' => 'required|string|max:255',
+                'gender' => 'required|string|max:255',
+                'address' => 'required|string|max:255',
+                'school' => 'required|string|max:255',
+                'student_no' => 'required|string|max:255',
 
-        // Generate QR Code
-        $qr_code = 'QR_' . Str::random(10) . '_' . Str::random(10);
+                'emergency_contact_fullname' => 'required|string|max:255',
+                'emergency_contact_number' => 'required|string|max:255',
+                'emergency_contact_address' => 'required|string|max:255',
 
-        $profile_image = ($data['gender'] === 'male')
-            ? 'https://lh3.googleusercontent.com/d/15xbsTPp-MWc48TbxAaZ20wisUWwtQioq' // Image in the public/images folder
-            : 'https://lh3.googleusercontent.com/d/1FU9OpkgA-FTk3RrUnpoY_n5c9F6eQ4lA'; // Image in the public/images folder
+                'password' => 'required|string|min:8|confirmed',
+                'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image file
+            ]);
 
-        $request->merge([
-            'image_url' => $profile_image,
-        ]);
+            // Generate QR Code
+            $qr_code = 'QR_' . Str::random(10) . '_' . Str::random(10);
 
-        //send the image link to the controller
-        $file_records = $fileController->store($request);
+            $profile_image = ($data['gender'] === 'male')
+                ? 'https://lh3.googleusercontent.com/d/15xbsTPp-MWc48TbxAaZ20wisUWwtQioq' // Image in the public/images folder
+                : 'https://lh3.googleusercontent.com/d/1FU9OpkgA-FTk3RrUnpoY_n5c9F6eQ4lA'; // Image in the public/images folder
 
-        $file_id = $file_records->original['file']->id;
+            $request->merge([
+                'image_url' => $profile_image,
+            ]);
 
-        $profile_record = Profile::create([
-            'description' => 'User ' . $data['lastname'] . ' ' . substr($data['firstname'], 0, 1) . '. \'s profile',
-            'file_id' => $file_id,
-        ]);
+            //send the image link to the controller
+            $file_records = $fileController->store($request);
 
-        $user = User::create([
-            'firstname' => $data['firstname'],
-            'middlename' => $data['middlename'],
-            'lastname' => $data['lastname'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'phone' => $data['phone'],
-            'gender' => $data['gender'],
-            'address' => $data['address'],
-            'school' => \App\Models\School::where('id', $data['school'] + 1)->first()->description,
-            'student_no' => $data['student_no'],
-            'emergency_contact_fullname' => $data['emergency_contact_fullname'],
-            'emergency_contact_number' => $data['emergency_contact_number'],
-            'emergency_contact_address' => $data['emergency_contact_address'],
-            'qr_code' => $qr_code,
-            'profile_id' => $profile_record->id, // Save external image URL or uploaded image URL
-            'school_id' => $request->school + 1,
-            'expiry_date' => Carbon::now()->addMonths(3),
-        ]);
+            $file_id = $file_records->original['file']->id;
 
-        return redirect()->route('show.login')->with('success', 'Congratulations! You are now registered!');
+            $profile_record = Profile::create([
+                'description' => 'User ' . $data['lastname'] . ' ' . substr($data['firstname'], 0, 1) . '. \'s profile',
+                'file_id' => $file_id,
+            ]);
+
+            $user = User::create([
+                'firstname' => $data['firstname'],
+                'middlename' => $data['middlename'],
+                'lastname' => $data['lastname'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'phone' => $data['phone'],
+                'gender' => $data['gender'],
+                'address' => $data['address'],
+                'school' => \App\Models\School::where('id', $data['school'] + 1)->first()->description,
+                'student_no' => $data['student_no'],
+                'emergency_contact_fullname' => $data['emergency_contact_fullname'],
+                'emergency_contact_number' => $data['emergency_contact_number'],
+                'emergency_contact_address' => $data['emergency_contact_address'],
+                'qr_code' => $qr_code,
+                'profile_id' => $profile_record->id, // Save external image URL or uploaded image URL
+                'school_id' => $request->school + 1,
+                'expiry_date' => Carbon::now()->addMonths(3),
+                'role_id' => Role::where('position', 'like', 'user')->first()->id,
+                'role' => 'user',
+                'name' => $data['firstname'] . ' ' . $data['middlename'] . ' ' . $data['lastname'],
+            ]);
+
+
+
+            DB::commit();
+
+            return redirect()->route('show.login')->with('success', 'Congratulations! You are now registered!');
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return back()->with('invalid', $ex->getMessage());
+        }
     }
 
     public function adminRegister(Request $request, FileController $fileController)
@@ -196,7 +212,10 @@ class AuthController extends Controller
 
     private function adminLogin(Request $request, $user, UserController $userController)
     {
-        if ($user->role !== 'admin') {
+        if (
+            $user->roles->position != "operations" && $user->roles->position != "supervisor" &&
+            $user->roles->position != "top_manager"
+        ) {
             Auth::logout();
             return back()->with('invalid', 'This user does not exist.');
         }
@@ -247,23 +266,25 @@ class AuthController extends Controller
             Carbon::parse($user->expiry_date)->timezone($timezone)->lessThanOrEqualTo(Carbon::now($timezone));
 
         $isActive = $user->status === 'active';
-        
+
         if ($isStarted && $isActive && !$isExpired) {
             return redirect()->route('users.dashboard');
         }
-        
+
         Auth::logout();
         // return response()->json(['error' => 'You are not allowed to log in. Please contact the admin for more information'], 403);
-        
-        if (!is_null($user->starting_date) 
-            && !(Carbon::parse($user->starting_date)->timezone($timezone)->startOfDay()->lessThanOrEqualTo(Carbon::now($timezone)->startOfDay()))) {
-            
+
+        if (
+            !is_null($user->starting_date)
+            && !(Carbon::parse($user->starting_date)->timezone($timezone)->startOfDay()->lessThanOrEqualTo(Carbon::now($timezone)->startOfDay()))
+        ) {
+
             Auth::logout();
-            return redirect()->route('show.login')->with('invalid', "You are forced to log out. This account will be open at " . 
-                Carbon::parse($user->starting_date)->timezone($timezone)->format('M j, Y') . 
+            return redirect()->route('show.login')->with('invalid', "You are forced to log out. This account will be open at " .
+                Carbon::parse($user->starting_date)->timezone($timezone)->format('M j, Y') .
                 ". Please contact admin for more information.");
         }
-        
+
         return back()->with('invalid', 'This account is not started yet. Please contact admin for more information.');
     }
 
@@ -343,87 +364,88 @@ class AuthController extends Controller
     {
         try {
             DB::beginTransaction();
-$data = $request->validate([
-            'firstname' => 'required|string|max:255',
-            'middlename' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'required|string|max:255',
-            'gender' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'school' => 'required|string|max:255',
-            'student_no' => 'required|string|max:255',
+            $data = $request->validate([
+                'firstname' => 'required|string|max:255',
+                'middlename' => 'required|string|max:255',
+                'lastname' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'phone' => 'required|string|max:255',
+                'gender' => 'required|string|max:255',
+                'address' => 'required|string|max:255',
+                'school' => 'required|string|max:255',
+                'student_no' => 'required|string|max:255',
 
-            'emergency_contact_fullname' => 'required|string|max:255',
-            'emergency_contact_number' => 'required|string|max:255',
-            'emergency_contact_address' => 'required|string|max:255',
+                'emergency_contact_fullname' => 'required|string|max:255',
+                'emergency_contact_number' => 'required|string|max:255',
+                'emergency_contact_address' => 'required|string|max:255',
 
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+                'password' => 'required|string|min:8|confirmed',
+            ]);
 
-        $profile_image = ($data['gender'] === 'male')
+            $profile_image = ($data['gender'] === 'male')
 
-            ? 'https://lh3.googleusercontent.com/d/15xbsTPp-MWc48TbxAaZ20wisUWwtQioq' // Image in the public/images folder
-            : 'https://lh3.googleusercontent.com/d/1FU9OpkgA-FTk3RrUnpoY_n5c9F6eQ4lA'; // Image in the public/images folder
+                ? 'https://lh3.googleusercontent.com/d/15xbsTPp-MWc48TbxAaZ20wisUWwtQioq' // Image in the public/images folder
+                : 'https://lh3.googleusercontent.com/d/1FU9OpkgA-FTk3RrUnpoY_n5c9F6eQ4lA'; // Image in the public/images folder
 
-        $request->merge([
-            'image_url' => $profile_image,
-        ]);
+            $request->merge([
+                'image_url' => $profile_image,
+            ]);
 
-        //send the image link to the controller
-        $file_records = $fileController->store($request);
+            //send the image link to the controller
+            $file_records = $fileController->store($request);
 
-        $file_id = $file_records->original['file']->id;
+            $file_id = $file_records->original['file']->id;
 
-        $profile_record = Profile::create([
-            'description' => 'User ' . $data['lastname'] . ' ' . substr($data['firstname'], 0, 1) . '. \'s profile',
-            'file_id' => $file_id,
-        ]);
+            $profile_record = Profile::create([
+                'description' => 'User ' . $data['lastname'] . ' ' . substr($data['firstname'], 0, 1) . '. \'s profile',
+                'file_id' => $file_id,
+            ]);
 
-        //return response()->json(['message' => $request->all()],Response::HTTP_INTERNAL_SERVER_ERROR);
+            //return response()->json(['message' => $request->all()],Response::HTTP_INTERNAL_SERVER_ERROR);
 
-        //dd($data);
-        //Generate QR Code
-        $qr_code = 'QR' . '_' . Str::random(10) . '_' . Str::random(10);
+            //dd($data);
+            //Generate QR Code
+            $qr_code = 'QR' . '_' . Str::random(10) . '_' . Str::random(10);
 
-        $school_id = null;
-        if($data['school'] != null){
-            $school_id = \App\Models\School::where('description', $data['school'])->first()->id;
-        }
+            $school_id = null;
+            if ($data['school'] != null) {
+                $school_id = \App\Models\School::where('description', $data['school'])->first()->id;
+            }
 
-        //dd($qr_code);
-        $user = User::create(
-            [
-                'firstname' => $data['firstname'],
-                'middlename' => $data['middlename'],
-                'lastname' => $data['lastname'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-                'phone' => $data['phone'],
-                'gender' => $data['gender'],
-                'address' => $data['address'],
-                'school' => \App\Models\School::where('description', $data['school'])->first()->description,
-                'student_no' => $data['student_no'],
-                'emergency_contact_fullname' => $data['emergency_contact_fullname'],
-                'emergency_contact_number' => $data['emergency_contact_number'],
-                'emergency_contact_address' => $data['emergency_contact_address'],
-                'qr_code' => $qr_code,
-                'expiry_date' => Carbon::now()->addMonths(3),
-                'school_id' => $school_id,
-                'profile_id' => $profile_record->id, // Save external image URL or uploaded image URL
-            ]
-        );
+            //dd($qr_code);
+            $user = User::create(
+                [
+                    'firstname' => $data['firstname'],
+                    'middlename' => $data['middlename'],
+                    'lastname' => $data['lastname'],
+                    'email' => $data['email'],
+                    'password' => Hash::make($data['password']),
+                    'phone' => $data['phone'],
+                    'gender' => $data['gender'],
+                    'address' => $data['address'],
+                    'school' => \App\Models\School::where('description', $data['school'])->first()->description,
+                    'student_no' => $data['student_no'],
+                    'emergency_contact_fullname' => $data['emergency_contact_fullname'],
+                    'emergency_contact_number' => $data['emergency_contact_number'],
+                    'emergency_contact_address' => $data['emergency_contact_address'],
+                    'qr_code' => $qr_code,
+                    'expiry_date' => Carbon::now()->addMonths(3),
+                    'school_id' => $school_id,
+                    'profile_id' => $profile_record->id, // Save external image URL or uploaded image URL
+                    'role' => 'user',
+                    'role_id' => Role::where('position', 'user')->first()->id,
+                    'name' => $data['firstname'] . ' ' . $data['middlename'] . ' ' . $data['lastname'],
+                ]
+            );
 
             DB::commit();
 
-        return back()->with([
-            'success' => 'Account Created Successfully!',
-        ]);
-        }
-        catch(\Exception $ex){
+            return back()->with([
+                'success' => 'Account Created Successfully!',
+            ]);
+        } catch (\Exception $ex) {
             DB::rollBack();
             @dd($ex->getMessage());
         }
-        
     }
 }

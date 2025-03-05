@@ -94,9 +94,9 @@ class User extends Authenticatable
 
 
     //smm relations
-    public function role()
+    public function roles()
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(Role::class, 'role_id');
     }
 
     public function issuedJobOrders()

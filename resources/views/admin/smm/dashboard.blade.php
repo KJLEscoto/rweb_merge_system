@@ -1,5 +1,3 @@
-
-
 @extends('layouts.application')
 
 @section('title', 'Page Title')
@@ -12,7 +10,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <div class="container mx-auto p-6 max-w-screen-xl overflow-hidden">
     @if(!Auth::user()->signature)
-        <form action="{{ url('signature/store') }}" method="POST" id="modalSignatureForm">
+        <form action="{{ url('admin/smm/signature/store') }}" method="POST" id="modalSignatureForm">
             @csrf
             @method('PUT')
             <x-save-signature />
@@ -44,15 +42,15 @@
                                                 @elseif ((auth()->user()->role_id == '3' && ($job_draft->status == 'Submitted to Operations' || $job_draft->status == 'completed' || $job_draft->status == 'Submitted to Top Manager' || $job_draft->status == "Submitted to Client")) || (auth()->user()->role_id == '4' && ($job_draft->status == 'Submitted to Operations' || $job_draft->status == 'completed' || $job_draft->status == 'Submitted to Top Manager' || $job_draft->status == "Submitted to Client")))
                                                     Created
                                                     @elseif (auth()->user()->role_id == '1' and $job_draft->status == 'Submitted to Client')
-                                                    <a href="{{url('client/show/' . $job_draft->id)}}">
+                                                    <a href="{{url('admin/smm/client/show/' . $job_draft->id)}}">
                                                         <p class="text-[#fa7011]">Approve</p>
                                                     </a>
                                                     @elseif (auth()->user()->role_id == '2' and $job_draft->status == 'Submitted to Operations')
-                                                    <a href="{{url('operation/show/' . $job_draft->id)}}">
+                                                    <a href="{{url('admin/smm/operation/show/' . $job_draft->id)}}">
                                                         <p class="text-[#fa7011]">Sign</p>
                                                     </a>
                                                     @elseif (auth()->user()->role_id == '3' and $job_draft->status == 'Waiting for Content Writer Approval' || $job_draft->status == 'Waiting for Graphic Designer Approval')
-                                                        <form action="{{ url('content/accept/' . $job_draft->id) }}" method="POST">
+                                                        <form action="{{ url('admin/smm/content/accept/' . $job_draft->id) }}" method="POST">
                                                             @csrf
                                                             @method('PUT')
                                                             <button type="submit" class="text-[#fa7011] bg-transparent border-none cursor-pointer">
@@ -60,11 +58,11 @@
                                                             </button>
                                                         </form>
                                                     @elseif (auth()->user()->role_id == '3' and $job_draft->status == 'pending')
-                                                    <a href="{{url('content/edit/' . $job_draft->id)}}">
+                                                    <a href="{{url('admin/smm/content/edit/' . $job_draft->id)}}">
                                                         <p class="text-[#fa7011]">Create</p>
                                                     </a>
                                                     @elseif (auth()->user()->role_id == '4' and $job_draft->status == 'Waiting for Content Writer Approval' || $job_draft->status == 'Waiting for Graphic Designer Approval')
-                                                    <form action="{{ url('graphic/accept/' . $job_draft->id) }}" method="POST">
+                                                    <form action="{{ url('admin/smm/graphic/accept/' . $job_draft->id) }}" method="POST">
                                                         @csrf
                                                         @method('PUT')
                                                         <button type="submit" class="text-[#fa7011] bg-transparent border-none cursor-pointer">
@@ -72,15 +70,15 @@
                                                         </button>
                                                     </form>
                                                     @elseif (auth()->user()->role_id == '4' and $job_draft->status == 'pending')
-                                                    <a href="{{url('graphic/edit/' . $job_draft->id)}}">
+                                                    <a href="{{url('admin/smm/graphic/edit/' . $job_draft->id)}}">
                                                         <p class="text-[#fa7011]">Create</p>
                                                     </a>
                                                     @elseif (auth()->user()->role_id == '5' and $job_draft->status == 'Submitted to Top Manager')
-                                                    <a href="{{url('topmanager/show/' . $job_draft->id)}}">
+                                                    <a href="{{url('admin/smm/topmanager/show/' . $job_draft->id)}}">
                                                         <p class="text-[#fa7011]">Sign</p>
                                                     </a>
                                                     @elseif (auth()->user()->role_id == '6' and $job_draft->status == 'Submitted to Supervisor')
-                                                    <a href="{{url('supervisor/approve/show/' . $job_draft->id)}}">
+                                                    <a href="{{url('admin/smm/supervisor/approve/show/' . $job_draft->id)}}">
                                                         <p class="text-[#fa7011]">Sign</p>
                                                     </a>
                                                 @endif
@@ -117,22 +115,22 @@
                                                     <td class="px-4 py-2 text-sm">{{$job_draft_revision->jobOrder->title}} - {{Str::title(str_replace('_', ' ', $job_draft_revision->type))}}</td>
                                                     <td class="px-4 py-2 text-sm">
                                                         @if (auth()->user()->role_id == 3)
-                                                            <a href="{{url('revision/edit/' . $job_draft_revision->id)}}">
+                                                            <a href="{{url('admin/smm/revision/edit/' . $job_draft_revision->id)}}">
                                                                 <p class="text-[#fa7011]">Revise</p>
                                                             </a>
 
                                                         @elseif (auth()->user()->role_id == 4)
-                                                            <a href="{{url('revision/edit/' . $job_draft_revision->id)}}">
+                                                            <a href="{{url('admin/smm/revision/edit/' . $job_draft_revision->id)}}">
                                                                 <p class="text-[#fa7011]">Revise</p>
                                                             </a>
 
                                                         @elseif (auth()->user()->role_id == 2)
-                                                            <a href="{{url('revision/edit/' . $job_draft_revision->id)}}">
+                                                            <a href="{{url('admin/smm/revision/edit/' . $job_draft_revision->id)}}">
                                                                 <p class="text-[#fa7011]">Revise</p>
                                                             </a>
 
                                                         @elseif (auth()->user()->role_id == 6)
-                                                            <a href="{{url('revision/edit/' . $job_draft_revision->id)}}">
+                                                            <a href="{{url('admin/smm/revision/edit/' . $job_draft_revision->id)}}">
                                                                 <p class="text-[#fa7011]">Revise</p>
                                                             </a>
                                                         @endif
@@ -173,7 +171,7 @@
                                                         <td class="px-4 py-2 text-sm">
                                                             @if (auth()->user()->role_id == 2)
                                                                 @if ($my_task->status == "Waiting for Content Writer Approval" || $my_task->status == "Waiting for Graphic Designer Approval")
-                                                                <form action="{{ url('operation/task/accept/' . $my_task->id) }}" method="POST">
+                                                                <form action="{{ url('admin/smm/operation/task/accept/' . $my_task->id) }}" method="POST">
                                                                     @csrf
                                                                     @method('PUT')
                                                                     <button type="submit" class="text-[#fa7011] bg-transparent border-none cursor-pointer">
@@ -182,14 +180,14 @@
                                                                 </form>
                                                                 
                                                                 @else
-                                                                    <a href="{{url('operation/task/edit/' . $my_task->id)}}">
+                                                                    <a href="{{url('admin/smm/operation/task/edit/' . $my_task->id)}}">
                                                                         <p class="text-[#fa7011]">Create</p>
                                                                     </a>
                                                                 @endif
                                                 
                                                             @elseif (auth()->user()->role_id == 6)
                                                                 @if ($my_task->status == "Waiting for Content Writer Approval" || $my_task->status == "Waiting for Graphic Designer Approval")
-                                                                    <form action="{{ url('supervisor/task/accept/' . $my_task->id) }}" method="POST">
+                                                                    <form action="{{ url('admin/smm/supervisor/task/accept/' . $my_task->id) }}" method="POST">
                                                                         @csrf
                                                                         @method('PUT')
                                                                         <button type="submit" class="text-[#fa7011] bg-transparent border-none cursor-pointer">
@@ -198,7 +196,7 @@
                                                                     </form>
                                                                   
                                                                 @else
-                                                                    <a href="{{url('supervisor/task/edit/' . $my_task->id)}}">
+                                                                    <a href="{{url('admin/smm/supervisor/task/edit/' . $my_task->id)}}">
                                                                         <p class="text-[#fa7011]">Create</p>
                                                                     </a>
                                                                 @endif
@@ -340,4 +338,9 @@
 
         });
     </script>
-
+    <script>
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.go(1);
+        };
+    </script>

@@ -17,11 +17,11 @@
 
     <div class="h-auto">
         <div class="px-10 text-white">
-            <div class="w-full flex justify-end items-end mb-4 cursor-pointer" onclick="window.location.assign('{{ url('profile/show') }}')">
+            <div class="w-full flex justify-end items-end mb-4 cursor-pointer" onclick="window.location.assign('{{ url('admin/smm/profile/show') }}')">
                 <div class="w-fit px-4 py-1 bg-[#f68e12] rounded-md">Go Back</div>
             </div>
 
-            <form action="{{ url('profile/update/') }}" method="POST" enctype="multipart/form-data" id="userForm">
+            <form action="{{ url('admin/smm/profile/update/') }}" method="POST" enctype="multipart/form-data" id="userForm">
                 @csrf
                 @method('PATCH')
 

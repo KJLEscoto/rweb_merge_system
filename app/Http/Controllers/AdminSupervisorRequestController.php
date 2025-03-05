@@ -17,7 +17,7 @@ class AdminSupervisorRequestController extends Controller
             ->whereDoesntHave('jobOrders') // Exclude requests already assigned to JobOrders
             ->get();
 
-        return view('pages.admin.supervisorRequest.index', compact('supervisor_requests'));
+        return view('admin.smm.admin.supervisorRequest.index', compact('supervisor_requests'));
     }
 
 
@@ -25,7 +25,7 @@ class AdminSupervisorRequestController extends Controller
     public function show($id)
     {
         $supervisor_request = ModelsRequest::find($id);
-        return view('pages.admin.supervisorRequest.show', compact('supervisor_request'));
+        return view('admin.smm.admin.supervisorRequest.show', compact('supervisor_request'));
     }
 
     public function create($id)
@@ -36,7 +36,7 @@ class AdminSupervisorRequestController extends Controller
 
         $supervisor_request = ModelsRequest::find($id);
 
-        return view('pages.admin.supervisorRequest.create', compact('content_writers', 'graphic_designers', 'clients', 'supervisor_request'));
+        return view('admin.smm.admin.supervisorRequest.create', compact('content_writers', 'graphic_designers', 'clients', 'supervisor_request'));
     }
 
     public function store(Request $request)

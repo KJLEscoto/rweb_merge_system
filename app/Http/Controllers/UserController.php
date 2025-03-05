@@ -517,7 +517,6 @@ class UserController extends Controller
             'ranking' => $ranking,
             'array_daily' => $array_daily,
         ]);
-
     }
 
     public function showUserDetails($id, DtrSummaryController $dtrSummaryController, DtrDownloadRequestController $dtrDownloadRequestController)
@@ -832,7 +831,7 @@ class UserController extends Controller
         if (Auth::user()->role === 'admin') {
             return $this->showAdminDashboard(new RankingController());
         }
-        
+
         return $this->showUserDashboard(new RankingController());
     }
 

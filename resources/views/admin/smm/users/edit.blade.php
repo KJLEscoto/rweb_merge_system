@@ -15,11 +15,11 @@
 
     <div class="h-auto">
         <div class="px-10 text-white">
-            <div class="w-full flex justify-end items-end mb-4 cursor-pointer" onclick="window.location.assign('{{ url('users') }}')">
+            <div class="w-full flex justify-end items-end mb-4 cursor-pointer" onclick="window.location.assign('{{ url('admin/smm/users') }}')">
                 <div class="w-fit px-4 py-1 bg-[#f68e12] rounded-md">Go Back</div>
             </div>
 
-            <form action="{{ url('users/update/' . $user->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ url('admin/smm/users/update/' . $user->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 

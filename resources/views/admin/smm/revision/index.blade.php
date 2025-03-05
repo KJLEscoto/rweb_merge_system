@@ -53,7 +53,7 @@
 
 
                         <td class="w-[20%] px-4 py-3">
-                                <a href="{{ $job_draft->status === 'Revision' ? url('revision/edit/' . $job_draft->id) : '#' }}">
+                                <a href="{{ $job_draft->status === 'Revision' ? url('admin/smm/revision/edit/' . $job_draft->id) : '#' }}">
                                     <button class="px-4 py-2 text-sm text-white rounded {{ $job_draft->status === 'Revision' ? 'bg-orange-500 hover:bg-orange-600' : 'bg-gray-400 cursor-not-allowed pointer-events-none' }}">
                                         Revise
                                     </button>
@@ -61,7 +61,7 @@
                                                             
 
                 
-                                <a href="{{ url('revision/show/' . $job_draft->id) }}">
+                                <a href="{{ url('admin/smm/revision/show/' . $job_draft->id) }}">
                                     <button class="px-4 py-2 text-sm text-white bg-gray-600 rounded hover:bg-gray-600 inline-block text-center">
                                         Show
                                     </button>

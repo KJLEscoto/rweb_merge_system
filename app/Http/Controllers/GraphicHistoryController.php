@@ -17,18 +17,18 @@ class GraphicHistoryController extends Controller
             ->where('type', 'graphic_designer')
             ->with('jobOrder', 'contentWriter', 'graphicDesigner', 'client') // Corrected ->with() usage
             ->get();
-        return view('pages.graphic_designer.history.index', compact('job_drafts'));
+        return view('admin.smm.graphic_designer.history.index', compact('job_drafts'));
     }
     public function show($id)
     {
         $job_draft = JobDraft::with('jobOrder.issuer', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.graphic_designer.history.show', compact('job_draft'));
+        return view('admin.smm.graphic_designer.history.show', compact('job_draft'));
     }
     public function downloadPDF($id)
     {
         $job_draft = JobDraft::with('jobOrder.issuer', 'contentWriter', 'graphicDesigner', 'client')->find($id);
 
-        $pdf = Pdf::loadView('pages.graphic_designer.history.show', compact('job_draft'));
+        $pdf = Pdf::loadView('admin.smm.graphic_designer.history.show', compact('job_draft'));
 
         return $pdf->download('job_order_' . $id . '.pdf');
     }

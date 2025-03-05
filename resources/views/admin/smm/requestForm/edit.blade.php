@@ -129,7 +129,7 @@
         <div id="btn-container">
             <div>
                 <button id="history-btn">
-                    <a href="{{url('/requestForm/history')}}"><i class="fa-solid fa-clock-rotate-left"></i> History</a>
+                    <a href="{{url('/admin/smm/requestForm/history')}}"><i class="fa-solid fa-clock-rotate-left"></i> History</a>
                 </button>
             </div>
             <div>
@@ -151,7 +151,7 @@
                 <table>
                     <tr>
                         <td><strong>Department:</strong><br>
-                            <p>{{$request_form?->requestedBy->role->position}}</p>
+                            <p>{{$request_form?->requestedBy->roles->position}}</p>
                         </td>
                         <td><strong>Date:</strong><br>
                             <p>{{$request_form?->date}}</p>
@@ -261,7 +261,7 @@
 <!-- Modal -->
 <div id="description-modal" class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden flex items-center justify-center">
     <div class="bg-white p-6 rounded-lg shadow-lg w-1/2">
-        <form id="description-form" action="{{ url('requestForm/update/' . $request_form?->id) }}" method="POST">
+        <form id="description-form" action="{{ url('admin/smm/requestForm/update/' . $request_form?->id) }}" method="POST">
             @csrf
             <div class="h-40 overflow-y-auto">
                 <label>
@@ -414,7 +414,7 @@
                     @forelse ($accounting as $accountant)
                         <tr class="border-b">
                             <td class="px-4 md:px-6 py-3">{{ $accountant->name }}</td>
-                            <td class="px-4 md:px-6 py-3">{{ Str::title(str_replace('_', ' ', $accountant->role->position)) }}</td>
+                            <td class="px-4 md:px-6 py-3">{{ Str::title(str_replace('_', ' ', $accountant->roles->position)) }}</td>
                             <td class="px-4 md:px-6 py-3 text-center">
                                 <button onclick="selectContentWriter('{{ $accountant->id }}', '{{ $accountant->name }}')" class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
                                     Select
@@ -467,7 +467,7 @@
                     @foreach ($managers as $manager)
                         <tr class="border-b">
                             <td class="px-4 md:px-6 py-3">{{ $manager->name }}</td>
-                            <td class="px-4 md:px-6 py-3">{{ Str::title(str_replace('_', ' ', $manager->role->position)) }}</td>
+                            <td class="px-4 md:px-6 py-3">{{ Str::title(str_replace('_', ' ', $manager->roles->position)) }}</td>
                             <td class="px-4 md:px-6 py-3 text-center">
                                 <button onclick="selectGraphicDesigner('{{ $manager->id }}', '{{ $manager->name }}')" class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
                                     Select

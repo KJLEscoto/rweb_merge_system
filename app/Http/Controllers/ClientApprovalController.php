@@ -20,19 +20,19 @@ class ClientApprovalController extends Controller
             ->with('jobOrder', 'contentWriter', 'graphicDesigner', 'client') // Corrected ->with() usage
             ->get();
 
-        return view('pages.client.joborder.list', compact('job_drafts'));
+        return view('admin.smm.client.joborder.list', compact('job_drafts'));
     }
 
     public function show($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.client.joborder.show', compact('job_draft'));
+        return view('admin.smm.client.joborder.show', compact('job_draft'));
     }
 
     public function edit($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.client.joborder.edit', compact('job_draft'));
+        return view('admin.smm.client.joborder.edit', compact('job_draft'));
     }
 
     public function update(Request $request, $id)
@@ -65,7 +65,7 @@ class ClientApprovalController extends Controller
             ]);
         } elseif ($job_draft_id->type == 'graphic_designer') {
             if ($job_draft_id->jobOrder->renewable == 0) {
-                return view('pages.client.joborder.renew', compact('job_draft_id'));
+                return view('admin.smm.client.joborder.renew', compact('job_draft_id'));
             } elseif ($job_draft_id->jobOrder->renewable == 1) {
                 JobDraft::create([
                     'job_order_id' => $job_draft_id->job_order_id,
@@ -86,7 +86,7 @@ class ClientApprovalController extends Controller
     public function declineForm($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.client.joborderapproval.declineform', compact('job_draft'));
+        return view('admin.smm.client.joborderapproval.declineform', compact('job_draft'));
     }
 
     public function decline(Request $request, $id)

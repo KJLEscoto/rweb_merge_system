@@ -21,7 +21,7 @@
 
     <div class="px-10 text-white">
         <div class="w-full flex justify-end items-end mb-4 cursor-pointer"
-            onclick="window.location.assign('{{ url('users') }}')">
+            onclick="window.location.assign('{{ url('admin/smm/users') }}')">
             <div class="w-fit px-4 py-1 bg-[#f68e12] rounded-md">Go Back</div>
         </div>
         <div class="grid mt-10 grid-cols-3 h-80 gap-6 text-black">
@@ -50,7 +50,7 @@
                 <div class="flex justify-between">
                     <h1 class="text-sm font-semibold">User Information</h1>
                     <div class="px-4 py-1 bg-[#f68e12] cursor-pointer text-white rounded-md hover:bg-[#e57f0f]"
-                    onclick="window.location.assign('{{ url('users/edit/' . $user->id) }}')">Edit</div>
+                    onclick="window.location.assign('{{ url('admin/smm/users/edit/' . $user->id) }}')">Edit</div>
                 </div>
                 <div class="space-y-4 mt-4">
                     <div>

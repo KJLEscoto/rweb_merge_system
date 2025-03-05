@@ -62,10 +62,10 @@
                     <tr class="project-row border-b text-sm" data-status="{{ strtolower($request_form->status) }}">
                         <td class="px-4 py-3">
                             <div class="flex items-center space-x-4">
-                                <a id="approval-link" href="{{ url('/requestForm/show/' . $request_form->id) }}" class="text-blue-500 hover:underline">
+                                <a id="approval-link" href="{{ url('/admin/smm/requestForm/show/' . $request_form->id) }}" class="text-blue-500 hover:underline">
                                     View
                                 </a>
-                                <form action="{{ url('/requestForm/approve/' . $request_form->id) }}" method="POST" class="inline">
+                                <form action="{{ url('/admin/smm/requestForm/approve/' . $request_form->id) }}" method="POST" class="inline">
                                     @csrf
                                     <button 
                                         {{ (Auth::user()->role_id === 6) || (Auth::user()->role_id === 5 && $request_form->status === "Approved by Top Manager") || (Auth::user()->role_id === 7 && $request_form->status === "Approved by Accounting" || Auth::user()->role_id === 7 && $request_form->status === "Approved by Operation") ? "disabled" : "" }}
@@ -86,7 +86,7 @@
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </span>
                             @else
-                                <a href="{{ url('/requestForm/edit/' . $request_form->id) }}" class="text-blue-500 hover:text-blue-700">
+                                <a href="{{ url('/admin/smm/requestForm/edit/' . $request_form->id) }}" class="text-blue-500 hover:text-blue-700">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
                             @endif
@@ -98,7 +98,7 @@
                                     <i class="fa-solid fa-trash"></i>
                                 </span>
                             @else
-                                <form action="{{ url('/requestForm/delete/' . $request_form->id) }}" method="POST" class="inline-block">
+                                <form action="{{ url('/admin/smm/requestForm/delete/' . $request_form->id) }}" method="POST" class="inline-block">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-500 hover:text-red-700 focus:outline-none">

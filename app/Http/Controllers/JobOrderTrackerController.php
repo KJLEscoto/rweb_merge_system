@@ -39,7 +39,7 @@ class JobOrderTrackerController extends Controller
                 ->get();
         }
 
-        return view('pages.track.index', compact('job_drafts'));
+        return view('admin.smm.track.index', compact('job_drafts'));
     }
 
 
@@ -73,7 +73,7 @@ class JobOrderTrackerController extends Controller
     public function show($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.track.show', compact('job_draft'));
+        return view('admin.smm.track.show', compact('job_draft'));
     }
 
     /**

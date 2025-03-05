@@ -60,7 +60,7 @@
                             </p>
                         </td>
                         <td class="w-[15%] px-4 py-3 text-center border-b">
-                            <a href="{{ url('topmanager/show/' . $job_draft->id) }}">
+                            <a href="{{ url('admin/smm/topmanager/show/' . $job_draft->id) }}">
                                 <button class="px-4 py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600 whitespace-nowrap">
                                     View Form
                                 </button>

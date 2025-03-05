@@ -15,20 +15,20 @@ class SupervisorApprovalController extends Controller
             ->with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
             ->get();
 
-        return view('pages.supervisor.joborderapproval.list', compact('job_drafts'));
+        return view('admin.smm.supervisor.joborderapproval.list', compact('job_drafts'));
     }
 
 
     public function show($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.supervisor.joborderapproval.show', compact('job_draft'));
+        return view('admin.smm.supervisor.joborderapproval.show', compact('job_draft'));
     }
 
     public function edit($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.supervisor.joborderapproval.edit', compact('job_draft'));
+        return view('admin.smm.supervisor.joborderapproval.edit', compact('job_draft'));
     }
 
     public function update(Request $request, $id)
@@ -91,7 +91,7 @@ class SupervisorApprovalController extends Controller
     public function declineForm($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.supervisor.joborderapproval.declineform', compact('job_draft'));
+        return view('admin.smm.supervisor.joborderapproval.declineform', compact('job_draft'));
     }
 
     public function decline(Request $request, $id)

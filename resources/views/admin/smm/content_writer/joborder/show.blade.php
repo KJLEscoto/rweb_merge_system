@@ -75,7 +75,7 @@
 </style>
 <div id="container-pdf">
     <div class="bg-[#fa7011] text-white rounded-md px-3 py-1 w-fit mb-4">
-        <a href="{{url('/content')}}">Back</a>
+        <a href="{{url('/admin/smm/content')}}">Back</a>
     </div>
     <div class="header">
         <img src="{{ asset('/Assets/doc_header.png') }}" alt="Header">

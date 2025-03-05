@@ -15,20 +15,20 @@ class OperationApprovalController extends Controller
             ->with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
             ->get();
 
-        return view('pages.admin.joborderapproval.list', compact('job_drafts'));
+        return view('admin.smm.admin.joborderapproval.list', compact('job_drafts'));
     }
 
 
     public function show($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.admin.joborderapproval.show', compact('job_draft'));
+        return view('admin.smm.admin.joborderapproval.show', compact('job_draft'));
     }
 
     public function edit($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.admin.joborderapproval.edit', compact('job_draft'));
+        return view('admin.smm.admin.joborderapproval.edit', compact('job_draft'));
     }
 
     public function update(Request $request, $id)
@@ -89,7 +89,7 @@ class OperationApprovalController extends Controller
     public function declineForm($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.admin.joborderapproval.declineform', compact('job_draft'));
+        return view('admin.smm.admin.joborderapproval.declineform', compact('job_draft'));
     }
 
     public function decline(Request $request, $id)

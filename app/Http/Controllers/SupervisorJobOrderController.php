@@ -15,13 +15,13 @@ class SupervisorJobOrderController extends Controller
             ->doesntHave('jobOrders') // Requests that have no job orders
             ->get();
 
-        return view('pages.supervisor.job_order.index', compact('supervisor_requests'));
+        return view('admin.smm.supervisor.job_order.index', compact('supervisor_requests'));
     }
 
     public function create()
     {
         $operators = User::where('role_id', 2)->get();
-        return view('pages.supervisor.job_order.create', compact('operators'));
+        return view('admin.smm.supervisor.job_order.create', compact('operators'));
     }
 
     public function store(Request $request)
@@ -48,14 +48,14 @@ class SupervisorJobOrderController extends Controller
     public function show($id)
     {
         $supervisor_request = ModelsRequest::with('issuer', 'assignee')->find($id);
-        return view('pages.supervisor.job_order.show', compact('supervisor_request'));
+        return view('admin.smm.supervisor.job_order.show', compact('supervisor_request'));
     }
 
     public function edit($id)
     {
         $supervisor_request = ModelsRequest::with('issuer', 'assignee')->find($id);
         $operators = User::where('role_id', 2)->get();
-        return view('pages.supervisor.job_order.edit', compact('supervisor_request', 'operators'));
+        return view('admin.smm.supervisor.job_order.edit', compact('supervisor_request', 'operators'));
     }
 
     public function update(Request $request, $id)

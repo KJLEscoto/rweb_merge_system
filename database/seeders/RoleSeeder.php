@@ -22,7 +22,7 @@ class RoleSeeder extends Seeder
             ['position' => 'top_manager'],
             ['position' => 'supervisor'],
             ['position' => 'accounting'],
-
+            ['position' => 'user'],
         ];
 
         DB::table('roles')->insert($roles);

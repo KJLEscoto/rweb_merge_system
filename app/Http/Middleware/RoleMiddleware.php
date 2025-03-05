@@ -23,7 +23,7 @@ class RoleMiddleware
         }
         // Check if user has the correct role
 
-        if (Auth::user()->role->position != $role) {
+        if (Auth::user()->roles->position != $role) {
             abort(403, 'Unauthorized action.');
         }
 

@@ -13,13 +13,13 @@
         @endif
 
     {{-- Search Bar --}}
-    <a href="{{ url('supervisor/directjob/create') }}">
+    <a href="{{ url('admin/smm/supervisor/directjob/create') }}">
         <div class="bg-[#fa7011] w-fit block text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center lg:hidden">
             <i class="fa-solid fa-plus"></i>
         </div>
     </a>
     <div class="w-full h-fit flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-        <a href="{{ url('supervisor/directjob/create') }}">
+        <a href="{{ url('admin/smm/supervisor/directjob/create') }}">
             <div class="bg-[#fa7011] hidden text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center w-full md:w-auto lg:block">
                 Create Direct Job Order
             </div>
@@ -64,12 +64,12 @@
                             </p>
                         </td>
                         <td class="w-[20%] px-4 py-3 text-center">
-                            <a href="{{url('supervisor/directjob/edit/' . $job_draft->id)}}">
+                            <a href="{{url('admin/smm/supervisor/directjob/edit/' . $job_draft->id)}}">
                                 <button class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white {{$job_draft->status === 'pending' || $job_draft->status === 'Waiting for Content Writer Approval' || $job_draft->status === 'Waiting for Graphic Designer Approval'  ? "bg-green-500 hover:bg-green-600" : "bg-gray-400 cursor-not-allowed"}} rounded " {{$job_draft->status === 'pending' || $job_draft->status === 'Waiting for Content Writer Approval' || $job_draft->status === 'Waiting for Graphic Designer Approval' ? "" : "disabled"}}>
                                     Edit
                                 </button>
                             </a>
-                            <a href="{{url('supervisor/directjob/show/' . $job_draft->id)}}">
+                            <a href="{{url('admin/smm/supervisor/directjob/show/' . $job_draft->id)}}">
                                 <button class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
                                     Show
                                 </button>

@@ -17,7 +17,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('admin.smm.auth.login');
     }
 
     /**
@@ -37,12 +37,45 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
+        $admin_roles = [
+            'operations',
+            'supervisor',
+            'top_manager',
+        ];
 
-        $request->session()->regenerateToken();
+        $user_roles = [
+            'content_writer',
+            'graphic_designer',
+            'client',
+            'accounting',
+            'user',
+        ];
 
-        return redirect('/login');
+        if (in_array(Auth::user()->roles->position, $admin_roles)) {
+            Auth::guard('web')->logout();
+
+            $request->session()->invalidate();
+
+            $request->session()->regenerateToken();
+
+            return redirect('/admin/login')->withHeaders([
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                'Pragma' => 'no-cache',
+                'Expires' => 'Fri, 01 Jan 1990 00:00:00 GMT'
+            ]);
+        } else {
+            Auth::guard('web')->logout();
+
+            $request->session()->invalidate();
+
+            $request->session()->regenerateToken();
+
+            return redirect('/admin/smm/login')->withHeaders([
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                'Pragma' => 'no-cache',
+                'Expires' => 'Fri, 01 Jan 1990 00:00:00 GMT'
+            ]);
+        }
     }
 }

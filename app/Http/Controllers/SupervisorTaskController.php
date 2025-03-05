@@ -20,7 +20,7 @@ class SupervisorTaskController extends Controller
             ->with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client']) // Ensures relations are loaded
             ->get();
 
-        return view('pages.supervisor.task.list', compact('job_drafts'));
+        return view('admin.smm.supervisor.task.list', compact('job_drafts'));
     }
 
     public function show($id)
@@ -29,7 +29,7 @@ class SupervisorTaskController extends Controller
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client', 'parentDraft')->find($id);
 
         // Pass both the job draft and the latest job draft to the view
-        return view('pages.supervisor.task.show', compact('job_draft'));
+        return view('admin.smm.supervisor.task.show', compact('job_draft'));
     }
 
     public function create($id)
@@ -38,7 +38,7 @@ class SupervisorTaskController extends Controller
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client', 'parentDraft')->find($id);
 
         // Pass both the job draft and the latest job draft to the view
-        return view('pages.supervisor.task.create', compact('job_draft'));
+        return view('admin.smm.supervisor.task.create', compact('job_draft'));
     }
 
     public function store(Request $request, $id)
@@ -63,7 +63,7 @@ class SupervisorTaskController extends Controller
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client', 'parentDraft')->find($id);
 
         // Pass both the job draft and the latest job draft to the view
-        return view('pages.supervisor.task.edit', compact('job_draft'));
+        return view('admin.smm.supervisor.task.edit', compact('job_draft'));
     }
 
     public function update(Request $request, $id)

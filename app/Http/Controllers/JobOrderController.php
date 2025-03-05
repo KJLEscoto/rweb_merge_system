@@ -12,7 +12,7 @@ class JobOrderController extends Controller
     public function index()
     {
         $job_drafts = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner')->get();
-        return view('pages/admin/joborder/joborder', compact('job_drafts'));
+        return view('admin/smm/admin/joborder/joborder', compact('job_drafts'));
     }
     public function create()
     {
@@ -20,7 +20,7 @@ class JobOrderController extends Controller
         $graphic_designers = User::where('role_id', 4)->get();
         $clients = User::where('role_id', 1)->get();
 
-        return view('pages.admin.joborder.create', compact('content_writers', 'graphic_designers', 'clients'));
+        return view('admin.smm.admin.joborder.create', compact('content_writers', 'graphic_designers', 'clients'));
     }
     public function store(Request $request)
     {
@@ -58,7 +58,7 @@ class JobOrderController extends Controller
     public function show($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.admin.joborder.show', compact('job_draft'));
+        return view('admin.smm.admin.joborder.show', compact('job_draft'));
     }
 
     public function edit($id)
@@ -69,7 +69,7 @@ class JobOrderController extends Controller
 
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
 
-        return view('pages.admin.joborder.edit', compact('job_draft', 'content_writers', 'graphic_designers', 'clients'));
+        return view('admin.smm.admin.joborder.edit', compact('job_draft', 'content_writers', 'graphic_designers', 'clients'));
     }
 
     public function update(Request $request, $id)

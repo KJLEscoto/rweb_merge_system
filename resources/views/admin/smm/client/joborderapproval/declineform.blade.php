@@ -41,7 +41,7 @@
                      
                     <!-- Back Button -->
                     <div class="rounded-md text-white flex justify-end mb-10">
-                        <a href="{{ url('/client') }}"
+                        <a href="{{ url('/admin/smm/client') }}"
                            class="w-fit px-4 py-1 bg-[#fa7011] rounded hover:bg-[#d95f0a] transition duration-200">
                             Back
                         </a>
@@ -68,7 +68,7 @@
 
                     <!-- Decline Form Section -->
                     <div class="mt-10">
-                        <form action="{{ url('/client/decline/' . $job_draft->id) }}" method="POST">
+                        <form action="{{ url('/admin/smm/client/decline/' . $job_draft->id) }}" method="POST">
                             @csrf
                             
                             <!-- CKEditor 5 for Decline Reason -->

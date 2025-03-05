@@ -21,7 +21,7 @@
 
     <div class="px-10 text-white">
         <div class="w-full flex justify-end items-end mb-4 cursor-pointer"
-            onclick="window.location.assign('{{ url('/') }}')">
+            onclick="window.location.assign('{{ url('/admin/smm/') }}')">
             <div class="w-fit px-4 py-1 bg-[#f68e12] rounded-md">Go Back</div>
         </div>
         <div class="grid mt-10 grid-cols-3 h-80 gap-6 text-black">

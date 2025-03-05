@@ -27,13 +27,13 @@
 <div class="container mx-auto p-6">
     <div class="w-full px-6 py-10 mx-auto rounded-lg custom-shadow bg-white">
         <div>
-            <a href="{{ url('/supervisor/joborder') }}">
+            <a href="{{ url('/admin/smm/supervisor/joborder') }}">
                 <div class="w-fit px-4 py-1 bg-gray-400 rounded-md text-white custom-shadow custom-hover-shadow">
                     Back
                 </div>
             </a>
         </div>
-        <form action="{{ url('/supervisor/joborder/update/' . $supervisor_request->id) }}" method="POST">
+        <form action="{{ url('/admin/smm/supervisor/joborder/update/' . $supervisor_request->id) }}" method="POST">
             @csrf
             @method('PUT')
             <h1 class="text-xl font-bold mt-4">Edit Form</h1>
@@ -115,7 +115,7 @@
                     @forelse ($operators as $operator)
                         <tr class="border-b">
                             <td class="px-6 py-3">{{ $operator->name }}</td>
-                            <td class="px-6 py-3">{{ ucfirst($operator->role->position) }}</td>
+                            <td class="px-6 py-3">{{ ucfirst($operator->roles->position) }}</td>
                             <td class="px-6 py-3 text-center">
                                 <button onclick="selectOperator('{{ $operator->id }}', '{{ $operator->name }}')" class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600">
                                     Select

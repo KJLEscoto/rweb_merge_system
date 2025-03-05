@@ -37,13 +37,13 @@
     @endif
     <div class="w-full px-6 py-10 mx-auto rounded-lg custom-shadow bg-white">
         <div>
-            <a href="{{ url('/joborder') }}">
+            <a href="{{ url('/admin/smm/joborder') }}">
                 <div class="w-fit px-4 py-1 bg-gray-400 rounded-md text-white custom-shadow custom-hover-shadow">
                     Back
                 </div>
             </a>
         </div>
-        <form action="{{ url('/joborder/store') }}" method="POST">
+        <form action="{{ url('/admin/smm/joborder/store') }}" method="POST">
             @csrf
 
             <h1 class="text-xl font-bold mt-4">Create Job Order</h1>

@@ -34,13 +34,13 @@
     @endif
     <div class="w-full px-6 py-10 mx-auto rounded-lg custom-shadow bg-white">
         <div>
-            <a href="{{ url('/supervisor/joborder') }}">
+            <a href="{{ url('/admin/smm/supervisor/joborder') }}">
                 <div class="w-fit px-4 py-1 bg-gray-400 rounded-md text-white custom-shadow custom-hover-shadow">
                     Back
                 </div>
             </a>
         </div>
-        <form action="{{ url('/supervisor/joborder/store') }}" method="POST">
+        <form action="{{ url('/admin/smm/supervisor/joborder/store') }}" method="POST">
             @csrf
 
             <h1 class="text-xl font-bold mt-4">Create Job Order</h1>
@@ -124,7 +124,7 @@
                     @forelse ($operators as $operator)
                         <tr class="border-b">
                             <td class="px-4 md:px-6 py-3">{{ $operator->name }}</td>
-                            <td class="px-4 md:px-6 py-3">{{ ucfirst($operator->role->position) }}</td>
+                            <td class="px-4 md:px-6 py-3">{{ ucfirst($operator->roles->position) }}</td>
                             <td class="px-4 md:px-6 py-3 text-center">
                                 <button onclick="selectOperator('{{ $operator->id }}', '{{ $operator->name }}')" class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
                                     Select

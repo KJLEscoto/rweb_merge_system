@@ -1,16 +1,16 @@
 @php
     $user = Auth::user();
-    $user->role
+    $user->roles
 @endphp
 
-@props(['link' => $user->role->position])
+@props(['link' => $user->roles->position])
 
 <div class="space-y-4 z-10 h-full">
     @if ($link === 'operations')
 
         {{-- Operations Sidebar Menu --}}
         <div class="block px-6">
-            <a href="{{ url('/dashboard') }}"
+            <a href="{{ url('/admin/smm/dashboard') }}" 
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('dashboard', 'dashboard/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-400 transition-all' }}"
                 style="{{ request()->is('dashboard', 'dashboard/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('dashboard', 'dashboard/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -23,7 +23,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/operation/task') }}"
+            <a href="{{ url('/admin/smm/operation/task') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('operation/task', 'operation/task/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('operation/task', 'operation/task/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('operation/task', 'operation/task/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -37,7 +37,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/operation/requests') }}"
+            <a href="{{ url('/admin/smm/operation/requests') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('operation/requests', 'operation/request/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('operation/requests', 'operation/request/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('operation/requests', 'operation/request/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -51,7 +51,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/joborder') }}"
+            <a href="{{ url('/admin/smm/joborder') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('joborder', 'joborder/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('joborder', 'joborder/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('joborder', 'joborder/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -64,7 +64,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/operation') }}"
+            <a href="{{ url('/admin/smm/operation') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('operation', 'operation/show/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('operation', 'operation/show/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('operation', 'operation/show/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -78,7 +78,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/revision') }}"
+            <a href="{{ url('/admin/smm/revision') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('revision', 'revisions', 'revision/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('revision', 'revisions', 'revision/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('revision', 'revision/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -92,7 +92,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/operation/renewal') }}"
+            <a href="{{ url('/admin/smm/operation/renewal') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('operation/renewal', 'operation/renewal/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('operation/renewal', 'operation/renewal/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('operation/renewal', 'operation/renewal/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -103,7 +103,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/track') }}"
+            <a href="{{ url('/admin/smm/track') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('track', 'track/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('track', 'track/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('track', 'track/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -114,7 +114,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/profile/show') }}"
+            <a href="{{ url('/admin/smm/profile/show') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('profile', 'profile/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('profile', 'profile/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('profile', 'profile/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -125,7 +125,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/users') }}"
+            <a href="{{ url('/admin/smm/users') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('users', 'register', 'users/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('users', 'register', 'users/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('users', 'register', 'users/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -136,7 +136,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/operation/history') }}"
+            <a href="{{ url('/admin/smm/operation/history') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('operation/history', 'operation/history/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('operation/history', 'operation/history/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('operation/history', 'operation/history/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -160,7 +160,7 @@
     @elseif ($link === 'client')
         {{-- Client Sidebar Menu --}}
         <div class="block px-6">
-            <a href="{{ url('/dashboard') }}"
+            <a href="{{ url('/admin/smm/dashboard') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('dashboard', '/dashboard/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('dashboard', '/dashboard/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('dashboard', '/dashboard/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -171,7 +171,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/client') }}"
+            <a href="{{ url('/admin/smm/client') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('client', 'client/show/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('client', 'client/show/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('client', 'client/show/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -185,7 +185,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/client/history') }}"
+            <a href="{{ url('/admin/smm/client/history') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('client/history', 'client/history/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('client/history', 'client/history/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('client/history', 'client/history/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -196,7 +196,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/client/renewal') }}"
+            <a href="{{ url('/admin/smm/client/renewal') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('client/renewal', 'client/renewal/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('client/renewal', 'client/renewal/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('client/renewal', 'client/renewal/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -207,7 +207,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/track') }}"
+            <a href="{{ url('/admin/smm/track') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('track', 'track/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('track', 'track/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('track', 'track/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -218,7 +218,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/profile/show') }}"
+            <a href="{{ url('/admin/smm/profile/show') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('profile', 'profile/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('profile', 'profile/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('profile', 'profile/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -242,7 +242,7 @@
     @elseif ($link === 'content_writer')
         {{-- Content Writer Sidebar Menu --}}
         <div class="block px-6">
-            <a href="{{ url('/dashboard') }}"
+            <a href="{{ url('/admin/smm/dashboard') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('dashboard', 'dashboard/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('dashboard', 'dashboard/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('dashboard', 'dashboard/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -253,7 +253,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/content') }}"
+            <a href="{{ url('/admin/smm/content') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('content', 'content/edit/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('content', 'content/edit/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('content', 'content/edit/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -267,7 +267,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/track') }}"
+            <a href="{{ url('/admin/smm/track') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('track', 'track/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('track', 'track/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('track', 'track/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -278,7 +278,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/profile/show') }}"
+            <a href="{{ url('/admin/smm/profile/show') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('profile', 'profile/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('profile', 'profile/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('profile', 'profile/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -289,7 +289,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/revision') }}"
+            <a href="{{ url('/admin/smm/revision') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('revision', 'revisions', 'revision/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('revision', 'revisions', 'revision/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('revision', 'revision/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -303,7 +303,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/content/history') }}"
+            <a href="{{ url('/admin/smm/content/history') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('content/history', 'content/history/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('content/history', 'content/history/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('content/history', 'content/history/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -327,7 +327,7 @@
     @elseif ($link === 'graphic_designer')
         {{-- Graphic Designer Sidebar Menu --}}
         <div class="block px-6">
-            <a href="{{ url('/dashboard') }}"
+            <a href="{{ url('/admin/smm/dashboard') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('dashboard', 'dashboard/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('dashboard', 'dashboard/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('dashboard', 'dashboard/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -338,7 +338,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/graphic') }}"
+            <a href="{{ url('/admin/smm/graphic') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('graphic', 'graphic') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('graphic', 'graphic') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('graphic', 'graphic') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -352,7 +352,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/revision') }}"
+            <a href="{{ url('/admin/smm/revision') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('revision', 'revisions', 'revision/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('revision', 'revisions', 'revision/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('revision', 'revision/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -366,7 +366,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/graphic/history') }}"
+            <a href="{{ url('/admin/smm/graphic/history') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('graphic/history', 'graphic/history/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('graphic/history', 'graphic/history/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('graphic/history', 'graphic/history/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -377,7 +377,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/track') }}"
+            <a href="{{ url('/admin/smm/track') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('track', 'track/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('track', 'track/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('track', 'track/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -388,7 +388,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/profile/show') }}"
+            <a href="{{ url('/admin/smm/profile/show') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('profile', 'profile/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('profile', 'profile/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('profile', 'profile/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -412,7 +412,7 @@
     @elseif ($link === 'top_manager')
         {{-- Top Manager Sidebar Menu --}}
         <div class="block px-6">
-            <a href="{{ url('/dashboard') }}"
+            <a href="{{ url('/admin/smm/dashboard') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('dashboard', 'dashboard/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('dashboard', 'dashboard/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('dashboard', 'dashboard/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -423,7 +423,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/topmanager') }}"
+            <a href="{{ url('/admin/smm/topmanager') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('topmanager', 'topmanager/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('topmanager', 'topmanager/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('topmanager', 'topmanager/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -437,7 +437,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/track') }}"
+            <a href="{{ url('/admin/smm/track') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('track', 'track/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('track', 'track/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('track', 'track/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -448,7 +448,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/requestForm/history') }}"
+            <a href="{{ url('/admin/smm/requestForm/history') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('requestForm/create', 'requestForm/history', 'requestForm/create/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('requestForm/create', 'requestForm/history', 'requestForm/create/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('requestForm/create', 'requestForm/history', 'requestForm/create/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -459,7 +459,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/profile/show') }}"
+            <a href="{{ url('/admin/smm/profile/show') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('profile', 'profile/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('profile', 'profile/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('profile', 'profile/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -470,7 +470,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/users') }}"
+            <a href="{{ url('/admin/smm/users') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('users', 'users/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('users', 'users/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('users', 'users/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -495,7 +495,7 @@
 
         {{-- Supervisor Sidebar Menu --}}
         <div class="block px-6">
-            <a href="{{ url('/dashboard') }}"
+            <a href="{{ url('/admin/smm/dashboard') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('dashboard', 'dashboard/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('dashboard', 'dashboard/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('dashboard', 'dashboard/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -506,7 +506,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/supervisor/joborder') }}"
+            <a href="{{ url('/admin/smm/supervisor/joborder') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('supervisor/joborder', 'supervisor/joborder/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('supervisor/joborder', 'supervisor/joborder/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('supervisor/joborder', 'supervisor/joborder/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -520,7 +520,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/supervisor/directjob') }}"
+            <a href="{{ url('/admin/smm/supervisor/directjob') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('supervisor/directjob', 'supervisor/directjob/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('supervisor/directjob', 'supervisor/directjob/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('supervisor/directjob', 'supervisor/directjob/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -531,7 +531,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/supervisor/task') }}"
+            <a href="{{ url('/admin/smm/supervisor/task') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('supervisor/task', 'supervisor/task/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('supervisor/task', 'supervisor/task/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('supervisor/task', 'supervisor/task/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -545,7 +545,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/revision') }}"
+            <a href="{{ url('/admin/smm/revision') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('revision', 'revisions', 'revision/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('revision', 'revisions', 'revision/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('revision', 'revision/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -559,7 +559,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/supervisor/approve') }}"
+            <a href="{{ url('/admin/smm/supervisor/approve') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('supervisor/approve', 'supervisor/approve/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('supervisor/approve', 'supervisor/approve/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('supervisor/approve', 'supervisor/approve/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -574,7 +574,7 @@
 
 
         <div class="block px-6">
-            <a href="{{ url('/track') }}"
+            <a href="{{ url('/admin/smm/track') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('track', 'track/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('track', 'track/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('track', 'track/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -585,7 +585,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/supervisor/renewal') }}"
+            <a href="{{ url('/admin/smm/supervisor/renewal') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('supervisor/renewal', 'supervisor/renewal/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('supervisor/renewal', 'supervisor/renewal/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('supervisor/renewal', 'supervisor/renewal/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -596,7 +596,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/users') }}"
+            <a href="{{ url('/admin/smm/users') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('users', 'register', 'users/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('users', 'register', 'users/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('users', 'register', 'users/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -607,7 +607,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/profile/show') }}"
+            <a href="{{ url('/admin/smm/profile/show') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('profile', 'profile/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('profile', 'profile/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('profile', 'profile/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -618,7 +618,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/requestForm/create') }}"
+            <a href="{{ url('/admin/smm/requestForm/create') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('requestForm/create', 'requestForm/history', 'requestForm/create/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('requestForm/create', 'requestForm/history', 'requestForm/create/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('requestForm/create', 'requestForm/history', 'requestForm/create/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -629,7 +629,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/supervisor/history') }}"
+            <a href="{{ url('/admin/smm/supervisor/history') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('supervisor/history', 'supervisor/history/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('supervisor/history', 'supervisor/history/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('supervisor/history', 'supervisor/history/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -654,7 +654,7 @@
 
         {{-- Supervisor Sidebar Menu --}}
         <div class="block px-6">
-            <a href="{{ url('/dashboard') }}"
+            <a href="{{ url('/admin/smm/dashboard') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('dashboard', 'dashboard/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('dashboard', 'dashboard/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('dashboard', 'dashboard/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -665,7 +665,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/profile/show') }}"
+            <a href="{{ url('/admin/smm/profile/show') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('profile', 'profile/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('profile', 'profile/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('profile', 'profile/*') ? 'bg-black' : 'bg-[#f66d11]' }}">
@@ -676,7 +676,7 @@
         </div>
 
         <div class="block px-6">
-            <a href="{{ url('/requestForm/history') }}"
+            <a href="{{ url('/admin/smm/requestForm/history') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('requestForm/create', 'requestForm/history', 'requestForm/create/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
                 style="{{ request()->is('requestForm/create', 'requestForm/history', 'requestForm/create/*') ? 'box-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);' : '' }}">
                 <div class="size-10 flex items-center justify-center rounded-lg {{ request()->is('requestForm/create', 'requestForm/history', 'requestForm/create/*') ? 'bg-black' : 'bg-[#f66d11]' }}">

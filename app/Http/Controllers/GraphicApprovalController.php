@@ -18,13 +18,13 @@ class GraphicApprovalController extends Controller
             ->with('jobOrder', 'contentWriter', 'graphicDesigner', 'client') // Corrected ->with() usage
             ->get();
 
-        return view('pages.graphic_designer.joborder.list', compact('job_drafts'));
+        return view('admin.smm.graphic_designer.joborder.list', compact('job_drafts'));
     }
 
     public function show($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.graphic_designer.joborder.show', compact('job_draft'));
+        return view('admin.smm.graphic_designer.joborder.show', compact('job_draft'));
     }
 
     public function create($id)
@@ -33,7 +33,7 @@ class GraphicApprovalController extends Controller
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client', 'parentDraft')->find($id);
 
         // Pass both the job draft and the latest job draft to the view
-        return view('pages.graphic_designer.joborder.create', compact('job_draft'));
+        return view('admin.smm.graphic_designer.joborder.create', compact('job_draft'));
     }
 
     public function store(Request $request, $id)
@@ -58,7 +58,7 @@ class GraphicApprovalController extends Controller
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client', 'parentDraft')->find($id);
 
         // Pass both the job draft and the latest job draft to the view
-        return view('pages.graphic_designer.joborder.edit', compact('job_draft'));
+        return view('admin.smm.graphic_designer.joborder.edit', compact('job_draft'));
     }
 
     public function update(Request $request, $id)

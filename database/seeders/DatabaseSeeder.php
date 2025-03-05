@@ -59,6 +59,27 @@ class DatabaseSeeder extends Seeder
             'role_id' => 1,
         ]);
 
+        $request = new Request([
+            'firstname' => 'admin2',
+            'name' => 'Admin A Admin',
+            'lastname' => 'admin2',
+            'middlename' => 'admin2',
+            'email' => 'admin2@email.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'role' => 'admin',
+            'phone' => '09123456789',
+            'gender' => 'female',
+            'address' => 'Test Address',
+            'school' => null, // Assuming school ID 1
+            'student_no' => '1234567890',
+            'emergency_contact_fullname' => 'Test Emergency',
+            'emergency_contact_number' => '09123456789',
+            'emergency_contact_address' => 'Test Emergency Address',
+            'role_id' => 2,
+        ]);
+
+
 
         //@dd($request->all());
 

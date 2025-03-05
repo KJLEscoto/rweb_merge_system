@@ -28,13 +28,13 @@
 <div class="container mx-auto p-6">
     <div class="w-full px-6 py-10 mx-auto rounded-lg custom-shadow bg-white">
         <div>
-            <a href="{{ url('/revision') }}">
+            <a href="{{ url('/admin/smm/revision') }}">
                 <div class="w-fit px-4 py-1 bg-gray-400 rounded-md text-white custom-shadow custom-hover-shadow">
                     Back
                 </div>
             </a>
         </div>
-        <form action="{{ url('/revision/update/' . $revisions->jobDraft->id) }}" method="POST">
+        <form action="{{ url('/admin/smm/revision/update/' . $revisions->jobDraft->id) }}" method="POST">
             @csrf
             @method('PUT')
             <h1 class="text-xl font-bold mt-4">Create Draft</h1>

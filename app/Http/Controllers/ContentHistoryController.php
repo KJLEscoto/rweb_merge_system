@@ -17,18 +17,18 @@ class ContentHistoryController extends Controller
             ->where('type', 'content_writer')
             ->with('jobOrder', 'contentWriter', 'graphicDesigner', 'client') // Corrected ->with() usage
             ->get();
-        return view('pages.content_writer.history.index', compact('job_drafts'));
+        return view('admin.smm.content_writer.history.index', compact('job_drafts'));
     }
     public function show($id)
     {
         $job_draft = JobDraft::with('jobOrder.issuer', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.content_writer.history.show', compact('job_draft'));
+        return view('admin.smm.content_writer.history.show', compact('job_draft'));
     }
     public function downloadPDF($id)
     {
         $job_draft = JobDraft::with('jobOrder.issuer', 'contentWriter', 'graphicDesigner', 'client')->find($id);
 
-        $pdf = Pdf::loadView('pages.content_writer.history.show', compact('job_draft'));
+        $pdf = Pdf::loadView('admin.smm.content_writer.history.show', compact('job_draft'));
 
         return $pdf->download('job_order_' . $id . '.pdf');
     }

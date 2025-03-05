@@ -3,8 +3,20 @@
 </head>
 
 <x-main-layout breadcumb="DTR" page="Interns">
+    @php
+        $not_intern_roles = [
+            'content_writer',
+            'graphic_designer',
+            'client',
+            'supervisor',
+            'operations',
+            'top_manager',
+            'accounting',
+            'admin',
+        ];
+    @endphp
     <div class="w-full h-auto flex flex-col gap-5 px-10 pt-10">
-        @if ($users->where('role', '!=', 'admin')->first())
+        @if ($users->whereNotIn('role', $not_intern_roles)->first())
             <section class="flex md:flex-row flex-col-reverse items-center lg:justify-between w-full gap-5">
 
                 <section class="w-1/2">
@@ -27,7 +39,7 @@
 
             <section class="grid lg:!grid-cols-5 md:grid-cols-4 grid-cols-2 gap-5" id="user-container">
                 @foreach ($users as $user)
-                    @if ($user['role'] != 'admin')
+                    @if (!in_array($user->roles->position, $not_intern_roles))
                         <a href="{{ route('admin.dtr.interns.details', $user->id) }}"
                             class="p-5 border border-gray-200 rounded-xl cursor-pointer group animate-transition hover:border-[#F57D11] flex flex-col gap-5 items-center justify-center h-auto w-full bg-white user-card"
                             data-name="{{ strtolower($user->firstname) }}"

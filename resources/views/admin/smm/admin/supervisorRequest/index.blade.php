@@ -14,7 +14,7 @@
         @endif
 
     {{-- Search Bar --}}
-    <a href="{{ url('joborder/create') }}">
+    <a href="{{ url('admin/smm/joborder/create') }}">
         <div class="bg-[#fa7011] w-fit block text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center lg:hidden">
             <i class="fa-solid fa-plus"></i>
         </div>
@@ -47,27 +47,27 @@
                         <td class="px-6 py-3">{{$supervisor_request->status}}</td>
                         <td class="px-6 py-3">
                             @if ($supervisor_request->status == "Waiting for Operation Approval")
-                                <form action="{{ url('operation/request/accept/' . $supervisor_request->id) }}" method="POST" class="inline">
+                                <form action="{{ url('admin/smm/operation/request/accept/' . $supervisor_request->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('PUT')
                                     <button type="submit" class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-[#fa7011] rounded hover:bg-[#fa7011]">
                                         Accept
                                     </button>
                                 </form>  
-                                <a href="{{url('operation/request/show/' . $supervisor_request->id)}}">
+                                <a href="{{url('admin/smm/operation/request/show/' . $supervisor_request->id)}}">
                                     <button class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
                                         Show
                                     </button>
                                 </a>
                             @else
-                                <form action="{{ url('operation/request/accept/' . $supervisor_request->id) }}" method="POST" class="inline">
+                                <form action="{{ url('admin/smm/operation/request/accept/' . $supervisor_request->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('PUT')
                                     <button type="submit" disabled class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-gray-400 rounded hover:bg-gray-500 cursor-not-allowed">
                                         Accept
                                     </button>
                                 </form>  
-                                <a href="{{url('operation/request/show/' . $supervisor_request->id)}}">
+                                <a href="{{url('admin/smm/operation/request/show/' . $supervisor_request->id)}}">
                                     <button class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
                                         Show
                                     </button>

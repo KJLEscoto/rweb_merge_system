@@ -15,18 +15,18 @@ class SupervisorHistoryController extends Controller
         // Fetch all job drafts for the authenticated user
         $job_drafts = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client') // Corrected ->with() usage
             ->get();
-        return view('pages.supervisor.history.index', compact('job_drafts'));
+        return view('admin.smm.supervisor.history.index', compact('job_drafts'));
     }
     public function show($id)
     {
         $job_draft = JobDraft::with('jobOrder.issuer', 'contentWriter', 'graphicDesigner', 'client')->find($id);
-        return view('pages.supervisor.history.show', compact('job_draft'));
+        return view('admin.smm.supervisor.history.show', compact('job_draft'));
     }
     public function downloadPDF($id)
     {
         $job_draft = JobDraft::with('jobOrder.issuer', 'contentWriter', 'graphicDesigner', 'client')->find($id);
 
-        $pdf = Pdf::loadView('pages.supervisor.history.show', compact('job_draft'));
+        $pdf = Pdf::loadView('admin.smm.supervisor.history.show', compact('job_draft'));
 
         return $pdf->download('job_order_' . $id . '.pdf');
     }

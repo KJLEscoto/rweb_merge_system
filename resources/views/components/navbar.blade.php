@@ -13,7 +13,7 @@
                 <h1 class="text-white hidden lg:block truncate max-w-[150px] sm:max-w-[200px] md:max-w-[250px] lg:max-w-[300px] xl:max-w-[350px] break-words">
                     Hi, {{ $user->name ?? 'Guest' }}
                 </h1>
-                <h1 class="text-gray-300 text-[.7rem]">{{ ucwords(str_replace('_', ' ', $user->role->position)) }}</h1>
+                <h1 class="text-gray-300 text-[.7rem]">{{ ucwords(str_replace('_', ' ', $user->roles->position)) }}</h1>
             </div>
 
 
@@ -24,7 +24,7 @@
                  draggable="false">
 
             {{-- Logout Button --}}
-            <form method="POST" action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('admin.smm.logout') }}">
                 @csrf
                 <button type="submit">
                     <i class="fa-solid fa-power-off text-xl bg-white px-2 py-1 rounded-lg" style="color: #fa7011;"></i>

@@ -47,18 +47,18 @@
 <div class="container mx-auto p-6 ">
     <div class="w-full px-6 py-10 mx-auto rounded-lg custom-shadow bg-white">
         <div>
-            <a href="{{ url('users') }}">
+            <a href="{{ route('admin.smm.users') }}">
                 <div class="w-fit px-4 py-1 bg-[#fa7011] rounded-md text-white custom-shadow custom-hover-shadow">
                     Go Back
                 </div>
             </a>
         </div>
-        <form method="POST" class="relative" action="{{ url('register') }}" enctype="multipart/form-data">
+        <form method="POST" class="relative" action="{{ route('admin.smm.register') }}" enctype="multipart/form-data">
             @csrf
                 <h1 class="mt-10 text-xl font-bold">Register User</h1>
                 <div class="image-upload-container absolute -top-14 cursor-pointer right-0 size-24">
-                    <input type="file" name="image" id="file-input" class="hidden" onchange="previewImage(event)">
                     <img id="image-preview" src="{{ asset('Assets/user-profile-profilepage.png') }}" class="size-24 border-2 border-[#fa7011] rounded-full object-cover absolute top-0 right-0" alt="Profile Picture" onclick="document.getElementById('file-input').click();">
+                    <input type="file" name="image" id="file-input" class="hidden" onchange="previewImage(event)">
                     <div class="overlay" onclick="document.getElementById('file-input').click();">
                         <i class="fa-solid fa-camera"></i>
                     </div>
@@ -91,8 +91,8 @@
                             <option value="3" {{ old('role_id') == 3 ? 'selected' : '' }}>Content Writer</option>
                             <option value="4" {{ old('role_id') == 4 ? 'selected' : '' }}>Graphic Designer</option>
                             <option value="5" {{ old('role_id') == 5 ? 'selected' : '' }}>Top Manager</option>
-                            <option value="5" {{ old('role_id') == 6 ? 'selected' : '' }}>Supervisor</option>
-                            <option value="5" {{ old('role_id') == 7 ? 'selected' : '' }}>Accounting</option>
+                            <option value="6" {{ old('role_id') == 6 ? 'selected' : '' }}>Supervisor</option>
+                            <option value="7" {{ old('role_id') == 7 ? 'selected' : '' }}>Accounting</option>
                         </select>
                         @error('role_id')
                             <p class="text-red-600 text-sm">{{ $message }}</p>

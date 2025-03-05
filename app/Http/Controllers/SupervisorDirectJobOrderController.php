@@ -12,16 +12,16 @@ class SupervisorDirectJobOrderController extends Controller
     public function index()
     {
         $job_drafts = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner')->get();
-        return view('pages.supervisor.directjob.index', compact('job_drafts'));
+        return view('admin.smm.supervisor.directjob.index', compact('job_drafts'));
     }
 
     public function create()
     {
-        $clients = User::with('role')->where('role_id', 1)->get();
-        $graphicworkers = User::with('role')->whereNotIn('role_id', [1, 3, 5])->get();
-        $contentworkers = User::with('role')->whereNotIn('role_id', [1, 4, 5])->get();
+        $clients = User::with('roles')->where('role_id', 1)->get();
+        $graphicworkers = User::with('roles')->whereNotIn('role_id', [1, 3, 5])->get();
+        $contentworkers = User::with('roles')->whereNotIn('role_id', [1, 4, 5])->get();
 
-        return view('pages/supervisor/directjob/create', compact('clients', 'graphicworkers', 'contentworkers'));
+        return view('admin/smm/supervisor/directjob/create', compact('clients', 'graphicworkers', 'contentworkers'));
     }
 
     public function store(Request $request)
@@ -66,7 +66,7 @@ class SupervisorDirectJobOrderController extends Controller
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
 
-        return view('pages/supervisor/directjob/show', compact('job_draft'));
+        return view('admin/smm/supervisor/directjob/show', compact('job_draft'));
     }
 
     public function edit($id)
@@ -76,7 +76,7 @@ class SupervisorDirectJobOrderController extends Controller
         $contentworkers = User::with('role')->whereNotIn('role_id', [1, 4])->get();
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
 
-        return view('pages/supervisor/directjob/edit', compact('job_draft', 'graphicworkers', 'contentworkers', 'clients'));
+        return view('admin/smm/supervisor/directjob/edit', compact('job_draft', 'graphicworkers', 'contentworkers', 'clients'));
     }
 
     public function update(Request $request, $id)

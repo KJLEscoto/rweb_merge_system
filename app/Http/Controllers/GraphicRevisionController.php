@@ -15,19 +15,19 @@ class GraphicRevisionController extends Controller
             ->where('graphic_designer_id', auth()->user()->id) // Cleaner way to get the authenticated user's ID
             ->get(); // Retrieve all records
 
-        return view('pages.graphic_designer.revision.index', compact('job_drafts'));
+        return view('admin.smm.graphic_designer.revision.index', compact('job_drafts'));
     }
 
     public function show($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client', 'revisions')->find($id);
-        return view('pages.graphic_designer.revision.show', compact('job_draft'));
+        return view('admin.smm.graphic_designer.revision.show', compact('job_draft'));
     }
 
     public function edit($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client', 'revisions')->find($id);
-        return view('pages.graphic_designer.revision.edit', compact('job_draft'));
+        return view('admin.smm.graphic_designer.revision.edit', compact('job_draft'));
     }
 
     public function update(Request $request, $id)

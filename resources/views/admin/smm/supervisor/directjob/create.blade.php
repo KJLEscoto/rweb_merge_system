@@ -41,13 +41,13 @@
 
     <div class="w-full px-6 py-10 mx-auto rounded-lg custom-shadow bg-white">
         <div>
-            <a href="{{ url('/supervisor/directjob') }}">
+            <a href="{{ url('/admin/smm/supervisor/directjob') }}">
                 <div class="w-fit px-4 py-1 bg-gray-400 rounded-md text-white custom-shadow custom-hover-shadow">
                     Back
                 </div>
             </a>
         </div>
-        <form action="{{ url('/supervisor/directjob/store') }}" method="POST">
+        <form action="{{ url('/admin/smm/supervisor/directjob/store') }}" method="POST">
             @csrf
 
             <h1 class="text-xl font-bold mt-4">Create Job Order</h1>
@@ -195,7 +195,7 @@
                     @forelse ($clients as $client)
                         <tr class="border-b">
                             <td class="px-4 md:px-6 py-3">{{ $client->name }}</td>
-                            <td class="px-4 md:px-6 py-3">{{ ucfirst($client->role->position) }}</td>
+                            <td class="px-4 md:px-6 py-3">{{ ucfirst($client->roles->position) }}</td>
                             <td class="px-4 md:px-6 py-3 text-center">
                                 <button onclick="selectClient('{{ $client->id }}', '{{ $client->name }}')" class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
                                     Select Client
@@ -250,7 +250,7 @@
                     @forelse ($contentworkers as $content_writer)
                         <tr class="border-b">
                             <td class="px-4 md:px-6 py-3">{{ $content_writer->name }}</td>
-                            <td class="px-4 md:px-6 py-3">{{ Str::title(str_replace('_', ' ', $content_writer->role->position)) }}</td>
+                            <td class="px-4 md:px-6 py-3">{{ Str::title(str_replace('_', ' ', $content_writer->roles->position)) }}</td>
                             <td class="px-4 md:px-6 py-3 text-center">
                                 <button onclick="selectContentWriter('{{ $content_writer->id }}', '{{ $content_writer->name }}')" class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
                                     Select
@@ -305,7 +305,7 @@
                     @forelse ($graphicworkers as $graphic_designer)
                         <tr class="border-b">
                             <td class="px-4 md:px-6 py-3">{{ $graphic_designer->name }}</td>
-                            <td class="px-4 md:px-6 py-3">{{ Str::title(str_replace('_', ' ', $graphic_designer->role->position)) }}</td>
+                            <td class="px-4 md:px-6 py-3">{{ Str::title(str_replace('_', ' ', $graphic_designer->roles->position)) }}</td>
 
                             <td class="px-4 md:px-6 py-3 text-center">
                                 <button onclick="selectGraphicDesigner('{{ $graphic_designer->id }}', '{{ $graphic_designer->name }}')" class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">

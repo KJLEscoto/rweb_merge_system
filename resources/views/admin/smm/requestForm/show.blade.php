@@ -129,7 +129,7 @@
         <div id="btn-container">
             <div>
                 <button id="history-btn">
-                    <a href="{{url('/requestForm/history')}}"><i class="fa-solid fa-clock-rotate-left"></i> History</a>
+                    <a href="{{url('/admin/smm/requestForm/history')}}"><i class="fa-solid fa-clock-rotate-left"></i> History</a>
                 </button>
             </div>
             <div>
@@ -151,7 +151,7 @@
                 <table>
                     <tr>
                         <td><strong>Department:</strong><br>
-                            <p>{{$request_form->requestedBy->role->position}}</p>
+                            <p>{{$request_form->requestedBy->roles->position}}</p>
                         </td>
                         <td><strong>Date:</strong><br>
                             <p>{{$request_form->date}}</p>

@@ -18,13 +18,13 @@ class OperationRevisionController extends Controller
             })
             ->get(); // Retrieve all records
 
-        return view('pages.admin.revision.index', compact('job_drafts'));
+        return view('admin.smm.admin.revision.index', compact('job_drafts'));
     }
 
     public function edit($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client', 'revisions')->find($id);
-        return view('pages.admin.revision.edit', compact('job_draft'));
+        return view('admin.smm.admin.revision.edit', compact('job_draft'));
     }
 
     public function update(Request $request, $id)

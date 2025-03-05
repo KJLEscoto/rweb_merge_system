@@ -12,7 +12,7 @@ class OperationRenewalController extends Controller
     public function index()
     {
         $job_orders = JobOrder::with('jobDrafts')->get();
-        return view('pages.admin.renewal.index', compact('job_orders'));
+        return view('admin.smm.admin.renewal.index', compact('job_orders'));
     }
 
     public function update(Request $request, $id)

@@ -17,13 +17,13 @@ class SupervisorRevisionController extends Controller
             })
             ->get(); // Retrieve all records
 
-        return view('pages.supervisor.revision.index', compact('job_drafts'));
+        return view('admin.smm.supervisor.revision.index', compact('job_drafts'));
     }
 
     public function edit($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client', 'revisions')->find($id);
-        return view('pages.supervisor.revision.edit', compact('job_draft'));
+        return view('admin.smm.supervisor.revision.edit', compact('job_draft'));
     }
 
     public function update(Request $request, $id)

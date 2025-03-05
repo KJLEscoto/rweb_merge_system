@@ -14,7 +14,7 @@ class ClientRenewalController extends Controller
         $job_orders = JobOrder::whereHas('jobDrafts', function ($query) {
             $query->where('client_id', auth()->user()->id);
         })->get();
-        return view('pages.client.renewal.index', compact('job_orders'));
+        return view('admin.smm.client.renewal.index', compact('job_orders'));
     }
 
     public function update(Request $request, $id)

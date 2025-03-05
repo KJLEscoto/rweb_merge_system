@@ -344,7 +344,24 @@
                         routeName="admin.dtr.history" />
                     <x-admin.sidebar-menu icon="ic--round-school" label="Schools" routeName="admin.dtr.schools" />
                     <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.dtr.profile" />
+                
+                    {{-- admin smm navbar --}}
+                @elseif (Request::routeIs('admin.smm*'))
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
+                        routeName="admin.smm.dashboard" />
+                    <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="My Tasks"
+                        routeName="operation.approve" />
+                    <x-admin.sidebar-menu icon="fa--users" label="Incoming Requests" routeName="admin.dtr.interns" />
+                    <x-admin.sidebar-menu icon="mdi--clipboard-text-history" label="Outgoing Requests"
+                        routeName="admin.dtr.history" />
+                    <x-admin.sidebar-menu icon="ic--round-school" label="Approvals" routeName="admin.dtr.schools" />
+                    <x-admin.sidebar-menu icon="fa--user" label="My Revisions" routeName="admin.dtr.profile" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Renewal" routeName="admin.dtr.profile" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Track Job Orders" routeName="admin.dtr.profile" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Users" routeName="admin.dtr.profile" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Downloadables" routeName="admin.dtr.profile" />
                 @endif
+
 
             </aside>
             <section class="col-span-9 h-auto w-full bg-gray-100 pb-10">

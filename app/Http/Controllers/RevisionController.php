@@ -47,19 +47,19 @@ class RevisionController extends Controller
                 ->get();
         }
 
-        return view('pages.revision.index', compact('job_drafts'));
+        return view('admin.smm.revision.index', compact('job_drafts'));
     }
 
     public function show($id)
     {
         $revisions = Revision::with('jobDraft')->where('job_draft_id', $id)->get();
-        return view('pages.revision.show', compact('revisions'));
+        return view('admin.smm.revision.show', compact('revisions'));
     }
 
     public function edit($id)
     {
         $revisions = Revision::with(['jobDraft.jobOrder', 'jobDraft.client'])->where('job_draft_id', $id)->where('status', 'pending')->first();
-        return view('pages.revision.edit', compact('revisions'));
+        return view('admin.smm.revision.edit', compact('revisions'));
     }
 
     public function update(Request $request, $id)

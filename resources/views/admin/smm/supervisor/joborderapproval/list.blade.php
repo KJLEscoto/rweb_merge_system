@@ -80,7 +80,7 @@
                             </p>
                         </td>
                         <td class="w-[15%] px-2 sm:px-4 py-2 sm:py-3 text-center border-b">
-                            <a href="{{ url('supervisor/approve/show/' . $job_draft->id) }}">
+                            <a href="{{ url('admin/smm/supervisor/approve/show/' . $job_draft->id) }}">
                                 <button class="px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm text-white  rounded whitespace-nowrap {{$job_draft->status !== 'Submitted to Supervisor' ? "cursor-not-allowed bg-gray-400" : "bg-green-500 hover:bg-green-600"}}" {{$job_draft->status !== 'Submitted to Supervisor' ? "disabled" : ""}}>
                                     View Form
                                 </button>
