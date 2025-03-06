@@ -28,7 +28,6 @@ class JobDraft extends Model
         'feedback',
         'date_completed',
         'reference_draft_id',
-        'days_to_add',
         'draft_op_sign',
         'op_signed_draft',
         'draft_sup_sign',

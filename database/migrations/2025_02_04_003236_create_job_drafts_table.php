@@ -38,7 +38,7 @@ return new class extends Migration
             $table->string('feedback')->nullable();
             $table->date('date_completed')->nullable();
             $table->unsignedBigInteger('reference_draft_id')->nullable();
-            $table->integer('days_to_add')->default(0);
+            // $table->integer('days_to_add')->default(0);
 
             // Foreign Key Constraint
             $table->foreign('job_order_id')->references('id')->on('job_orders')->onDelete('cascade');

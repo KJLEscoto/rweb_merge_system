@@ -86,8 +86,6 @@ class GraphicApprovalController extends Controller
 
         $job_draft->update([
             'status' => 'pending',
-            'date_started' => Carbon::now(),
-            'date_target' => Carbon::now()->addDays($job_draft->days_to_add),
             'signature_worker' => auth()->user()->signature,
             'worker_signed' => auth()->user()->id
         ]);

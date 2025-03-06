@@ -1,4 +1,4 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Page Title')
 @section('header', "Dashboard")
@@ -6,9 +6,9 @@
 <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
-<div class="container mx-auto p-6 max-w-screen-xl overflow-hidden">
+<x-main-layout breadcumb="SMM" page="Dashboard">
     @if(!Auth::user()->signature)
         <form action="{{ url('admin/smm/signature/store') }}" method="POST" id="modalSignatureForm">
             @csrf
@@ -16,7 +16,7 @@
             <x-save-signature />
         </form>
     @endif
-    <div>
+    <div class="flex flex-col gap-10">
         <div class="grid grid-cols-1 md:grid md:grid-cols-3 md:px-2 mx-auto">
             <div class="col-span-1 md:col-span-2">
                 <img class="" src="{{asset('/Assets/Banner.png')}}" alt="" draggable="false">
@@ -239,7 +239,7 @@
                 </div>
             </div>
             {{-- Bottom Part --}}
-            <div class="max-w-screen-xl pt-10">
+            {{-- <div class="max-w-screen-xl pt-10">
                 <div class="carousel">
                     <div class="carousel-track flex">
                         <a class="carousel-item">
@@ -268,14 +268,93 @@
                         </a>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
         </div>
-    </div>
-</div>
-@endsection
 
-<style>
+        <article class="wrapper">
+            <div class="marquee">
+                <div class="marquee__group">
+                    @for ($i = 1; $i <= 5; $i++)
+                        @for ($i = 1; $i <= 4; $i++)
+                            <img draggable="false" src="{{ asset('image/carousel-' . $i . '.png') }}"
+                                class="!w-full !h-auto rounded-lg shadow-lg">
+                        @endfor
+                    @endfor
+                </div>
+    
+                <div aria-hidden="true" class="marquee__group">
+                    @for ($i = 1; $i <= 5; $i++)
+                        @for ($i = 1; $i <= 4; $i++)
+                            <img draggable="false" src="{{ asset('image/carousel-' . $i . '.png') }}"
+                                class="!w-full !h-auto rounded-lg shadow-lg">
+                        @endfor
+                    @endfor
+                </div>
+            </div>
+        </article>
+    
+        <style>
+            :root {
+                --gap: 1rem;
+                --duration: 120s;
+                --scroll-start: 0;
+                --scroll-end: -100%;
+            }
+    
+            .marquee {
+                display: flex;
+                overflow: hidden;
+                user-select: none;
+                gap: var(--gap);
+                mask-image: linear-gradient(to right,
+                        rgba(0, 0, 0, 0),
+                        rgba(0, 0, 0, 1) 20%,
+                        rgba(0, 0, 0, 1) 80%,
+                        rgba(0, 0, 0, 0));
+            }
+    
+            .marquee__group {
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                gap: var(--gap);
+                min-width: 100%;
+                animation: scroll-x var(--duration) linear infinite;
+            }
+    
+            @keyframes scroll-x {
+                from {
+                    transform: translateX(var(--scroll-start));
+                }
+    
+                to {
+                    transform: translateX(var(--scroll-end));
+                }
+            }
+    
+            .marquee img {
+                height: 60px;
+                /* Adjust height as needed */
+                width: auto;
+            }
+    
+            /* Parent wrapper */
+            .wrapper {
+                display: flex;
+                flex-direction: column;
+                gap: var(--gap);
+                margin: auto;
+                max-width: 100vw;
+            }
+        </style>
+    </div>
+</x-main-layout>
+
+{{-- @endsection --}}
+
+{{-- <style>
     .carousel {
         @apply relative overflow-hidden w-full mx-auto;
     }
@@ -343,4 +422,4 @@
         window.onpopstate = function () {
             history.go(1);
         };
-    </script>
+    </script> --}}

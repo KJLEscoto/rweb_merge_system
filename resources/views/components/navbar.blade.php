@@ -4,8 +4,7 @@
 
 @props(['header' => ""])
 
-<div class="container mx-auto max-w-screen-xl overflow-hidden">
-<div class="grid grid-cols-3">
+{{-- <div class="grid grid-cols-3">
     <x-pagetitle header="{{ $header }}" />
     <div class="hidden md:block">
         <div class="bg-[#fa7011] rounded-bl-[40px] flex items-center justify-center gap-8 h-fit px-2 py-4">
@@ -17,13 +16,11 @@
             </div>
 
 
-            {{-- Proper way to check if user has an image --}}
             <img src="{{ $user->image ? asset($user->image) : asset('/Assets/user-profile-profilepage.png') }}"
                  class="w-14 h-14 rounded-full object-cover"
                  alt="User Profile"
                  draggable="false">
 
-            {{-- Logout Button --}}
             <form method="POST" action="{{ route('admin.smm.logout') }}">
                 @csrf
                 <button type="submit">
@@ -32,5 +29,5 @@
             </form>
         </div>
     </div>
-</div>
-</div>
+</div> --}}
+<x-admin.mini-profile />

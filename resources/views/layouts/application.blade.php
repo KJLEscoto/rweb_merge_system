@@ -41,7 +41,7 @@
 
              <!-- Main Content -->
              <div class="flex-1 overflow-y-auto scrollbar-hide bg-gray-100">
-                <div class="h-24">
+                <div class="h-24 w-full flex justify-end">
                     <x-navbar :header="View::yieldContent('header')" />
                 </div>
                 <div class="mt-5 flex-1 overflow-auto">

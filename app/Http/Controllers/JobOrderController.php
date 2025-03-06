@@ -83,7 +83,7 @@ class JobOrderController extends Controller
             'client_id' => 'sometimes|integer|nullable',
             'date_target' => 'sometimes|date',
             'date_started' => 'sometimes|date',
-            'days_to_add' => 'sometimes|integer'
+            // 'days_to_add' => 'sometimes|integer'
         ]);
 
         // Find the job draft by ID
@@ -97,9 +97,9 @@ class JobOrderController extends Controller
         if ($request->filled('date_target')) {
             $updateDraft['date_target'] = $request->date_target;
         }
-        if ($request->filled('days_to_add')) {
-            $updateDraft['days_to_add'] = $request->days_to_add;
-        }
+        // if ($request->filled('days_to_add')) {
+        //     $updateDraft['days_to_add'] = $request->days_to_add;
+        // }
         if ($request->filled('graphic_designer_id')) {
             $updateDraft['graphic_designer_id'] = $request->graphic_designer_id;
         }
