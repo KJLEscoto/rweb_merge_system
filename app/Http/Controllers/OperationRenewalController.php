@@ -41,8 +41,8 @@ class OperationRenewalController extends Controller
                 JobDraft::create([
                     'job_order_id' => $jobDraft->job_order_id,
                     'type' => 'content_writer',
-                    // 'date_started' => Carbon::now()->toDateString(), // Set date_started to today
-                    // 'date_target' => Carbon::now()->addDays(3)->toDateString(),
+                    'date_started' => Carbon::now()->toDateString(), // Set date_started to today
+                    'date_target' => Carbon::now()->addDays(3)->toDateString(),
                     'status' => 'Waiting for Content Writer Approval',
                     'content_writer_id' => $jobDraft->content_writer_id,
                     'graphic_designer_id' => $jobDraft->graphic_designer_id,
