@@ -1,9 +1,9 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Show User')
 @section('header', 'Show User')
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 @php
     $roles = [
@@ -16,7 +16,8 @@
         7 => 'Accounting'
     ];
 @endphp
-<div class="mx-auto max-w-screen-2xl h-screen">
+<x-main-layout breadcumb="SMM" page="Profile">
+<div class="px-10 pt-10">
     {{-- Middle Part --}}
 
     <div class="px-10 text-white">
@@ -48,7 +49,7 @@
 
 
                 <div class="px-10 col-span-3 w-full lg:col-span-3 bg-white shadow-md rounded-md pt-10 py-10">
-                    <div class="w-full h-full flex justify-center items-center ">
+                    <div class="w-full flex justify-center items-center ">
                         {{-- <img class="rounded-full w-32 h-32 object-cover"
                             src="{{ file_exists(public_path($user->image)) && $user->image ? asset($user->image) : asset('/Assets/user-profile-profilepage.png') }}"
                             alt="User Image"> --}}
@@ -107,4 +108,5 @@
     </div>
 
 </div>
-@endsection
+</x-main-layout>
+{{-- @endsection --}}

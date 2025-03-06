@@ -1,9 +1,9 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Job Order')
 @section('header', 'Job Order')
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -32,6 +32,7 @@
 <script src="https://cdn.jsdelivr.net/npm/signature_pad"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<x-main-layout breadcumb="SMM" page="Show Approval">
 <div class="mx-auto max-w-screen-2xl">
     <div class="h-full mx-auto max-w-screen-xl">
         {{-- Middle Part --}}
@@ -116,23 +117,24 @@
         </div>
     </div>
 </div>
-    <!-- Decline Modal -->
-    <div id="declineModal" class="fixed inset-0 flex items-center justify-center hidden bg-gray-500 bg-opacity-50 z-50">
-        <div class="bg-white p-6 rounded-md w-[50%]">
-            <h2 class="text-xl font-bold mb-4">Decline Job Order</h2>
-            <form action="{{ url('/admin/smm/topmanager/decline/' . $job_draft->id) }}" method="POST" id="declineForm">
-                @csrf
-                <div class="mb-4">
-                    <label for="declineReason" class="block text-sm font-semibold mb-2">Reason for Decline:</label>
-                    <textarea name="summary" id="declineReason" rows="4" class="w-full border rounded-md p-2" placeholder="Enter your reason..."></textarea>
-                </div>
-                <div class="flex justify-end space-x-2">
-                    <button type="button" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400" onclick="closeDeclineModal()">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Submit Decline</button>
-                </div>
-            </form>
-        </div>
+</x-main-layout>
+<!-- Decline Modal -->
+<div id="declineModal" class="fixed inset-0 flex items-center justify-center hidden bg-gray-500 bg-opacity-50 z-50">
+    <div class="bg-white p-6 rounded-md w-[50%]">
+        <h2 class="text-xl font-bold mb-4">Decline Job Order</h2>
+        <form action="{{ url('/admin/smm/topmanager/decline/' . $job_draft->id) }}" method="POST" id="declineForm">
+            @csrf
+            <div class="mb-4">
+                <label for="declineReason" class="block text-sm font-semibold mb-2">Reason for Decline:</label>
+                <textarea name="summary" id="declineReason" rows="4" class="w-full border rounded-md p-2" placeholder="Enter your reason..."></textarea>
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button type="button" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400" onclick="closeDeclineModal()">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Submit Decline</button>
+            </div>
+        </form>
     </div>
+</div>
 
 
     <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
@@ -241,4 +243,4 @@
         }
     });
 </script>
-@endsection
+{{-- @endsection --}}

@@ -1,9 +1,9 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Admin')
 @section('header', "Create Job Order")
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -29,7 +29,7 @@
 
 <!-- CKEditor 5 Classic CDN -->
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
-
+<x-main-layout breadcumb="SMM" page="Job Order Create">
 <div class="container mx-auto p-6">
     {{-- Success Message Component --}}
     @if(session('Status'))
@@ -130,6 +130,7 @@
         </form>
     </div>
 </div>
+</x-main-layout>
 
 <script>
     function openModal() {
@@ -159,4 +160,4 @@
         });
 </script>
 
-@endsection
+{{-- @endsection --}}

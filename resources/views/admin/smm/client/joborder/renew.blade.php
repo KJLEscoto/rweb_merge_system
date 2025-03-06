@@ -1,10 +1,10 @@
 
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Clients')
 @section('header', 'List of Job Orders to Approve || Client')
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -22,7 +22,8 @@
     }
 </style>
 
-<div class="container mx-auto p-4 sm:p-6 flex items-center justify-center h-full">
+<x-main-layout breadcumb="SMM" page="Renew Job Order">
+<div class="px-10 pt-10 flex items-center justify-center h-full">
     <div class="w-full">
         <form action="{{ url('/admin/smm/client/renew/' . $job_draft_id->id) }}" method="POST">
             @csrf
@@ -42,4 +43,5 @@
         </form>
     </div>
 </div>
-@endsection
+</x-main-layout>
+{{-- @endsection --}}

@@ -16,10 +16,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('guest')->group(function () {
 
 
-    Route::get('admin/smm/login', [AuthenticatedSessionController::class, 'create'])
+    Route::get('smm/login', [AuthenticatedSessionController::class, 'create'])
         ->name('admin.smm.login');
 
-    Route::post('admin/smm/login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('smm/login', [AuthenticatedSessionController::class, 'store']);
 
     Route::get('admin/smm/forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('admin.smm.password.request');

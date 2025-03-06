@@ -1,9 +1,9 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Job Order')
 @section('header', 'Job Order')
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -31,57 +31,59 @@
 <!-- Include CKEditor 5 CDN -->
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
-<div class="mx-auto max-w-screen-2xl">
-    <div class="h-full mx-auto max-w-screen-xl">
-        <div class="h-auto gap-8 m-10 p-10 relative bg-white" style="box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.3); border-radius: 8px;">
-            <div class="rounded-md text-white flex justify-end mb-10">
-                <a href="{{ url('/admin/smm/client') }}" class="w-fit px-4 py-1 bg-[#fa7011] rounded hover:bg-[#d95f0a] transition duration-200">
-                    Back
-                </a>
-            </div>
+<x-main-layout breadcumb="SMM" page="Show Job Order">
+    <div class="px-10 pt-10">
+        <div class="h-full mx-auto max-w-screen-xl">
+            <div class="h-auto gap-8 m-10 p-10 relative bg-white" style="box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.3); border-radius: 8px;">
+                <div class="rounded-md text-white flex justify-end mb-10">
+                    <a href="{{ url('/admin/smm/client') }}" class="w-fit px-4 py-1 bg-[#fa7011] rounded hover:bg-[#d95f0a] transition duration-200">
+                        Back
+                    </a>
+                </div>
 
-                                <!-- Responsive Grid for Details -->
-                                <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
-                                    <!-- Project Name -->
-                                    <div class="lg:col-span-1 font-semibold">Project Name:</div>
-                                    <div class="lg:col-span-4">{{ $job_draft->jobOrder->title }}</div>
-            
-                                    <!-- Designation -->
-                                    <div class="lg:col-span-1 font-semibold">Designation:</div>
-                                    <div class="lg:col-span-4">{{ Str::title(str_replace('_', ' ', $job_draft->type)) }}</div>
-            
-                                    <!-- Google Drive Link -->
-                                    <div class="lg:col-span-1 font-semibold">Google Drive Link:</div>
-                                    <div class="lg:col-span-4">
-                                        <div id="draftContent" class="max-h-[300px] rounded-lg overflow-y-auto break-all">
-                                            {!! $job_draft->draft !!}
+                                    <!-- Responsive Grid for Details -->
+                                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                                        <!-- Project Name -->
+                                        <div class="lg:col-span-1 font-semibold">Project Name:</div>
+                                        <div class="lg:col-span-4">{{ $job_draft->jobOrder->title }}</div>
+                
+                                        <!-- Designation -->
+                                        <div class="lg:col-span-1 font-semibold">Designation:</div>
+                                        <div class="lg:col-span-4">{{ Str::title(str_replace('_', ' ', $job_draft->type)) }}</div>
+                
+                                        <!-- Google Drive Link -->
+                                        <div class="lg:col-span-1 font-semibold">Google Drive Link:</div>
+                                        <div class="lg:col-span-4">
+                                            <div id="draftContent" class="max-h-[300px] rounded-lg overflow-y-auto break-all">
+                                                {!! $job_draft->draft !!}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-            <div class="mt-10">
-                <form id="jobForm" action="{{ url('/admin/smm/client/update/' . $job_draft->id) }}" method="POST">
-                    @csrf
-                    @method('PUT') <!-- Default method for Accept -->
-                    
-                    <label for="feedback" class="block font-semibold">Feedback:</label>
-                    <textarea class="w-full border p-2 rounded-md" name="summary" id="summaryEditor"></textarea>
-                    
-                    <div class="mt-4 flex space-x-4">
-                        <button type="submit" id="acceptButton"
-                            class="px-4 py-2 text-sm text-white bg-[#fa7011] rounded hover:bg-[#c06b32] disabled:opacity-50 disabled:cursor-not-allowed">
-                            Accept
-                        </button>
-                        <button type="submit" id="declineButton"
-                            class="px-4 py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed">
-                            Decline
-                        </button>
-                    </div>
-                </form>
+                <div class="mt-10">
+                    <form id="jobForm" action="{{ url('/admin/smm/client/update/' . $job_draft->id) }}" method="POST">
+                        @csrf
+                        @method('PUT') <!-- Default method for Accept -->
+                        
+                        <label for="feedback" class="block font-semibold">Feedback:</label>
+                        <textarea class="w-full border p-2 rounded-md" name="summary" id="summaryEditor"></textarea>
+                        
+                        <div class="mt-4 flex space-x-4">
+                            <button type="submit" id="acceptButton"
+                                class="px-4 py-2 text-sm text-white bg-[#fa7011] rounded hover:bg-[#c06b32] disabled:opacity-50 disabled:cursor-not-allowed">
+                                Accept
+                            </button>
+                            <button type="submit" id="declineButton"
+                                class="px-4 py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                                Decline
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</x-main-layout>
 
 
 <script>
@@ -117,4 +119,4 @@
         }
     });
 </script>
-@endsection
+{{-- @endsection --}}

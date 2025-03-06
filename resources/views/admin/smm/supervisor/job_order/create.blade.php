@@ -1,9 +1,9 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Admin')
 @section('header', "Create Job Order")
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -23,8 +23,8 @@
 
 <!-- CKEditor 5 Classic CDN -->
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
-
-<div class="container mx-auto p-6">
+<x-main-layout breadcumb="SMM" page="Create Supervisor Job Order">
+<div class="px-10 pt-10">
     @if(!Auth::user()->signature)
         <form action="{{ url('signature/store') }}" method="POST" id="modalSignatureForm">
             @csrf
@@ -97,6 +97,7 @@
         </form>
     </div>
 </div>
+</x-main-layout>
 
 <!-- Operator Selection Modal -->
 <div id="operator-modal" class="fixed inset-0 bg-gray-900 px-4 md:px-20 z-50 bg-opacity-50 flex items-center justify-center hidden">
@@ -183,4 +184,4 @@
         .catch(error => console.error(error));
 </script>
 
-@endsection
+{{-- @endsection --}}

@@ -1,9 +1,9 @@
-@extends('layouts.application')
+x{{-- @extends('layouts.application') --}}
 
 @section('title', 'Revision')
 @section('header', "Content Revision")
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -24,7 +24,8 @@
 <!-- CKEditor 5 CDN -->
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
-<div class="container mx-auto p-6">
+<x-main-layout breadcumb="SMM" page="Edit Revision">
+<div class="px-10 pt-10">
     <div class="w-full px-6 py-10 mx-auto rounded-lg custom-shadow bg-white">
         <div>
             <a href="{{ url('/admin/smm/graphic/revisions') }}">
@@ -113,6 +114,7 @@
         </form>
     </div>
 </div>
+</x-main-layout>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -136,4 +138,4 @@
     });
 </script>
 
-@endsection
+{{-- @endsection --}}

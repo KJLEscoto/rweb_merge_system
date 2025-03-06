@@ -1,9 +1,9 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Supervisor Revision')
 @section('header', 'Supervisor List Revision')
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -21,6 +21,7 @@
     }
 </style>
 
+<x-main-layout breadcumb="SMM" page="Revision">
 <div class="container mx-auto p-6">
     <div class="overflow-x-auto overflow-y-auto bg-white shadow-md rounded-lg h-[500px]" style="max-height: 500px;">
         <table class="w-full table-fixed text-left border-collapse min-w-[600px]" id="projectTable">
@@ -68,6 +69,7 @@
         </table>
     </div>
 </div>
+</x-main-layout>
 
 
-@endsection
+{{-- @endsection --}}

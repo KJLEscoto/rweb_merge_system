@@ -1,9 +1,9 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Job Order')
 @section('header', 'Job Order')
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .custom-shadow {
@@ -31,7 +31,8 @@
     <script src="https://cdn.jsdelivr.net/npm/signature_pad"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
+<x-main-layout breadcumb="SMM" page="Show Approval">
+<div class="px-10 pt-10">
     <div class="h-auto gap-8 m-4 lg:m-10 p-4 lg:p-10 relative bg-white"
         style="box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.3); border-radius: 8px;">
         <div class="rounded-md text-white flex justify-end mb-10">
@@ -201,7 +202,8 @@
         </div>
     </div>
 
-
+</div>
+</x-main-layout>
 <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
 
 <script>
@@ -367,4 +369,4 @@
             }
         });
     </script>
-@endsection
+{{-- @endsection --}}

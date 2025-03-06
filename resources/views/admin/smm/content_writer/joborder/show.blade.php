@@ -1,9 +1,9 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Supervisor')
 @section('header', 'Content Writer Job Order')
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -73,6 +73,9 @@
         padding: 20px
     }
 </style>
+
+<x-main-layout breadcumb="SMM" page="Show Job Order">
+<div class="px-10 pt-10">
 <div id="container-pdf">
     <div class="bg-[#fa7011] text-white rounded-md px-3 py-1 w-fit mb-4">
         <a href="{{url('/admin/smm/content')}}">Back</a>
@@ -179,5 +182,7 @@
         <img src="{{ asset('/Assets/doc_footer.png') }}" alt="Footer">
     </div>
 </div>
+</div>
+</x-main-layout>
 
-@endsection
+{{-- @endsection --}}

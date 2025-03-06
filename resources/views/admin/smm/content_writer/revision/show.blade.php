@@ -1,9 +1,9 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Content Revision')
 @section('header', 'Show Content Revision')
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -27,7 +27,8 @@
 <!-- Quill JS -->
 <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 
-<div class="container mx-auto p-6">
+<x-main-layout breadcumb="SMM" page="Show Revision">
+<div class="px-10 pt-10">
     <div class="w-full px-6 py-10 mx-auto rounded-lg custom-shadow bg-white">
         <div>
             <a href="{{ url('/admin/smm/content') }}">
@@ -82,6 +83,7 @@
 
     </div>
 </div>
+</x-main-layout>
 
 <script>
     var quill = new Quill('#quill-editor', {
@@ -103,4 +105,4 @@
     };
 
     </script>
-@endsection
+{{-- @endsection --}}

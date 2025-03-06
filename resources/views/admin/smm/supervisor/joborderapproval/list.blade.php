@@ -1,9 +1,9 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Job Order')
 @section('header', 'List of Job Orders')
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -24,7 +24,8 @@
     }
 </style>
 
-<div class="container mx-auto p-4 sm:p-6">
+<x-main-layout breadcumb="SMM" page="Approval">
+<div class="px-10 pt-10">
     {{-- Success Message Component --}}
     @if(session('Status'))
         <x-success />
@@ -101,6 +102,7 @@
         </table>
     </div>
 </div>
+</x-main-layout>
 
 {{-- JavaScript --}}
 <script>
@@ -159,4 +161,4 @@
     });
 </script>
 
-@endsection
+{{-- @endsection --}}

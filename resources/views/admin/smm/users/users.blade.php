@@ -1,9 +1,9 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Page Title')
 @section('header', "Users")
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 @php
     $roles = [
@@ -16,7 +16,8 @@
         7 => 'Accounting'
     ];
 @endphp
-<div class="container mx-auto p-6">
+<x-main-layout breadcumb="SMM" page="Users">
+<div class="px-10 pt-10">
     <a href="{{ route('admin.smm.register') }}">
         <div class="bg-[#fa7011] w-fit block text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center lg:hidden">
             <i class="fa-solid fa-plus"></i>
@@ -88,6 +89,7 @@
         {{-- {{ $list_of_projects->links('vendor.pagination.custom') }} --}}
     </div>
 </div>
+</x-main-layout>
 
 <script>
     function filterTable() {
@@ -107,4 +109,4 @@
         }
     }
 </script>
-@endsection
+{{-- @endsection --}}

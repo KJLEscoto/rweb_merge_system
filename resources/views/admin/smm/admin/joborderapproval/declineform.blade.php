@@ -1,9 +1,9 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Job Order')
 @section('header', 'Job Order')
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -31,7 +31,8 @@
 <!-- Include CKEditor 5 CDN -->
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
-<div class="mx-auto max-w-screen-2xl">
+<x-main-layout breadcumb="SMM" page="Decline">
+<div class="px-10 pt-10">
     <div class="h-full mx-auto max-w-screen-xl">
         {{-- Middle Part --}}
         <div class="">
@@ -92,6 +93,7 @@
         </div>
     </div>
 </div>
+</x-main-layout>
 
 <!-- Initialize CKEditor 5 -->
 <script>
@@ -109,4 +111,4 @@
         }
     });
 </script>
-@endsection
+{{-- @endsection --}}

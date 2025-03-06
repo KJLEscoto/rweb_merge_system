@@ -1,11 +1,12 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Edit User')
 @section('header', 'Edit User')
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
-<div class="mx-auto max-w-screen-2xl">
+<x-main-layout breadcumb="SMM" page="Profile">
+<div class="px-10 pt-10">
 
     @if (session('Status'))
     <div id="toast" class="fixed top-4 right-4 z-50">
@@ -150,6 +151,7 @@
         </div>
     </div>
 </div>
+</x-main-layout>
 
 <script src="https://cdn.jsdelivr.net/npm/signature_pad"></script>
 <script>
@@ -288,4 +290,4 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 </script>
-@endsection
+{{-- @endsection --}}
