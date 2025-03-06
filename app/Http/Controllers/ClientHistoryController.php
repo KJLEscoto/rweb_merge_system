@@ -12,6 +12,7 @@ class ClientHistoryController extends Controller
     {
         $authuser = auth()->user();
 
+        //Subject to remove
         // Fetch all job drafts for the authenticated user
         $job_drafts = JobDraft::where('client_id', $authuser->id)
             ->with('jobOrder', 'contentWriter', 'graphicDesigner', 'client') // Corrected ->with() usage
@@ -20,11 +21,13 @@ class ClientHistoryController extends Controller
     }
     public function show($id)
     {
+        //Subject to remove
         $job_draft = JobDraft::with('jobOrder.issuer', 'contentWriter', 'graphicDesigner', 'client')->find($id);
         return view('admin.smm.client.history.show', compact('job_draft'));
     }
     public function downloadPDF($id)
     {
+        //Subject to remove
         $job_draft = JobDraft::with('jobOrder.issuer', 'contentWriter', 'graphicDesigner', 'client')->find($id);
 
         $pdf = Pdf::loadView('admin.smm.client.history.show', compact('job_draft'));
