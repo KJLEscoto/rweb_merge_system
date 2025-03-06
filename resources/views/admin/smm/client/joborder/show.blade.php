@@ -36,7 +36,7 @@
         <div class="h-full mx-auto max-w-screen-xl">
             <div class="h-auto gap-8 m-10 p-10 relative bg-white" style="box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.3); border-radius: 8px;">
                 <div class="rounded-md text-white flex justify-end mb-10">
-                    <a href="{{ url('/admin/smm/client') }}" class="w-fit px-4 py-1 bg-[#fa7011] rounded hover:bg-[#d95f0a] transition duration-200">
+                    <a href="{{ url('/smm/client') }}" class="w-fit px-4 py-1 bg-[#fa7011] rounded hover:bg-[#d95f0a] transition duration-200">
                         Back
                     </a>
                 </div>
@@ -61,7 +61,7 @@
                                     </div>
 
                 <div class="mt-10">
-                    <form id="jobForm" action="{{ url('/admin/smm/client/update/' . $job_draft->id) }}" method="POST">
+                    <form id="jobForm" action="{{ url('/smm/client/update/' . $job_draft->id) }}" method="POST">
                         @csrf
                         @method('PUT') <!-- Default method for Accept -->
                         
@@ -92,7 +92,7 @@
     document.getElementById('declineButton').addEventListener('click', function(e) {
         e.preventDefault();
         var form = document.getElementById('jobForm');
-        form.action = "{{ url('/admin/smm/client/decline/' . $job_draft->id) }}";
+        form.action = "{{ url('/smm/client/decline/' . $job_draft->id) }}";
         // Remove the hidden _method input (for PUT) so the form submits as POST.
         var methodInput = form.querySelector('input[name="_method"]');
         if(methodInput) {

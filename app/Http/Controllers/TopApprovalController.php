@@ -36,6 +36,9 @@ class TopApprovalController extends Controller
         $job_draft = JobDraft::findOrFail($id);
 
         if ($job_draft->type == "content_writer") {
+            $job_draft->update([
+                'status' => 'completed',
+            ]);
             JobDraft::create([
                 'job_order_id' => $job_draft->job_order_id,
                 'type' => 'graphic_designer',
@@ -47,7 +50,7 @@ class TopApprovalController extends Controller
                 'client_id' => $job_draft->client_id,
                 'reference_draft_id' => $id,
                 'signature_supervisor' => $job_draft->signature_supervisor,
-                'supervisor_signed' => $job_draft->supervisor_signed
+                'supervisor_signed' => $job_draft->supervisor_signed,
             ]);
         } elseif ($job_draft->type == "graphic_designer") {
             // Update Database with Signature Path
@@ -57,7 +60,7 @@ class TopApprovalController extends Controller
         }
 
 
-        return redirect()->route('topmanager.approve')->with('Status', 'Job Order Approved Successfully');
+        return redirect()->route('admin.smm.topmanager.approve')->with('Status', 'Job Order Approved Successfully');
     }
 
     public function declineForm($id)
@@ -91,6 +94,6 @@ class TopApprovalController extends Controller
             'draft_sup_sign' => null,
             'sup_signed_draft' => null
         ]);
-        return redirect()->route('topmanager.approve')->with('Status', 'Job Order Declined Successfully');
+        return redirect()->route('admin.smm.topmanager.approve')->with('Status', 'Job Order Declined Successfully');
     }
 }

@@ -51,7 +51,7 @@ class ProfileController extends Controller
             if ($request->filled('password')) {
                 $user->password = Hash::make($request->input('password'));
             } else {
-                return Redirect::route('profile.edit')
+                return Redirect::route('admin.smm.profile.edit')
                     ->withErrors(['password' => 'New password and confirmation are required if you provide the current password.']);
             }
         }
@@ -75,7 +75,7 @@ class ProfileController extends Controller
         }
 
         // Handle File Upload
-        if ($request->hasFile('signature')) {
+        if ($request->hasFile(key: 'signature')) {
             $file = $request->file('signature');
             $user->signature = 'signatures/' . time() . '.' . $file->extension();
             $file->move(public_path('signatures'), $user->signature);
@@ -83,6 +83,7 @@ class ProfileController extends Controller
 
         // Handle Signature Pad Input
         elseif ($request->signature_pad) {
+            dd($request->signature_pad);
             $image = str_replace('data:image/png;base64,', '', $request->signature_pad);
             $user->signature = 'signatures/signature_' . time() . '.png';
             file_put_contents(public_path($user->signature), base64_decode($image));
@@ -90,7 +91,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return Redirect::route('profile.edit')->with('Status', 'Profile Updated Successfully!');
+        return Redirect::route('admin.smm.profile.edit')->with('Status', 'Profile Updated Successfully!');
     }
 
     /**

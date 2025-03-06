@@ -256,7 +256,7 @@ Route::prefix('/smm')->middleware('auth.redirect')->group(function() {
 
     Route::middleware(['auth', 'role:client'])->group(function () {
         Route::get('/client', [ClientApprovalController::class, 'index'])->name('admin.smm.client.approve');
-        Route::get('/client/show/{id}', [ClientApprovalController::class, 'show'])->name('client.show');
+        Route::get('/client/show/{id}', [ClientApprovalController::class, 'show'])->name('admin.smm.client.show');
         Route::get('/client/edit/{id}', [ClientApprovalController::class, 'edit'])->name('client.edit');
         Route::put('/client/update/{id}', [ClientApprovalController::class, 'update'])->name('client.update');
         Route::get('/client/decline/{id}', [ClientApprovalController::class, 'declineForm']);
@@ -280,8 +280,8 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
         
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.smm.dashboard');
         Route::get('/revision', [RevisionController::class, 'index'])->name('admin.smm.revision');
-        Route::get('/revision/show/{id}', [RevisionController::class, 'show'])->name('revision.show');
-        Route::get('/revision/edit/{id}', [RevisionController::class, 'edit'])->name('revision.edit');
+        Route::get('/revision/show/{id}', [RevisionController::class, 'show'])->name('admin.smm.revision.show');
+        Route::get('/revision/edit/{id}', [RevisionController::class, 'edit'])->name('admin.smm.revision.edit');
         Route::put('/revision/update/{id}', [RevisionController::class, 'update'])->name('revision.update');
 
 
@@ -304,7 +304,7 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
 
     Route::middleware('auth')->group(function () {
         Route::get('/profile/show', [ProfileController::class, 'index'])->name('admin.smm.profile');
-        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('admin.smm.profile.edit');
         Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
@@ -312,8 +312,8 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
         Route::get('/joborder', [JobOrderController::class, 'index'])->name('admin.smm.joborder');
         Route::get('/joborder/create', [JobOrderController::class, 'create'])->name('joborder.create');
         Route::post('/joborder/store', [JobOrderController::class, 'store'])->name('joborder.store');
-        Route::get('/joborder/show/{id}', [JobOrderController::class, 'show'])->name('joborder.show');
-        Route::get('/joborder/edit/{id}', [JobOrderController::class, 'edit'])->name('joborder.edit');
+        Route::get('/joborder/show/{id}', [JobOrderController::class, 'show'])->name('admin.smm.joborder.show');
+        Route::get('/joborder/edit/{id}', [JobOrderController::class, 'edit'])->name('admin.smm.joborder.edit');
         Route::put('/joborder/update/{id}', [JobOrderController::class, 'update'])->name('joborder.update');
     });
 
@@ -355,7 +355,7 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
 
     Route::middleware(['auth', 'role:operations'])->group(function () {
         Route::get('/operation', [OperationApprovalController::class, 'index'])->name('admin.smm.operation.approve');
-        Route::get('/operation/show/{id}', [OperationApprovalController::class, 'show'])->name('operation.show');
+        Route::get('/operation/show/{id}', [OperationApprovalController::class, 'show'])->name('admin.smm.operation.show');
         Route::get('/operation/edit/{id}', [OperationApprovalController::class, 'edit'])->name('operation.edit');
         Route::put('/operation/update/{id}', [OperationApprovalController::class, 'update'])->name('operation.update');
         Route::get('/operation/decline/{id}', [OperationApprovalController::class, 'declineForm']);
@@ -369,17 +369,17 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
         Route::post('/operation/update/{id}', [OperationRenewalController::class, 'update'])->name('operation.update');
 
         Route::get('/operation/requests', [AdminSupervisorRequestController::class, 'index'])->name('admin.smm.operation.request');
-        Route::get('/operation/request/show/{id}', [AdminSupervisorRequestController::class, 'show'])->name('operation.show');
-        Route::get('/operation/request/create/{id}', [AdminSupervisorRequestController::class, 'create'])->name('operation.create');
+        Route::get('/operation/request/show/{id}', [AdminSupervisorRequestController::class, 'show'])->name('admin.smm.operation.show');
+        Route::get('/operation/request/create/{id}', [AdminSupervisorRequestController::class, 'create'])->name('admin.smm.operation.create');
         Route::post('/operation/request/store', [AdminSupervisorRequestController::class, 'store'])->name('operation.store');
         Route::put('/operation/request/accept/{id}', [AdminSupervisorRequestController::class, 'accept'])->name('operation.accept');
 
         //Create "My Tasks" tab for Admin DONE
         Route::get('/operation/task', [OperationTaskController::class, 'index'])->name('admin.smm.operation.task');
-        Route::get('/operation/task/show/{id}', [OperationTaskController::class, 'show'])->name('operation.show');
-        Route::get('/operation/task/create/{id}', [OperationTaskController::class, 'create'])->name('operation.create');
+        Route::get('/operation/task/show/{id}', [OperationTaskController::class, 'show'])->name('admin.smm.operation.show');
+        Route::get('/operation/task/create/{id}', [OperationTaskController::class, 'create'])->name('admin.smm.operation.create');
         Route::put('/operation/task/store/{id}', [OperationTaskController::class, 'store'])->name('operation.store');
-        Route::get('/operation/task/edit/{id}', [OperationTaskController::class, 'edit'])->name('operation.edit');
+        Route::get('/operation/task/edit/{id}', [OperationTaskController::class, 'edit'])->name('admin.smm.operation.edit');
         Route::put('/operation/task/update/{id}', [OperationTaskController::class, 'update'])->name('operation.update');
         Route::put('/operation/task/accept/{id}', [OperationTaskController::class, 'accept'])->name('operation.accept');
 
@@ -391,7 +391,7 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
 
     Route::middleware(['auth', 'role:top_manager'])->group(function () {
         Route::get('/topmanager', [TopApprovalController::class, 'index'])->name('admin.smm.topmanager.approve');
-        Route::get('/topmanager/show/{id}', [TopApprovalController::class, 'show'])->name('topmanager.show');
+        Route::get('/topmanager/show/{id}', [TopApprovalController::class, 'show'])->name('admin.smm.topmanager.show');
         Route::get('/topmanager/edit/{id}', [TopApprovalController::class, 'edit'])->name('topmanager.edit');
         Route::put('/topmanager/update/{id}', [TopApprovalController::class, 'update'])->name('topmanager.update');
         Route::get('/topmanager/decline/{id}', [TopApprovalController::class, 'declineForm']);
@@ -402,7 +402,7 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
 
     Route::middleware(['auth', 'role:supervisor'])->group(function () {
         Route::get('/supervisor/approve', [SupervisorApprovalController::class, 'index'])->name('admin.smm.supervisor.approve');
-        Route::get('/supervisor/approve/show/{id}', [SupervisorApprovalController::class, 'show'])->name('supervisor.show');
+        Route::get('/supervisor/approve/show/{id}', [SupervisorApprovalController::class, 'show'])->name('admin.smm.supervisor.show');
         Route::get('/supervisor/approve/edit/{id}', [SupervisorApprovalController::class, 'edit'])->name('supervisor.edit');
         Route::put('/supervisor/approve/update/{id}', [SupervisorApprovalController::class, 'update'])->name('supervisor.update');
         Route::get('/supervisor/approve/declineForm/{id}', [SupervisorApprovalController::class, 'declineForm'])->name('supervisor.declineForm');
@@ -416,25 +416,25 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
         Route::post('/supervisor/update/{id}', [SupervisorRenewalController::class, 'update'])->name('supervisor.update');
 
         Route::get('/supervisor/joborder', [SupervisorJobOrderController::class, 'index'])->name('admin.smm.supervisor.joborder');
-        Route::get('/supervisor/joborder/create', [SupervisorJobOrderController::class, 'create'])->name('supervisor.create');
+        Route::get('/supervisor/joborder/create', [SupervisorJobOrderController::class, 'create'])->name('admin.smm.supervisor.create');
         Route::post('/supervisor/joborder/store', [SupervisorJobOrderController::class, 'store'])->name('supervisor.store');
-        Route::get('/supervisor/joborder/show/{id}', [SupervisorJobOrderController::class, 'show'])->name('supervisor.show');
-        Route::get('/supervisor/joborder/edit/{id}', [SupervisorJobOrderController::class, 'edit'])->name('supervisor.edit');
+        Route::get('/supervisor/joborder/show/{id}', [SupervisorJobOrderController::class, 'show'])->name('admin.smm.supervisor.show');
+        Route::get('/supervisor/joborder/edit/{id}', [SupervisorJobOrderController::class, 'edit'])->name('admin.smm.supervisor.edit');
         Route::put('/supervisor/joborder/update/{id}', [SupervisorJobOrderController::class, 'update'])->name('supervisor.update');
 
         Route::get('/supervisor/directjob', [SupervisorDirectJobOrderController::class, 'index'])->name('admin.smm.supervisor.directjob');
-        Route::get('/supervisor/directjob/create', [SupervisorDirectJobOrderController::class, 'create'])->name('supervisor.directjob.create');
+        Route::get('/supervisor/directjob/create', [SupervisorDirectJobOrderController::class, 'create'])->name('admin.smm.supervisor.directjob.create');
         Route::post('/supervisor/directjob/store', [SupervisorDirectJobOrderController::class, 'store'])->name('supervisor.directjob.store');
-        Route::get('/supervisor/directjob/show/{id}', [SupervisorDirectJobOrderController::class, 'show'])->name('supervisor.directjob.show');
-        Route::get('/supervisor/directjob/edit/{id}', [SupervisorDirectJobOrderController::class, 'edit'])->name('supervisor.directjob.edit');
+        Route::get('/supervisor/directjob/show/{id}', [SupervisorDirectJobOrderController::class, 'show'])->name('admin.smm.supervisor.directjob.show');
+        Route::get('/supervisor/directjob/edit/{id}', [SupervisorDirectJobOrderController::class, 'edit'])->name('admin.smm.supervisor.directjob.edit');
         Route::put('/supervisor/directjob/update/{id}', [SupervisorDirectJobOrderController::class, 'update'])->name('supervisor.directjob.update');
 
         //Create "My Task" tab for Supervisor DONE
         Route::get('/supervisor/task', [SupervisorTaskController::class, 'index'])->name('admin.smm.supervisor.task');
-        Route::get('/supervisor/task/show/{id}', [SupervisorTaskController::class, 'show'])->name('supervisor.show');
-        Route::get('/supervisor/task/create/{id}', [SupervisorTaskController::class, 'create'])->name('supervisor.create');
+        Route::get('/supervisor/task/show/{id}', [SupervisorTaskController::class, 'show'])->name('admin.smm.supervisor.show');
+        Route::get('/supervisor/task/create/{id}', [SupervisorTaskController::class, 'create'])->name('admin.smm.supervisor.create');
         Route::put('/supervisor/task/store/{id}', [SupervisorTaskController::class, 'store'])->name('supervisor.store');
-        Route::get('/supervisor/task/edit/{id}', [SupervisorTaskController::class, 'edit'])->name('supervisor.edit');
+        Route::get('/supervisor/task/edit/{id}', [SupervisorTaskController::class, 'edit'])->name('admin.smm.supervisor.edit');
         Route::put('/supervisor/task/update/{id}', [SupervisorTaskController::class, 'update'])->name('supervisor.update');
         Route::put('/supervisor/task/accept/{id}', [SupervisorTaskController::class, 'accept'])->name('supervisor.accept');
 

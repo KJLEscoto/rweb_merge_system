@@ -30,9 +30,9 @@ class AdminSupervisorRequestController extends Controller
 
     public function create($id)
     {
-        $clients = User::with('role')->where('role_id', 1)->get();
-        $graphic_designers = User::with('role')->whereNotIn('role_id', [1, 3, 5])->get();
-        $content_writers = User::with('role')->whereNotIn('role_id', [1, 4, 5])->get();
+        $clients = User::with('roles')->where('role_id', 1)->get();
+        $graphic_designers = User::with('roles')->whereNotIn('role_id', [1, 3, 5])->get();
+        $content_writers = User::with('roles')->whereNotIn('role_id', [1, 4, 5])->get();
 
         $supervisor_request = ModelsRequest::find($id);
 
@@ -76,7 +76,7 @@ class AdminSupervisorRequestController extends Controller
             'supervisor_signed' => auth()->user()->id
         ]);
 
-        return redirect()->route('operation.request')->with('Status', 'Job Order Create Successfully');
+        return redirect()->route('admin.smm.operation.request')->with('Status', 'Job Order Create Successfully');
     }
 
     public function accept($id)
@@ -87,6 +87,6 @@ class AdminSupervisorRequestController extends Controller
             'status' => 'Approved by Operation'
         ]);
 
-        return redirect()->route('operation.request')->with('Status', 'Job Order Accepted Successfully');
+        return redirect()->route('admin.smm.operation.request')->with('Status', 'Job Order Accepted Successfully');
     }
 }

@@ -83,7 +83,7 @@ class OperationApprovalController extends Controller
             'status' => 'Submitted to Supervisor',
         ]);
 
-        return redirect()->route('operation.approve')->with('Status', 'Job Order Approved Successfully');
+        return redirect()->route('admin.smm.operation.approve')->with('Status', 'Job Order Approved Successfully');
     }
 
     public function declineForm($id)
@@ -114,6 +114,6 @@ class OperationApprovalController extends Controller
         $job_draft->update([
             'status' => 'Revision',
         ]);
-        return redirect()->route('operation.approve')->with('Status', 'Job Order Declined Successfully');
+        return redirect()->route('admin.smm.operation.approve')->with('Status', 'Job Order Declined Successfully');
     }
 }

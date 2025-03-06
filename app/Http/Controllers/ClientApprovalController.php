@@ -57,27 +57,23 @@ class ClientApprovalController extends Controller
         ]);
 
 
-        // if ($job_draft_id->type == 'content_writer') {
-        //     // will not approve content anymore
-        // } elseif ($job_draft_id->type == 'graphic_designer') {
-        //     if ($job_draft_id->jobOrder->renewable == 0) {
-        //         return view('admin.smm.client.joborder.renew', compact('job_draft_id'));
-        //     } elseif ($job_draft_id->jobOrder->renewable == 1) {
-        //         JobDraft::create([
-        //             'job_order_id' => $job_draft_id->job_order_id,
-        //             'type' => 'content_writer',
-        //             'date_started' => Carbon::now()->toDateString(), // Set date_started to today
-        //             'date_target' => Carbon::now()->addDays(3)->toDateString(),
-        //             'status' => 'Waiting for Content Writer Approval',
-        //             'content_writer_id' => $job_draft_id->content_writer_id,
-        //             'graphic_designer_id' => $job_draft_id->graphic_designer_id,
-        //             'client_id' => $job_draft_id->client_id,
-        //             'signature_supervisor' => $job_draft_id->signature_supervisor,
-        //             'supervisor_signed' => $job_draft_id->supervisor_signed
-        //         ]);
-        //     }
-        // }
-        return redirect()->route('client.approve')->with('Status', 'Job Order Approved Successfully');
+            if ($job_draft->jobOrder->renewable == 0) {
+                return view('admin.smm.client.joborder.renew', compact('job_draft_id'));
+            } elseif ($job_draft->jobOrder->renewable == 1) {
+                JobDraft::create([
+                    'job_order_id' => $job_draft->job_order_id,
+                    'type' => 'content_writer',
+                    'date_started' => Carbon::now()->toDateString(), // Set date_started to today
+                    'date_target' => Carbon::now()->addDays(3)->toDateString(),
+                    'status' => 'Waiting for Content Writer Approval',
+                    'content_writer_id' => $job_draft->content_writer_id,
+                    'graphic_designer_id' => $job_draft->graphic_designer_id,
+                    'client_id' => $job_draft->client_id,
+                    'signature_supervisor' => $job_draft->signature_supervisor,
+                    'supervisor_signed' => $job_draft->supervisor_signed
+                ]);
+            }
+        return redirect()->route('admin.smm.client.approve')->with('Status', 'Job Order Approved Successfully');
     }
     public function declineForm($id)
     {
@@ -110,13 +106,13 @@ class ClientApprovalController extends Controller
             'draft_sup_sign' => null,
             'sup_signed_draft' => null
         ]);
-        return redirect()->route('client.approve')->with('Status', 'Job Order Declined Successfully');
+        return redirect()->route('admin.smm.client.approve')->with('Status', 'Job Order Declined Successfully');
     }
 
     public function renew(Request $request, $id)
     {
         if ($request->renewable == 0) {
-            return redirect()->route('client.approve')->with('Status', 'Job Order Approved Successfully');
+            return redirect()->route('admin.smm.client.approve')->with('Status', 'Job Order Approved Successfully');
         } else {
 
             $job_draft = JobDraft::with('jobOrder')->find($id);
@@ -148,7 +144,7 @@ class ClientApprovalController extends Controller
                 'supervisor_signed' => $job_draft->supervisor_signed
             ]);
 
-            return redirect()->route('client.approve')->with('Status', 'Job Order Approved Successfully');
+            return redirect()->route('admin.smm.client.approve')->with('Status', 'Job Order Approved Successfully');
         }
     }
 }

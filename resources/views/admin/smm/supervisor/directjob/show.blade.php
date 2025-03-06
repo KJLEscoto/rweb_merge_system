@@ -102,7 +102,7 @@
                     </td>
                     
                     <td><strong>Target Finished Date:</strong><br>
-                        {{ $job_draft->date_started ? \Carbon\Carbon::parse($job_draft->date_started)->addDays($job_draft->days_to_add)->format('Y-m-d') : 'N/A' }}
+    {{ $job_draft->date_target }}
                     </td>
                             
                 </tr>
@@ -152,15 +152,20 @@
             <table>
                 <tr>
                     <td class="signature">
-                        <strong>Assigned Personnel Signature:                     @if ($job_draft->type == "content_writer")
-                            {{ $job_draft->contentWriter->name }}
+                        <strong>Assigned Personnel Signature:                     
+                        @if ($job_draft->type == "content_writer")
+                            <br />{{ $job_draft->contentWriter->name }}
                         @else
                             {{ $job_draft->graphicDesigner->name }}
                         @endif</strong><br>
-                        <img src="{{ asset($job_draft->signature_worker) }}" alt="Admin Signature">
+                        @if ($job_draft->signature_worker)
+                            <img src="{{ asset($job_draft->signature_worker) }}" alt="Admin Signature">
+                        @else
+                            No Signature
+                        @endif
                     </td>
                     <td class="signature">
-                        <strong>Supervisor Signature: {{$job_draft->jobOrder->issuer->name}}</strong><br>
+                        <strong>Supervisor Signature: <br />{{$job_draft->jobOrder->issuer->name}}</strong><br>
                         <img src="{{ asset($job_draft->signature_supervisor) }}" alt="Supervisor Signature">
                     </td>
                 </tr>

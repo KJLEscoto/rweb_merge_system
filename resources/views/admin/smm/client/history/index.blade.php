@@ -71,4 +71,4 @@
 </div>
 </x-main-layout>
 
-@endsection
+{{-- @endsection --}}

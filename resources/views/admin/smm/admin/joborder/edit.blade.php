@@ -116,20 +116,31 @@
                             </div>
                         </div>
                     @elseif ($job_draft->status === "Waiting for Content Writer Approval" || $job_draft->status === "Waiting for Graphic Designer Approval")
-                        <div class="col-span-2 lg:col-span-1 grid grid-cols-2 w-full gap-4 rounded-lg">
-                            <div class="col-span-2">
-                                <p class="text-sm text-gray-600">Days to Add</p>
-                                <div class="relative">
-                                    <input type="number" name="days_to_add"
-                                    value="{{ old('days_to_add', $job_draft->days_to_add) }}"
-                                    class="w-full border px-3 py-2 border-gray-200 rounded-lg">
-                                
-                                </div>
-                                @error('days_to_add')
-                                    <p class="text-red-600 text-sm">{{ $message }}</p>
-                                @enderror
+                    <div class="col-span-1 grid grid-cols-2 w-full gap-4 rounded-lg">
+                        <div>
+                            <p class="text-sm text-gray-600">Date Started</p>
+                            <div class="relative">
+                                <input type="date" name="date_started"
+                                    value="{{ old('date_started', $job_draft->date_started) }}"
+                                    class="w-full border px-3 py-2  border-gray-200 rounded-lg">
                             </div>
+                            @error('date_started')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
                         </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Date Target</p>
+                            <div class="relative">
+                                <input type="date" name="date_target"
+                                    value="{{ old('date_target', $job_draft->date_target) }}"
+                                    class="w-full border px-3 py-2  border-gray-200 rounded-lg">
+                            </div>
+                            @error('date_target')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        
+                    </div>
                     @endif
 
                     <div class="col-span-2 h-fit w-full">

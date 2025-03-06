@@ -25,7 +25,7 @@
 <x-main-layout breadcumb="SMM" page="Renew Job Order">
 <div class="px-10 pt-10 flex items-center justify-center h-full">
     <div class="w-full">
-        <form action="{{ url('/admin/smm/client/renew/' . $job_draft_id->id) }}" method="POST">
+        <form action="{{ url('/smm/client/renew/' . $job_draft_id->id) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="w-[30rem] mx-auto h-80 space-y-4 bg-gray-200 border-gray-600 shadow-lg flex items-center justify-center flex-col">
