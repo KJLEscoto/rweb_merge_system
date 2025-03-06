@@ -21,7 +21,7 @@ class DashboardController extends Controller
                 ->take(5) // Get the latest 5 data
                 ->get();
 
-            return view('admin.smm.dashboard', compact('job_drafts'));
+            return view('admin.smm.dashboard-nonadmin', compact('job_drafts'));
         } elseif ($user_role == 2) {
             $job_drafts = JobDraft::with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
                 ->whereNotIn('status', ["pending", "Revision", 'Waiting for Content Writer Approval', 'Waiting for Graphic Designer Approval'])
@@ -74,7 +74,7 @@ class DashboardController extends Controller
                 ->orderBy('id', 'desc') // Sort by id descending
                 ->take(5) // Get the latest 5 data
                 ->get();
-            return view('admin.smm.dashboard', compact('job_drafts', 'job_drafts_revisions'));
+            return view('admin.smm.dashboard-nonadmin', compact('job_drafts', 'job_drafts_revisions'));
         } elseif ($user_role == 4) {
             $job_drafts = JobDraft::with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
                 ->whereNot('status', 'Revision')
@@ -92,7 +92,7 @@ class DashboardController extends Controller
                 ->take(5) // Get the latest 5 data
                 ->get();
 
-            return view('admin.smm.dashboard', compact('job_drafts', 'job_drafts_revisions'));
+            return view('admin.smm.dashboard-nonadmin', compact('job_drafts', 'job_drafts_revisions'));
         } elseif ($user_role == 5) {
             $job_drafts = JobDraft::with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
                 ->whereIn('status', ['Submitted to Client', 'completed', 'Submitted to Top Manager'])
@@ -140,7 +140,7 @@ class DashboardController extends Controller
             return view('admin.smm.dashboard', compact('job_drafts', 'job_drafts_revisions', 'my_tasks')); // Include both variables
         } elseif ($user_role == 7) {
             $job_drafts = [];
-            return view('admin.smm.dashboard', compact('job_drafts')); // Include both variables
+            return view('admin.smm.dashboard-nonadmin', compact('job_drafts')); // Include both variables
         }
     }
 }

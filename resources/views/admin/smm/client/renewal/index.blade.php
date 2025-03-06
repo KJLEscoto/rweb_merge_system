@@ -1,9 +1,9 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Clients')
 @section('header', 'Renew JO')
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -67,7 +67,8 @@
     }
 </style>
 
-<div class="container mx-auto p-6">
+<x-main-layout breadcumb="SMM" page="Renewal">
+<div class="px-10 pt-10">
     <div class="overflow-x-auto overflow-y-auto bg-white shadow-md rounded-lg h-[500px]" style="max-height: 500px;">
         <table class="w-full text-left border-collapse" id="projectTable">
             <thead class="sticky top-0 bg-[#fa7011] text-white z-10">
@@ -102,7 +103,7 @@
         </table>
     </div>
 </div>
-
+</x-main-layout>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.renew-toggle').forEach(toggle => {
@@ -132,4 +133,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 
-@endsection
+{{-- @endsection --}}

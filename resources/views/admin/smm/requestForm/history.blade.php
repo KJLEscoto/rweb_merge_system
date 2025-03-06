@@ -1,9 +1,9 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Job Order')
 @section('header', 'Request Form History')
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -23,7 +23,8 @@
 </style>
 
 
-<div class="container mx-auto p-4 sm:p-6">
+<x-main-layout breadcumb="SMM" page="History Request Form">
+<div class="px-10 pt-10">
     @if(session('Status'))
         <x-success />
     @endif
@@ -133,6 +134,7 @@
         </table>
     </div>
 </div>
+</x-main-layout>
 
 <script>
     function filterTable() {
@@ -157,4 +159,4 @@
     }
 </script>
 
-@endsection
+{{-- @endsection --}}

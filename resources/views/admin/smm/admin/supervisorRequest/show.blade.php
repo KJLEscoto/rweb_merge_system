@@ -1,9 +1,9 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Admin')
 @section('header', 'Show Job Order')
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -71,7 +71,8 @@
 <!-- CKEditor 5 Classic -->
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
-<div class="container mx-auto p-6">
+<x-main-layout breadcumb="SMM" page="Incoming Request Show">
+<div class="px-10 pt-10">
     <div class="w-full px-6 py-10 mx-auto rounded-lg custom-shadow bg-white">
         <div class="flex items-center justify-between">
             <a href="{{ url('/admin/smm/operation/requests') }}">
@@ -154,6 +155,7 @@
         </div>
     </div>
 </div>
+</x-main-layout>
 
 <script>
     // Initialize CKEditor in Read-Only mode
@@ -170,4 +172,4 @@
         });
 </script>
 
-@endsection
+{{-- @endsection --}}

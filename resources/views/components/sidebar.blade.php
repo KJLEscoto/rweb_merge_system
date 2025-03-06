@@ -650,7 +650,7 @@
             </form>
         </div>
 
-        @elseif ($link == 'accounting')
+    @elseif ($link == 'accounting')
 
         {{-- Supervisor Sidebar Menu --}}
         <div class="block px-6">

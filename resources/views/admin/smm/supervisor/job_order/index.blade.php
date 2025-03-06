@@ -1,12 +1,13 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Admin')
 @section('header', "Job Order")
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 
-<div class="container mx-auto p-6">
+<x-main-layout breadcumb="SMM" page="Job Order">
+<div class="px-10 pt-10">
     {{-- Success Message Component --}}
     @if(session('Status'))
         <x-success />
@@ -81,6 +82,7 @@
         {{-- {{ $list_of_projects->links('vendor.pagination.custom') }} --}}
     </div>
 </div>
+</x-main-layout>
 
 <script>
     function filterTable() {
@@ -101,4 +103,4 @@
     }
 </script>
 
-@endsection
+{{-- @endsection --}}

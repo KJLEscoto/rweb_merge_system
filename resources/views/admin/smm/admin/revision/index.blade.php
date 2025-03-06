@@ -1,4 +1,4 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Operation Revision')
 @section('header', 'Operation List Revision')
@@ -21,7 +21,8 @@
     }
 </style>
 
-<div class="container mx-auto p-6">
+<x-main-layout breadcumb="SMM" page="My Revision">
+<div class="px-10 pt-10">
     <div class="overflow-x-auto overflow-y-auto bg-white shadow-md rounded-lg h-[500px]" style="max-height: 500px;">
         <table class="w-full table-fixed text-left border-collapse min-w-[600px]" id="projectTable">
             <thead class="sticky top-0 bg-[#fa7011] text-white">
@@ -68,6 +69,6 @@
         </table>
     </div>
 </div>
+</x-main-layout>
 
-
-@endsection
+{{-- @endsection --}}

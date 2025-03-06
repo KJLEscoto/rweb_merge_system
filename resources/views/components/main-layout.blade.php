@@ -21,6 +21,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+    
+    {{-- Font Awesome CDN --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     {{-- modal script --}}
     <link href="https://cdn.jsdelivr.net/npm/pagedone@1.2.2/src/css/pagedone.css" rel="stylesheet" />
@@ -346,35 +351,90 @@
                     <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.dtr.profile" />
                 
                     {{-- admin smm navbar --}}
-                @elseif (Request::routeIs('admin.smm*'))
+                @elseif (Request::routeIs('admin.smm*') && (Auth::user()->roles->position === "operations"))
                     <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
                         routeName="admin.smm.dashboard" />
                     <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="My Tasks"
-                        routeName="operation.approve" />
-                    <x-admin.sidebar-menu icon="fa--users" label="Incoming Requests" routeName="operation.request" />
+                        routeName="admin.smm.operation.task" />
+                    <x-admin.sidebar-menu icon="fa--users" label="Incoming Requests" routeName="admin.smm.operation.request" />
                     <x-admin.sidebar-menu icon="mdi--clipboard-text-history" label="Outgoing Requests"
-                        routeName="joborder" />
-                    <x-admin.sidebar-menu icon="ic--round-school" label="Approvals" routeName="operation.approve" />
-                    <x-admin.sidebar-menu icon="fa--user" label="My Revisions" routeName="operation.revision" />
-                    <x-admin.sidebar-menu icon="fa--user" label="Renewal" routeName="operation.renewal" />
-                    <x-admin.sidebar-menu icon="fa--user" label="Track Job Orders" routeName="track.index" />
+                        routeName="admin.smm.joborder" />
+                    <x-admin.sidebar-menu icon="ic--round-school" label="Approvals" routeName="admin.smm.operation.approve" />
+                    <x-admin.sidebar-menu icon="fa--user" label="My Revisions" routeName="admin.smm.operation.revision" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Renewal" routeName="admin.smm.operation.renewal" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Track Job Orders" routeName="admin.smm.track.index" />
                     <x-admin.sidebar-menu icon="fa--user" label="Users" routeName="admin.smm.users" />
-                    <x-admin.sidebar-menu icon="fa--user" label="Downloadables" routeName="operation.history" />
-                    <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="profile" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Downloadables" routeName="admin.smm.operation.history" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
+
+                @elseif (Request::routeIs('admin.smm*') && (Auth::user()->roles->position === "supervisor"))
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
+                        routeName="admin.smm.dashboard" />
+                    <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="Operation Job Order"
+                        routeName="admin.smm.supervisor.joborder" />
+                    <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="Direct Job Order"
+                        routeName="admin.smm.supervisor.directjob" />
+                    <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="My Task"
+                        routeName="admin.smm.supervisor.task" />
+                    <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="My Revision"
+                        routeName="admin.smm.revision" />
+                    <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="Approvals"
+                        routeName="admin.smm.supervisor.approve" />
+                    <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="Track"
+                        routeName="admin.smm.track.index" />
+                    <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="Renewal"
+                        routeName="admin.smm.supervisor.renewal" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Request Form" routeName="admin.smm.requestForm" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Users" routeName="admin.smm.users" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Downloadables" routeName="admin.smm.supervisor.history" />
+
+                @elseif (Request::routeIs('admin.smm*') && (Auth::user()->roles->position === "top_manager"))
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard" routeName="admin.smm.dashboard" />
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Approval" routeName="admin.smm.topmanager.approve" />
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Track Job Order" routeName="admin.smm.track.index" />
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Request Form" routeName="admin.smm.requestForm.history" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Users" routeName="admin.smm.users" />
+                @elseif (Request::routeIs('admin.smm*') && (Auth::user()->roles->position === "client"))
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard" routeName="admin.smm.dashboard" />
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Approvals" routeName="admin.smm.client.approve" />
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Downloadables" routeName="admin.smm.client.history" />
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Renewal" routeName="admin.smm.client.renewal" />
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Track" routeName="admin.smm.track.index" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
+                @elseif (Request::routeIs('admin.smm*') && (Auth::user()->roles->position === "content_writer"))
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard" routeName="admin.smm.dashboard" />
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="My Tasks" routeName="admin.smm.content.approve" />
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Track Job Orders" routeName="admin.smm.track.index" />
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Revision" routeName="admin.smm.revision" />
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Downloadables" routeName="admin.smm.content.history" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
+                @elseif (Request::routeIs('admin.smm*') && (Auth::user()->roles->position === "graphic_designer"))
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard" routeName="admin.smm.dashboard" />
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="My Tasks" routeName="admin.smm.graphic.approve" />
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Track Job Orders" routeName="admin.smm.track.index" />
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Revision" routeName="admin.smm.revision" />
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Downloadables" routeName="admin.smm.graphic.history" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
+                @elseif (Request::routeIs('admin.smm*') && (Auth::user()->roles->position === "accounting"))
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard" routeName="admin.smm.dashboard" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Request Form" routeName="admin.smm.requestForm" />
                 @endif
 
 
             </aside>
             <section class="col-span-9 h-auto w-full bg-gray-100 pb-10">
                 <div class="px-16 pt-16">
-                    <headers class="w-full flex items-end justify-between">
+                    <div class="w-full flex items-end justify-between">
 
                         <x-admin.page-title breadcumb="{{ $breadcumb }}" page="{{ $page }}" />
 
                         <section class="fixed z-40 right-0 top-0">
                             <x-admin.mini-profile />
                         </section>
-                    </headers>
+                    </div>
                 </div>
 
                 {{ $slot }}
