@@ -73,23 +73,28 @@
                                             </tr>
                                         </thead>
                                         <tbody class="divide-y divide-gray-200">
-                                            @foreach ($yearData['months'] as $monthData)
-                                                <tr class="hover:bg-gray-50">
-                                                    <td
-                                                        class="px-4 py-3 flex justify-between w-full gap-2 flex-wrap items-center">
-                                                        <p>{{ $monthData['month_name'] }}</p>
-                                                        <p class="float-right">
-                                            @if (floor((int) filter_var($monthData['total_hours'], FILTER_SANITIZE_NUMBER_INT) / 60) > 0)
-                                                {{ floor((int) filter_var($monthData['total_hours'], FILTER_SANITIZE_NUMBER_INT) / 60) }}
-                                                hours
-                                            @endif
-                                            {{ round((int) filter_var($yearData['total_hours'], FILTER_SANITIZE_NUMBER_INT) % 60) }}
-                                            minutes
-                                        </p>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
+    @foreach ($yearData['months'] as $monthData)
+        <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3 flex justify-between w-full gap-2 flex-wrap items-center">
+                <p>{{ $monthData['month_name'] }}</p>
+                <p class="float-right">
+                    @php
+                        $totalMinutes = (int) filter_var($monthData['total_hours'], FILTER_SANITIZE_NUMBER_INT);
+                        $hours = floor($totalMinutes / 60);
+                        $minutes = $totalMinutes % 60;
+                    @endphp
+
+                    @if ($hours > 0)
+                        {{ $hours }} hours
+                    @endif
+
+                    {{ $minutes }} minutes
+                </p>
+            </td>
+        </tr>
+    @endforeach
+</tbody>
+
                                     </table>
                                 </div>
                             @endforeach

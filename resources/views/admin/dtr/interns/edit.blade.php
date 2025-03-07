@@ -18,7 +18,8 @@
 
     <main class="h-auto w-full flex flex-col gap-5 px-10 py-10">
         <form action="{{ route('users.settings.update', $user->id) }}" method="POST"
-            class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
+            class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5"
+            enctype="multipart/form-data">
             @csrf
             @method('PUT')
 

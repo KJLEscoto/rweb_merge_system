@@ -2,7 +2,18 @@
     <p>Hi, <span class="capitalize">{{ Auth::user()->firstname }}</span>!</p>
     {{-- <h1 class="absolute top-0 z-10 px-3 py-1 rounded bg-[#f56d11] text-white text-sm -left-12">DTR</h1> --}}
     <!-- Profile Dropdown -->
-    <div class="dropdown relative inline-flex hover:scale-105 transition">
+    @php
+        $admin_roles = [
+            'admin',
+            'top_manager',
+            'supervisor',
+            'operations',
+        ];
+    @endphp
+    @if(
+        in_array(Auth::user()->roles->position, $admin_roles)
+    )
+        <div class="dropdown relative inline-flex hover:scale-105 transition">
         <button type="button" id="dropdown-profile" data-target="dropdown-show-profile"
             class="dropdown-profile inline-flex w-16 h-16 overflow-hidden rounded-full border-4 border-[#fdb783]/50"
             onclick="toggleDropdown()">
@@ -42,6 +53,17 @@
 
         </div>
     </div>
+    @else
+        <div
+            class="inline-flex w-16 h-16 overflow-hidden rounded-full border-4 border-[#fdb783]/50">
+            <img draggable="false"
+                src="{{ \App\Models\File::where(
+                    'id',
+                    \App\Models\Profile::where('id', Auth::user()->profile_id)->first()->file_id,
+                )->first()->path . '?=s100?t=' . time() }}"
+                alt="user profile" class="w-full h-full object-cover border-4 bg-white rounded-full border-[#fdb783]">
+        </div>
+    @endif
 
     <!-- Logout Button -->
     <button type="button" onclick="openLogoutModal()"
