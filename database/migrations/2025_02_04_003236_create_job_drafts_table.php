@@ -33,12 +33,13 @@ return new class extends Migration
             $table->longText('client_signature')->nullable();
 
             $table->string('status');
-            $table->unsignedBigInteger('content_writer_id');
-            $table->unsignedBigInteger('graphic_designer_id');
+            $table->unsignedBigInteger('content_writer_id')->nullable();
+            $table->unsignedBigInteger('graphic_designer_id')->nullable();
             $table->unsignedBigInteger('client_id');
             $table->string('feedback')->nullable();
             $table->date('date_completed')->nullable();
             $table->unsignedBigInteger('reference_draft_id')->nullable();
+            $table->string('works');
             // $table->integer('days_to_add')->default(0);
 
             // Foreign Key Constraint
