@@ -62,7 +62,7 @@
                 <div class="lg:col-span-4">
                     @php
                         $isDisabled = $job_draft->status != "Submitted to Operations";
-                        $isSigned = !empty($job_draft->signature_admin);
+                        $isSigned = !empty($job_draft->signature_client);
                     @endphp
 
                     <div class="mt-6 bg-white p-4 rounded-md shadow-md w-fit">
@@ -89,10 +89,10 @@
 
                             <!-- File Upload -->
                             <div id="uploadSection" class="{{ Auth::user()->signature ? 'hidden' : '' }}">
-                                <input type="file" name="signature_admin" accept="image/*"
+                                <input type="file" name="signature_client" accept="image/*"
                                     class="mt-2 border p-2 w-full rounded-md" id="signatureInput" {{ $isDisabled || $isSigned ? 'disabled' : '' }}>
                                 <div class="mt-4 w-52 h-32 border border-gray-300 rounded-md overflow-hidden flex items-center justify-center bg-gray-100">
-                                    <img id="imagePreview" src="{{ $isSigned ? asset($job_draft->signature_admin) : '' }}"
+                                    <img id="imagePreview" src="{{ $isSigned ? asset($job_draft->signature_client) : '' }}"
                                         alt="Selected Image" class="{{ $isSigned ? 'block' : 'hidden' }} w-full h-full object-cover">
                                 </div>
                             </div>
@@ -121,9 +121,9 @@
                                 </div>
                             </div>
 
-                            @if($errors->has('signature_admin') || $errors->has('signature_pad'))
+                            @if($errors->has('signature_client') || $errors->has('signature_pad'))
                                 <p class="text-sm text-red-600">
-                                    {{ $errors->first('signature_admin') ?: $errors->first('signature_pad') }}
+                                    {{ $errors->first('signature_client') ?: $errors->first('signature_pad') }}
                                 </p>
                             @endif
 

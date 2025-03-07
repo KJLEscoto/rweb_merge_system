@@ -113,6 +113,9 @@
                                     <p class="text-sm text-gray-600">Content Writer</p>
                                     <input type="checkbox" name="content_checkbox"/>
                                 </div>
+                                @error('content_checkbox')
+                                    <p class="text-red-600 text-sm">{{ $message }}</p>
+                                @enderror
                                 <div class="relative">
                                     <input type="text" id="selected-content-writer-name"
                                         value="{{ old('content_writer_id') ? ($contentworkers->firstWhere('id', old('content_writer_id'))->name ?? 'Select a Content Writer') : 'Select a Content Writer' }}"
@@ -130,6 +133,9 @@
                                     <p class="text-sm text-gray-600">Graphics Designer</p>
                                     <input type="checkbox" name="graphic_checkbox"/>
                                 </div>
+                                @error('content_checkbox')
+                                    <p class="text-red-600 text-sm">{{ $message }}</p>
+                                @enderror
                                 <div class="relative">
                                     <input type="text" id="selected-graphic-designer-name"
                                         value="{{ old('graphic_designer_id') ? ($graphicworkers->firstWhere('id', old('graphic_designer_id'))->name ?? 'Select a Graphics Designer') : 'Select a Graphics Designer' }}"

@@ -38,7 +38,7 @@ class ClientApprovalController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'signature_admin'  => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'signature_client'  => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'signature_pad'    => 'nullable|string',
             'new_signature_pad' => 'nullable|string',
             'summary' => 'required',
@@ -46,7 +46,7 @@ class ClientApprovalController extends Controller
 
         $signatureCount = 0;
 
-        if ($request->hasFile('signature_admin')) {
+        if ($request->hasFile('signature_client')) {
             $signatureCount++;
         }
         if (!empty($request->signature_pad)) {
@@ -65,9 +65,9 @@ class ClientApprovalController extends Controller
         if ($signatureCount > 1) {
             return redirect()->back()->withErrors(['signature' => 'Only one signature is allowed.'])->withInput();
         }
-
-        if ($request->hasFile('signature_admin')) {
-            $file = $request->file('signature_admin');
+        $imagePath = null;
+        if ($request->hasFile('signature_client')) {
+            $file = $request->file('signature_client');
             $imagePath = 'signatures/signature_' . time() . '.' . $file->extension();
             $file->move(public_path('signatures'), $imagePath);
         } elseif ($request->signature_pad) {
@@ -107,7 +107,8 @@ class ClientApprovalController extends Controller
                 'graphic_designer_id' => $job_draft->graphic_designer_id,
                 'client_id' => $job_draft->client_id,
                 'signature_supervisor' => $job_draft->signature_supervisor,
-                'supervisor_signed' => $job_draft->supervisor_signed
+                'supervisor_signed' => $job_draft->supervisor_signed,
+                'works' => $job_draft->works
             ]);
         }
         return redirect()->route('admin.smm.client.approve')->with('Status', 'Job Order Approved Successfully');
