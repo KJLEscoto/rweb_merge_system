@@ -32,6 +32,15 @@ class ClientHistoryController extends Controller
 
         $pdf = Pdf::loadView('admin.smm.client.history.show', compact('job_draft'));
 
-        return $pdf->download('job_order_' . $id . '.pdf');
+        if($job_draft->type === "content_writer"){
+            $worker = $job_draft->contentWriter->name;
+        }else{
+            $worker = $job_draft->graphicDesigner->name;
+        }
+
+        return $pdf->download(
+            str_replace(' ', '', $job_draft->type . '-' . $worker . '-' . $job_draft->client->name . '-' . $job_draft->date_started) . '.pdf'
+        );  
+        
     }
 }

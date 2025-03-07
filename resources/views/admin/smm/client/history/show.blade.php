@@ -121,7 +121,7 @@
         <div class="section-remarks">
             <strong>Remarks:</strong>
             <div class="text-sm text-gray-600 w-full max-h-[500px] overflow-y-auto bg-white border border-gray-300 p-2 rounded">
-                {!! $job_draft->feedback !!}
+{!! $job_draft->draft !!}
             </div>
         </div>
         <table>
