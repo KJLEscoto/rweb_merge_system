@@ -1,32 +1,4 @@
-<x-main-layout>
-
-    {{-- <main class="h-screen overflow-x-hidden w-full bg-white">
-        <div id="left-side" class="space-y-10">
-            <x-image path="{{ asset('resources/img/logos/rweb_logo.png') }}" className="h-20 w-auto" />
-            <div class="space-y-3">
-                <h1 class="text-5xl text-[#F57D11] font-bold">Daily Time Record</h1>
-                <p class="text-lg text-gray-600">Track Your Internship Hours with Ease!</p>
-            </div>
-            <div class="flex items-center gap-5">
-                <x-button big primary label="Create Account" routePath="show.register" />
-                <x-button big tertiary label="Log In" className="font-semibold" routePath="show.login" />
-            </div>
-        </div>
-        <div id="right-side" class="h-auto w-auto relative flex items-end justify-end">
-            <svg class="w-[1050px] h-auto rotate-180 absolute right-0 top-0" viewBox="0 0 200 200"
-                xmlns="http://www.w3.org/2000/svg">
-                <path fill="#F57D12"
-                    d="M37,-41.9C52.4,-39.8,72.4,-34.9,77,-24.2C81.6,-13.5,70.9,3,64.3,20.2C57.8,37.5,55.5,55.4,45.5,63.3C35.5,71.1,17.8,69,-0.9,70.2C-19.5,71.4,-39,75.9,-54.2,69.7C-69.4,63.5,-80.2,46.6,-85.3,28.3C-90.3,10.1,-89.5,-9.3,-79.1,-20.8C-68.7,-32.3,-48.6,-35.8,-33.8,-38.1C-19,-40.4,-9.5,-41.6,0.7,-42.5C10.8,-43.4,21.6,-44.1,37,-41.9Z"
-                    transform="translate(100 100)" />
-            </svg>
-            <div class="z-10 relative">
-                <x-image className="w-[700px] h-auto filter drop-shadow-xl"
-                    path="{{ asset('resources/img/hero-model.png') }}" />
-
-            </div>
-        </div>
-    </main> --}}
-
+{{-- <x-main-layout>
     <main class="h-[calc(100vh)] overflow-auto w-full bg-white flex flex-col items-center justify-center py-5">
         <div id="model" class="w-auto h-auto">
             <x-image className="w-[500px] h-auto filter drop-shadow-xl"
@@ -71,19 +43,100 @@
     </script>
 
 </x-main-layout>
+--}}
 
+<x-main-layout>
+    <main class="overflow-hidden">
+        <div class="h-auto w-full bg-white grid grid-cols-12 relative">
+            <section id="right-side" class="h-[calc(100vh)] overflow-auto col-span-8 flex justify-center items-center">
+                <div class="container mx-auto max-w-screen-xl">
+                    <div class="w-full px-20 space-y-20">
+                        <div class="space-y-10">
+                            <div class="w-40 h-2 bg-gradient-to-r from-[#F57D11] via-[#F57D11]/90 to-[#F53C11]"></div>
 
+                            <div class="space-y-5">
+                                <section class="flex items-end gap-1">
+                                    <img class="w-auto h-16" src="{{ asset('image/rweb_icon.png') }}">
+                                    <h1 class="font-bold text-5xl text-gray-700">Web System</h1>
+                                </section>
+                                <p class="text-gray-600">Streamlining operations with an all-in-one
+                                    system for
+                                    <span class="font-bold">SMM</span>,
+                                    <span class="font-bold">Front-end</span>,
+                                    <br>
+                                    and <span class="font-bold">OJT Daily Time
+                                        Records</span>.
+                                </p>
+                            </div>
 
-{{-- <section id="right-side" class="h-auto w-auto relative flex items-end justify-end">
-            <svg class="w-[1050px] h-auto rotate-180 absolute right-0 top-0" viewBox="0 0 200 200"
-                xmlns="http://www.w3.org/2000/svg">
-                <path fill="#F57D12"
-                    d="M37,-41.9C52.4,-39.8,72.4,-34.9,77,-24.2C81.6,-13.5,70.9,3,64.3,20.2C57.8,37.5,55.5,55.4,45.5,63.3C35.5,71.1,17.8,69,-0.9,70.2C-19.5,71.4,-39,75.9,-54.2,69.7C-69.4,63.5,-80.2,46.6,-85.3,28.3C-90.3,10.1,-89.5,-9.3,-79.1,-20.8C-68.7,-32.3,-48.6,-35.8,-33.8,-38.1C-19,-40.4,-9.5,-41.6,0.7,-42.5C10.8,-43.4,21.6,-44.1,37,-41.9Z"
-                    transform="translate(100 100)" />
-            </svg>
-            <div class="z-10 relative">
-                <x-image className="w-[700px] h-auto filter drop-shadow-xl"
-                    path="{{ asset('resources/img/hero-model.png') }}" />
+                            <div class="space-y-3">
+                                <h1 class="font-semibold text-lg text-gray-700">For Intern (OJT)</h1>
+                                <div class="flex items-center gap-5">
+                                    <a href="{{ route('show.register') }}"
+                                        class="px-10 py-3 rounded relative overflow-hidden font-medium text-white flex items-center justify-center gap-2 animate-transition bg-gradient-to-r from-[#F57D11] via-[#F57D11]/70 to-[#F53C11] hover:bg-[#F53C11] disabled:opacity-50 lg:text-sm text-xs cursor-pointer">
+                                        Create Account
+                                    </a>
+                                    <a href="{{ route('show.login') }}"
+                                        class="px-14 py-3 border rounded text-[#F57D11] hover:border-[#F57D11] animate-transition flex items-center justify-center gap-2 lg:text-sm text-xs cursor-pointer font-medium">
+                                        Log In
+                                    </a>
+                                </div>
+                            </div>
 
-            </div>
-        </section> --}}
+                            <div class="space-y-3">
+                                <h1 class="font-semibold text-lg text-gray-700">SMM Client</h1>
+                                <a href="{{ route('admin.smm.login') }}"
+                                    class="px-10 py-3 w-fit rounded relative overflow-hidden font-medium text-white flex items-center justify-center gap-2 animate-transition bg-gradient-to-r from-[#F57D11] via-[#F57D11]/70 to-[#F53C11] hover:bg-[#F53C11] disabled:opacity-50 lg:text-sm text-xs cursor-pointer">
+                                    Login here
+                                    <span class="eva--arrow-forward-outline w-5 h-5"></span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <section
+                                class="p-2 w-fit h-fit flex items-center justify-center rounded-full text-[#F57D11] hover:border-[#F57D11] transition cursor-pointer border border-gray-200">
+                                <span class="w-5 h-5 mage--facebook"></span>
+                            </section>
+                            <section
+                                class="p-2 w-fit h-fit flex items-center justify-center rounded-full text-[#F57D11] hover:border-[#F57D11] transition cursor-pointer border border-gray-200">
+                                <span class="w-5 h-5 ri--instagram-fill"></span>
+                            </section>
+                            <section
+                                class="p-2 w-fit h-fit flex items-center justify-center rounded-full text-[#F57D11] hover:border-[#F57D11] transition cursor-pointer border border-gray-200">
+                                <span class="w-5 h-5 formkit--pinterest"></span>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="left-side"
+                class="h-[calc(100vh)] shadow-xl scale-x-[-1] col-span-4 bg-center bg-no-repeat bg-cover "
+                style="background-image: url('resources/img/diamond-pattern.png')">
+            </section>
+        </div>
+    </main>
+</x-main-layout>
+
+<script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.fromTo("#right-side", {
+        opacity: 0.5,
+        x: -120
+    }, {
+        opacity: 1,
+        x: 0,
+        duration: 1.5
+    });
+
+    gsap.fromTo("#left-side", {
+        opacity: 0.5,
+        x: 120
+    }, {
+        opacity: 1,
+        x: 0,
+        duration: 1.5
+    });
+</script>
