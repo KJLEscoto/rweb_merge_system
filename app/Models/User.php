@@ -153,4 +153,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(RequestForm::class, 'receiver_id');
     }
+
+    public function signatures()
+    {
+        return $this->belongsTo(Signature::class, 'signature_id');
+    }
 }

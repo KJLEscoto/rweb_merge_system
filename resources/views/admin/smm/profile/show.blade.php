@@ -58,7 +58,11 @@
                             alt="User Image"> --}}
                             @if ($user->signature)
                                 <img class="object-fill w-full"
-                                src="{{asset($user->signature)}}"
+                                src="{{
+                                    \App\Models\File::where('id', 
+                                        Auth::user()->signatures->file_id
+                                    )->first()->path . '?t=' . time() . '?s=100';
+                                }}"
                                 alt="User Image">
                             @else
                                 <p>No Signature Added.</p>
