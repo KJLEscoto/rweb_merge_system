@@ -25,69 +25,73 @@ class SupervisorDirectJobOrderController extends Controller
     }
 
     public function store(Request $request)
-{
-    // Validate request before proceeding
-    $request->validate([
-        'title' => 'required|string',
-        'description' => 'required|string',
-        'content_writer_id' => 'nullable|integer',
-        'graphic_designer_id' => 'nullable|integer',
-        'client_id' => 'required|integer',
-        'date_started' => 'required|date',
-        'date_target' => 'required|date'
-    ]);
+    {
+        // Validate request before proceeding
+        $request->validate([
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'content_writer_id' => 'nullable|integer|exists:users,id',
+            'graphic_designer_id' => 'nullable|integer|exists:users,id',
+            'client_id' => 'required|integer|exists:users,id',
+            'date_started' => 'required|date',
+            'date_target' => 'required|date',
+            'content_checkbox' => 'required_without:graphic_checkbox',
+            'graphic_checkbox' => 'required_without:content_checkbox'
+        ]);
 
-    // Ensure at least one checkbox is checked
-    if (!$request->has('content_checkbox') && !$request->has('graphic_checkbox')) {
-        return redirect()->back()->with('Status', 'You must select at least one work type.');
+        // Ensure the user has a signature before proceeding
+        if (!auth()->user()->signature) {
+            return redirect()->route('admin.smm.supervisor.directjob.create')
+                ->with('Status', 'No Signature Found');
+        }
+
+        // Determine work type and assign appropriate fields
+        $work = null;
+        $content_writer_id = null;
+        $graphic_designer_id = null;
+        $work_type = null;
+
+        if ($request->content_checkbox && !$request->graphic_checkbox) {
+            $work = "Content Only";
+            $content_writer_id = $request->content_writer_id;
+            $work_type = 'content_writer';
+        } elseif ($request->graphic_checkbox && !$request->content_checkbox) {
+            $work = "Graphic Only";
+            $graphic_designer_id = $request->graphic_designer_id;
+            $work_type = 'graphic_designer';
+        } elseif ($request->content_checkbox && $request->graphic_checkbox) {
+            $work = "Both";
+            $content_writer_id = $request->content_writer_id;
+            $graphic_designer_id = $request->graphic_designer_id;
+            $work_type = 'content_writer';
+        }
+
+        // Create job order
+        $job_order = JobOrder::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'issued_by' => auth()->user()->id,
+        ]);
+
+        // Create job draft
+        JobDraft::create([
+            'job_order_id' => $job_order->id,
+            'type' => $work_type,
+            'date_started' => $request->date_started,
+            'date_target' => $request->date_target,
+            'status' => 'Waiting for Content Writer Approval',
+            'content_writer_id' => $content_writer_id,
+            'graphic_designer_id' => $graphic_designer_id,
+            'client_id' => $request->client_id,
+            'signature_supervisor' => auth()->user()->signature,
+            'supervisor_signed' => auth()->user()->id,
+            'works' => $work
+        ]);
+
+        return redirect()->route('admin.smm.supervisor.directjob')
+            ->with('Status', 'Job Order Created Successfully');
     }
 
-    // Determine work type and assign appropriate fields
-    $work = null;
-    $content_writer_id = null;
-    $graphic_designer_id = null;
-
-    if ($request->has('content_checkbox') && !$request->has('graphic_checkbox')) {
-        $work = "Content Only";
-        $content_writer_id = $request->content_writer_id;
-    } elseif ($request->has('graphic_checkbox') && !$request->has('content_checkbox')) {
-        $work = "Graphic Only";
-        $graphic_designer_id = $request->graphic_designer_id;
-    } elseif ($request->has('content_checkbox') && $request->has('graphic_checkbox')) {
-        $work = "Both";
-        $content_writer_id = $request->content_writer_id;
-        $graphic_designer_id = $request->graphic_designer_id;
-    }
-
-    // Ensure the user has a signature before proceeding
-    if (!auth()->user()->signature) {
-        return redirect()->route('admin.smm.supervisor.directjob.create')->with('Status', 'No Signature Found');
-    }
-
-    // Create job order
-    $job_order = JobOrder::create([
-        'title' => $request->title,
-        'description' => $request->description,
-        'issued_by' => auth()->user()->id,
-    ]);
-
-    // Create job draft
-    JobDraft::create([
-        'job_order_id' => $job_order->id,
-        'type' => $work,
-        'date_started' => $request->date_started,
-        'date_target' => $request->date_target,
-        'status' => 'Waiting for Content Writer Approval',
-        'content_writer_id' => $content_writer_id,
-        'graphic_designer_id' => $graphic_designer_id,
-        'client_id' => $request->client_id,
-        'signature_supervisor' => auth()->user()->signature,
-        'supervisor_signed' => auth()->user()->id,
-        'works' => $work
-    ]);
-
-    return redirect()->route('admin.smm.supervisor.directjob')->with('Status', 'Job Order Created Successfully');
-}
 
 
     public function show($id)
