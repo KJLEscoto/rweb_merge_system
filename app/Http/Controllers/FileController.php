@@ -207,41 +207,41 @@ class FileController extends Controller
      */
     public function edit(Request $request, $fileId)
     {
-        $request->validate([
+        $data = $request->validate([
             'file' => 'required|file', // Ensure a file is provided
         ]);
+
 
         $accessToken = $this->token();
         if (!$accessToken) {
             return response()->json(['error' => 'Failed to retrieve access token'], 500);
         }
 
-        if (!$request->hasFile('file')) {
-            return response()->json(['error' => 'No file found'], 400);
+        $file = $request['file'] ?? null;
+
+        if (!$file instanceof \Illuminate\Http\UploadedFile) {
+            return response()->json(['error' => 'Invalid file upload'], 400);
         }
 
-        $file = $request->file('file');
 
-        if (!$file->isValid()) {
+        if (!$file || !$file->isValid()) {
             return response()->json(['error' => 'Uploaded file is not valid'], 400);
         }
 
-        $filePath = $request->file('file')->getPathname();
-        $fileMimeType = $request->file('file')->getClientMimeType();
+        $filePath = $file->getPathname();
+        $fileMimeType = $file->getClientMimeType();
+        $fileName = $file->getClientOriginalName();
 
-        // // Extract fileId from Google Drive URL if needed
-        // preg_match('/id=([a-zA-Z0-9_-]+)/', $fileId, $matches);
-        // $fileId = $matches[1] ?? null;
-
-        //$fileId = $this->extractDriveFileId($fileId);
-
-        if ($fileId) {
-            echo "Extracted File ID: " . $fileId;
-        } else {
-            echo "No valid File ID found.";
+        // Extract fileId from Google Drive URL if needed
+        if (isset($request->file_id)) {
+            $fileId = $this->extractDriveFileId($request->file_id);
         }
 
-        $metadata = json_encode(['name' => $request->file('file')->getClientOriginalName()]);
+        if (!isset($fileId) || empty($fileId)) {
+            return response()->json(['error' => 'No valid File ID found'], 400);
+        }
+
+        $metadata = json_encode(['name' => $fileName]);
 
         // Upload the updated file
         $response = Http::withHeaders([
@@ -253,14 +253,14 @@ class FileController extends Controller
         )->attach(
             'file',
             file_get_contents($filePath),
-            $request->file('file')->getClientOriginalName(),
+            $fileName,
             [
                 'Content-Type' => $fileMimeType,
             ]
         )->patch("https://www.googleapis.com/upload/drive/v3/files/{$fileId}?uploadType=multipart");
 
         $result = json_decode($response->body(), true);
-        // @dd($request->all(), $fileId, $filePath, $metadata, $result);
+
         if ($response->failed()) {
             return response()->json(['error' => 'Failed to update file', 'details' => $result], $response->status());
         }
@@ -271,8 +271,6 @@ class FileController extends Controller
         ])->get("https://www.googleapis.com/drive/v3/files/{$fileId}?fields=id,name,mimeType,webViewLink,webContentLink");
 
         $fileData = json_decode($fileInfo->body(), true);
-
-        //@dd($fileData['webViewLink'], $fileData['webContentLink']);
 
         return response()->json([
             'message' => 'File updated successfully',

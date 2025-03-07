@@ -10,8 +10,8 @@
                 src="{{ \App\Models\File::where(
                     'id',
                     \App\Models\Profile::where('id', Auth::user()->profile_id)->first()->file_id,
-                )->first()->path }}"
-                alt="user profile" class="w-full h-full object-cover border-4 rounded-full border-[#fdb783]">
+                )->first()->path . '?=s100?t=' . time() }}"
+                alt="user profile" class="w-full h-full object-cover border-4 bg-white rounded-full border-[#fdb783]">
         </button>
 
         <!-- Dropdown Menu -->

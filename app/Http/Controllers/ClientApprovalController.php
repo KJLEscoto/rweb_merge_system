@@ -37,9 +37,46 @@ class ClientApprovalController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
+            'signature_admin'  => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'signature_pad'    => 'nullable|string',
+            'new_signature_pad' => 'nullable|string',
             'summary' => 'required',
         ]);
+
+        $signatureCount = 0;
+
+        if ($request->hasFile('signature_admin')) {
+            $signatureCount++;
+        }
+        if (!empty($request->signature_pad)) {
+            $signatureCount++;
+        }
+        if (!empty($request->new_signature_pad)) {
+            $signatureCount++;
+        }
+
+        // If no signature was provided, return an error.
+        if ($signatureCount === 0) {
+            return redirect()->back()->withErrors(['signature' => 'A signature is required.'])->withInput();
+        }
+
+        // If more than one signature was provided, return an error.
+        if ($signatureCount > 1) {
+            return redirect()->back()->withErrors(['signature' => 'Only one signature is allowed.'])->withInput();
+        }
+
+        if ($request->hasFile('signature_admin')) {
+            $file = $request->file('signature_admin');
+            $imagePath = 'signatures/signature_' . time() . '.' . $file->extension();
+            $file->move(public_path('signatures'), $imagePath);
+        } elseif ($request->signature_pad) {
+            $image = str_replace('data:image/png;base64,', '', $request->signature_pad);
+            $imagePath = 'signatures/signature_' . time() . '.png';
+            file_put_contents(public_path($imagePath), base64_decode($image));
+        } elseif ($request->new_signature_pad) {
+            $imagePath = auth()->user()->signature;
+        }
 
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
         // Fetch the referenced content draft properly
@@ -49,6 +86,7 @@ class ClientApprovalController extends Controller
             'feedback' => $request->summary,
             'status' => 'completed',
             'date_completed' => now(),
+            'client_signature' => $imagePath
         ]);
 
         $content_draft->update([
@@ -57,22 +95,22 @@ class ClientApprovalController extends Controller
         ]);
 
 
-            if ($job_draft->jobOrder->renewable == 0) {
-                return view('admin.smm.client.joborder.renew', compact('job_draft_id'));
-            } elseif ($job_draft->jobOrder->renewable == 1) {
-                JobDraft::create([
-                    'job_order_id' => $job_draft->job_order_id,
-                    'type' => 'content_writer',
-                    'date_started' => Carbon::now()->toDateString(), // Set date_started to today
-                    'date_target' => Carbon::now()->addDays(3)->toDateString(),
-                    'status' => 'Waiting for Content Writer Approval',
-                    'content_writer_id' => $job_draft->content_writer_id,
-                    'graphic_designer_id' => $job_draft->graphic_designer_id,
-                    'client_id' => $job_draft->client_id,
-                    'signature_supervisor' => $job_draft->signature_supervisor,
-                    'supervisor_signed' => $job_draft->supervisor_signed
-                ]);
-            }
+        if ($job_draft->jobOrder->renewable == 0) {
+            return view('admin.smm.client.joborder.renew', compact('job_draft_id'));
+        } elseif ($job_draft->jobOrder->renewable == 1) {
+            JobDraft::create([
+                'job_order_id' => $job_draft->job_order_id,
+                'type' => 'content_writer',
+                'date_started' => Carbon::now()->toDateString(), // Set date_started to today
+                'date_target' => Carbon::now()->addDays(3)->toDateString(),
+                'status' => 'Waiting for Content Writer Approval',
+                'content_writer_id' => $job_draft->content_writer_id,
+                'graphic_designer_id' => $job_draft->graphic_designer_id,
+                'client_id' => $job_draft->client_id,
+                'signature_supervisor' => $job_draft->signature_supervisor,
+                'supervisor_signed' => $job_draft->supervisor_signed
+            ]);
+        }
         return redirect()->route('admin.smm.client.approve')->with('Status', 'Job Order Approved Successfully');
     }
     public function declineForm($id)
