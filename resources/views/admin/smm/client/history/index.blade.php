@@ -48,7 +48,7 @@
                         <td class="px-2 sm:px-4 py-2 sm:py-3 "><p class="px-2 py-1 bg-green-400 w-fit rounded-lg">{{ ucfirst($job_draft->status)}}</p></td>
                         <td class="px-2 sm:px-4 py-2 sm:py-3 border-b">
                             <a href="{{ route('client.history.download', $job_draft->id) }}">
-                                <button class="px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm text-white bg-orange-500 rounded hover:bg-orange-600 whitespace-nowrap">
+                                <button {{$job_draft->status === "completed" ? "" : "disabled"}} class="px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm text-white {{$job_draft->status === "completed" ? "bg-orange-500 rounded hover:bg-orange-600" : "bg-gray-500 rounded hover:bg-gray-600 cursor-not-allowed"}} whitespace-nowrap">
                                     <span><i class="fa-solid fa-download" style="color: #ffffff;"></i></span>
                                      Download PDF
                                 </button>
