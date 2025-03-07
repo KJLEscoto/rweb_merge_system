@@ -31,7 +31,7 @@
 <div class="px-10 pt-10">
     <div class="w-full px-6 py-10 mx-auto rounded-lg custom-shadow bg-white">
         <div>
-            <a href="{{ url('/admin/smm/graphic') }}">
+            <a href="{{ url('/smm/graphic') }}">
                 <div class="w-fit px-4 py-1 bg-gray-400 rounded-md text-white custom-shadow custom-hover-shadow">
                     Back
                 </div>
