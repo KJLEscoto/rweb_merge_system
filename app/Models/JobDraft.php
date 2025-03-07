@@ -31,7 +31,8 @@ class JobDraft extends Model
         'draft_op_sign',
         'op_signed_draft',
         'draft_sup_sign',
-        'sup_signed_draft'
+        'sup_signed_draft',
+        'client_signature'
     ];
 
     public function jobOrder()

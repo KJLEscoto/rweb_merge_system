@@ -33,7 +33,10 @@
                             src="{{ file_exists(public_path($user->image)) && $user->image ? asset($user->image) : asset('/Assets/user-profile-profilepage.png') }}"
                             alt="User Image"> --}}
                         <img class="rounded-full w-32 h-32 object-cover"
-                            src="{{ file_exists(asset($user->image)) && $user->image ? asset($user->image) : asset('/Assets/user-profile-profilepage.png') }}"
+                        src="{{ \App\Models\File::where(
+                            'id',
+                            \App\Models\Profile::where('id', Auth::user()->profile_id)->first()->file_id,
+                        )->first()->path . '?=s100?t=' . time() }}"
                             alt="User Image">
                     </div>
                     <div class="text-center mt-4">

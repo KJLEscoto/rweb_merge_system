@@ -30,6 +30,7 @@ return new class extends Migration
             $table->unsignedBigInteger('op_signed_draft')->nullable();
             $table->longText('draft_sup_sign')->nullable();
             $table->unsignedBigInteger('sup_signed_draft')->nullable();
+            $table->longText('client_signature')->nullable();
 
             $table->string('status');
             $table->unsignedBigInteger('content_writer_id');

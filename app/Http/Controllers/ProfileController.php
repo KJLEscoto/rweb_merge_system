@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\File;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,13 +34,13 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request, FileController $fileController): RedirectResponse
     {
 
         $user = $request->user();
 
         // Update validated attributes except the password and image.
-        $user->fill($request->except(['password', 'current_password', 'password_confirmation', 'image']));
+        $user->fill($request->except(['password', 'current_password', 'password_confirmation', 'image', 'signature_pad']));
 
         // Reset email verification if the email has changed.
         if ($user->isDirty('email')) {
@@ -67,6 +68,8 @@ class ProfileController extends Controller
                 unlink(public_path($user->image));
             }
 
+            $fileFormat = $fileController->edit(new Request(['file' => $request['image']]), File::where('id', $user->profiles->file_id)->first()->description);
+
             $file = $request->file('image');
             $file_name = time() . '.' . $file->getClientOriginalExtension();
             $destination = public_path('uploads');
@@ -83,12 +86,10 @@ class ProfileController extends Controller
 
         // Handle Signature Pad Input
         elseif ($request->signature_pad) {
-            dd($request->signature_pad);
             $image = str_replace('data:image/png;base64,', '', $request->signature_pad);
             $user->signature = 'signatures/signature_' . time() . '.png';
             file_put_contents(public_path($user->signature), base64_decode($image));
         }
-
         $user->save();
 
         return Redirect::route('admin.smm.profile.edit')->with('Status', 'Profile Updated Successfully!');
