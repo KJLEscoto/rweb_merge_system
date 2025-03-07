@@ -115,7 +115,11 @@
                         <!-- Date Started and Date Deadline -->
                         <div class="col-span-2 grid grid-cols-2 w-full gap-4 rounded-lg">
                         <div>
-                            <p class="text-sm text-gray-600">Content Writer</p>
+                            <div class="flex gap-4">
+                                <p class="text-sm text-gray-600">Content Writer</p>
+                                <input type="checkbox" name="content_checkbox" id="content-checkbox"/>
+                            </div>
+                            
                             <div class="relative">
                                 <input type="text" id="selected-content-writer-name"
                                     value="{{ old('content_writer_id') ? ($content_writers->firstWhere('id', old('content_writer_id'))->name ?? 'Select a Content Writer') : 'Select a Content Writer' }}"
@@ -129,7 +133,10 @@
                             @enderror
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600">Graphics Designer</p>
+                            <div class="flex gap-4">
+                                <p class="text-sm text-gray-600">Graphics Designer</p>
+                                <input type="checkbox" name="graphic_checkbox" id="graphic-checkbox"/>
+                            </div>
                             <div class="relative">
                                 <input type="text" id="selected-graphic-designer-name"
                                     value="{{ old('graphic_designer_id') ? ($graphic_designers->firstWhere('id', old('graphic_designer_id'))->name ?? 'Select a Graphics Designer') : 'Select a Graphics Designer' }}"
@@ -469,5 +476,68 @@
                 console.error(error);
             });
     </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const contentCheckbox = document.getElementById("content-checkbox");
+        const contentInput = document.getElementById("selected-content-writer-name");
+
+        const graphicCheckbox = document.getElementById("graphic-checkbox");
+        const graphicInput = document.getElementById("selected-graphic-designer-name");
+
+        contentCheckbox.addEventListener("change", function() {
+            if (contentCheckbox.checked) {
+                contentInput.disabled = false;
+                contentInput.classList.remove("bg-gray-200");
+            } else {
+                contentInput.disabled = true;
+                contentInput.classList.add("bg-gray-200");
+            }
+        });
+
+        graphicCheckbox.addEventListener("change", function() {
+            if (graphicCheckbox.checked) {
+                graphicInput.disabled = false;
+                graphicInput.classList.remove("bg-gray-200");
+            } else {
+                graphicInput.disabled = true;
+                graphicInput.classList.add("bg-gray-200");
+            }
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const contentCheckbox = document.getElementById("content-checkbox");
+        const contentInput = document.getElementById("selected-content-writer-name");
+
+        const graphicCheckbox = document.getElementById("graphic-checkbox");
+        const graphicInput = document.getElementById("selected-graphic-designer-name");
+
+        function toggleInput(checkbox, input, modalFunctionName) {
+            if (checkbox.checked) {
+                input.disabled = false;
+                input.classList.remove("bg-gray-200", "cursor-not-allowed");
+                input.onclick = window[modalFunctionName]; // Enable modal function
+            } else {
+                input.disabled = true;
+                input.classList.add("bg-gray-200", "cursor-not-allowed");
+                input.onclick = null; // Prevent clicking
+            }
+        }
+
+        contentCheckbox.addEventListener("change", function() {
+            toggleInput(contentCheckbox, contentInput, "openContentWriterModal");
+        });
+
+        graphicCheckbox.addEventListener("change", function() {
+            toggleInput(graphicCheckbox, graphicInput, "openGraphicDesignerModal");
+        });
+
+        // Initial check in case old values exist
+        toggleInput(contentCheckbox, contentInput, "openContentWriterModal");
+        toggleInput(graphicCheckbox, graphicInput, "openGraphicDesignerModal");
+    });
+</script>
 
 {{-- @endsection --}}

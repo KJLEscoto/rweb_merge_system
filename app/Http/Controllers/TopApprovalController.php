@@ -57,6 +57,7 @@ class TopApprovalController extends Controller
                     'reference_draft_id' => $id,
                     'signature_supervisor' => $job_draft->signature_supervisor,
                     'supervisor_signed' => $job_draft->supervisor_signed,
+                    'works' => $job_draft->works
                 ]);
             }
         } elseif ($job_draft->type == "graphic_designer") {

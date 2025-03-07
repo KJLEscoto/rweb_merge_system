@@ -32,11 +32,35 @@ class SupervisorRenewalController extends Controller
         if ($request->input('renewable')) {
             $jobDraft = JobDraft::where('job_order_id', $id)->orderBy('id', 'desc')->first();
 
-            if (!$jobDraft) {
-                return response()->json(['success' => false, 'message' => 'Job Draft not found'], 404);
-            }
-
-            if ($jobDraft->status == 'completed') {
+            if ($jobDraft->works == 'Content Only' && $jobDraft->status == 'completed') {
+                JobDraft::create([
+                    'job_order_id' => $jobDraft->job_order_id,
+                    'type' => 'content_writer',
+                    'date_started' => Carbon::now()->addDays(15)->toDateString(), // Set date_started to today
+                    'date_target' => Carbon::now()->addDays(18)->toDateString(),
+                    'status' => 'Waiting for Content Writer Approval',
+                    'content_writer_id' => $jobDraft->content_writer_id,
+                    'graphic_designer_id' => null,
+                    'client_id' => $jobDraft->client_id,
+                    'signature_supervisor' => $jobDraft->signature_supervisor,
+                    'supervisor_signed' => $jobDraft->supervisor_signed,
+                    'works' => $jobDraft->works
+                ]);
+            } elseif ($jobDraft->works == 'Graphic Only' && $jobDraft->status == 'completed') {
+                JobDraft::create([
+                    'job_order_id' => $jobDraft->job_order_id,
+                    'type' => 'graphic_designer',
+                    'date_started' => Carbon::now()->addDays(15)->toDateString(), // Set date_started to today
+                    'date_target' => Carbon::now()->addDays(18)->toDateString(),
+                    'status' => 'Waiting for Graphic Designer Approval',
+                    'content_writer_id' =>  null,
+                    'graphic_designer_id' => $jobDraft->graphic_designer_id,
+                    'client_id' => $jobDraft->client_id,
+                    'signature_supervisor' => $jobDraft->signature_supervisor,
+                    'supervisor_signed' => $jobDraft->supervisor_signed,
+                    'works' => $jobDraft->works
+                ]);
+            } elseif ($jobDraft->works == 'Both' && $jobDraft->status == 'completed') {
                 // Create a new JobDraft entry for renewal
                 JobDraft::create([
                     'job_order_id' => $jobDraft->job_order_id,
@@ -48,7 +72,8 @@ class SupervisorRenewalController extends Controller
                     'graphic_designer_id' => $jobDraft->graphic_designer_id,
                     'client_id' => $jobDraft->client_id,
                     'signature_supervisor' => $jobDraft->signature_supervisor,
-                    'supervisor_signed' => $jobDraft->supervisor_signed
+                    'supervisor_signed' => $jobDraft->supervisor_signed,
+                    'works' => $jobDraft->works
                 ]);
             }
         }

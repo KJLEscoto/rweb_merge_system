@@ -77,8 +77,8 @@
                 
                 <td class="signature">
                     <strong>Signature:</strong><br>
-                    @if(file_exists(public_path($job_draft->client->signature)))
-                        <img src="{{ public_path($job_draft->client->signature) }}" alt="Client Signature">
+                    @if(file_exists(public_path($job_draft->client_signature)))
+                        <img src="{{ public_path($job_draft->client_signature) }}" alt="Client Signature">
                     @else
                         <p>Signature not found in directory</p>
                     @endif

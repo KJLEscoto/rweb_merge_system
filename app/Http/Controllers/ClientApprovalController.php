@@ -80,7 +80,6 @@ class ClientApprovalController extends Controller
 
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
         // Fetch the referenced content draft properly
-        $content_draft = JobDraft::where('id', $job_draft->reference_draft_id)->first();
 
         $job_draft->update([
             'feedback' => $request->summary,
@@ -89,27 +88,65 @@ class ClientApprovalController extends Controller
             'client_signature' => $imagePath
         ]);
 
-        $content_draft->update([
-            'feedback' => $request->summary,
-            'date_completed' => now(),
-        ]);
+        if ($job_draft->type == 'graphic_designer') {
+            $content_draft = JobDraft::where('id', $job_draft->reference_draft_id)->first();
+            if ($content_draft) {
+                $content_draft->update([
+                    'client_signature' => $imagePath,
+                    'feedback' => $request->summary,
+                    'date_completed' => now(),
+                ]);
+            }
+        }
 
 
         if ($job_draft->jobOrder->renewable == 1) {
-            // return view('admin.smm.client.joborder.renew', compact('job_draft_id'));
-            JobDraft::create([
-                'job_order_id' => $job_draft->job_order_id,
-                'type' => 'content_writer',
-                'date_started' => Carbon::now()->toDateString(), // Set date_started to today
-                'date_target' => Carbon::now()->addDays(3)->toDateString(),
-                'status' => 'Waiting for Content Writer Approval',
-                'content_writer_id' => $job_draft->content_writer_id,
-                'graphic_designer_id' => $job_draft->graphic_designer_id,
-                'client_id' => $job_draft->client_id,
-                'signature_supervisor' => $job_draft->signature_supervisor,
-                'supervisor_signed' => $job_draft->supervisor_signed,
-                'works' => $job_draft->works
-            ]);
+            if ($job_draft->works == 'Content Only') {
+                // return view('admin.smm.client.joborder.renew', compact('job_draft_id'));
+                JobDraft::create([
+                    'job_order_id' => $job_draft->job_order_id,
+                    'type' => 'content_writer',
+                    'date_started' => Carbon::now()->addDays(15)->toDateString(), // Set date_started to today
+                    'date_target' => Carbon::now()->addDays(18)->toDateString(),
+                    'status' => 'Waiting for Content Writer Approval',
+                    'content_writer_id' => $job_draft->content_writer_id,
+                    'graphic_designer_id' => null,
+                    'client_id' => $job_draft->client_id,
+                    'signature_supervisor' => $job_draft->signature_supervisor,
+                    'supervisor_signed' => $job_draft->supervisor_signed,
+                    'works' => $job_draft->works
+                ]);
+            } elseif ($job_draft->works == 'Graphic Only') {
+                // return view('admin.smm.client.joborder.renew', compact('job_draft_id'));
+                JobDraft::create([
+                    'job_order_id' => $job_draft->job_order_id,
+                    'type' => 'graphic_designer',
+                    'date_started' => Carbon::now()->addDays(15)->toDateString(), // Set date_started to today
+                    'date_target' => Carbon::now()->addDays(18)->toDateString(),
+                    'status' => 'Waiting for Graphic Designer Approval',
+                    'content_writer_id' => null,
+                    'graphic_designer_id' => $job_draft->graphic_designer_id,
+                    'client_id' => $job_draft->client_id,
+                    'signature_supervisor' => $job_draft->signature_supervisor,
+                    'supervisor_signed' => $job_draft->supervisor_signed,
+                    'works' => $job_draft->works
+                ]);
+            } elseif ($job_draft->works == 'Both') {
+                // return view('admin.smm.client.joborder.renew', compact('job_draft_id'));
+                JobDraft::create([
+                    'job_order_id' => $job_draft->job_order_id,
+                    'type' => 'content_writer',
+                    'date_started' => Carbon::now()->addDays(15)->toDateString(), // Set date_started to today
+                    'date_target' => Carbon::now()->addDays(18)->toDateString(),
+                    'status' => 'Waiting for Content Writer Approval',
+                    'content_writer_id' => $job_draft->content_writer_id,
+                    'graphic_designer_id' => $job_draft->graphic_designer_id,
+                    'client_id' => $job_draft->client_id,
+                    'signature_supervisor' => $job_draft->signature_supervisor,
+                    'supervisor_signed' => $job_draft->supervisor_signed,
+                    'works' => $job_draft->works
+                ]);
+            }
         }
         return redirect()->route('admin.smm.client.approve')->with('Status', 'Job Order Approved Successfully');
     }
