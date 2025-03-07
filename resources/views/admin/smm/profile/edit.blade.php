@@ -31,7 +31,9 @@
                         <div class="col-span-3 px-4 lg:col-span-1 h-fit pb-10 bg-white shadow-md rounded-md pt-10 border border-[#e1e1e1]">
                             <div class="w-full flex justify-center items-center">
                                 <img id="profileImage" class="rounded-full w-32 h-32 object-cover"
-                                    src="{{ $user->image ? asset($user->image) : asset('/Assets/user-profile-profilepage.png') }}"
+                                    src="{{ 
+                                        \App\Models\File::where('id', Auth::user()->profiles->file_id)->first()->path . '?t=' . time() . '?s=100'
+                                    }}"
                                     alt="Profile Picture">
                             </div>
                             <div class="text-center">
@@ -52,7 +54,9 @@
                             </div>
                             <div class="w-full flex justify-center items-center">
                                 @if ($user->signature)
-                                    <img class="object-fill w-full" src="{{ asset($user->signature) }}" alt="User Signature">
+                                    <img class="object-fill w-full" src="{{ 
+                                        \App\Models\File::where('id', Auth::user()->signatures->file_id)->first()->path . '?t=' . time() . '?s=100';
+                                    }}" alt="User Signature">
                                 @else
                                     <p>No Signature Added</p>
                                 @endif
