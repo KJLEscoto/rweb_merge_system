@@ -19,30 +19,30 @@ class SupervisorRenewalController extends Controller
     {
         // dd('hello'); // Remove this line after debugging
         $jobOrder = JobOrder::find($id);
-    
+
         if (!$jobOrder) {
             return response()->json(['success' => false, 'message' => 'Job Order not found'], 404);
         }
-    
+
         // Update the renewable status
         $jobOrder->renewable = $request->input('renewable');
         $jobOrder->save();
-    
+
         // Check if renewal is required
         if ($request->input('renewable')) {
             $jobDraft = JobDraft::where('job_order_id', $id)->orderBy('id', 'desc')->first();
-    
+
             if (!$jobDraft) {
                 return response()->json(['success' => false, 'message' => 'Job Draft not found'], 404);
             }
-    
+
             if ($jobDraft->status == 'completed') {
                 // Create a new JobDraft entry for renewal
                 JobDraft::create([
                     'job_order_id' => $jobDraft->job_order_id,
                     'type' => 'content_writer',
-                    'date_started' => Carbon::now()->toDateString(), // Set date_started to today
-                    'date_target' => Carbon::now()->addDays(3)->toDateString(),
+                    'date_started' => Carbon::now()->addDays(15)->toDateString(), // Set date_started to today
+                    'date_target' => Carbon::now()->addDays(18)->toDateString(),
                     'status' => 'Waiting for Content Writer Approval',
                     'content_writer_id' => $jobDraft->content_writer_id,
                     'graphic_designer_id' => $jobDraft->graphic_designer_id,
@@ -54,5 +54,4 @@ class SupervisorRenewalController extends Controller
         }
         return response()->json(['success' => true, 'message' => 'Job Order updated successfully']);
     }
-    
 }
