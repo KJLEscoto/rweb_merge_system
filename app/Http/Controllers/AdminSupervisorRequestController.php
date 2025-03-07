@@ -45,8 +45,8 @@ class AdminSupervisorRequestController extends Controller
         $request->validate([
             'title' => 'required|string',
             'description' => 'required|string',
-            'content_writer_id' => 'nullable|integer|exists:users,id',
-            'graphic_designer_id' => 'nullable|integer|exists:users,id',
+            'content_writer_id' => 'required_without:graphic_designer_id',
+            'graphic_designer_id' => 'required_without:content_writer_id',
             'client_id' => 'required|integer|exists:users,id',
             'date_started' => 'required|date',
             'date_target' => 'required|date',
@@ -60,20 +60,24 @@ class AdminSupervisorRequestController extends Controller
         $content_writer_id = null;
         $graphic_designer_id = null;
         $work_type = null;
+        $initial_status = null;
 
         if ($request->content_checkbox && !$request->graphic_checkbox) {
             $work = "Content Only";
             $content_writer_id = $request->content_writer_id;
             $work_type = 'content_writer';
+            $initial_status = 'Waiting for Content Writer Approval';
         } elseif ($request->graphic_checkbox && !$request->content_checkbox) {
             $work = "Graphic Only";
             $graphic_designer_id = $request->graphic_designer_id;
             $work_type = 'graphic_designer';
+            $initial_status = 'Waiting for Graphic Designer Approval';
         } elseif ($request->content_checkbox && $request->graphic_checkbox) {
             $work = "Both";
             $content_writer_id = $request->content_writer_id;
             $graphic_designer_id = $request->graphic_designer_id;
             $work_type = 'content_writer';
+            $initial_status = 'Waiting for Content Writer Approval';
         }
 
         // Create job order
@@ -90,7 +94,7 @@ class AdminSupervisorRequestController extends Controller
             'type' => $work_type,
             'date_started' => $request->date_started,
             'date_target' => $request->date_target,
-            'status' => 'Waiting for Content Writer Approval',
+            'status' => $initial_status,
             'content_writer_id' => $content_writer_id,
             'graphic_designer_id' => $graphic_designer_id,
             'client_id' => $request->client_id,

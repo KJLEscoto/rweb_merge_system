@@ -42,7 +42,7 @@
                                                 @elseif ((auth()->user()->role_id == '3' && ($job_draft->status == 'Submitted to Operations' || $job_draft->status == 'completed' || $job_draft->status == 'Submitted to Top Manager' || $job_draft->status == "Submitted to Client")) || (auth()->user()->role_id == '4' && ($job_draft->status == 'Submitted to Operations' || $job_draft->status == 'completed' || $job_draft->status == 'Submitted to Top Manager' || $job_draft->status == "Submitted to Client")))
                                                     Created
                                                     @elseif (auth()->user()->role_id == '1' and $job_draft->status == 'Submitted to Client')
-                                                    <a href="{{url('admin/smm/client/show/' . $job_draft->id)}}">
+                                                    <a href="{{url('smm/client/show/' . $job_draft->id)}}">
                                                         <p class="text-[#fa7011]">Approve</p>
                                                     </a>
                                                     @elseif (auth()->user()->role_id == '2' and $job_draft->status == 'Submitted to Operations')

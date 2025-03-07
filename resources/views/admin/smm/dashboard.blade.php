@@ -42,7 +42,7 @@
                                                 @elseif ((auth()->user()->role_id == '3' && ($job_draft->status == 'Submitted to Operations' || $job_draft->status == 'completed' || $job_draft->status == 'Submitted to Top Manager' || $job_draft->status == "Submitted to Client")) || (auth()->user()->role_id == '4' && ($job_draft->status == 'Submitted to Operations' || $job_draft->status == 'completed' || $job_draft->status == 'Submitted to Top Manager' || $job_draft->status == "Submitted to Client")))
                                                     Created
                                                     @elseif (auth()->user()->role_id == '1' and $job_draft->status == 'Submitted to Client')
-                                                    <a href="{{url('admin/smm/client/show/' . $job_draft->id)}}">
+                                                    <a href="{{url('smm/client/show/' . $job_draft->id)}}">
                                                         <p class="text-[#fa7011]">Approve</p>
                                                     </a>
                                                     @elseif (auth()->user()->role_id == '2' and $job_draft->status == 'Submitted to Operations')
@@ -50,7 +50,7 @@
                                                         <p class="text-[#fa7011]">Sign</p>
                                                     </a>
                                                     @elseif (auth()->user()->role_id == '3' and $job_draft->status == 'Waiting for Content Writer Approval' || $job_draft->status == 'Waiting for Graphic Designer Approval')
-                                                        <form action="{{ url('admin/smm/content/accept/' . $job_draft->id) }}" method="POST">
+                                                        <form action="{{ url('smm/content/accept/' . $job_draft->id) }}" method="POST">
                                                             @csrf
                                                             @method('PUT')
                                                             <button type="submit" class="text-[#fa7011] bg-transparent border-none cursor-pointer">
@@ -70,7 +70,7 @@
                                                         </button>
                                                     </form>
                                                     @elseif (auth()->user()->role_id == '4' and $job_draft->status == 'pending')
-                                                    <a href="{{url('admin/smm/graphic/edit/' . $job_draft->id)}}">
+                                                    <a href="{{url('smm/graphic/edit/' . $job_draft->id)}}">
                                                         <p class="text-[#fa7011]">Create</p>
                                                     </a>
                                                     @elseif (auth()->user()->role_id == '5' and $job_draft->status == 'Submitted to Top Manager')
@@ -115,12 +115,12 @@
                                                     <td class="px-4 py-2 text-sm">{{$job_draft_revision->jobOrder->title}} - {{Str::title(str_replace('_', ' ', $job_draft_revision->type))}}</td>
                                                     <td class="px-4 py-2 text-sm">
                                                         @if (auth()->user()->role_id == 3)
-                                                            <a href="{{url('admin/smm/revision/edit/' . $job_draft_revision->id)}}">
+                                                            <a href="{{url('smm/revision/edit/' . $job_draft_revision->id)}}">
                                                                 <p class="text-[#fa7011]">Revise</p>
                                                             </a>
 
                                                         @elseif (auth()->user()->role_id == 4)
-                                                            <a href="{{url('admin/smm/revision/edit/' . $job_draft_revision->id)}}">
+                                                            <a href="{{url('smm/revision/edit/' . $job_draft_revision->id)}}">
                                                                 <p class="text-[#fa7011]">Revise</p>
                                                             </a>
 
@@ -161,7 +161,7 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($my_tasks as $my_task )
-                                                @if ($my_task->contentWriter->name == Auth::user()->name && $my_task->type == "content_writer" || $my_task->graphicDesigner->name == Auth::user()->name && $my_task->type == "graphic_designer")
+                                                @if ($my_task->contentWriter?->name == Auth::user()->name && $my_task->type == "content_writer" || $my_task->graphicDesigner?->name == Auth::user()->name && $my_task->type == "graphic_designer")
                                                     <tr>
                                                         <td class="px-4 py-2 text-sm" 
                                                             id="taskType-{{$my_task->id}}" 

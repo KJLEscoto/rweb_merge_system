@@ -35,6 +35,7 @@
                         <th class="w-[30%] px-4 py-3">Title</th>
                         <th class="w-[35%] px-4 py-3">Designated</th>
                         <th class="w-[20%] text-center px-4 py-3">Status</th>
+                        <th class="w-[20%] text-center px-4 py-3">Delivery</th>
                         <th class="w-[15%] px-4 py-3 text-center">Actions</th>
                     </tr>
                 </thead>
@@ -56,6 +57,25 @@
                                     {{ ucfirst($job_draft->status) }}
                                 </p>
                             </td>
+                            <td class="w-[20%] text-center px-4 py-3 text-black">
+                                <p class="w-full px-2 py-1 rounded-lg text-wrap">
+                                    @php
+                                        // Use date_completed if available, otherwise use the current date
+                                        $dateCompleted = $job_draft->date_completed ? \Carbon\Carbon::parse($job_draft->date_completed) : \Carbon\Carbon::now();
+                                        $dateTarget = \Carbon\Carbon::parse($job_draft->date_target);
+                            
+                                        $days_difference = $dateTarget->diffInDays($dateCompleted, false);
+                                    @endphp
+                            
+                                    @if ($days_difference > 0)
+                                        Late by {{ $days_difference }} day(s).
+                                    @else
+                                        On Time
+                                    @endif
+                                </p>
+                            </td>
+                            
+                            
                             <td class="w-[15%] px-4 py-3 text-center">
                                 <a href="{{ url('admin/smm/track/' . $job_draft->id) }}">
                                     <button class="px-4 py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
