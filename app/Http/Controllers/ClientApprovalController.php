@@ -80,7 +80,6 @@ class ClientApprovalController extends Controller
 
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
         // Fetch the referenced content draft properly
-        $content_draft = JobDraft::where('id', $job_draft->reference_draft_id)->first();
 
         $job_draft->update([
             'feedback' => $request->summary,
@@ -89,10 +88,15 @@ class ClientApprovalController extends Controller
             'client_signature' => $imagePath
         ]);
 
-        $content_draft->update([
-            'feedback' => $request->summary,
-            'date_completed' => now(),
-        ]);
+        if ($job_draft->type == 'content_writer') {
+            $content_draft = JobDraft::where('id', $job_draft->reference_draft_id)->first();
+            if ($content_draft) {
+                $content_draft->update([
+                    'feedback' => $request->summary,
+                    'date_completed' => now(),
+                ]);
+            }
+        }
 
 
         if ($job_draft->jobOrder->renewable == 1) {
