@@ -53,97 +53,40 @@
         #container-pdf{
             padding: 20px
         }
+        .letter {
+            padding: 2rem;
+            height: 10rem
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <img src="{{ public_path('/Assets/doc_header.png') }}" alt="Header">
-        <h2>Operation Job Order Form</h2>
+        <h2>Acknowledgement & Acceptance</h2>
     </div>
 
     <div class="section">
         <div class="highlight"></div>
-        <table>
-            <tr>
-                <td><strong>Client Name:</strong><br>{{ $job_draft->client->name }}</td>
-                <td><strong>Client Address:</strong><br>{{ $job_draft->client->address }}</td>
-            </tr>
-        </table>
+        <div class="letter">I, <strong>{{$job_draft->client->name}}</strong>, hereby acknowledge and accept the project, namely, <strong>{{$job_draft->jobOrder->title}}</strong>.</div>
         <div class="gray-bar"></div>
         <table>
             <tr>
-                <td><strong>Date Issued:</strong><br>
-                    {{ $job_draft->date_started ? \Carbon\Carbon::parse($job_draft->date_started)->format('Y-m-d') : 'N/A' }}
+                <td><strong>Date:</strong><br>
+                    {{ $job_draft->date_started }}
                 </td>
                 
-                <td><strong>Target Finished Date:</strong><br>
-{{ $job_draft->date_target }}
+                <td class="signature">
+                    <strong>Signature:</strong><br>
+                    @if(file_exists(public_path($job_draft->client->signature)))
+                        <img src="{{ public_path($job_draft->client->signature) }}" alt="Client Signature">
+                    @else
+                        <p>Signature not found in directory</p>
+                    @endif
                 </td>
                           
             </tr>
         </table>
-        <table>
-            <tr>
-                <td><strong>Issued by:</strong><br>{{ $job_draft->jobOrder->issuer->name }}</td>
-                <td>
-                    <strong>Work Performed by:</strong><br>
-                    @if ($job_draft->type == "content_writer")
-                        {{ $job_draft->contentWriter->name }}
-                    @else
-                        {{ $job_draft->graphicDesigner->name }}
-                    @endif
-                </td>
-            </tr>
-        </table>
-        <div class="section-remarks">
-            <strong>Description:</strong>
-            <div class="text-sm text-gray-600 w-full max-h-[500px] overflow-y-auto bg-white border border-gray-300 p-2 rounded">
-                {!! $job_draft->jobOrder->description !!}
-            </div>
-        </div>
-        <div class="gray-bar"></div>
-        <div class=""><strong> Complete Information </strong></div>
-        <table>
-            <tr>
-                <td><strong>Date Completed:</strong><br>
-                    {{ $job_draft->date_completed ? \Carbon\Carbon::parse($job_draft->date_completed)->format('Y-m-d') : 'N/A' }}
-                </td>
-                
-                <td><strong>Time Required:</strong><br>
-                    @if($job_draft->date_started && $job_draft->date_completed)
-                        {{ \Carbon\Carbon::parse($job_draft->date_started)->diffInDays(\Carbon\Carbon::parse($job_draft->date_completed)) }} days
-                    @else
-                        N/A
-                    @endif
-                </td>                             
-            </tr>
-        </table>
-        <div class="section-remarks">
-            <strong>Remarks:</strong>
-            <div class="text-sm text-gray-600 w-full max-h-[500px] overflow-y-auto bg-white border border-gray-300 p-2 rounded">
-{!! $job_draft->draft !!}
-            </div>
-        </div>
-        <table>
-            <tr>
-                <td class="signature">
-                    <strong>Assigned Personnel Signature:</strong><br>
-                    @if(file_exists(public_path($job_draft->signature_worker)))
-                        <img src="{{ public_path($job_draft->signature_worker) }}" alt="Worker Signature">
-                    @else
-                        <p>Signature not found in directory</p>
-                    @endif
-                </td>
-                <td class="signature">
-                    <strong>Supervisor Signature:</strong><br>
-                    @if(file_exists(public_path($job_draft->signature_supervisor)))
-                        <img src="{{ public_path($job_draft->signature_supervisor) }}" alt="Supervisor Signature">
-                    @else
-                        <p>Signature not found in directory</p>
-                    @endif
-                </td>
-            </tr>
-        </table>
+        
     </div>
 
     <div class="footer">
