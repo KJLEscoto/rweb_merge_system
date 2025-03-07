@@ -111,7 +111,7 @@
                             <div>
                                 <div class="flex gap-4">
                                     <p class="text-sm text-gray-600">Content Writer</p>
-                                    <input type="checkbox" name="content_checkbox"/>
+                                    <input type="checkbox" name="content_checkbox" id="content-checkbox"/>
                                 </div>
                                 @error('content_checkbox')
                                     <p class="text-red-600 text-sm">{{ $message }}</p>
@@ -131,7 +131,7 @@
                             <div>
                                 <div class="flex gap-4">
                                     <p class="text-sm text-gray-600">Graphics Designer</p>
-                                    <input type="checkbox" name="graphic_checkbox"/>
+                                    <input type="checkbox" name="graphic_checkbox" id="graphic-checkbox"/>
                                 </div>
                                 @error('content_checkbox')
                                     <p class="text-red-600 text-sm">{{ $message }}</p>
@@ -470,4 +470,39 @@
             console.error(error);
         });
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const contentCheckbox = document.getElementById("content-checkbox");
+        const contentInput = document.getElementById("selected-content-writer-name");
+
+        const graphicCheckbox = document.getElementById("graphic-checkbox");
+        const graphicInput = document.getElementById("selected-graphic-designer-name");
+
+        function toggleInput(checkbox, input, modalFunctionName) {
+            if (checkbox.checked) {
+                input.disabled = false;
+                input.classList.remove("bg-gray-200", "cursor-not-allowed");
+                input.onclick = window[modalFunctionName]; // Enable modal function
+            } else {
+                input.disabled = true;
+                input.classList.add("bg-gray-200", "cursor-not-allowed");
+                input.onclick = null; // Prevent clicking
+            }
+        }
+
+        contentCheckbox.addEventListener("change", function() {
+            toggleInput(contentCheckbox, contentInput, "openContentWriterModal");
+        });
+
+        graphicCheckbox.addEventListener("change", function() {
+            toggleInput(graphicCheckbox, graphicInput, "openGraphicDesignerModal");
+        });
+
+        // Initial check in case old values exist
+        toggleInput(contentCheckbox, contentInput, "openContentWriterModal");
+        toggleInput(graphicCheckbox, graphicInput, "openGraphicDesignerModal");
+    });
+</script>
+
 {{-- @endsection --}}
