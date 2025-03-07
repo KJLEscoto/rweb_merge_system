@@ -95,9 +95,8 @@ class ClientApprovalController extends Controller
         ]);
 
 
-        if ($job_draft->jobOrder->renewable == 0) {
-            return view('admin.smm.client.joborder.renew', compact('job_draft_id'));
-        } elseif ($job_draft->jobOrder->renewable == 1) {
+        if ($job_draft->jobOrder->renewable == 1) {
+            // return view('admin.smm.client.joborder.renew', compact('job_draft_id'));
             JobDraft::create([
                 'job_order_id' => $job_draft->job_order_id,
                 'type' => 'content_writer',

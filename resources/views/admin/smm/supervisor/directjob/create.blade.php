@@ -109,7 +109,10 @@
 
                         <div class="col-span-2 grid grid-cols-2 w-full gap-4 rounded-lg">
                             <div>
-                                <p class="text-sm text-gray-600">Content Writer</p>
+                                <div class="flex gap-4">
+                                    <p class="text-sm text-gray-600">Content Writer</p>
+                                    <input type="checkbox" name="content_checkbox"/>
+                                </div>
                                 <div class="relative">
                                     <input type="text" id="selected-content-writer-name"
                                         value="{{ old('content_writer_id') ? ($contentworkers->firstWhere('id', old('content_writer_id'))->name ?? 'Select a Content Writer') : 'Select a Content Writer' }}"
@@ -123,7 +126,10 @@
                                 @enderror
                             </div>
                             <div>
-                                <p class="text-sm text-gray-600">Graphics Designer</p>
+                                <div class="flex gap-4">
+                                    <p class="text-sm text-gray-600">Graphics Designer</p>
+                                    <input type="checkbox" name="graphic_checkbox"/>
+                                </div>
                                 <div class="relative">
                                     <input type="text" id="selected-graphic-designer-name"
                                         value="{{ old('graphic_designer_id') ? ($graphicworkers->firstWhere('id', old('graphic_designer_id'))->name ?? 'Select a Graphics Designer') : 'Select a Graphics Designer' }}"

@@ -25,46 +25,70 @@ class SupervisorDirectJobOrderController extends Controller
     }
 
     public function store(Request $request)
-    {
+{
+    // Validate request before proceeding
+    $request->validate([
+        'title' => 'required|string',
+        'description' => 'required|string',
+        'content_writer_id' => 'nullable|integer',
+        'graphic_designer_id' => 'nullable|integer',
+        'client_id' => 'required|integer',
+        'date_started' => 'required|date',
+        'date_target' => 'required|date'
+    ]);
 
-        // Validate request before proceeding
-        $request->validate([
-            'title' => 'required|string',
-            'description' => 'required|string',
-            'content_writer_id' => 'required|integer',
-            'graphic_designer_id' => 'required|integer',
-            'client_id' => 'required|integer',
-            // 'days_to_add' => 'required',
-            'date_started' => 'required',
-            'date_target' => 'required'
-        ]);
-
-        if (!auth()->user()->signature) {
-            return redirect()->route('admin.smm.supervisor.directjob.create')->with('Status', 'No Signature Found');
-        }
-
-        $job_order = JobOrder::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'issued_by' => auth()->user()->id,
-        ]);
-
-        $job_draft = JobDraft::create([
-            'job_order_id' => $job_order->id,
-            'type' => 'content_writer',
-            // 'days_to_add' => $request->days_to_add,
-            'date_started' => $request->date_started,
-            'date_target' => $request->date_target,
-            'status' => 'Waiting for Content Writer Approval',
-            'content_writer_id' => $request->content_writer_id,
-            'graphic_designer_id' => $request->graphic_designer_id,
-            'client_id' => $request->client_id,
-            'signature_supervisor' => auth()->user()->signature,
-            'supervisor_signed' => auth()->user()->id
-        ]);
-
-        return redirect()->route('admin.smm.supervisor.directjob')->with('Status', 'Job Order Create Successfully');
+    // Ensure at least one checkbox is checked
+    if (!$request->has('content_checkbox') && !$request->has('graphic_checkbox')) {
+        return redirect()->back()->with('Status', 'You must select at least one work type.');
     }
+
+    // Determine work type and assign appropriate fields
+    $work = null;
+    $content_writer_id = null;
+    $graphic_designer_id = null;
+
+    if ($request->has('content_checkbox') && !$request->has('graphic_checkbox')) {
+        $work = "Content Only";
+        $content_writer_id = $request->content_writer_id;
+    } elseif ($request->has('graphic_checkbox') && !$request->has('content_checkbox')) {
+        $work = "Graphic Only";
+        $graphic_designer_id = $request->graphic_designer_id;
+    } elseif ($request->has('content_checkbox') && $request->has('graphic_checkbox')) {
+        $work = "Both";
+        $content_writer_id = $request->content_writer_id;
+        $graphic_designer_id = $request->graphic_designer_id;
+    }
+
+    // Ensure the user has a signature before proceeding
+    if (!auth()->user()->signature) {
+        return redirect()->route('admin.smm.supervisor.directjob.create')->with('Status', 'No Signature Found');
+    }
+
+    // Create job order
+    $job_order = JobOrder::create([
+        'title' => $request->title,
+        'description' => $request->description,
+        'issued_by' => auth()->user()->id,
+    ]);
+
+    // Create job draft
+    JobDraft::create([
+        'job_order_id' => $job_order->id,
+        'type' => $work,
+        'date_started' => $request->date_started,
+        'date_target' => $request->date_target,
+        'status' => 'Waiting for Content Writer Approval',
+        'content_writer_id' => $content_writer_id,
+        'graphic_designer_id' => $graphic_designer_id,
+        'client_id' => $request->client_id,
+        'signature_supervisor' => auth()->user()->signature,
+        'supervisor_signed' => auth()->user()->id,
+        'works' => $work
+    ]);
+
+    return redirect()->route('admin.smm.supervisor.directjob')->with('Status', 'Job Order Created Successfully');
+}
+
 
     public function show($id)
     {
