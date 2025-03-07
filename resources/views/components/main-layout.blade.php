@@ -401,7 +401,7 @@
                     <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Approvals" routeName="admin.smm.client.approve" />
                     <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Downloadables" routeName="admin.smm.client.history" />
                     {{-- <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Renewal" routeName="admin.smm.client.renewal" /> --}}
-                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Track" routeName="admin.smm.track.index" />
+                    {{-- <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Track" routeName="admin.smm.track.index" /> --}}
                     <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
                 @elseif (Request::routeIs('admin.smm*') && (Auth::user()->roles->position === "content_writer"))
                     <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard" routeName="admin.smm.dashboard" />
