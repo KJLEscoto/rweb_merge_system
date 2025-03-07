@@ -42,7 +42,7 @@ class SupervisorJobOrderController extends Controller
             'deadline' => $request->deadline
         ]);
 
-        return redirect()->route('supervisor.joborder')->with('Status', 'Job Order Created Successfully');
+        return redirect()->route('admin.smm.supervisor.joborder')->with('Status', 'Job Order Created Successfully');
     }
 
     public function show($id)
@@ -75,6 +75,6 @@ class SupervisorJobOrderController extends Controller
             'assigned_to' => $request->assigned_to,
             'deadline' => $request->deadline
         ]);
-        return redirect()->route('supervisor.joborder')->with('Status', 'Job Order Updated Successfully');
+        return redirect()->route('admin.smm.supervisor.joborder')->with('Status', 'Job Order Updated Successfully');
     }
 }

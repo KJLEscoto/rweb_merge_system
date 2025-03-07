@@ -1,9 +1,9 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Show User')
 @section('header', 'Show User')
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
 @php
     $roles = [
@@ -16,7 +16,9 @@
         7 => 'Accounting'
     ];
 @endphp
-<div class="mx-auto max-w-screen-2xl">
+
+<x-main-layout breadcumb="SMM" page="Show User">
+<div class="px-10 pt-10">
     {{-- Middle Part --}}
 
     <div class="px-10 text-white">
@@ -87,4 +89,5 @@
     </div>
 
 </div>
-@endsection
+</x-main-layout>
+{{-- @endsection --}}

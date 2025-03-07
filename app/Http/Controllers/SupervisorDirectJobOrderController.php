@@ -40,7 +40,7 @@ class SupervisorDirectJobOrderController extends Controller
         ]);
 
         if (!auth()->user()->signature) {
-            return redirect()->route('supervisor.directjob.create')->with('Status', 'No Signature Found');
+            return redirect()->route('admin.smm.supervisor.directjob.create')->with('Status', 'No Signature Found');
         }
 
         $job_order = JobOrder::create([
@@ -63,7 +63,7 @@ class SupervisorDirectJobOrderController extends Controller
             'supervisor_signed' => auth()->user()->id
         ]);
 
-        return redirect()->route('supervisor.directjob')->with('Status', 'Job Order Create Successfully');
+        return redirect()->route('admin.smm.supervisor.directjob')->with('Status', 'Job Order Create Successfully');
     }
 
     public function show($id)
@@ -75,9 +75,9 @@ class SupervisorDirectJobOrderController extends Controller
 
     public function edit($id)
     {
-        $clients = User::with('role')->where('role_id', 1)->get();
-        $graphicworkers = User::with('role')->whereNotIn('role_id', [1, 3])->get();
-        $contentworkers = User::with('role')->whereNotIn('role_id', [1, 4])->get();
+        $clients = User::with('roles')->where('role_id', 1)->get();
+        $graphicworkers = User::with('roles')->whereNotIn('role_id', [1, 3])->get();
+        $contentworkers = User::with('roles')->whereNotIn('role_id', [1, 4])->get();
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
 
         return view('admin/smm/supervisor/directjob/edit', compact('job_draft', 'graphicworkers', 'contentworkers', 'clients'));
@@ -127,6 +127,6 @@ class SupervisorDirectJobOrderController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->route('supervisor.directjob')->with('Status', 'Job Order Updated Successfully');
+        return redirect()->route('admin.smm.supervisor.directjob')->with('Status', 'Job Order Updated Successfully');
     }
 }

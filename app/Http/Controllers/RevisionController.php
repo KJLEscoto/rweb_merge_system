@@ -78,6 +78,6 @@ class RevisionController extends Controller
             'status' => 'Submitted to Operations',
             'draft' => $request->draft
         ]);
-        return redirect()->route('revision', compact('job_draft'));
+        return redirect()->route('admin.smm.revision', compact('job_draft'));
     }
 }

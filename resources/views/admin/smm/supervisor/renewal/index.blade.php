@@ -111,8 +111,8 @@ document.addEventListener('DOMContentLoaded', function() {
         toggle.addEventListener('change', function() {
             let jobOrderId = this.getAttribute('data-id');
             let newStatus = this.checked ? 1 : 0;
-
-            fetch(`/operation/update/${jobOrderId}`, {
+            
+            fetch(`/admin/smm/supervisor/update/${jobOrderId}`, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',

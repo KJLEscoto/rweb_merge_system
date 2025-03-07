@@ -54,7 +54,7 @@ class SupervisorTaskController extends Controller
             'status' => 'Submitted to Operations',
         ]);
 
-        return redirect()->route('supervisor.task')->with('Status', 'Draft Created Successfully');
+        return redirect()->route('admin.smm.supervisor.task')->with('Status', 'Draft Created Successfully');
     }
 
     public function edit($id)
@@ -79,13 +79,13 @@ class SupervisorTaskController extends Controller
             'status' => 'Submitted to Operations',
         ]);
 
-        return redirect()->route('supervisor.task')->with('Status', 'Draft Updated Successfully');
+        return redirect()->route('admin.smmsupervisor.task')->with('Status', 'Draft Updated Successfully');
     }
 
     public function accept($id)
     {
         if (!auth()->user()->signature) {
-            return redirect()->route('supervisor.task')->with('Status', 'No Signature Found');
+            return redirect()->route('admin.smm.supervisor.task')->with('Status', 'No Signature Found');
         }
         $job_draft = JobDraft::find($id);
 
@@ -97,6 +97,6 @@ class SupervisorTaskController extends Controller
             'worker_signed' => auth()->user()->id
         ]);
 
-        return redirect()->route('supervisor.task')->with('Status', 'Job Order Accepted Successfully');
+        return redirect()->route('admin.smm.supervisor.task')->with('Status', 'Job Order Accepted Successfully');
     }
 }

@@ -17,25 +17,25 @@ class SupervisorRenewalController extends Controller
 
     public function update(Request $request, $id)
     {
+        // dd('hello'); // Remove this line after debugging
         $jobOrder = JobOrder::find($id);
-
+    
         if (!$jobOrder) {
             return response()->json(['success' => false, 'message' => 'Job Order not found'], 404);
         }
-
+    
         // Update the renewable status
         $jobOrder->renewable = $request->input('renewable');
         $jobOrder->save();
-
+    
         // Check if renewal is required
         if ($request->input('renewable')) {
             $jobDraft = JobDraft::where('job_order_id', $id)->orderBy('id', 'desc')->first();
-
-
+    
             if (!$jobDraft) {
                 return response()->json(['success' => false, 'message' => 'Job Draft not found'], 404);
             }
-
+    
             if ($jobDraft->status == 'completed') {
                 // Create a new JobDraft entry for renewal
                 JobDraft::create([
@@ -54,4 +54,5 @@ class SupervisorRenewalController extends Controller
         }
         return response()->json(['success' => true, 'message' => 'Job Order updated successfully']);
     }
+    
 }

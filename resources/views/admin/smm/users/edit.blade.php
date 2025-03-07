@@ -1,11 +1,12 @@
-@extends('layouts.application')
+{{-- @extends('layouts.application') --}}
 
 @section('title', 'Edit User')
 @section('header', 'Edit User')
 
-@section('content')
+{{-- @section('content') --}}
 <script src="https://cdn.tailwindcss.com"></script>
-<div class="mx-auto max-w-screen-2xl">
+<x-main-layout breadcumb="SMM" page="Edit Users">
+<div class="px-10 pt-10">
 
     @if (session('status'))
         <div id="success-message" class="bg-green-500 text-white p-4 rounded-md mb-4">
@@ -115,6 +116,7 @@
         </div>
     </div>
 </div>
+</x-main-layout>
 
 <script>
     setTimeout(function() {
@@ -148,4 +150,4 @@ document.getElementById("removeProfileBtn").addEventListener("click", function()
 });
 
 </script>
-@endsection
+{{-- @endsection --}}

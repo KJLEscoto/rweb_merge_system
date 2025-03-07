@@ -100,7 +100,7 @@
                         </td>
                         
                         <td><strong>Target Finished Date:</strong><br>
-                            {{ $job_draft->date_started ? \Carbon\Carbon::parse($job_draft->date_started)->addDays($job_draft->days_to_add)->format('Y-m-d') : 'N/A' }}
+        {{ $job_draft->date_target }}
                         </td>
                                 
                     </tr>
