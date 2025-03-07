@@ -49,7 +49,7 @@ class GraphicApprovalController extends Controller
             'status' => 'Submitted to Operations',
         ]);
 
-        return redirect()->route('graphic.approve')->with('Status', 'Draft Created Successfully');
+        return redirect()->route('admin.smm.graphic.approve')->with('Status', 'Draft Created Successfully');
     }
 
     public function edit($id)
@@ -74,13 +74,13 @@ class GraphicApprovalController extends Controller
             'status' => 'Submitted to Operations',
         ]);
 
-        return redirect()->route('graphic.approve')->with('Status', 'Draft Updated Successfully');
+        return redirect()->route('admin.smm.graphic.approve')->with('Status', 'Draft Updated Successfully');
     }
 
     public function accept($id)
     {
         if (!auth()->user()->signature) {
-            return redirect()->route('graphic.approve')->with('Status', 'No Signature Found');
+            return redirect()->route('admin.smm.graphic.approve')->with('Status', 'No Signature Found');
         }
         $job_draft = JobDraft::find($id);
 
@@ -90,6 +90,6 @@ class GraphicApprovalController extends Controller
             'worker_signed' => auth()->user()->id
         ]);
 
-        return redirect()->route('graphic.approve')->with('Status', 'Job Order Accepted Successfully');
+        return redirect()->route('admin.smm.graphic.approve')->with('Status', 'Job Order Accepted Successfully');
     }
 }

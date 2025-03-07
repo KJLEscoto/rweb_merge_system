@@ -48,12 +48,12 @@ x{{-- @extends('layouts.application') --}}
 
 
                         <td class="px-6 py-3 border-b">
-                            <a href="{{url('admin/smm/content/revisions/edit/' . $job_draft->id)}}">
+                            <a href="{{url('smm/content/revisions/edit/' . $job_draft->id)}}">
                                 <button class="px-4 py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
                                     Edit Draft
                                 </button>
                             </a>
-                            <a href="{{url('admin/smm/graphic/show/' . $job_draft->id)}}">
+                            <a href="{{url('smm/graphic/show/' . $job_draft->id)}}">
 
                                 <button class="px-4 py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
                                     Show Details

@@ -87,13 +87,13 @@
                         <td class="px-6 py-3">
                             @if ($job_draft->status == 'pending' || $job_draft->status == 'Waiting for Content Writer Approval')
                                 @if ($job_draft->status == 'pending')
-                                    <a href="{{url('admin/smm/content/create/' . $job_draft->id)}}">
+                                    <a href="{{url('smm/content/create/' . $job_draft->id)}}">
                                         <button class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
                                             Create
                                         </button>
                                     </a>
                                 @elseif ($job_draft->status == 'Waiting for Content Writer Approval')
-                                    <form action="{{ url('admin/smm/content/accept/' . $job_draft->id) }}" method="POST" class="inline">
+                                    <form action="{{ url('smm/content/accept/' . $job_draft->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('PUT')
                                         <button type="submit" class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-[#fa7011] rounded hover:bg-[#fa7011]">
@@ -101,31 +101,31 @@
                                         </button>
                                     </form>                                
                                 @endif
-                                <a href="{{url('admin/smm/content/show/' . $job_draft->id)}}">
+                                <a href="{{url('smm/content/show/' . $job_draft->id)}}">
                                     <button class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
                                         Show
                                     </button>
                                 </a>
 
                             @elseif ($job_draft->status == "Submitted to Operations")
-                                <a href="{{url('admin/smm/content/edit/' . $job_draft->id)}}">
+                                <a href="{{url('smm/content/edit/' . $job_draft->id)}}">
                                     <button class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-blue-500 rounded hover:bg-blue-600">
                                         Edit
                                     </button>
                                 </a>
-                                <a href="{{url('admin/smm/content/show/' . $job_draft->id)}}">
+                                <a href="{{url('smm/content/show/' . $job_draft->id)}}">
                                     <button class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
                                         Show
                                     </button>
                                 </a>
 
                             @else
-                                <a href="{{url('admin/smm/content/create/' . $job_draft->id)}}">
+                                <a href="{{url('smm/content/create/' . $job_draft->id)}}">
                                     <button disabled class="px-2 py-1 mb-2 cursor-not-allowed lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-gray-500 rounded hover:bg-gray-600">
                                         Edit
                                     </button>
                                 </a>
-                                <a href="{{url('admin/smm/content/show/' . $job_draft->id)}}">
+                                <a href="{{url('smm/content/show/' . $job_draft->id)}}">
                                     <button class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
                                         Show
                                     </button>

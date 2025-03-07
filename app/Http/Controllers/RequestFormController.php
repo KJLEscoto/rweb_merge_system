@@ -76,7 +76,7 @@ class RequestFormController extends Controller
             ]);
         }
 
-        return redirect()->route('requestForm')->with('Status', 'Request Form Updated Successfully.');
+        return redirect()->route('admin.smm.requestForm')->with('Status', 'Request Form Updated Successfully.');
     }
 
 
@@ -120,7 +120,7 @@ class RequestFormController extends Controller
             ]);
         }
 
-        return redirect()->route('requestForm')->with('Status', 'Request Form Created Successfully.');
+        return redirect()->route('admin.smm.requestForm')->with('Status', 'Request Form Created Successfully.');
     }
 
     public function approve($id)
@@ -141,7 +141,7 @@ class RequestFormController extends Controller
             'status' => $status,
         ]);
 
-        return redirect()->route('requestForm.history')->with('Status', 'Request Form Approve Successfully.');
+        return redirect()->route('admin.smm.requestForm.history')->with('Status', 'Request Form Approve Successfully.');
     }
 
     public function delete($id)
@@ -154,6 +154,6 @@ class RequestFormController extends Controller
         // Delete the request form
         $request_form->delete();
 
-        return redirect()->route('requestForm.history')->with('Status', 'Request Form Deleted Successfully.');
+        return redirect()->route('admin.smm.requestForm.history')->with('Status', 'Request Form Deleted Successfully.');
     }
 }

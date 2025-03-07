@@ -50,7 +50,7 @@
                         <td class="px-6 py-3 border-b flex space-x-3">
 
                             <div>
-                                <a href="{{url('admin/smm/content/revisions/edit/' . $job_draft->id)}}">
+                                <a href="{{url('smm/content/revisions/edit/' . $job_draft->id)}}">
                                     <button class="px-4 py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
                                         Edit Draft
                                     </button>
@@ -58,7 +58,7 @@
                             </div>
 
                             <div>
-                                <a href="{{url('admin/smm/content/revisions/show/' . $job_draft->id)}}">
+                                <a href="{{url('smm/content/revisions/show/' . $job_draft->id)}}">
                                     <button class="px-4 py-2 text-sm text-white bg-blue-500 rounded hover:bg-blue-600">
                                         Show
                                     </button>

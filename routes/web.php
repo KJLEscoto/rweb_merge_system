@@ -271,6 +271,43 @@ Route::prefix('/smm')->middleware('auth.redirect')->group(function() {
         Route::post('/client/update/{id}', [ClientRenewalController::class, 'update'])->name('client.update');
     });
 
+
+    Route::middleware(['auth', 'role:content_writer'])->group(function () {
+        Route::get('/content', [ContentApprovalController::class, 'index'])->name('admin.smm.content.approve');
+        Route::get('/content/show/{id}', [ContentApprovalController::class, 'show'])->name('admin.smm.content.show');
+        Route::get('/content/create/{id}', [ContentApprovalController::class, 'create'])->name('admin.smm.content.create');
+        Route::put('/content/store/{id}', [ContentApprovalController::class, 'store'])->name('content.store');
+        Route::get('/content/edit/{id}', [ContentApprovalController::class, 'edit'])->name('content.edit');
+        Route::put('/content/update/{id}', [ContentApprovalController::class, 'update'])->name('content.update');
+        Route::put('/content/accept/{id}', [ContentApprovalController::class, 'accept'])->name('content.accept');
+
+        Route::get('/content/revisions/', [ContentRevisionController::class, 'index'])->name('content.revisions');
+        Route::get('/content/revisions/edit/{id}', [ContentRevisionController::class, 'edit']);
+        Route::put('/content/revisions/update/{id}', [ContentRevisionController::class, 'update']);
+
+        Route::get('/content/history', [ContentHistoryController::class, 'index'])->name('admin.smm.content.history');
+        Route::get('/content/history/show/{id}', [ContentHistoryController::class, 'show'])->name('content.history.show');
+        Route::get('/content/history/download/{id}', [ContentHistoryController::class, 'downloadPDF'])->name('content.history.download');
+    });
+
+    Route::middleware(['auth', 'role:graphic_designer'])->group(function () {
+        Route::get('/graphic', [GraphicApprovalController::class, 'index'])->name('admin.smm.graphic.approve');
+        Route::get('/graphic/show/{id}', [GraphicApprovalController::class, 'show'])->name('admin.smm.graphic.show');
+        Route::get('/graphic/create/{id}', [GraphicApprovalController::class, 'create'])->name('admin.smm.graphic.create');
+        Route::put('/graphic/store/{id}', [GraphicApprovalController::class, 'store'])->name('graphic.store');
+        Route::get('/graphic/edit/{id}', [GraphicApprovalController::class, 'edit'])->name('graphic.edit');
+        Route::put('/graphic/update/{id}', [GraphicApprovalController::class, 'update'])->name('graphic.update');
+        Route::put('/graphic/accept/{id}', [GraphicApprovalController::class, 'accept'])->name('graphic.accept');
+
+        Route::get('/graphic/revisions', [GraphicRevisionController::class, 'index'])->name('graphic.revisions');
+        Route::get('/graphic/revisions/edit/{id}', [GraphicRevisionController::class, 'edit']);
+        Route::put('/graphic/revisions/update/{id}', [GraphicRevisionController::class, 'update']);
+
+        Route::get('/graphic/history', [GraphicHistoryController::class, 'index'])->name('admin.smm.graphic.history');
+        Route::get('/graphic/history/show/{id}', [GraphicHistoryController::class, 'show'])->name('graphic.history.show');
+        Route::get('/graphic/history/download/{id}', [GraphicHistoryController::class, 'downloadPDF'])->name('graphic.history.download');
+    });
+
 });
 
 Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
@@ -317,41 +354,7 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
         Route::put('/joborder/update/{id}', [JobOrderController::class, 'update'])->name('joborder.update');
     });
 
-    Route::middleware(['auth', 'role:content_writer'])->group(function () {
-        Route::get('/content', [ContentApprovalController::class, 'index'])->name('content.approve');
-        Route::get('/content/show/{id}', [ContentApprovalController::class, 'show'])->name('content.show');
-        Route::get('/content/create/{id}', [ContentApprovalController::class, 'create'])->name('content.create');
-        Route::put('/content/store/{id}', [ContentApprovalController::class, 'store'])->name('content.store');
-        Route::get('/content/edit/{id}', [ContentApprovalController::class, 'edit'])->name('content.edit');
-        Route::put('/content/update/{id}', [ContentApprovalController::class, 'update'])->name('content.update');
-        Route::put('/content/accept/{id}', [ContentApprovalController::class, 'accept'])->name('content.accept');
 
-        Route::get('/content/revisions/', [ContentRevisionController::class, 'index'])->name('content.revisions');
-        Route::get('/content/revisions/edit/{id}', [ContentRevisionController::class, 'edit']);
-        Route::put('/content/revisions/update/{id}', [ContentRevisionController::class, 'update']);
-
-        Route::get('/content/history', [ContentHistoryController::class, 'index'])->name('admin.smm.content.history');
-        Route::get('/content/history/show/{id}', [ContentHistoryController::class, 'show'])->name('content.history.show');
-        Route::get('/content/history/download/{id}', [ContentHistoryController::class, 'downloadPDF'])->name('content.history.download');
-    });
-
-    Route::middleware(['auth', 'role:graphic_designer'])->group(function () {
-        Route::get('/graphic', [GraphicApprovalController::class, 'index'])->name('admin.smm.graphic.approve');
-        Route::get('/graphic/show/{id}', [GraphicApprovalController::class, 'show'])->name('graphic.show');
-        Route::get('/graphic/create/{id}', [GraphicApprovalController::class, 'create'])->name('graphic.create');
-        Route::put('/graphic/store/{id}', [GraphicApprovalController::class, 'store'])->name('graphic.store');
-        Route::get('/graphic/edit/{id}', [GraphicApprovalController::class, 'edit'])->name('graphic.edit');
-        Route::put('/graphic/update/{id}', [GraphicApprovalController::class, 'update'])->name('graphic.update');
-        Route::put('/graphic/accept/{id}', [GraphicApprovalController::class, 'accept'])->name('graphic.accept');
-
-        Route::get('/graphic/revisions', [GraphicRevisionController::class, 'index'])->name('graphic.revisions');
-        Route::get('/graphic/revisions/edit/{id}', [GraphicRevisionController::class, 'edit']);
-        Route::put('/graphic/revisions/update/{id}', [GraphicRevisionController::class, 'update']);
-
-        Route::get('/graphic/history', [GraphicHistoryController::class, 'index'])->name('admin.smm.graphic.history');
-        Route::get('/graphic/history/show/{id}', [GraphicHistoryController::class, 'show'])->name('graphic.history.show');
-        Route::get('/graphic/history/download/{id}', [GraphicHistoryController::class, 'downloadPDF'])->name('graphic.history.download');
-    });
 
     Route::middleware(['auth', 'role:operations'])->group(function () {
         Route::get('/operation', [OperationApprovalController::class, 'index'])->name('admin.smm.operation.approve');
