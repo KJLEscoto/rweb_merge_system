@@ -36,4 +36,9 @@ class JobOrder extends Model
     {
         return $this->belongsTo(Request::class, 'request_id');
     }
+
+    public function latestJobDraft()
+    {
+        return $this->hasOne(JobDraft::class, 'job_order_id')->latest('date_started');
+    }
 }

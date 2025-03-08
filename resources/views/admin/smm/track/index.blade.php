@@ -20,7 +20,6 @@
         transition: box-shadow 0.3s ease;
     }
 </style>
-
 <x-main-layout breadcumb="SMM" page="Track">
     <div class="px-10 pt-10">
         <div class="overflow-x-auto overflow-y-auto bg-white shadow-md rounded-lg h-[500px]" style="max-height: 500px;">

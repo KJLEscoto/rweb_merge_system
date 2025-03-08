@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -40,9 +39,8 @@ return new class extends Migration
             $table->date('date_completed')->nullable();
             $table->unsignedBigInteger('reference_draft_id')->nullable();
             $table->string('works');
-            // $table->integer('days_to_add')->default(0);
 
-            // Foreign Key Constraint
+            // Foreign Key Constraints
             $table->foreign('job_order_id')->references('id')->on('job_orders')->onDelete('cascade');
             $table->foreign('content_writer_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('graphic_designer_id')->references('id')->on('users')->onDelete('cascade');
@@ -52,6 +50,9 @@ return new class extends Migration
             $table->foreign('op_signed_draft')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('sup_signed_draft')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('reference_draft_id')->references('id')->on('job_drafts')->onDelete('cascade');
+
+            $table->softDeletes(); // Soft deletes column
+            $table->timestamps(); // Adds created_at and updated_at timestamps
         });
     }
 

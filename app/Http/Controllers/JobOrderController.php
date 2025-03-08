@@ -131,4 +131,17 @@ class JobOrderController extends Controller
         return redirect()->route('joborder')
             ->with('Status', 'Job Order Updated Successfully');
     }
+
+    public function delete($id)
+    {
+        $job_order = JobOrder::findOrFail($id);
+        dd($job_order, $job_order->jobDrafts());
+        // Delete related particulars first to avoid foreign key constraint issues
+        $job_order->jobDrafts()->delete();
+
+        // Delete the request form
+        $job_order->delete();
+
+        return redirect()->route('joborder')->with('Status', 'Job Order Deleted');
+    }
 }
