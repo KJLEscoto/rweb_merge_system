@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\JobDraft;
 use App\Models\JobOrder;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class JobOrderTrackerController extends Controller
@@ -79,8 +80,14 @@ class JobOrderTrackerController extends Controller
      */
     public function show($id)
     {
-        $job_order = JobOrder::with('jobDrafts')->find($id);
+        $job_order = JobOrder::with('jobDrafts', 'latestJobDraft')->find($id);
         return view('admin.smm.track.show', compact('job_order'));
+    }
+
+    public function showDraft($id)
+    {
+        $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
+        return view('admin.smm.track.show-draft', compact('job_draft'));
     }
 
     /**
@@ -91,7 +98,24 @@ class JobOrderTrackerController extends Controller
      */
     public function edit($id)
     {
-        //
+        $clients = User::with('roles')->where('role_id', 1)->get();
+        $graphic_designers = User::with('roles')->whereNotIn('role_id', [1, 3, 5])->get();
+        $content_writers = User::with('roles')->whereNotIn('role_id', [1, 4, 5])->get();
+
+        $job_order = JobOrder::with('latestJobDraft')->find($id);
+
+        return view('admin.smm.admin.joborder.edit', compact('job_draft', 'content_writers', 'graphic_designers', 'clients'));
+    }
+
+    public function editDraft($id)
+    {
+        $clients = User::with('roles')->where('role_id', 1)->get();
+        $graphic_designers = User::with('roles')->whereNotIn('role_id', [1, 3, 5])->get();
+        $content_writers = User::with('roles')->whereNotIn('role_id', [1, 4, 5])->get();
+
+        $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
+
+        return view('admin.smm.track.edit-draft', compact('job_draft', 'content_writers', 'graphic_designers', 'clients'));
     }
 
     /**
@@ -103,7 +127,7 @@ class JobOrderTrackerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        dd('hello');
     }
 
     /**
@@ -112,7 +136,7 @@ class JobOrderTrackerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function destroy($id)
     {
         $job_order = JobOrder::findOrFail($id);
         // Delete related job drafts first to avoid foreign key constraint issues
