@@ -22,6 +22,8 @@ return new class extends Migration
             $table->boolean('renewable')->default(false);
             $table->foreign('issued_by')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('request_id')->references('id')->on('requests')->onDelete('cascade');
+            $table->softDeletes(); // Soft deletes column
+            $table->timestamps(); // Adds created_at and updated_at timestamps
         });
     }
 
