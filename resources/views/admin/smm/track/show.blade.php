@@ -75,107 +75,106 @@
 </style>
 
 <x-main-layout breadcumb="SMM" page="Show Track">
-<div class="px-10 pt-10">
-<div id="container-pdf">
-    <div class="bg-[#fa7011] text-white rounded-md px-3 py-1 w-fit mb-4">
-        <a href="{{url('/admin/smm/track')}}">Back</a>
-    </div>
-    <div class="header">
-        <img src="{{ asset('/Assets/doc_header.png') }}" alt="Header">
-        <h2>Operation Job Order Form</h2>
-    </div>
-
-    <div class="section">
-        <div class="highlight"></div>
-        <table>
-            <tr>
-                <td><strong>Client Name:</strong><br>{{ $job_draft->client->name }}</td>
-                <td><strong>Client Address:</strong><br>{{ $job_draft->client->address }}</td>
-            </tr>
-        </table>
-        <div class="gray-bar"></div>
-        <table>
-            <tr>
-                <td><strong>Date Issued:</strong><br>
-                    {{ $job_draft->date_started ? \Carbon\Carbon::parse($job_draft->date_started)->format('Y-m-d') : 'N/A' }}
-                </td>
-                
-                <td><strong>Target Finished Date:</strong><br>
-{{ $job_draft->date_target }}
-                </td>
-                          
-            </tr>
-        </table>
-        <table>
-            <tr>
-                <td><strong>Issued by:</strong><br>{{ $job_draft->jobOrder->issuer->name }}</td>
-                <td>
-                    <strong>Work Performed by:</strong><br>
-                    @if ($job_draft->type == "content_writer")
-                        {{ $job_draft->contentWriter->name }}
-                    @else
-                        {{ $job_draft->graphicDesigner->name }}
-                    @endif
-                </td>
-            </tr>
-        </table>
-        <div class="section-remarks">
-            <strong>Description:</strong>
-            <div class="text-sm text-gray-600 w-full max-h-[500px] overflow-y-auto bg-white border border-gray-300 p-2 rounded">
-                {!! $job_draft->jobOrder->description !!}
+    <div class="px-10 pt-10 space-y-10">
+        <div class="">
+            <div>
+                <a href="{{ url('/admin/smm/track') }}">
+                    <div class="w-fit px-4 py-1 bg-gray-400 rounded-md text-white custom-shadow custom-hover-shadow">
+                        Back
+                    </div>
+                </a>
+            </div>
+            <div class="grid grid-cols-3">
+                <div>
+                    <p>Title</p>
+                    <p>{{$job_order->title}}</p>
+                </div>
+                <div>
+                    <p>Client</p>
+                    <p>{{$job_order->latestJobDraft->client->name}}</p>
+                </div>
+                <div>
+                    <p>Issuer</p>
+                    {{$job_order->issuer->name}}
+                </div>
+            </div>
+            <div>
+                <p>Description</p>
+                <div class="border border-gray-400 px-5 py-5">{!! $job_order->description !!}</div>
             </div>
         </div>
-        <div class="gray-bar"></div>
-        <div class=""><strong> Complete Information </strong></div>
-        <table>
-            <tr>
-                <td><strong>Date Completed:</strong><br>
-                    {{ $job_draft->date_completed ? \Carbon\Carbon::parse($job_draft->date_completed)->format('Y-m-d') : 'N/A' }}
-                </td>
-                
-                <td><strong>Time Required:</strong><br>
-                    @if($job_draft->date_started && $job_draft->date_completed)
-                        {{ \Carbon\Carbon::parse($job_draft->date_started)->diffInDays(\Carbon\Carbon::parse($job_draft->date_completed)) }} days
-                    @else
-                        N/A
-                    @endif
-                </td>                             
-            </tr>
-        </table>
-        <div class="section-remarks">
-            <strong>Remarks:</strong>
-            <div class="text-sm text-gray-600 w-full max-h-[500px] overflow-y-auto bg-white border border-gray-300 p-2 rounded">
-{!! $job_draft->draft !!}
-            </div>
-        </div>
-        <table>
-            <tr>
-                <td class="signature">
-                    <strong>Assigned Personnel Signature:
-                    @if ($job_draft->type == "content_writer")
-                        {{ $job_draft->contentWriter->name }}
-                    @else
-                        {{ $job_draft->graphicDesigner->name }}
-                    @endif</strong><br>
-                    @if ($job_draft->signature_worker)
-                        <img src="{{ asset($job_draft->signature_worker) }}" alt="Admin Signature">
-                    @else
-                        No Signature
-                    @endif
-                </td>
-                <td class="signature">
-                    <strong>Supervisor Signature: {{$job_draft->jobOrder->issuer->name}}</strong><br>
-                    <img src="{{ asset($job_draft->signature_supervisor) }}" alt="Supervisor Signature">
-                </td>
-            </tr>
-        </table>
-    </div>
 
-    <div class="footer">
-        <img src="{{ asset('/Assets/doc_footer.png') }}" alt="Footer">
+        <div>
+            <p class="font-bold">Drafts</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Deadline</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ( $job_order->jobDrafts as $job_draft )
+                        <tr>
+                            <td>{{$job_draft->type}}</td>
+                            <td>{{$job_draft->date_target}}</td>
+                            <td>{{$job_draft->status}}</td>
+                            <td class="">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <div onclick="window.location.href='{{ url('admin/smm/track/show/draft/' . $job_draft->id) }}'">
+                                        <button class="px-4 py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
+                                            Show
+                                        </button>
+                                    </div>
+                                    <div onclick="window.location.href='{{ url('admin/smm/track/edit/draft/' . $job_draft->id) }}'">
+                                        <button {{$job_draft->status === 'completed' ? "disabled" : ""}} class="px-4 py-2 text-sm text-white {{$job_draft->status === 'completed' ? "bg-gray-500 rounded hover:bg-gray-600" : "bg-blue-500 rounded hover:bg-blue-600"}}">
+                                            Edit
+                                        </button>    
+                                    </div>
+                                    <div onclick="deleteJobOrder({{ $job_order->id }})" class="px-4 py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600 cursor-pointer">
+                                        Delete
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-</div>
 </x-main-layout>
 
+
+
+<script>
+    function deleteJobOrder(jobOrderId) {
+        if (confirm('Are you sure you want to delete this item?')) {
+            // Create a form element dynamically
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/admin/smm/track/' + jobOrderId;
+            
+            // CSRF token input
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = '{{ csrf_token() }}';
+            form.appendChild(csrfInput);
+            
+            // Method override for DELETE
+            const methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = '_method';
+            methodInput.value = 'DELETE';
+            form.appendChild(methodInput);
+            
+            // Append the form to the document body and submit it
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
+    
 {{-- @endsection --}}

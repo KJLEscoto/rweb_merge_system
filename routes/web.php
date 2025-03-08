@@ -248,8 +248,8 @@ Route::prefix('files')->group(function () {
 });
 
 
-Route::prefix('/smm')->middleware('auth.redirect')->group(function() {
-    Route::middleware(['auth'])->group(function(){
+Route::prefix('/smm')->middleware('auth.redirect')->group(function () {
+    Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.smm.dashboard');
     });
 
@@ -307,14 +307,13 @@ Route::prefix('/smm')->middleware('auth.redirect')->group(function() {
         Route::get('/graphic/history/show/{id}', [GraphicHistoryController::class, 'show'])->name('graphic.history.show');
         Route::get('/graphic/history/download/{id}', [GraphicHistoryController::class, 'downloadPDF'])->name('graphic.history.download');
     });
-
 });
 
 Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
 
     //smm routes
     Route::middleware(['auth'])->group(function () {
-        
+
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.smm.dashboard');
         Route::get('/revision', [RevisionController::class, 'index'])->name('admin.smm.revision');
         Route::get('/revision/show/{id}', [RevisionController::class, 'show'])->name('admin.smm.revision.show');
@@ -324,8 +323,10 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
 
         Route::name('admin.smm.')->group(function () {
             Route::resource('track', JobOrderTrackerController::class);
+            Route::get('/track/show/draft/{id}', [JobOrderTrackerController::class, 'showDraft'])->name('track.showDraft');
+            Route::get('/track/edit/draft/{id}', [JobOrderTrackerController::class, 'editDraft'])->name('track.editDraft');
         });
-        
+
 
         Route::put('/signature/store', [SignatureController::class, 'store'])->name('signature.store');
 
@@ -401,7 +402,7 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
         Route::post('/topmanager/decline/{id}', [TopApprovalController::class, 'decline']);
     });
 
-    
+
 
     Route::middleware(['auth', 'role:supervisor'])->group(function () {
         Route::get('/supervisor/approve', [SupervisorApprovalController::class, 'index'])->name('admin.smm.supervisor.approve');
