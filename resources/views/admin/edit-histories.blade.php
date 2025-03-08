@@ -35,7 +35,8 @@
                         class="w-12 h-12 rounded-full" alt="{{ $history->user->firstname }}">
                     <div>
                         <h3 class="text-lg font-semibold text-[#F57D11] capitalize">{{ $history->user->firstname }}
-                            {{ $history->user->lastname }}</h3>
+                            {{ $history->user->lastname }}
+                        </h3>
                         <p class="text-sm text-gray-600">{{ $history->user->email }}</p>
                     </div>
                 </div>
@@ -45,12 +46,11 @@
                         <label class="block text-sm font-medium text-gray-700">Description</label>
                         <select name="history_description"
                             class="w-full p-2 border rounded focus:ring-[#F57D11] focus:border-[#F57D11]" required>
-                            <option value="Time In" {{ $history->description == 'Time In' ? 'selected' : '' }}>Time In
+                            <option value="Time In" {{ $history->description == 'time in' ? 'selected' : '' }}>Time In
                             </option>
-                            <option value="Time In | Late"
-                                {{ $history->description == 'Time In | Late' ? 'selected' : '' }}>Time In | Late
+                            <option value="Time In | Late" {{ $history->description == 'time in' && $history->extra_description == 'late' ? 'selected' : '' }}>Time In | Late
                             </option>
-                            <option value="Time Out" {{ $history->description == 'Time Out' ? 'selected' : '' }}>Time
+                            <option value="Time Out" {{ $history->description == 'time out' ? 'selected' : '' }}>Time
                                 Out
                             </option>
                         </select>
