@@ -10,7 +10,7 @@
             <div class="bg-white p-6 rounded z-10 max-w-md mx-auto">
                 <h1 class="text-xl font-bold mb-4">Add a Signature</h1>
                 <p class="mb-4">No signature found. Please create your signature below.</p>
-                
+
                 <!-- New Signature Pad -->
                 <div id="newSignaturePadContainer">
                     <canvas id="new-signature-pad" class="w-full" style="height:200px;"></canvas>
@@ -20,7 +20,7 @@
                         Save and Use Signature
                     </button>
                 </div>
-                
+
                 <!-- Close Modal Button -->
                 <button type="button" id="closeSignatureModal" class="mt-4 px-4 py-2 bg-red-500 text-white rounded">
                     Close
@@ -31,56 +31,56 @@
 
     <!-- Modal Script -->
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('signatureModal');
-    const canvas = document.getElementById('new-signature-pad');
-    const saveButton = document.getElementById('saveNewSignature');
-    const closeButton = document.getElementById('closeSignatureModal');
-    const hiddenInput = document.getElementById('savedSignaturePadData');
-    
-    // Initialize the signature pad for the modal canvas
-    const signaturePad = new SignaturePad(canvas);
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = document.getElementById('signatureModal');
+            const canvas = document.getElementById('new-signature-pad');
+            const saveButton = document.getElementById('saveNewSignature');
+            const closeButton = document.getElementById('closeSignatureModal');
+            const hiddenInput = document.getElementById('savedSignaturePadData');
 
-    // Resize canvas function
-    function resizeCanvas() {
-        const ratio = Math.max(window.devicePixelRatio || 1, 1);
-        canvas.width = canvas.offsetWidth * ratio;
-        canvas.height = 200 * ratio; // Fixed height
-        canvas.getContext("2d").scale(ratio, ratio);
-        signaturePad.clear();
-    }
+            // Initialize the signature pad for the modal canvas
+            const signaturePad = new SignaturePad(canvas);
 
-    // Show modal and resize canvas
-    document.getElementById("useSavedSignature").addEventListener("click", function () {
-        const userSignature = "{{ Auth::user()->signature }}";
+            // Resize canvas function
+            function resizeCanvas() {
+                const ratio = Math.max(window.devicePixelRatio || 1, 1);
+                canvas.width = canvas.offsetWidth * ratio;
+                canvas.height = 200 * ratio; // Fixed height
+                canvas.getContext("2d").scale(ratio, ratio);
+                signaturePad.clear();
+            }
 
-        if (!userSignature) {
-            // Show modal and resize canvas when it's displayed
-            modal.classList.remove('hidden');
-            setTimeout(resizeCanvas, 100); // Delay to allow modal rendering
-        }
-    });
+            // Show modal and resize canvas
+            document.getElementById("useSavedSignature").addEventListener("click", function () {
+                const userSignature = "{{ Auth::user()->signature }}";
 
-    // Save button: if pad not empty, set hidden input (the form will submit)
-    saveButton.addEventListener('click', function(e) {
-        if(signaturePad.isEmpty()){
-            alert("Please provide a signature first.");
-            e.preventDefault(); // Prevent submission if empty
-        } else {
-            // Set the hidden input value to the signature data URL
-            hiddenInput.value = signaturePad.toDataURL("image/png");
-            modal.classList.add('hidden'); // Optionally, close the modal after saving
-        }
-    });
+                if (!userSignature) {
+                    // Show modal and resize canvas when it's displayed
+                    modal.classList.remove('hidden');
+                    setTimeout(resizeCanvas, 100); // Delay to allow modal rendering
+                }
+            });
 
-    // Close button simply hides the modal
-    closeButton.addEventListener('click', function(){
-        modal.classList.add('hidden');
-    });
+            // Save button: if pad not empty, set hidden input (the form will submit)
+            saveButton.addEventListener('click', function (e) {
+                if (signaturePad.isEmpty()) {
+                    alert("Please provide a signature first.");
+                    e.preventDefault(); // Prevent submission if empty
+                } else {
+                    // Set the hidden input value to the signature data URL
+                    hiddenInput.value = signaturePad.toDataURL("image/png");
+                    modal.classList.add('hidden'); // Optionally, close the modal after saving
+                }
+            });
 
-    // Resize canvas on window resize
-    window.addEventListener('resize', resizeCanvas);
-});
+            // Close button simply hides the modal
+            closeButton.addEventListener('click', function () {
+                modal.classList.add('hidden');
+            });
+
+            // Resize canvas on window resize
+            window.addEventListener('resize', resizeCanvas);
+        });
 
     </script>
 @endif
