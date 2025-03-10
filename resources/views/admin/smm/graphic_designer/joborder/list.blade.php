@@ -1,19 +1,18 @@
-{{-- @extends('layouts.application') --}}
+<head>
+    <title>{{ env('APP_NAME') }} | SMM | List Job Order</title>
 
-@section('title', 'Graphic Designer')
-@section('header', "Job Order")
+    <script src="https://cdn.tailwindcss.com"></script>
 
-{{-- @section('content') --}}
-<script src="https://cdn.tailwindcss.com"></script>
+</head>
 
 <x-main-layout breadcumb="SMM" page="List Job Order">
-<div class="px-10 pt-10">
+
     {{-- Success Message Component --}}
-    @if(session('Status') === 'Job Order Accepted Successfully')
+    @if (session('Status') === 'Job Order Accepted Successfully')
         <x-success />
     @endif
 
-    @if(session('Status') === 'No Signature Found' && !Auth::user()->signature)
+    @if (session('Status') === 'No Signature Found' && !Auth::user()->signature)
         <form action="{{ url('signature/store') }}" method="POST" id="modalSignatureForm">
             @csrf
             @method('PUT')
@@ -37,14 +36,16 @@
 
         <div class="flex items-center w-full md:w-auto relative">
             <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-500"></i>
-            <input type="text" id="searchInput" class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            placeholder="Search..." onkeyup="filterTable()" />
+            <input type="text" id="searchInput"
+                class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                placeholder="Search..." onkeyup="filterTable()" />
 
         </div>
 
         <div class="flex justify-between items-center gap-4 px-10">
             <a class="cursor-pointer" id="pendingBtn" onclick="filterByStatus('pending')">Pending</a>
-            <a class="cursor-pointer" id="submittedBtn" onclick="filterByStatus('submitted to operations')">Submitted</a>
+            <a class="cursor-pointer" id="submittedBtn"
+                onclick="filterByStatus('submitted to operations')">Submitted</a>
             <a class="cursor-pointer" id="allBtn" onclick="filterByStatus('all')">All</a>
         </div>
     </div>
@@ -62,71 +63,80 @@
             </thead>
             <tbody id="tableBody" class="overflow-y-auto">
                 @forelse ($job_drafts as $job_draft)
-                <tr class="border-b {{
-                    (($job_draft->type == 'content_writer' && $job_draft->contentWriter->name != Auth::user()->name)
-                    || ($job_draft->type == 'graphic_designer' && $job_draft->graphicDesigner->name != Auth::user()->name))
-                    ? 'hidden'
-                    : ''
-                }}" data-status="{{ strtolower($job_draft->status) }}">
-            
+                    <tr class="border-b {{ ($job_draft->type == 'content_writer' && $job_draft->contentWriter->name != Auth::user()->name) ||
+                    ($job_draft->type == 'graphic_designer' && $job_draft->graphicDesigner->name != Auth::user()->name)
+                        ? 'hidden'
+                        : '' }}"
+                        data-status="{{ strtolower($job_draft->status) }}">
+
                         <td class="px-6 py-3">{{ $job_draft->jobOrder->title }}</td>
                         <td class="px-6 py-3">
-                            @if ($job_draft->type == "content_writer")
+                            @if ($job_draft->type == 'content_writer')
                                 Content Writer - {{ $job_draft->contentWriter->name }}
                             @else
                                 Graphic Designer - {{ $job_draft->graphicDesigner->name }}
                             @endif
                         </td>
                         <td>
-                                                    <p class="w-full text-center text-white px-2 py-1 rounded-lg text-wrap
-                                {{ $job_draft->status == 'completed' ? 'bg-green-400' : 
-                                ($job_draft->status == 'Revision' ? 'bg-red-600' : 'bg-[#fa6e117e]') }} ">
+                            <p
+                                class="w-full text-center text-white px-2 py-1 rounded-lg text-wrap
+                                {{ $job_draft->status == 'completed'
+                                    ? 'bg-green-400'
+                                    : ($job_draft->status == 'Revision'
+                                        ? 'bg-red-600'
+                                        : 'bg-[#fa6e117e]') }} ">
                                 {{ ucfirst($job_draft->status) }}
                             </p>
                         </td>
                         <td class="px-6 py-3">
                             @if ($job_draft->status == 'pending' || $job_draft->status == 'Waiting for Graphic Designer Approval')
                                 @if ($job_draft->status == 'pending')
-                                    <a href="{{url('smm/graphic/create/' . $job_draft->id)}}">
-                                        <button class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
+                                    <a href="{{ url('smm/graphic/create/' . $job_draft->id) }}">
+                                        <button
+                                            class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
                                             Create
                                         </button>
                                     </a>
                                 @elseif ($job_draft->status == 'Waiting for Graphic Designer Approval')
-                                    <form action="{{ url('smm/graphic/accept/' . $job_draft->id) }}" method="POST" class="inline">
+                                    <form action="{{ url('smm/graphic/accept/' . $job_draft->id) }}" method="POST"
+                                        class="inline">
                                         @csrf
                                         @method('PUT')
-                                        <button type="submit" class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-[#fa7011] rounded hover:bg-[#fa7011]">
+                                        <button type="submit"
+                                            class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-[#fa7011] rounded hover:bg-[#fa7011]">
                                             Accept
                                         </button>
-                                    </form>                                
+                                    </form>
                                 @endif
-                                <a href="{{url('smm/graphic/show/' . $job_draft->id)}}">
-                                    <button class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
+                                <a href="{{ url('smm/graphic/show/' . $job_draft->id) }}">
+                                    <button
+                                        class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
                                         Show
                                     </button>
                                 </a>
-
-                            @elseif ($job_draft->status == "Submitted to Operations")
-                                <a href="{{url('smm/graphic/edit/' . $job_draft->id)}}">
-                                    <button class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-blue-500 rounded hover:bg-blue-600">
+                            @elseif ($job_draft->status == 'Submitted to Operations')
+                                <a href="{{ url('smm/graphic/edit/' . $job_draft->id) }}">
+                                    <button
+                                        class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-blue-500 rounded hover:bg-blue-600">
                                         Edit
                                     </button>
                                 </a>
-                                <a href="{{url('smm/graphic/show/' . $job_draft->id)}}">
-                                    <button class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
+                                <a href="{{ url('smm/graphic/show/' . $job_draft->id) }}">
+                                    <button
+                                        class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
                                         Show
                                     </button>
                                 </a>
-
                             @else
-                                <a href="{{url('smm/graphic/create/' . $job_draft->id)}}">
-                                    <button disabled class="px-2 py-1 mb-2 cursor-not-allowed lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-gray-500 rounded hover:bg-gray-600">
+                                <a href="{{ url('smm/graphic/create/' . $job_draft->id) }}">
+                                    <button disabled
+                                        class="px-2 py-1 mb-2 cursor-not-allowed lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-gray-500 rounded hover:bg-gray-600">
                                         Edit
                                     </button>
                                 </a>
-                                <a href="{{url('smm/graphic/show/' . $job_draft->id)}}">
-                                    <button class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
+                                <a href="{{ url('smm/graphic/show/' . $job_draft->id) }}">
+                                    <button
+                                        class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
                                         Show
                                     </button>
                                 </a>
@@ -151,7 +161,7 @@
     <div class="mt-4">
         {{-- {{ $list_of_projects->links('vendor.pagination.custom') }} --}}
     </div>
-</div>
+
 </x-main-layout>
 
 <script>
@@ -175,36 +185,37 @@
 
 <script>
     function filterByStatus(status) {
-    let tableBody = document.getElementById("tableBody");
-    let rows = tableBody.getElementsByTagName("tr");
+        let tableBody = document.getElementById("tableBody");
+        let rows = tableBody.getElementsByTagName("tr");
 
-    let buttons = document.querySelectorAll('.flex a'); // Select all buttons
+        let buttons = document.querySelectorAll('.flex a'); // Select all buttons
 
-    // Reset the active class for all buttons
-    buttons.forEach(button => button.classList.remove('border-b', 'border-[#fa7011]'));
+        // Reset the active class for all buttons
+        buttons.forEach(button => button.classList.remove('border-b', 'border-[#fa7011]'));
 
-    // Loop through rows and filter
-    for (let row of rows) {
-        let rowStatus = row.getAttribute("data-status");
+        // Loop through rows and filter
+        for (let row of rows) {
+            let rowStatus = row.getAttribute("data-status");
 
-        if (status === 'all') {
-            row.style.display = ""; // Show all rows
-        } else if (status === 'pending') {
-            row.style.display = (rowStatus === 'pending' || rowStatus === 'waiting for graphic designer approval') ? "" : "none";
-        } else {
-            row.style.display = (rowStatus === status) ? "" : "none";
+            if (status === 'all') {
+                row.style.display = ""; // Show all rows
+            } else if (status === 'pending') {
+                row.style.display = (rowStatus === 'pending' || rowStatus === 'waiting for graphic designer approval') ?
+                    "" : "none";
+            } else {
+                row.style.display = (rowStatus === status) ? "" : "none";
+            }
+        }
+
+        // Add active class to the clicked button
+        if (status === 'pending') {
+            document.getElementById('pendingBtn').classList.add('border-b', 'border-[#fa7011]');
+        } else if (status === 'submitted to operations') {
+            document.getElementById('submittedBtn').classList.add('border-b', 'border-[#fa7011]');
+        } else if (status === 'all') {
+            document.getElementById('allBtn').classList.add('border-b', 'border-[#fa7011]');
         }
     }
-
-    // Add active class to the clicked button
-    if (status === 'pending') {
-        document.getElementById('pendingBtn').classList.add('border-b', 'border-[#fa7011]');
-    } else if (status === 'submitted to operations') {
-        document.getElementById('submittedBtn').classList.add('border-b', 'border-[#fa7011]');
-    } else if (status === 'all') {
-        document.getElementById('allBtn').classList.add('border-b', 'border-[#fa7011]');
-    }
-}
 
 
     // ✅ Set default active tab to "Pending" when the page loads

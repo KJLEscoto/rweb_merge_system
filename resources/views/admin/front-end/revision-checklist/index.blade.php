@@ -23,15 +23,15 @@
 @endphp
 
 <x-main-layout breadcumb="Front-end" page="Revision Checklist">
-    <main class="h-auto w-full flex flex-col gap-5 px-10 py-10">
+    <main class="h-auto w-full flex flex-col gap-5">
 
         @if ($revisions)
             <div class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
 
-                <div class="flex items-end justify-between w-full gap-5">
+                <div class="flex lg:flex-row flex-col-reverse items-end justify-between w-full gap-5">
                     {{-- Search Input --}}
-                    <section class="w-full">
-                        <div class="w-1/2 relative flex items-center">
+                    <section class="lg:!w-1/2 w-full">
+                        <div class="w-full relative flex items-center">
                             <span class="meteor-icons--search w-5 h-5 absolute left-3 text-gray-500"></span>
                             <input type="text" name="search" id="search"
                                 class="pl-10 py-2 pr-4 rounded-lg border border-gray-300 w-full outline-none focus:ring-2 focus:ring-[#f56d11]"
@@ -47,43 +47,44 @@
                         </section>
                     </div>
                 </div>
-
-                <table class="w-full border-collapse border border-gray-300">
-                    <thead>
-                        <tr
-                            class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
-                            <th>File Name</th>
-                            <th>Date</th>
-                            <th class="!text-center">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($revisions as $revision)
-                            <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
-                                <td class="flex items-center gap-2">
-                                    <div class="p-2 rounded bg-[#F57D11] text-white">
-                                        <span class="mingcute--file-fill w-6 h-6"></span>
-                                    </div>
-                                    {{ $revision['file_name'] }}
-                                </td>
-                                <td>{{ $revision['date'] }}</td>
-                                <td class="flex justify-center items-center">
-                                    @php
-                                        $statusClasses = [
-                                            'Done' => 'text-green-700 bg-green-300',
-                                            'Pending' => 'text-yellow-700 bg-yellow-300',
-                                            'Delayed' => 'text-red-700 bg-red-300',
-                                        ];
-                                    @endphp
-                                    <p
-                                        class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $statusClasses[$revision['status']] }}">
-                                        {{ $revision['status'] }}
-                                    </p>
-                                </td>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr
+                                class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
+                                <th>File Name</th>
+                                <th>Date</th>
+                                <th class="!text-center">Status</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($revisions as $revision)
+                                <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
+                                    <td class="flex items-center gap-2">
+                                        <div class="p-2 rounded bg-[#F57D11] text-white">
+                                            <span class="mingcute--file-fill w-6 h-6"></span>
+                                        </div>
+                                        {{ $revision['file_name'] }}
+                                    </td>
+                                    <td>{{ $revision['date'] }}</td>
+                                    <td class="flex justify-center items-center">
+                                        @php
+                                            $statusClasses = [
+                                                'Done' => 'text-green-700 bg-green-300',
+                                                'Pending' => 'text-yellow-700 bg-yellow-300',
+                                                'Delayed' => 'text-red-700 bg-red-300',
+                                            ];
+                                        @endphp
+                                        <p
+                                            class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $statusClasses[$revision['status']] }}">
+                                            {{ $revision['status'] }}
+                                        </p>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <p>pagination here.</p>
         @else

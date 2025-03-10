@@ -1,31 +1,31 @@
-{{-- @extends('layouts.application') --}}
+<head>
+    <title>{{ env('APP_NAME') }} | SMM | List Job Order</title>
 
-@section('title', 'Clients')
-@section('header', 'Job Orders to Approve')
+    <script src="https://cdn.tailwindcss.com"></script>
 
-{{-- @section('content') --}}
-<script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .custom-shadow {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .3);
+        }
 
-<style>
-    .custom-shadow {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .3);
-    }
-    .custom-hover-shadow:hover {
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0), 0 4px 6px rgba(0, 0, 0, 0);
-        transition: box-shadow 0.3s ease;
-    }
-    .custom-focus-ring:focus {
-        outline: none;
-        box-shadow: 0 0 0 1px #fa7011;
-        transition: box-shadow 0.3s ease;
-    }
-</style>
+        .custom-hover-shadow:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0), 0 4px 6px rgba(0, 0, 0, 0);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .custom-focus-ring:focus {
+            outline: none;
+            box-shadow: 0 0 0 1px #fa7011;
+            transition: box-shadow 0.3s ease;
+        }
+    </style>
+</head>
 
 <x-main-layout breadcumb="SMM" page="List Job Order">
-<div class="px-10 pt-10">
+
     <div class="overflow-x-auto h-[500px] max-h-[500px] overflow-y-auto bg-white shadow-md rounded-lg">
         {{-- Success Message Component --}}
-        @if(session('Status'))
+        @if (session('Status'))
             <x-success />
         @endif
         <table class="w-full text-left border-collapse min-w-[600px]" id="projectTable">
@@ -43,7 +43,7 @@
                     <tr class="project-row border-b text-sm sm:text-base">
                         <td class="px-4 sm:px-6 py-3 truncate">{{ $job_draft->jobOrder->title }}</td>
                         <td class="px-4 sm:px-6 py-3 truncate">
-                            @if ($job_draft->type == "content_writer")
+                            @if ($job_draft->type == 'content_writer')
                                 Content Writer - {{ $job_draft->contentWriter->name }}
                             @else
                                 Graphic Designer - {{ $job_draft->graphicDesigner->name }}
@@ -51,15 +51,20 @@
                         </td>
                         <td class="px-4 sm:px-6 py-3 whitespace-nowrap">{{ $job_draft->date_target }}</td>
                         <td class="px-4 sm:px-6 py-3 text-center text-white">
-                            <p class="w-full px-2 py-1 rounded-lg text-wrap
-                                {{ $job_draft->status == 'completed' ? 'bg-green-400' : 
-                                ($job_draft->status == 'Revision' ? 'bg-red-600' : 'bg-[#fa6e117e]') }} ">
+                            <p
+                                class="w-full px-2 py-1 rounded-lg text-wrap
+                                {{ $job_draft->status == 'completed'
+                                    ? 'bg-green-400'
+                                    : ($job_draft->status == 'Revision'
+                                        ? 'bg-red-600'
+                                        : 'bg-[#fa6e117e]') }} ">
                                 {{ ucfirst($job_draft->status) }}
                             </p>
                         </td>
                         <td class="px-4 sm:px-6 py-3 text-center border-b">
                             <a href="{{ url('/smm/client/show/' . $job_draft->id) }}">
-                                <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm text-white bg-green-500 rounded hover:bg-green-600 whitespace-nowrap">
+                                <button
+                                    class="px-3 sm:px-4 py-2 text-xs sm:text-sm text-white bg-green-500 rounded hover:bg-green-600 whitespace-nowrap">
                                     View Form
                                 </button>
                             </a>
@@ -78,7 +83,7 @@
             </tbody>
         </table>
     </div>
-</div>
+
 </x-main-layout>
 
 

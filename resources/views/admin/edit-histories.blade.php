@@ -10,7 +10,7 @@
         <x-modal.flash-msg msg="error" />
     @endif
 
-    <div class="h-auto w-full flex flex-col gap-5 px-10 pt-10">
+    <div class="h-auto w-full flex flex-col gap-5">
         {{-- Edit Form for a Single History Entry --}}
         <form id="historyForm" action="{{ route('admin.dtr.history.edit.post', ['id' => $history->id]) }}" method="POST"
             class="bg-white p-6 rounded border-l-8 border-[#F57D11] shadow-md">
@@ -48,7 +48,9 @@
                             class="w-full p-2 border rounded focus:ring-[#F57D11] focus:border-[#F57D11]" required>
                             <option value="Time In" {{ $history->description == 'time in' ? 'selected' : '' }}>Time In
                             </option>
-                            <option value="Time In | Late" {{ $history->description == 'time in' && $history->extra_description == 'late' ? 'selected' : '' }}>Time In | Late
+                            <option value="Time In | Late"
+                                {{ $history->description == 'time in' && $history->extra_description == 'late' ? 'selected' : '' }}>
+                                Time In | Late
                             </option>
                             <option value="Time Out" {{ $history->description == 'time out' ? 'selected' : '' }}>Time
                                 Out

@@ -1,31 +1,31 @@
-{{-- @extends('layouts.application') --}}
+<head>
+    <title>{{ env('APP_NAME') }} | SMM | Create Supervisor Job Order</title>
 
-@section('title', 'Admin')
-@section('header', "Create Job Order")
+    <script src="https://cdn.tailwindcss.com"></script>
 
-{{-- @section('content') --}}
-<script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .custom-shadow {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .3);
+        }
 
-<style>
-    .custom-shadow {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .3);
-    }
-    .custom-hover-shadow:hover {
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0), 0 4px 6px rgba(0, 0, 0, 0);
-        transition: box-shadow 0.3s ease;
-    }
-    .custom-focus-ring:focus {
-        outline: none;
-        box-shadow: 0 0 0 1px #545454;
-        transition: box-shadow 0.3s ease;
-    }
-</style>
+        .custom-hover-shadow:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0), 0 4px 6px rgba(0, 0, 0, 0);
+            transition: box-shadow 0.3s ease;
+        }
 
-<!-- CKEditor 5 Classic CDN -->
-<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
-<x-main-layout breadcumb="SMM" page="Create Supervisor Job Order">
-<div class="px-10 pt-10">
-    @if(!Auth::user()->signature)
+        .custom-focus-ring:focus {
+            outline: none;
+            box-shadow: 0 0 0 1px #545454;
+            transition: box-shadow 0.3s ease;
+        }
+    </style>
+
+    <!-- CKEditor 5 Classic CDN -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+</head>
+<x-main-layout breadcumb="SMM / Job Order" page="Create Supervisor Job Order">
+
+    @if (!Auth::user()->signature)
         <form action="{{ url('signature/store') }}" method="POST" id="modalSignatureForm">
             @csrf
             @method('PUT')
@@ -49,7 +49,8 @@
                     <!-- Title Input -->
                     <div class="col-span-2 lg:col-span-1 w-full">
                         <p class="text-sm text-gray-600">Title</p>
-                        <input type="text" name="title" value="{{ old('title') }}" class="w-full border px-3 py-2  border-gray-200 rounded-lg">
+                        <input type="text" name="title" value="{{ old('title') }}"
+                            class="w-full border px-3 py-2  border-gray-200 rounded-lg">
                         @error('title')
                             <p class="text-red-600 text-sm">{{ $message }}</p>
                         @enderror
@@ -61,7 +62,7 @@
                             <p class="text-sm text-gray-600">Operator</p>
                             <div class="relative">
                                 <input type="text" id="selected-operator-name"
-                                    value="{{ old('assigned_to') ? ($operators->firstWhere('id', old('assigned_to'))->name ?? 'Select an Operator') : 'Select an Operator' }}"
+                                    value="{{ old('assigned_to') ? $operators->firstWhere('id', old('assigned_to'))->name ?? 'Select an Operator' : 'Select an Operator' }}"
                                     class="w-full border px-3 py-2  border-gray-200 rounded-lg cursor-pointer" readonly
                                     onclick="openOperatorModal()">
                                 <input type="hidden" name="assigned_to" id="selected-operator-id"
@@ -73,7 +74,8 @@
                         </div>
                         <div>
                             <p class="text-sm text-gray-600">Deadline</p>
-                            <input type="date" name="deadline" value="{{ old('deadline') }}" class="w-full rounded-lg border px-3 py-2  border-gray-200 focus:ring-0">
+                            <input type="date" name="deadline" value="{{ old('deadline') }}"
+                                class="w-full rounded-lg border px-3 py-2  border-gray-200 focus:ring-0">
                             @error('deadline')
                                 <p class="text-red-600 text-sm">{{ $message }}</p>
                             @enderror
@@ -90,23 +92,28 @@
                     </div>
                 </div>
 
-                <button type="submit" class="col-span-1 text-center py-2 lg:py-4 w-full bg-[#fa7011] mt-10 rounded-lg custom-shadow custom-hover-shadow text-white font-bold">
+                <button type="submit"
+                    class="col-span-1 text-center py-2 lg:py-4 w-full bg-[#fa7011] mt-10 rounded-lg custom-shadow custom-hover-shadow text-white font-bold">
                     Submit
                 </button>
             </div>
         </form>
     </div>
-</div>
+
 </x-main-layout>
 
 <!-- Operator Selection Modal -->
-<div id="operator-modal" class="fixed inset-0 bg-gray-900 px-4 md:px-20 z-50 bg-opacity-50 flex items-center justify-center hidden">
+<div id="operator-modal"
+    class="fixed inset-0 bg-gray-900 px-4 md:px-20 z-50 bg-opacity-50 flex items-center justify-center hidden">
     <div class="bg-white w-full max-w-sm md:max-w-lg lg:max-w-2xl px-5 pb-10 pt-5 rounded-lg">
         <!-- Search & Close button -->
         <div class="w-full flex md:flex-row justify-between items-center flex-col-reverse lg:flex-row gap-4 mb-4">
-            <input type="text" id="searchOperatorInput" class="w-full md:w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search..." onkeyup="filterOperatorTable()">
+            <input type="text" id="searchOperatorInput"
+                class="w-full md:w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                placeholder="Search..." onkeyup="filterOperatorTable()">
             <div class="w-full flex justify-end md:w-auto">
-                <button onclick="closeOperatorModal()" class="bg-[#fa7011] text-white px-4 py-2 rounded w-fit">Close</button>
+                <button onclick="closeOperatorModal()"
+                    class="bg-[#fa7011] text-white px-4 py-2 rounded w-fit">Close</button>
             </div>
         </div>
 
@@ -127,7 +134,8 @@
                             <td class="px-4 md:px-6 py-3">{{ $operator->name }}</td>
                             <td class="px-4 md:px-6 py-3">{{ ucfirst($operator->roles->position) }}</td>
                             <td class="px-4 md:px-6 py-3 text-center">
-                                <button onclick="selectOperator('{{ $operator->id }}', '{{ $operator->name }}')" class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
+                                <button onclick="selectOperator('{{ $operator->id }}', '{{ $operator->name }}')"
+                                    class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
                                     Select
                                 </button>
                             </td>

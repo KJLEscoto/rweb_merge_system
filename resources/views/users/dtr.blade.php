@@ -7,22 +7,11 @@
 
     <main class="w-full">
         {{-- <x-modal.dtr-summary id="dtr-summary-modal" /> --}}
-        <div class="flex flex-col gap-5 w-full items-center justify-center pb-5">
+        <div class="flex flex-col w-full items-center justify-center pb-5">
             <div
-                class="w-full grid xl:!grid-cols-3 text-nowrap grid-cols-2 gap-5 bg-white p-3 border border-gray-200 shadow-lg sticky top-5 z-30 rounded-full max-w-screen-xl mx-auto">
+                class="w-full grid text-nowrap grid-cols-2 bg-white p-3 border border-orange-300 shadow-lg sticky top-0 z-30 rounded max-w-screen-xl mx-auto">
 
-                <section class="xl:col-span-1 xl:flex justify-start items-center hidden w-full">
-                    <form action="{{ route('users.dtr.post') }}" method="POST" class="inline my-auto">
-                        @csrf
-                        @method('POST')
-                        <input type="month" name="searchDate" id="searchDate"
-                            class="px-5 py-2 rounded-full cursor-pointer border border-gray-200 text-sm"
-                            value="{{ \Carbon\Carbon::parse($pagination['currentMonth']['name'])->format('Y-m') }}"
-                            onchange="this.form.submit()">
-                    </form>
-                </section>
-
-                <section class="flex items-center gap-3 col-span-1 xl:!justify-center justify-start w-full">
+                <section class="flex items-center gap-3 col-span-1 justify-start w-full">
                     <form action="{{ route('users.dtr.post') }}" method="POST" class="inline my-auto">
                         @csrf
                         @method('POST')
@@ -55,19 +44,43 @@
                     </form>
                 </section>
 
-                <section class="flex items-center gap-3 col-span-1 justify-end w-full h-auto">
-                    <!-- Fix alignment and padding for DTR Summary -->
-                    <x-button tertiary label="DTR Summary" openModal="dtr-summary-modal"
-                        className="text-xs lg:px-8 px-4 !py-4 modal-button my-auto" />
+                <div class="flex items-center gap-3 col-span-1 justify-end w-full">
+                    <section class="w-full">
+                        <form action="{{ route('users.dtr.post') }}" method="POST"
+                            class="flex justify-end items-end my-auto">
+                            @csrf
+                            @method('POST')
+                            <input type="month" name="searchDate" id="searchDate"
+                                class="px-5 py-2 md:w-auto w-2/3 rounded cursor-pointer border border-gray-200 text-sm"
+                                value="{{ \Carbon\Carbon::parse($pagination['currentMonth']['name'])->format('Y-m') }}"
+                                onchange="this.form.submit()">
+                        </form>
+                    </section>
+                    <section x-data="{ isOpen: false }" class="relative">
+                        <!-- Toggle Button -->
+                        <button @click="isOpen = !isOpen" class="cursor-pointer hover:opacity-70">
+                            <span class="mi--options-vertical w-7 h-7"></span>
+                        </button>
+                        <!-- Dropdown Menu -->
+                        <div x-show="isOpen" @click.away="isOpen = false" x-cloak
+                            class="absolute right-0 top-full mt-3 bg-white border rounded shadow-lg space-y-2 p-2 w-48 z-50"
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 scale-100"
+                            x-transition:leave-end="opacity-0 scale-95">
+                            <x-button tertiary label="DTR Summary" openModal="dtr-summary-modal"
+                                className="text-xs lg:px-8 px-4 !py-3 modal-button my-auto w-full text-left" />
+                            <x-button primary label="Request a PDF"
+                                leftIcon="ph--hand-deposit lg:!w-5 lg:!h-5 !w-4 !h-4"
+                                className="text-xs lg:px-8 px-4 my-auto w-full text-left" onClick="requestPDF()" />
+                        </div>
+                    </section>
+                </div>
 
-                    <!-- Request PDF Button (With onClick Event) -->
-                    <x-button primary label="Request a PDF" showLabel="{{ true }}"
-                        leftIcon="ph--hand-deposit lg:!w-6 lg:!h-6 !w-4 !h-4" className="text-xs lg:px-8 px-4 my-auto"
-                        onClick="requestPDF()" />
-                </section>
             </div>
 
-            <div class="xl:w-[75%] lg:w-[85%] md:w-[95%] w-[100%] h-auto mt-8">
+            <div class="w-full h-auto mt-8">
                 <div
                     class="w-auto h-auto border bg-white border-gray-100 shadow-md resize-none p-8 space-y-5 select-none">
                     <section class="flex items-start justify-between">

@@ -11,11 +11,11 @@
         $pendingApprovals = collect($approvals)->where('status', 'pending');
     @endphp
 
-    <div class="h-auto w-full flex flex-col gap-5 px-10 pt-10">
+    <div class="h-auto w-full flex flex-col gap-5">
         @if ($pendingApprovals->isNotEmpty())
             <div class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
                 <div class="flex justify-between items-center flex-wrap gap-5 w-full">
-                    <section class="w-1/2">
+                    <section class="lg:w-1/2 w-full">
                         <div class="w-full relative flex items-center">
                             <span class="meteor-icons--search w-5 h-5 absolute left-3 text-gray-500"></span>
                             <input type="text" name="search" id="search"

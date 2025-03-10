@@ -1,82 +1,85 @@
-{{-- @extends('layouts.application') --}}
+<head>
+    <title>{{ env('APP_NAME') }} | SMM | Create Direct Job Order</title>
 
-@section('title', 'Supervisor')
-@section('header', "Create Direct Job Order")
+    <script src="https://cdn.tailwindcss.com"></script>
 
-{{-- @section('content') --}}
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-    .custom-shadow {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .3);
-    }
-    .custom-hover-shadow:hover {
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0), 0 4px 6px rgba(0, 0, 0, 0);
-        transition: box-shadow 0.3s ease;
-    }
-    .custom-focus-ring:focus {
-        outline: none;
-        box-shadow: 0 0 0 1px #545454;
-        transition: box-shadow 0.3s ease;
-    }
+    <style>
+        .custom-shadow {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .3);
+        }
 
-    /* Ensure CKEditor is scrollable with max height */
-    .ck-editor__editable {
-        max-height: 500px !important;
-        overflow-y: auto !important;
-    }
-</style>
+        .custom-hover-shadow:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0), 0 4px 6px rgba(0, 0, 0, 0);
+            transition: box-shadow 0.3s ease;
+        }
 
-<!-- CKEditor 5 Classic CDN -->
-<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+        .custom-focus-ring:focus {
+            outline: none;
+            box-shadow: 0 0 0 1px #545454;
+            transition: box-shadow 0.3s ease;
+        }
 
-<x-main-layout breadcumb="SMM" page="Create Direct Job Order">
-    <div class="px-10 pt-10">
-        {{-- Success Message Component --}}
-        @if(!Auth::user()->signature)
-            <form action="{{ url('signature/store') }}" method="POST" id="modalSignatureForm">
-                @csrf
-                @method('PUT')
-                <x-save-signature />
-            </form>
-        @endif
+        /* Ensure CKEditor is scrollable with max height */
+        .ck-editor__editable {
+            max-height: 500px !important;
+            overflow-y: auto !important;
+        }
+    </style>
 
-        <div class="w-full px-6 py-10 mx-auto rounded-lg custom-shadow bg-white">
-            <div>
-                <a href="{{ url('/admin/smm/supervisor/directjob') }}">
-                    <div class="w-fit px-4 py-1 bg-gray-400 rounded-md text-white custom-shadow custom-hover-shadow">
-                        Back
+    <!-- CKEditor 5 Classic CDN -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+</head>
+
+<x-main-layout breadcumb="SMM / Direct Job Order" page="Create Direct Job Order">
+
+    {{-- Success Message Component --}}
+    @if (!Auth::user()->signature)
+        <form action="{{ url('signature/store') }}" method="POST" id="modalSignatureForm">
+            @csrf
+            @method('PUT')
+            <x-save-signature />
+        </form>
+    @endif
+
+    <div class="w-full px-6 py-10 mx-auto rounded-lg custom-shadow bg-white">
+        <div>
+            <a href="{{ url('/admin/smm/supervisor/directjob') }}">
+                <div class="w-fit px-4 py-1 bg-gray-400 rounded-md text-white custom-shadow custom-hover-shadow">
+                    Back
+                </div>
+            </a>
+        </div>
+        <form action="{{ url('/admin/smm/supervisor/directjob/store') }}" method="POST">
+            @csrf
+
+            <h1 class="text-xl font-bold mt-4">Create Job Order</h1>
+            <div class="grid grid-cols-4 space-y-4">
+                <div class="col-span-4 grid grid-cols-2 gap-4 mt-4">
+                    <div class="col-span-2 lg:col-span-1 w-full">
+                        <p class="text-sm text-gray-600">Title</p>
+                        <input type="text" name="title" value="{{ old('title') }}"
+                            class="w-full border px-3 py-2  border-gray-200 rounded-lg">
+                        @error('title')
+                            <p class="text-red-600 text-sm">{{ $message }}</p>
+                        @enderror
                     </div>
-                </a>
-            </div>
-            <form action="{{ url('/admin/smm/supervisor/directjob/store') }}" method="POST">
-                @csrf
-
-                <h1 class="text-xl font-bold mt-4">Create Job Order</h1>
-                <div class="grid grid-cols-4 space-y-4">
-                    <div class="col-span-4 grid grid-cols-2 gap-4 mt-4">
-                        <div class="col-span-2 lg:col-span-1 w-full">
-                            <p class="text-sm text-gray-600">Title</p>
-                            <input type="text" name="title" value="{{ old('title') }}" class="w-full border px-3 py-2  border-gray-200 rounded-lg">
-                            @error('title')
-                                <p class="text-red-600 text-sm">{{ $message }}</p>
-                            @enderror
+                    <!-- Client -->
+                    <div class="col-span-2 lg:col-span-1 w-full">
+                        <p class="text-sm text-gray-600">Client</p>
+                        <div class="relative">
+                            <input type="text" id="selected-client-name"
+                                value="{{ old('client_id') ? $clients->firstWhere('id', old('client_id'))->name ?? 'Select a Client' : 'Select a Client' }}"
+                                class="w-full border px-3 py-2  border-gray-200 rounded-lg cursor-pointer" readonly
+                                onclick="openModal()">
+                            <input type="hidden" name="client_id" id="selected-client-id"
+                                value="{{ old('client_id') }}">
                         </div>
-                        <!-- Client -->
-                        <div class="col-span-2 lg:col-span-1 w-full">
-                            <p class="text-sm text-gray-600">Client</p>
-                            <div class="relative">
-                                <input type="text" id="selected-client-name"
-                                    value="{{ old('client_id') ? ($clients->firstWhere('id', old('client_id'))->name ?? 'Select a Client') : 'Select a Client' }}"
-                                    class="w-full border px-3 py-2  border-gray-200 rounded-lg cursor-pointer" readonly onclick="openModal()">
-                                <input type="hidden" name="client_id" id="selected-client-id"
-                                    value="{{ old('client_id') }}">
-                            </div>
-                            @error('client_id')
-                                <p class="text-red-600 text-sm">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <!-- Content Writer -->
-                        {{-- <div class="col-span-2 lg:col-span-1 w-full">
+                        @error('client_id')
+                            <p class="text-red-600 text-sm">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <!-- Content Writer -->
+                    {{-- <div class="col-span-2 lg:col-span-1 w-full">
                             <p class="text-sm text-gray-600">Content Writer</p>
                             <div class="relative">
                                 <input type="text" id="selected-content-writer-name"
@@ -91,8 +94,8 @@
                             @enderror
                         </div> --}}
 
-                        <!-- Graphics Designer -->
-                        {{-- <div class="col-span-2 lg:col-span-1 w-full">
+                    <!-- Graphics Designer -->
+                    {{-- <div class="col-span-2 lg:col-span-1 w-full">
                             <p class="text-sm text-gray-600">Graphics Designer</p>
                             <div class="relative">
                                 <input type="text" id="selected-graphic-designer-name"
@@ -107,104 +110,107 @@
                             @enderror
                         </div> --}}
 
-                        <div class="col-span-2 grid grid-cols-2 w-full gap-4 rounded-lg">
-                            <div>
-                                <div class="flex gap-4">
-                                    <p class="text-sm text-gray-600">Content Writer</p>
-                                    <input type="checkbox" name="content_checkbox" id="content-checkbox"/>
-                                </div>
-                                @error('content_checkbox')
-                                    <p class="text-red-600 text-sm">{{ $message }}</p>
-                                @enderror
-                                <div class="relative">
-                                    <input type="text" id="selected-content-writer-name"
-                                        value="{{ old('content_writer_id') ? ($contentworkers->firstWhere('id', old('content_writer_id'))->name ?? 'Select a Content Writer') : 'Select a Content Writer' }}"
-                                        class="w-full border px-3 py-2  border-gray-200 rounded-lg cursor-pointer" readonly
-                                        onclick="openContentWriterModal()">
-                                    <input type="hidden" name="content_writer_id" id="selected-content-writer-id"
-                                        value="{{ old('content_writer_id') }}">
-                                </div>
-                                @error('content_writer_id')
-                                    <p class="text-red-600 text-sm">{{ $message }}</p>
-                                @enderror
+                    <div class="col-span-2 grid grid-cols-2 w-full gap-4 rounded-lg">
+                        <div>
+                            <div class="flex gap-4">
+                                <p class="text-sm text-gray-600">Content Writer</p>
+                                <input type="checkbox" name="content_checkbox" id="content-checkbox" />
                             </div>
-                            <div>
-                                <div class="flex gap-4">
-                                    <p class="text-sm text-gray-600">Graphics Designer</p>
-                                    <input type="checkbox" name="graphic_checkbox" id="graphic-checkbox"/>
-                                </div>
-                                @error('content_checkbox')
-                                    <p class="text-red-600 text-sm">{{ $message }}</p>
-                                @enderror
-                                <div class="relative">
-                                    <input type="text" id="selected-graphic-designer-name"
-                                        value="{{ old('graphic_designer_id') ? ($graphicworkers->firstWhere('id', old('graphic_designer_id'))->name ?? 'Select a Graphics Designer') : 'Select a Graphics Designer' }}"
-                                        class="w-full border px-3 py-2  border-gray-200 rounded-lg cursor-pointer" readonly
-                                        onclick="openGraphicDesignerModal()">
-                                    <input type="hidden" name="graphic_designer_id" id="selected-graphic-designer-id"
-                                        value="{{ old('graphic_designer_id') }}">
-                                </div>
-                                @error('graphic_designer_id')
-                                    <p class="text-red-600 text-sm">{{ $message }}</p>
-                                @enderror
+                            @error('content_checkbox')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
+                            <div class="relative">
+                                <input type="text" id="selected-content-writer-name"
+                                    value="{{ old('content_writer_id') ? $contentworkers->firstWhere('id', old('content_writer_id'))->name ?? 'Select a Content Writer' : 'Select a Content Writer' }}"
+                                    class="w-full border px-3 py-2  border-gray-200 rounded-lg cursor-pointer" readonly
+                                    onclick="openContentWriterModal()">
+                                <input type="hidden" name="content_writer_id" id="selected-content-writer-id"
+                                    value="{{ old('content_writer_id') }}">
                             </div>
+                            @error('content_writer_id')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
                         </div>
-
-                        <div class="col-span-2 grid grid-cols-2 w-full gap-4 rounded-lg">
-                            <div>
-                                <p class="text-sm text-gray-600">Date Started</p>
-                                <div class="relative">
-                                    <input type="date" name="date_started"
-                                        value="{{old('date_started')}}"
-                                        class="w-full border px-3 py-2  border-gray-200 rounded-lg">
-                                </div>
-                                @error('date_started')
-                                    <p class="text-red-600 text-sm">{{ $message }}</p>
-                                @enderror
+                        <div>
+                            <div class="flex gap-4">
+                                <p class="text-sm text-gray-600">Graphics Designer</p>
+                                <input type="checkbox" name="graphic_checkbox" id="graphic-checkbox" />
                             </div>
-                            <div>
-                                <p class="text-sm text-gray-600">Date Target</p>
-                                <div class="relative">
-                                    <input type="date" name="date_target"
-                                        value="{{old('date_target')}}"
-                                        class="w-full border px-3 py-2  border-gray-200 rounded-lg">
-                                </div>
-                                @error('date_target')
-                                    <p class="text-red-600 text-sm">{{ $message }}</p>
-                                @enderror
+                            @error('content_checkbox')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
+                            <div class="relative">
+                                <input type="text" id="selected-graphic-designer-name"
+                                    value="{{ old('graphic_designer_id') ? $graphicworkers->firstWhere('id', old('graphic_designer_id'))->name ?? 'Select a Graphics Designer' : 'Select a Graphics Designer' }}"
+                                    class="w-full border px-3 py-2  border-gray-200 rounded-lg cursor-pointer" readonly
+                                    onclick="openGraphicDesignerModal()">
+                                <input type="hidden" name="graphic_designer_id" id="selected-graphic-designer-id"
+                                    value="{{ old('graphic_designer_id') }}">
                             </div>
-                        </div>
-
-                        <div class="col-span-2 h-fit w-full">
-                            <p class="text-sm text-gray-600">Instructions</p>
-                            <!-- CKEditor Textarea -->
-                            <textarea name="description" id="editor" class="w-full border-gray-200 rounded-lg">{{ old('description') }}</textarea>
-                            @error('description')
+                            @error('graphic_designer_id')
                                 <p class="text-red-600 text-sm">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
-                    <button type="submit" class="col-span-1 text-center py-2 lg:py-4 w-full bg-[#fa7011] mt-10 rounded-lg custom-shadow custom-hover-shadow text-white font-bold">
-                        Submit
-                    </button>
+
+                    <div class="col-span-2 grid grid-cols-2 w-full gap-4 rounded-lg">
+                        <div>
+                            <p class="text-sm text-gray-600">Date Started</p>
+                            <div class="relative">
+                                <input type="date" name="date_started" value="{{ old('date_started') }}"
+                                    class="w-full border px-3 py-2  border-gray-200 rounded-lg">
+                            </div>
+                            @error('date_started')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Date Target</p>
+                            <div class="relative">
+                                <input type="date" name="date_target" value="{{ old('date_target') }}"
+                                    class="w-full border px-3 py-2  border-gray-200 rounded-lg">
+                            </div>
+                            @error('date_target')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-span-2 h-fit w-full">
+                        <p class="text-sm text-gray-600">Instructions</p>
+                        <!-- CKEditor Textarea -->
+                        <textarea name="description" id="editor" class="w-full border-gray-200 rounded-lg">{{ old('description') }}</textarea>
+                        @error('description')
+                            <p class="text-red-600 text-sm">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
-            </form>
-        </div>
+                <button type="submit"
+                    class="col-span-1 text-center py-2 lg:py-4 w-full bg-[#fa7011] mt-10 rounded-lg custom-shadow custom-hover-shadow text-white font-bold">
+                    Submit
+                </button>
+            </div>
+        </form>
+    </div>
 
     <!-- Client Selection Modal -->
-    <div id="client-modal" class="fixed inset-0 bg-gray-900 px-4 md:px-20 z-50 bg-opacity-50 flex items-center justify-center hidden">
+    <div id="client-modal"
+        class="fixed inset-0 bg-gray-900 px-4 md:px-20 z-50 bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white w-full max-w-sm md:max-w-lg lg:max-w-2xl px-5 pb-10 pt-5 rounded-lg">
             <!-- Search & Close button -->
             <div class="w-full flex md:flex-row justify-between items-center flex-col-reverse lg:flex-row gap-4 mb-4">
                 <div class="flex items-center w-full md:w-auto relative">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-500"></i>
-                    <input type="text" id="searchInput" class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search..." onkeyup="filterTable()">
+                    <input type="text" id="searchInput"
+                        class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        placeholder="Search..." onkeyup="filterTable()">
                     <button class="absolute right-2 px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">
                         <i class="fa-solid fa-filter"></i>
                     </button>
                 </div>
                 <div class="w-full flex justify-end md:w-auto">
-                    <button onclick="closeModal()" class="bg-[#fa7011] text-white px-4 py-2 rounded w-fit">Close</button>
+                    <button onclick="closeModal()"
+                        class="bg-[#fa7011] text-white px-4 py-2 rounded w-fit">Close</button>
                 </div>
             </div>
 
@@ -224,7 +230,8 @@
                                 <td class="px-4 md:px-6 py-3">{{ $client->name }}</td>
                                 <td class="px-4 md:px-6 py-3">{{ ucfirst($client->roles->position) }}</td>
                                 <td class="px-4 md:px-6 py-3 text-center">
-                                    <button onclick="selectClient('{{ $client->id }}', '{{ $client->name }}')" class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
+                                    <button onclick="selectClient('{{ $client->id }}', '{{ $client->name }}')"
+                                        class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
                                         Select Client
                                     </button>
                                 </td>
@@ -247,19 +254,23 @@
 
 
     <!-- Content Writer Modal -->
-    <div id="content-writer-modal" class="fixed inset-0 bg-gray-900 px-4 md:px-20 z-50 bg-opacity-50 flex items-center justify-center hidden">
+    <div id="content-writer-modal"
+        class="fixed inset-0 bg-gray-900 px-4 md:px-20 z-50 bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white w-full max-w-sm md:max-w-lg lg:max-w-2xl px-5 pb-10 pt-5 rounded-lg">
             <!-- Search & Close button -->
             <div class="w-full flex md:flex-row justify-between items-center flex-col-reverse lg:flex-row gap-4 mb-4">
                 <div class="flex items-center w-full md:w-auto relative">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-500"></i>
-                    <input type="text" id="searchContentWriterInput" class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search..." onkeyup="filterContentWriterTable()">
+                    <input type="text" id="searchContentWriterInput"
+                        class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        placeholder="Search..." onkeyup="filterContentWriterTable()">
                     <button class="absolute right-2 px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">
                         <i class="fa-solid fa-filter"></i>
                     </button>
                 </div>
                 <div class="w-full flex justify-end md:w-auto">
-                    <button onclick="closeContentWriterModal()" class="bg-[#fa7011] text-white px-4 py-2 rounded w-fit">Close</button>
+                    <button onclick="closeContentWriterModal()"
+                        class="bg-[#fa7011] text-white px-4 py-2 rounded w-fit">Close</button>
                 </div>
             </div>
 
@@ -277,9 +288,12 @@
                         @forelse ($contentworkers as $content_writer)
                             <tr class="border-b">
                                 <td class="px-4 md:px-6 py-3">{{ $content_writer->name }}</td>
-                                <td class="px-4 md:px-6 py-3">{{ Str::title(str_replace('_', ' ', $content_writer->roles->position)) }}</td>
+                                <td class="px-4 md:px-6 py-3">
+                                    {{ Str::title(str_replace('_', ' ', $content_writer->roles->position)) }}</td>
                                 <td class="px-4 md:px-6 py-3 text-center">
-                                    <button onclick="selectContentWriter('{{ $content_writer->id }}', '{{ $content_writer->name }}')" class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
+                                    <button
+                                        onclick="selectContentWriter('{{ $content_writer->id }}', '{{ $content_writer->name }}')"
+                                        class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
                                         Select
                                     </button>
                                 </td>
@@ -302,19 +316,23 @@
 
 
     <!-- Graphics Designer Modal -->
-    <div id="graphic-designer-modal" class="fixed inset-0 bg-gray-900 px-4 md:px-20 z-50 bg-opacity-50 flex items-center justify-center hidden">
+    <div id="graphic-designer-modal"
+        class="fixed inset-0 bg-gray-900 px-4 md:px-20 z-50 bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white w-full max-w-sm md:max-w-lg lg:max-w-2xl px-5 pb-10 pt-5 rounded-lg">
             <!-- Search & Close button -->
             <div class="w-full flex md:flex-row justify-between items-center flex-col-reverse lg:flex-row gap-4 mb-4">
                 <div class="flex items-center w-full md:w-auto relative">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-500"></i>
-                    <input type="text" id="searchGraphicDesignerInput" class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search..." onkeyup="filterGraphicDesignerTable()">
+                    <input type="text" id="searchGraphicDesignerInput"
+                        class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        placeholder="Search..." onkeyup="filterGraphicDesignerTable()">
                     <button class="absolute right-2 px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">
                         <i class="fa-solid fa-filter"></i>
                     </button>
                 </div>
                 <div class="w-full flex justify-end md:w-auto">
-                    <button onclick="closeGraphicDesignerModal()" class="bg-[#fa7011] text-white px-4 py-2 rounded w-fit">Close</button>
+                    <button onclick="closeGraphicDesignerModal()"
+                        class="bg-[#fa7011] text-white px-4 py-2 rounded w-fit">Close</button>
                 </div>
             </div>
 
@@ -332,10 +350,13 @@
                         @forelse ($graphicworkers as $graphic_designer)
                             <tr class="border-b">
                                 <td class="px-4 md:px-6 py-3">{{ $graphic_designer->name }}</td>
-                                <td class="px-4 md:px-6 py-3">{{ Str::title(str_replace('_', ' ', $graphic_designer->roles->position)) }}</td>
+                                <td class="px-4 md:px-6 py-3">
+                                    {{ Str::title(str_replace('_', ' ', $graphic_designer->roles->position)) }}</td>
 
                                 <td class="px-4 md:px-6 py-3 text-center">
-                                    <button onclick="selectGraphicDesigner('{{ $graphic_designer->id }}', '{{ $graphic_designer->name }}')" class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
+                                    <button
+                                        onclick="selectGraphicDesigner('{{ $graphic_designer->id }}', '{{ $graphic_designer->name }}')"
+                                        class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
                                         Select
                                     </button>
                                 </td>
@@ -356,7 +377,7 @@
         </div>
     </div>
 
-    </div>
+
 </x-main-layout>
 
 <script>
@@ -415,9 +436,11 @@
     function openModal() {
         document.getElementById('client-modal').classList.remove('hidden');
     }
+
     function closeModal() {
         document.getElementById('client-modal').classList.add('hidden');
     }
+
     function selectClient(clientId, clientName) {
         document.getElementById('selected-client-name').value = clientName;
         document.getElementById('selected-client-id').value = clientId;

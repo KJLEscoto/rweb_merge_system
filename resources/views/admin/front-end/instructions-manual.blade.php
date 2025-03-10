@@ -12,32 +12,34 @@
 @endphp
 
 <x-main-layout breadcumb="Front-end" page="Instructions Manual">
-    <main class="h-auto w-full flex flex-col gap-5 px-10 py-10">
+    <main class="h-auto w-full flex flex-col gap-5">
 
         @if ($manuals)
             <div class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
-                <table class="w-full border-collapse border border-gray-300">
-                    <thead>
-                        <tr
-                            class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
-                            <th>File Name</th>
-                            <th class="!text-center">Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($manuals as $manual)
-                            <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
-                                <td class="flex items-center gap-2">
-                                    <div class="p-2 rounded bg-[#F57D11] text-white">
-                                        <span class="mingcute--file-fill w-6 h-6"></span>
-                                    </div>
-                                    {{ $manual['file_name'] }}
-                                </td>
-                                <td class="!text-center">{{ $manual['date'] }}</td>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr
+                                class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
+                                <th>File Name</th>
+                                <th class="!text-center">Date</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($manuals as $manual)
+                                <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
+                                    <td class="flex items-center gap-2">
+                                        <div class="p-2 rounded bg-[#F57D11] text-white">
+                                            <span class="mingcute--file-fill w-6 h-6"></span>
+                                        </div>
+                                        {{ $manual['file_name'] }}
+                                    </td>
+                                    <td class="!text-center">{{ $manual['date'] }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <p>pagination here.</p>
         @else

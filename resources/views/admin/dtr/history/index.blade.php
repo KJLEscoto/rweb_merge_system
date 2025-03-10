@@ -9,10 +9,10 @@
 </head>
 
 <x-main-layout breadcumb="DTR" page="History">
-    <div class="h-auto w-full flex flex-col gap-5 px-10 py-10">
+    <div class="h-auto w-full flex flex-col gap-5">
         @if ($records)
-            <section class="flex lg:flex-row flex-col items-center justify-between w-full gap-5">
-                <section class="w-1/2">
+            <section class="flex lg:flex-row flex-col-reverse items-center justify-between w-full gap-5">
+                <section class="lg:w-1/2 w-full">
                     <div class="w-full relative flex items-center">
                         <span class="meteor-icons--search w-5 h-5 absolute left-3 text-gray-500"></span>
                         <input type="text" name="search" id="search"
@@ -21,7 +21,7 @@
                     </div>
                 </section>
 
-                <div class="flex items-center gap-2">
+                <div class="flex lg:flex-row flex-row-reverse items-center w-full justify-end gap-2">
                     <div>
                         <input class="px-5 py-1.5 rounded cursor-pointer border border-gray-200" type="month"
                             id="month">
@@ -46,7 +46,7 @@
             @endif
 
             <section class="h-auto w-full flex flex-col gap-5">
-                <div class="overflow-x-auto bg-white rounded-lg shadow-md">
+                <div class="overflow-x-auto bg-white rounded shadow-md">
                     <table id="recordsTable" class="w-full border-collapse border border-gray-300">
                         <thead>
                             <tr

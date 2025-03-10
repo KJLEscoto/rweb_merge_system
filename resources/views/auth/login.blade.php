@@ -14,9 +14,9 @@
         @endif
 
         <main class="container mx-auto max-w-screen-xl">
-            <div class="flex items-center justify-center h-screen w-full p-10 overflow-auto">
+            <div class="flex items-center justify-center h-screen w-full md:p-10 p-5 overflow-auto">
                 <form action="{{ route('admin.login') }}" method="POST"
-                    class="w-1/2 bg-white rounded-lg p-10 flex flex-col gap-5 h-auto shadow-lg border border-gray-100">
+                    class="md:w-1/2 w-full bg-white rounded-lg p-10 flex flex-col gap-5 h-auto shadow-lg border border-gray-100">
                     @csrf
                     <div class="w-auto h-auto">
                         <img src="{{ asset('image/rweb_logo.png') }}" class="w-auto h-14">
@@ -50,7 +50,7 @@
         <x-modal.confirmation-email id="confirmation-email-modal" />
 
         <x-form.container routeName="login" method="POST"
-            className="w-full h-auto flex items-center justify-center bg-white container mx-auto max-w-screen-2xl">
+            className="w-full lg:h-full h-auto lg:flex items-center justify-center bg-white container mx-auto max-w-screen-2xl">
             <div class="w-full flex flex-col items-center justify-center gap-7 overflow-x-hidden md:!p-10 p-5">
                 @if (session('success'))
                     <x-modal.flash-msg msg="success" />

@@ -1,15 +1,13 @@
-{{-- @extends('layouts.application') --}}
+<head>
+    <title>{{ env('APP_NAME') }} | SMM | Outgoing Requests</title>
 
-@section('title', 'Admin')
-@section('header', "Job Order")
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-{{-- @section('content') --}}
-<script src="https://cdn.tailwindcss.com"></script>
+<x-main-layout breadcumb="SMM" page="Outgoing Requests">
 
-<x-main-layout breadcumb="SMM" page="Outgoing Request">
-<div class="px-10 pt-10">
     {{-- Success Message Component --}}
-    @if(session('Status'))
+    @if (session('Status'))
         <x-success />
     @endif
     {{-- Search Bar --}}
@@ -28,8 +26,9 @@
 
         <div class="flex items-center w-full md:w-auto relative">
             <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-500"></i>
-            <input type="text" id="searchInput" class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            placeholder="Search..." onkeyup="filterTable()" />
+            <input type="text" id="searchInput"
+                class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                placeholder="Search..." onkeyup="filterTable()" />
 
         </div>
     </div>
@@ -50,7 +49,7 @@
                     <tr class="border-b">
                         <td class="px-6 py-3">{{ $job_draft->jobOrder->title }}</td>
                         <td class="px-6 py-3">
-                            @if ($job_draft->type == "content_writer")
+                            @if ($job_draft->type == 'content_writer')
                                 Content Writer - {{ $job_draft->contentWriter->name }}
                             @else
                                 Graphic Designer - {{ $job_draft->graphicDesigner->name }}
@@ -60,12 +59,14 @@
                         <td class="px-6 py-3">
                             <div class="flex space-x-2">
                                 <a href="{{ url('admin/smm/joborder/edit/' . $job_draft->id) }}">
-                                    <button class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
+                                    <button
+                                        class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
                                         Edit
                                     </button>
                                 </a>
                                 <a href="{{ url('admin/smm/joborder/show/' . $job_draft->id) }}">
-                                    <button class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
+                                    <button
+                                        class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
                                         Show
                                     </button>
                                 </a>
@@ -91,7 +92,7 @@
     <div class="mt-4">
         {{-- {{ $list_of_projects->links('vendor.pagination.custom') }} --}}
     </div>
-</div>
+
 </x-main-layout>
 
 <script>

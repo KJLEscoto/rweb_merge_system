@@ -3,7 +3,7 @@
 </head>
 
 <x-main-layout breadcumb="DTR / Interns" page="Intern Details">
-    <main class="h-auto w-full flex flex-col gap-5 px-10 pt-10">
+    <main class="h-auto w-full flex flex-col gap-5">
         <div class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
 
             <section class="flex w-full justify-between items-center">
@@ -61,7 +61,7 @@
             </section>
 
 
-            <div class="p-10 border border-gray-300 rounded grid grid-cols-3 gap-7">
+            <div class="lg:p-10 p-7 border border-gray-300 rounded lg:grid lg:grid-cols-3 flex flex-col gap-7">
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">First Name</h1>
                     <p class="text-gray-600 capitalize">

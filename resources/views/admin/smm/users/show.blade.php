@@ -1,32 +1,31 @@
-{{-- @extends('layouts.application') --}}
+<head>
+    <title>{{ env('APP_NAME') }} | SMM | Show User</title>
 
-@section('title', 'Show User')
-@section('header', 'Show User')
+    <script src="https://cdn.tailwindcss.com"></script>
 
-{{-- @section('content') --}}
-<script src="https://cdn.tailwindcss.com"></script>
-@php
-    $roles = [
-        1 => 'Client',
-        2 => 'Operations Manager',
-        3 => 'Content Writer',
-        4 => 'Graphic Designer',
-        5 => 'Top Manager',
-        6 => 'Supervisor',
-        7 => 'Accounting'
-    ];
-@endphp
+    @php
+        $roles = [
+            1 => 'Client',
+            2 => 'Operations Manager',
+            3 => 'Content Writer',
+            4 => 'Graphic Designer',
+            5 => 'Top Manager',
+            6 => 'Supervisor',
+            7 => 'Accounting',
+        ];
+    @endphp
+</head>
 
-<x-main-layout breadcumb="SMM" page="Show User">
-<div class="px-10 pt-10">
+<x-main-layout breadcumb="SMM / Users" page="Show User">
+
     {{-- Middle Part --}}
 
-    <div class="px-10 text-white">
+    <div class=" text-white">
         <div class="w-full flex justify-end items-end mb-4 cursor-pointer"
             onclick="window.location.assign('{{ url('admin/smm/users') }}')">
             <div class="w-fit px-4 py-1 bg-[#f68e12] rounded-md">Go Back</div>
         </div>
-        <div class="grid mt-10 grid-cols-3 h-80 gap-6 text-black">
+        <div class="grid mt-5 grid-cols-3 h-80 gap-6 text-black">
             <div class="px-10 col-span-3 lg:col-span-1 bg-white shadow-md rounded-md pt-10 py-10">
                 <div class="w-full flex justify-center items-center">
                     {{-- <img class="rounded-full w-32 h-32 object-cover"
@@ -34,8 +33,8 @@
                         alt="User Image"> --}}
 
                     <img class="rounded-full w-32 h-32 object-cover"
-                    src="{{ file_exists(public_path($user->image)) && $user->image ? asset($user->image) : asset('/Assets/user-profile-profilepage.png') }}"
-                    alt="User Image">
+                        src="{{ file_exists(public_path($user->image)) && $user->image ? asset($user->image) : asset('/Assets/user-profile-profilepage.png') }}"
+                        alt="User Image">
                 </div>
                 <div class="text-center mt-4">
                     <h1 class="font-semibold">{{ $user->name }}</h1>
@@ -52,33 +51,34 @@
                 <div class="flex justify-between">
                     <h1 class="text-sm font-semibold">User Information</h1>
                     <div class="px-4 py-1 bg-[#f68e12] cursor-pointer text-white rounded-md hover:bg-[#e57f0f]"
-                    onclick="window.location.assign('{{ url('admin/smm/users/edit/' . $user->id) }}')">Edit</div>
+                        onclick="window.location.assign('{{ url('admin/smm/users/edit/' . $user->id) }}')">Edit
+                    </div>
                 </div>
                 <div class="space-y-4 mt-4">
                     <div>
                         <div class="flex space-x-2 items-center">
-                            <img src="{{asset('/Assets/name.png')}}" class="w-5 h-5" alt="">
+                            <img src="{{ asset('/Assets/name.png') }}" class="w-5 h-5" alt="">
                             <h1 class="font-medium">Name</h1>
                         </div>
                         <p class="pl-7 text-gray-700">{{ $user->name }}</p>
                     </div>
                     <div>
                         <div class="flex space-x-2 items-center">
-                            <img src="{{asset('/Assets/email.png')}}" class="w-5 h-5" alt="">
+                            <img src="{{ asset('/Assets/email.png') }}" class="w-5 h-5" alt="">
                             <h1 class="font-medium">Email</h1>
                         </div>
                         <p class="pl-7 text-gray-700">{{ $user->email }}</p>
                     </div>
                     <div>
                         <div class="flex space-x-2 items-center">
-                            <img src="{{asset('/Assets/phone-number.png')}}" class="w-5 h-5" alt="">
+                            <img src="{{ asset('/Assets/phone-number.png') }}" class="w-5 h-5" alt="">
                             <h1 class="font-medium">Phone</h1>
                         </div>
                         <p class="pl-7 text-gray-700">{{ $user->phone }}</p>
                     </div>
                     <div>
                         <div class="flex space-x-2 items-center">
-                            <img src="{{asset('/Assets/address.png')}}" class="w-5 h-5" alt="">
+                            <img src="{{ asset('/Assets/address.png') }}" class="w-5 h-5" alt="">
                             <h1 class="font-medium">Address</h1>
                         </div>
                         <p class="pl-7 text-gray-700">{{ $user->address }}</p>
@@ -88,6 +88,6 @@
         </div>
     </div>
 
-</div>
+
 </x-main-layout>
 {{-- @endsection --}}

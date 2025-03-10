@@ -1,10 +1,13 @@
-<x-main-layout>
+<head>
+    <title>{{ env('APP_NAME') }} | Intern | Request</title>
+</head>
 
+<x-main-layout>
     <main class="w-full">
         {{-- <x-modal.dtr-summary id="dtr-summary-modal" /> --}}
         <div class="flex flex-col gap-5 w-full items-center justify-center pb-5">
             <div
-                class="w-full grid grid-cols-2 text-nowrap gap-5 bg-white p-3 border border-gray-200 shadow-lg sticky top-5 z-30 rounded-full max-w-screen-xl mx-auto">
+                class="w-full grid grid-cols-2 text-nowrap gap-5 bg-white p-3 border border-orange-300 shadow-lg sticky top-5 z-30 rounded max-w-screen-xl mx-auto">
 
                 <section class="col-span-1 flex items-center justify-start">
                     <x-button routePath="users.request" label="Back" tertiary button showLabel="{{ true }}"
@@ -13,19 +16,19 @@
 
                 <section class="flex items-center gap-3 col-span-1 justify-end w-full h-auto capitalize px-10">
                     @if ($status === 'approved')
-                        <span class="text-green-500 font-semibold text-sm">
+                        <span class="text-green-500 font-semibold md:text-sm text-xs">
                             Ready to Download
                         </span>
                         <button class="px-2 flex py-1 rounded-md bg-green-500 text-white"
-                        onclick="window.location.href='{{ url('/intern/request/' . $id . '?type=download') }}'">
+                            onclick="window.location.href='{{ url('/intern/request/' . $id . '?type=download') }}'">
                             <div class="material-symbols--download-rounded !w-6 !h-6"></div>
                         </button>
                     @elseif ($status === 'declined')
-                        <span class="text-red-500 font-semibold text-sm">
+                        <span class="text-red-500 font-semibold md:text-sm text-xs">
                             Declined
                         </span>
                     @else
-                        <span class="text-blue-500 font-semibold text-sm">
+                        <span class="text-blue-500 font-semibold md:text-sm text-xs">
                             Waiting for approval..
                         </span>
                     @endif
@@ -37,13 +40,15 @@
             </div>
 
             <div
-                class="xl:w-[75%] lg:w-[85%] md:w-[95%] w-[100%] h-auto mt-8 border-t-8 @if ($declined_by) border-red-500 @endif @if ($approved_by) border-green-500
+                class="w-full h-auto mt-8 border-t-8 @if ($declined_by) border-red-500 @endif @if ($approved_by) border-green-500
             @else border-blue-500 @endif ">
                 <div
                     class="w-auto h-auto border bg-white border-gray-100 shadow-md resize-none p-8 space-y-5 select-none">
                     <section class="flex items-start justify-between">
                         <x-logo width="lg:w-[200px] w-[150px]" />
-                        <x-image path="{{\App\Models\File::where('id', Auth::user()->schools->file_id)->first()->path}}" className="lg:w-16 w-12 h-auto" />
+                        <x-image
+                            path="{{ \App\Models\File::where('id', Auth::user()->schools->file_id)->first()->path }}"
+                            className="lg:w-16 w-12 h-auto" />
                     </section>
                     <section class="my-7 text-center">
                         <p class="text-[#F57D11] font-semibold sm:text-base text-sm">OJT Daily Time Record</p>
@@ -65,20 +70,20 @@
                                     hours
                                     {{ round((int) filter_var($totalHoursPerMonth, FILTER_SANITIZE_NUMBER_INT) % 60) }}
                                     minutes</span></p>
-                                    @if ($approved_by === null || !isset($approved_by))
-                                        @if ($declined_by != null || isset($declined_by))
-                                            <p class="lg:text-sm text-xs font-semibold text-red-500">Declined by: 
-                                                <span
-                                                class="font-normal lg:text-base text-sm capitalize">{{$declined_by}}</span>
-                                            </p>
-                                        @else
-                                        @endif
-                                    @else
-                                        <p class="lg:text-sm text-xs font-semibold">Approved by: 
-                                            <span
-                                            class="font-normal lg:text-base text-sm capitalize">{{$approved_by}}</span>
-                                        </p>
-                                    @endif
+                            @if ($approved_by === null || !isset($approved_by))
+                                @if ($declined_by != null || isset($declined_by))
+                                    <p class="lg:text-sm text-xs font-semibold text-red-500">Declined by:
+                                        <span
+                                            class="font-normal lg:text-base text-sm capitalize">{{ $declined_by }}</span>
+                                    </p>
+                                @else
+                                @endif
+                            @else
+                                <p class="lg:text-sm text-xs font-semibold">Approved by:
+                                    <span
+                                        class="font-normal lg:text-base text-sm capitalize">{{ $approved_by }}</span>
+                                </p>
+                            @endif
                         </div>
                     </section>
 

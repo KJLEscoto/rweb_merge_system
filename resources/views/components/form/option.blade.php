@@ -1,6 +1,6 @@
 @props(['imgPath' => '', 'routePath' => '', 'title', 'desc', 'btnLabel' => ''])
 
-<div class="relative md:h-screen h-full p-5 bg-cover bg-center bg-no-repeat"
+<div class="relative md:h-screen h-full p-5 md:bg-cover bg-center bg-contain bg-no-repeat"
     style="background-image: url('{{ "resources/img/$imgPath" }}');">
     <!-- Gradient Overlay -->
     <div class="absolute inset-0 bg-gradient-to-r from-[#F57D11] via-[#F57D11]/90 to-[#F53C11] opacity-80">

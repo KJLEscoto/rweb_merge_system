@@ -1,105 +1,129 @@
-x{{-- @extends('layouts.application') --}}
+<head>
+    <title>{{ env('APP_NAME') }} | SMM | Edit Request Form</title>
 
-@section('title', 'Job Order')
-@section('header', 'Request Form')
+    <script src="https://cdn.tailwindcss.com"></script>
 
-{{-- @section('content') --}}
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 
 
-<style>
-    .custom-shadow {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .3);
-    }
-    .custom-hover-shadow:hover {
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0), 0 4px 6px rgba(0, 0, 0, 0);
-        transition: box-shadow 0.3s ease;
-    }
-    .custom-focus-ring:focus {
-        outline: none;
-        box-shadow: 0 0 0 1px #fa7011;
-        transition: box-shadow 0.3s ease;
-    }
-    .active-tab {
-        border-bottom: 2px solid #fa7011;
-    }
-    body {
+    <style>
+        .custom-shadow {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .3);
+        }
+
+        .custom-hover-shadow:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0), 0 4px 6px rgba(0, 0, 0, 0);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .custom-focus-ring:focus {
+            outline: none;
+            box-shadow: 0 0 0 1px #fa7011;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .active-tab {
+            border-bottom: 2px solid #fa7011;
+        }
+
+        body {
             font-family: Arial, sans-serif;
 
             margin: 0;
         }
-        .header, .footer {
+
+        .header,
+        .footer {
             text-align: center;
         }
-        .header img, .footer img {
+
+        .header img,
+        .footer img {
             width: 100%;
             max-height: 150px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
         }
-        td, th {
+
+        td,
+        th {
             border: 1px solid black;
             padding: 10px;
             text-align: left;
             vertical-align: top;
         }
+
         .highlight {
             background-color: #fa7011;
             height: 40px;
             text-align: center;
         }
+
         .gray-bar {
             background-color: #6b7280;
             height: 40px;
             text-align: center;
         }
-        .long-bar{
+
+        .long-bar {
             border: 1px solid black;
             padding: 10px;
             text-align: left;
             vertical-align: top;
         }
-        .section{
+
+        .section {
             border: 1px solid black;
         }
+
         .section-title {
             font-weight: bold;
             background-color: #6b7280;
             color: white;
             text-align: center;
         }
+
         .signature img {
             width: 100px;
             height: auto;
         }
+
         .section-remarks {
             padding: 10px;
         }
 
         #printable-area {
-            page-break-after: always; /* Ensures footer appears at the bottom */
+            page-break-after: always;
+            /* Ensures footer appears at the bottom */
         }
+
         #signature-2 {
             display: flex;
             justify-content: space-around;
             align-items: center;
         }
-        #graphicDesignerTableBody tr td, #graphicDesignerTableHead tr th, #contentWriterTableBody tr td, #contentWriterTableHead tr th {
+
+        #graphicDesignerTableBody tr td,
+        #graphicDesignerTableHead tr th,
+        #contentWriterTableBody tr td,
+        #contentWriterTableHead tr th {
             border: none;
         }
-        #btn-container{
+
+        #btn-container {
             display: flex;
             gap: 2rem;
             padding: 1rem;
             justify-content: end;
             align-items: center;
         }
+
         #history-btn {
             padding-left: 1.75rem;
             padding-right: 1.75rem;
@@ -109,6 +133,7 @@ x{{-- @extends('layouts.application') --}}
             background-color: #4CAF50;
             border-radius: 5px;
         }
+
         #print-btn {
             padding-left: 1.75rem;
             padding-right: 1.75rem;
@@ -118,19 +143,22 @@ x{{-- @extends('layouts.application') --}}
             background-color: #c1c1c1;
             border-radius: 5px;
         }
+
         #signatures img {
             width: 10rem;
         }
-        
-</style>
+    </style>
+</head>
 
-<x-main-layout breadcumb="SMM" page="Edit Request Form">
-<div class="px-10 pt-10">
+<x-main-layout breadcumb="SMM / History Request Form" page="Edit Request Form">
+
+
     <body>
         <div id="btn-container">
             <div>
                 <button id="history-btn">
-                    <a href="{{url('/admin/smm/requestForm/history')}}"><i class="fa-solid fa-clock-rotate-left"></i> History</a>
+                    <a href="{{ url('/admin/smm/requestForm/history') }}"><i class="fa-solid fa-clock-rotate-left"></i>
+                        History</a>
                 </button>
             </div>
             <div>
@@ -138,120 +166,160 @@ x{{-- @extends('layouts.application') --}}
                     <i class="fa-solid fa-download"></i> Download
                 </button>
             </div>
-            
-            
+
+
         </div>
         <div id="printable-area">
             <div class="header">
                 <img src="{{ asset('/Assets/doc_header.png') }}" alt="Header">
                 <h2>Request Form</h2>
             </div>
-        
+
             <div class="section">
                 <div class="highlight"></div>
                 <table>
                     <tr>
                         <td><strong>Department:</strong><br>
-                            <p>{{$request_form?->requestedBy->roles->position}}</p>
+                            <p>{{ $request_form?->requestedBy->roles->position }}</p>
                         </td>
                         <td><strong>Date:</strong><br>
-                            <p>{{$request_form?->date}}</p>
+                            <p>{{ $request_form?->date }}</p>
                         </td>
                     </tr>
                 </table>
                 <div class="long-bar">
                     <p><strong>Requested By: </strong></p>
-                    <p>{{$request_form?->requestedBy->name}}</p>
+                    <p>{{ $request_form?->requestedBy->name }}</p>
                 </div>
                 <div class="gray-bar"></div>
                 <table>
                     <tr>
                         <td><strong>Particulars:</strong><br>
                             @php
-                                $selectedParticulars = collect($request_form?->particulars)->pluck('particular')->toArray();
+                                $selectedParticulars = collect($request_form?->particulars)
+                                    ->pluck('particular')
+                                    ->toArray();
                             @endphp
-                        
-                            <label><input type="checkbox" name="particulars[]" value="Domain" {{ in_array('Domain', $selectedParticulars) ? 'checked' : '' }}> Domain</label><br>
-                            <label><input type="checkbox" name="particulars[]" value="Hosting and Servers" {{ in_array('Hosting and Servers', $selectedParticulars) ? 'checked' : '' }}> Hosting and Servers</label><br>
-                            <label><input type="checkbox" name="particulars[]" value="Office Supplies" {{ in_array('Office Supplies', $selectedParticulars) ? 'checked' : '' }}> Office Supplies</label><br>
-                            <label><input type="checkbox" name="particulars[]" value="Fare" {{ in_array('Fare', $selectedParticulars) ? 'checked' : '' }}> Fare</label><br>
-                            <label><input type="checkbox" name="particulars[]" value="Petty Cash" {{ in_array('Petty Cash', $selectedParticulars) ? 'checked' : '' }}> Petty Cash</label><br>
-                            <label><input type="checkbox" name="particulars[]" value="Credit Card" {{ in_array('Credit Card', $selectedParticulars) ? 'checked' : '' }}> Credit Card</label><br>
-                            <label><input type="checkbox" name="particulars[]" value="Office Asset / Cash Advance" {{ in_array('Office Asset / Cash Advance', $selectedParticulars) ? 'checked' : '' }}> Office Asset / Cash Advance</label><br>
-                            <label><input type="checkbox" name="particulars[]" value="Car" {{ in_array('Car', $selectedParticulars) ? 'checked' : '' }}> Car</label><br>
-                            <label><input type="checkbox" name="particulars[]" value="Flyers" {{ in_array('Flyers', $selectedParticulars) ? 'checked' : '' }}> Flyers</label><br>
+
+                            <label><input type="checkbox" name="particulars[]" value="Domain"
+                                    {{ in_array('Domain', $selectedParticulars) ? 'checked' : '' }}>
+                                Domain</label><br>
+                            <label><input type="checkbox" name="particulars[]" value="Hosting and Servers"
+                                    {{ in_array('Hosting and Servers', $selectedParticulars) ? 'checked' : '' }}>
+                                Hosting and Servers</label><br>
+                            <label><input type="checkbox" name="particulars[]" value="Office Supplies"
+                                    {{ in_array('Office Supplies', $selectedParticulars) ? 'checked' : '' }}> Office
+                                Supplies</label><br>
+                            <label><input type="checkbox" name="particulars[]" value="Fare"
+                                    {{ in_array('Fare', $selectedParticulars) ? 'checked' : '' }}> Fare</label><br>
+                            <label><input type="checkbox" name="particulars[]" value="Petty Cash"
+                                    {{ in_array('Petty Cash', $selectedParticulars) ? 'checked' : '' }}> Petty
+                                Cash</label><br>
+                            <label><input type="checkbox" name="particulars[]" value="Credit Card"
+                                    {{ in_array('Credit Card', $selectedParticulars) ? 'checked' : '' }}> Credit
+                                Card</label><br>
+                            <label><input type="checkbox" name="particulars[]" value="Office Asset / Cash Advance"
+                                    {{ in_array('Office Asset / Cash Advance', $selectedParticulars) ? 'checked' : '' }}>
+                                Office Asset / Cash Advance</label><br>
+                            <label><input type="checkbox" name="particulars[]" value="Car"
+                                    {{ in_array('Car', $selectedParticulars) ? 'checked' : '' }}> Car</label><br>
+                            <label><input type="checkbox" name="particulars[]" value="Flyers"
+                                    {{ in_array('Flyers', $selectedParticulars) ? 'checked' : '' }}>
+                                Flyers</label><br>
                         </td>
                         <td>
-                            <label><input type="checkbox" name="particulars[]" value="for Multimedia Use" {{ in_array('for Multimedia Use', $selectedParticulars) ? 'checked' : '' }}> for Multimedia Use</label><br>
-                            <label><input type="checkbox" name="particulars[]" value="Cash Advance" {{ in_array('Cash Advance', $selectedParticulars) ? 'checked' : '' }}> Cash Advance</label><br>
-                            <label><input type="checkbox" name="particulars[]" value="Signage" {{ in_array('Signage', $selectedParticulars) ? 'checked' : '' }}> Signage</label><br>
-                            <label><input type="checkbox" name="particulars[]" value="Reimbursement" {{ in_array('Reimbursement', $selectedParticulars) ? 'checked' : '' }}> Reimbursement</label><br>
-                            <label><input type="checkbox" name="particulars[]" value="For Marketing Use" {{ in_array('For Marketing Use', $selectedParticulars) ? 'checked' : '' }}> For Marketing Use</label><br>
-                            <label><input type="checkbox" name="particulars[]" value="Ads - AUB" {{ in_array('Ads - AUB', $selectedParticulars) ? 'checked' : '' }}> Ads - AUB</label><br>
-                            <label><input type="checkbox" name="particulars[]" value="Repair and Maintenance" {{ in_array('Repair and Maintenance', $selectedParticulars) ? 'checked' : '' }}> Repair and Maintenance</label><br>
-                            <label><input type="checkbox" name="particulars[]" value="Refund" {{ in_array('Refund', $selectedParticulars) ? 'checked' : '' }}> Refund</label><br>
+                            <label><input type="checkbox" name="particulars[]" value="for Multimedia Use"
+                                    {{ in_array('for Multimedia Use', $selectedParticulars) ? 'checked' : '' }}>
+                                for Multimedia Use</label><br>
+                            <label><input type="checkbox" name="particulars[]" value="Cash Advance"
+                                    {{ in_array('Cash Advance', $selectedParticulars) ? 'checked' : '' }}> Cash
+                                Advance</label><br>
+                            <label><input type="checkbox" name="particulars[]" value="Signage"
+                                    {{ in_array('Signage', $selectedParticulars) ? 'checked' : '' }}>
+                                Signage</label><br>
+                            <label><input type="checkbox" name="particulars[]" value="Reimbursement"
+                                    {{ in_array('Reimbursement', $selectedParticulars) ? 'checked' : '' }}>
+                                Reimbursement</label><br>
+                            <label><input type="checkbox" name="particulars[]" value="For Marketing Use"
+                                    {{ in_array('For Marketing Use', $selectedParticulars) ? 'checked' : '' }}> For
+                                Marketing Use</label><br>
+                            <label><input type="checkbox" name="particulars[]" value="Ads - AUB"
+                                    {{ in_array('Ads - AUB', $selectedParticulars) ? 'checked' : '' }}> Ads -
+                                AUB</label><br>
+                            <label><input type="checkbox" name="particulars[]" value="Repair and Maintenance"
+                                    {{ in_array('Repair and Maintenance', $selectedParticulars) ? 'checked' : '' }}>
+                                Repair and Maintenance</label><br>
+                            <label><input type="checkbox" name="particulars[]" value="Refund"
+                                    {{ in_array('Refund', $selectedParticulars) ? 'checked' : '' }}>
+                                Refund</label><br>
                             <label>
-                                <input type="checkbox" name="particulars[]" value="Others" {{ in_array('Others', $selectedParticulars) ? 'checked' : '' }}>
-                                Others: <input type="text" name="other_particulars" class="border p-1" value="{{ in_array('Others', $selectedParticulars) ? $request_form?->other_particulars : '' }}">
+                                <input type="checkbox" name="particulars[]" value="Others"
+                                    {{ in_array('Others', $selectedParticulars) ? 'checked' : '' }}>
+                                Others: <input type="text" name="other_particulars" class="border p-1"
+                                    value="{{ in_array('Others', $selectedParticulars) ? $request_form?->other_particulars : '' }}">
                             </label>
                         </td>
-                        
+
                     </tr>
                 </table>
-                
+
                 <div class="long-bar" id="open-modal">
                     <strong>Description:</strong>
-                    <div class="text-sm text-gray-600 w-full max-h-[500px] overflow-y-auto bg-white border border-gray-300 p-2 rounded">
+                    <div
+                        class="text-sm text-gray-600 w-full max-h-[500px] overflow-y-auto bg-white border border-gray-300 p-2 rounded">
                         {!! $request_form?->description !!}
                     </div>
                 </div>
-    
+
                 <div id="signatures" class="p-5">
                     <div id="signature-2">
-                        
+
                         <div>
                             <strong>Requested By:</strong>
                             <p>{{ $request_form?->requestedBy->name ?? '' }}</p> <br>
-                            @if(!empty($request_form?->requestedBy->signature))
-                                <img src="{{ asset($request_form?->requestedBy->signature) }}" alt="Supervisor Signature">
+                            @if (!empty($request_form?->requestedBy->signature))
+                                <img src="{{ asset($request_form?->requestedBy->signature) }}"
+                                    alt="Supervisor Signature">
                             @endif
                         </div>
                         <div>
                             <strong>Received By:</strong>
                             <p>{{ $request_form?->receiver->name ?? '' }}</p> <br>
-                            @if ($request_form?->status == "Approved by Accounting")
-                                @if(!empty($request_form?->receiver->signature))
-                                    <img src="{{ asset($request_form?->receiver->signature) }}" alt="Supervisor Signature">
+                            @if ($request_form?->status == 'Approved by Accounting')
+                                @if (!empty($request_form?->receiver->signature))
+                                    <img src="{{ asset($request_form?->receiver->signature) }}"
+                                        alt="Supervisor Signature">
                                 @endif
                             @endif
                         </div>
-                        
+
                     </div>
-    
+
                     <div id="signature-2">
-    
+
                         <div>
                             <strong>Manager:</strong>
                             <p>{{ $request_form?->manager->name ?? '' }}</p> <br>
-                            @if ($request_form?->status != "Approved by Operation")
-                                @if(!empty($request_form?->receiver->signature))
-                                    <img src="{{ asset($request_form?->receiver->signature) }}" alt="Supervisor Signature">
+                            @if ($request_form?->status != 'Approved by Operation')
+                                @if (!empty($request_form?->receiver->signature))
+                                    <img src="{{ asset($request_form?->receiver->signature) }}"
+                                        alt="Supervisor Signature">
                                 @endif
                             @endif
-                        
-    
+
+
                         </div>
                     </div>
                 </div>
-                
+
             </div>
-        
+
             <div class="footer" style="page-break-before: always;">
                 <img src="{{ asset('/Assets/doc_footer.png') }}" alt="Footer">
-            </div>            
+            </div>
         </div>
     </body>
-</div>
+
 </x-main-layout>
 
 
@@ -263,85 +331,106 @@ x{{-- @extends('layouts.application') --}}
 <!-- Modal -->
 <div id="description-modal" class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden flex items-center justify-center">
     <div class="bg-white p-6 rounded-lg shadow-lg w-1/2">
-        <form id="description-form" action="{{ url('admin/smm/requestForm/update/' . $request_form?->id) }}" method="POST">
+        <form id="description-form" action="{{ url('admin/smm/requestForm/update/' . $request_form?->id) }}"
+            method="POST">
             @csrf
             <div class="h-40 overflow-y-auto">
                 <label>
-                    <input type="checkbox" name="particulars[]" value="Domain" {{ in_array('Domain', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="Domain"
+                        {{ in_array('Domain', $selectedParticulars) ? 'checked' : '' }}>
                     Domain
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="Hosting and Servers" {{ in_array('Hosting and Servers', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="Hosting and Servers"
+                        {{ in_array('Hosting and Servers', $selectedParticulars) ? 'checked' : '' }}>
                     Hosting and Servers
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="Office Supplies" {{ in_array('Office Supplies', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="Office Supplies"
+                        {{ in_array('Office Supplies', $selectedParticulars) ? 'checked' : '' }}>
                     Office Supplies
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="Fare" {{ in_array('Fare', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="Fare"
+                        {{ in_array('Fare', $selectedParticulars) ? 'checked' : '' }}>
                     Fare
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="Petty Cash" {{ in_array('Petty Cash', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="Petty Cash"
+                        {{ in_array('Petty Cash', $selectedParticulars) ? 'checked' : '' }}>
                     Petty Cash
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="Credit Card" {{ in_array('Credit Card', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="Credit Card"
+                        {{ in_array('Credit Card', $selectedParticulars) ? 'checked' : '' }}>
                     Credit Card
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="Office Asset / Cash Advance" {{ in_array('Office Asset / Cash Advance', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="Office Asset / Cash Advance"
+                        {{ in_array('Office Asset / Cash Advance', $selectedParticulars) ? 'checked' : '' }}>
                     Office Asset / Cash Advance
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="Car" {{ in_array('Car', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="Car"
+                        {{ in_array('Car', $selectedParticulars) ? 'checked' : '' }}>
                     Car
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="Flyers" {{ in_array('Flyers', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="Flyers"
+                        {{ in_array('Flyers', $selectedParticulars) ? 'checked' : '' }}>
                     Flyers
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="for Multimedia Use" {{ in_array('for Multimedia Use', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="for Multimedia Use"
+                        {{ in_array('for Multimedia Use', $selectedParticulars) ? 'checked' : '' }}>
                     for Multimedia Use
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="Cash Advance" {{ in_array('Cash Advance', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="Cash Advance"
+                        {{ in_array('Cash Advance', $selectedParticulars) ? 'checked' : '' }}>
                     Cash Advance
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="Signage" {{ in_array('Signage', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="Signage"
+                        {{ in_array('Signage', $selectedParticulars) ? 'checked' : '' }}>
                     Signage
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="Reimbursement" {{ in_array('Reimbursement', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="Reimbursement"
+                        {{ in_array('Reimbursement', $selectedParticulars) ? 'checked' : '' }}>
                     Reimbursement
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="For Marketing Use" {{ in_array('For Marketing Use', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="For Marketing Use"
+                        {{ in_array('For Marketing Use', $selectedParticulars) ? 'checked' : '' }}>
                     For Marketing Use
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="Ads - AUB" {{ in_array('Ads - AUB', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="Ads - AUB"
+                        {{ in_array('Ads - AUB', $selectedParticulars) ? 'checked' : '' }}>
                     Ads - AUB
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="Repair and Maintenance" {{ in_array('Repair and Maintenance', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="Repair and Maintenance"
+                        {{ in_array('Repair and Maintenance', $selectedParticulars) ? 'checked' : '' }}>
                     Repair and Maintenance
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="Refund" {{ in_array('Refund', $selectedParticulars) ? 'checked' : '' }}>
+                    <input type="checkbox" name="particulars[]" value="Refund"
+                        {{ in_array('Refund', $selectedParticulars) ? 'checked' : '' }}>
                     Refund
                 </label><br>
                 <label>
-                    <input type="checkbox" name="particulars[]" value="Others" {{ in_array('Others', $selectedParticulars) ? 'checked' : '' }}>
-                    Others: <input type="text" name="other_particulars" class="border p-1" value="{{ in_array('Others', $selectedParticulars) ? $request_form?->other_particulars : '' }}">
+                    <input type="checkbox" name="particulars[]" value="Others"
+                        {{ in_array('Others', $selectedParticulars) ? 'checked' : '' }}>
+                    Others: <input type="text" name="other_particulars" class="border p-1"
+                        value="{{ in_array('Others', $selectedParticulars) ? $request_form?->other_particulars : '' }}">
                 </label>
             </div>
             <div class="mt-4">
                 <h1 class="font-bold">Date:</h1>
-                <input type="date" name="date" class="border p-2 w-full rounded" value="{{ $request_form?->date }}">
+                <input type="date" name="date" class="border p-2 w-full rounded"
+                    value="{{ $request_form?->date }}">
             </div>
             <!-- Graphics Designer BUT CHANGED NAME TO MANAGER -->
             <div class="w-full col-span-2 lg:col-span-1">
@@ -358,7 +447,7 @@ x{{-- @extends('layouts.application') --}}
                     <p class="text-red-600 text-sm">{{ $message }}</p>
                 @enderror
             </div>
-            
+
             <div class="w-full col-span-2 lg:col-span-1">
                 <h1 class="font-bold">Auditor:</h1>
                 <div class="relative">
@@ -373,33 +462,39 @@ x{{-- @extends('layouts.application') --}}
                     <p class="text-red-600 text-sm">{{ $message }}</p>
                 @enderror
             </div>
-            
+
             <div class="mt-4">
                 <h1 class="font-bold">Description:</h1>
                 <textarea id="description-editor" name="description">{{ $request_form?->description }}</textarea>
             </div>
             <div class="mt-4 flex justify-end">
-                <button type="button" id="close-modal" class="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
-                <button type="submit" id="save-description" class="ml-2 px-4 py-2 bg-orange-500 text-white rounded">Save</button>
+                <button type="button" id="close-modal"
+                    class="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
+                <button type="submit" id="save-description"
+                    class="ml-2 px-4 py-2 bg-orange-500 text-white rounded">Save</button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- Content Writer Modal -->
-<div id="content-writer-modal" class="fixed inset-0 bg-gray-900 px-4 md:px-20 z-50 bg-opacity-50 flex items-center justify-center hidden">
+<div id="content-writer-modal"
+    class="fixed inset-0 bg-gray-900 px-4 md:px-20 z-50 bg-opacity-50 flex items-center justify-center hidden">
     <div class="bg-white w-full max-w-sm md:max-w-lg lg:max-w-2xl px-5 pb-10 pt-5 rounded-lg">
         <!-- Search & Close button -->
         <div class="w-full flex md:flex-row justify-between items-center flex-col-reverse lg:flex-row gap-4 mb-4">
             <div class="flex items-center w-full md:w-auto relative">
                 <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-500"></i>
-                <input type="text" id="searchContentWriterInput" class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search..." onkeyup="filterContentWriterTable()">
+                <input type="text" id="searchContentWriterInput"
+                    class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    placeholder="Search..." onkeyup="filterContentWriterTable()">
                 <button class="absolute right-2 px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">
                     <i class="fa-solid fa-filter"></i>
                 </button>
             </div>
             <div class="w-full flex justify-end md:w-auto">
-                <button onclick="closeContentWriterModal()" class="bg-[#fa7011] text-white px-4 py-2 rounded w-fit">Close</button>
+                <button onclick="closeContentWriterModal()"
+                    class="bg-[#fa7011] text-white px-4 py-2 rounded w-fit">Close</button>
             </div>
         </div>
         <!-- Table Container -->
@@ -416,9 +511,12 @@ x{{-- @extends('layouts.application') --}}
                     @forelse ($accounting as $accountant)
                         <tr class="border-b">
                             <td class="px-4 md:px-6 py-3">{{ $accountant->name }}</td>
-                            <td class="px-4 md:px-6 py-3">{{ Str::title(str_replace('_', ' ', $accountant->roles->position)) }}</td>
+                            <td class="px-4 md:px-6 py-3">
+                                {{ Str::title(str_replace('_', ' ', $accountant->roles->position)) }}</td>
                             <td class="px-4 md:px-6 py-3 text-center">
-                                <button onclick="selectContentWriter('{{ $accountant->id }}', '{{ $accountant->name }}')" class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
+                                <button
+                                    onclick="selectContentWriter('{{ $accountant->id }}', '{{ $accountant->name }}')"
+                                    class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
                                     Select
                                 </button>
                             </td>
@@ -440,19 +538,23 @@ x{{-- @extends('layouts.application') --}}
 </div>
 
 <!-- Graphics Designer Modal -->
-<div id="graphic-designer-modal" class="fixed inset-0 bg-gray-900 px-4 md:px-20 z-50 bg-opacity-50 flex items-center justify-center hidden">
+<div id="graphic-designer-modal"
+    class="fixed inset-0 bg-gray-900 px-4 md:px-20 z-50 bg-opacity-50 flex items-center justify-center hidden">
     <div class="bg-white w-full max-w-sm md:max-w-lg lg:max-w-2xl px-5 pb-10 pt-5 rounded-lg">
         <!-- Search & Close button -->
         <div class="w-full flex md:flex-row justify-between items-center flex-col-reverse lg:flex-row gap-4 mb-4">
             <div class="flex items-center w-full md:w-auto relative">
                 <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-500"></i>
-                <input type="text" id="searchGraphicDesignerInput" class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search..." onkeyup="filterGraphicDesignerTable()">
+                <input type="text" id="searchGraphicDesignerInput"
+                    class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    placeholder="Search..." onkeyup="filterGraphicDesignerTable()">
                 <button class="absolute right-2 px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">
                     <i class="fa-solid fa-filter"></i>
                 </button>
             </div>
             <div class="w-full flex justify-end md:w-auto">
-                <button onclick="closeGraphicDesignerModal()" class="bg-[#fa7011] text-white px-4 py-2 rounded w-fit">Close</button>
+                <button onclick="closeGraphicDesignerModal()"
+                    class="bg-[#fa7011] text-white px-4 py-2 rounded w-fit">Close</button>
             </div>
         </div>
         <!-- Table Container -->
@@ -469,9 +571,12 @@ x{{-- @extends('layouts.application') --}}
                     @foreach ($managers as $manager)
                         <tr class="border-b">
                             <td class="px-4 md:px-6 py-3">{{ $manager->name }}</td>
-                            <td class="px-4 md:px-6 py-3">{{ Str::title(str_replace('_', ' ', $manager->roles->position)) }}</td>
+                            <td class="px-4 md:px-6 py-3">
+                                {{ Str::title(str_replace('_', ' ', $manager->roles->position)) }}</td>
                             <td class="px-4 md:px-6 py-3 text-center">
-                                <button onclick="selectGraphicDesigner('{{ $manager->id }}', '{{ $manager->name }}')" class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
+                                <button
+                                    onclick="selectGraphicDesigner('{{ $manager->id }}', '{{ $manager->name }}')"
+                                    class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
                                     Select
                                 </button>
                             </td>
@@ -486,8 +591,8 @@ x{{-- @extends('layouts.application') --}}
 <!-- CKEditor Script -->
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 <script>
-        // Open Content Writer Modal
-        function openContentWriterModal() {
+    // Open Content Writer Modal
+    function openContentWriterModal() {
         document.getElementById('content-writer-modal').classList.remove('hidden');
     }
 
@@ -552,7 +657,7 @@ x{{-- @extends('layouts.application') --}}
         }
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         ClassicEditor
             .create(document.querySelector("#description-editor"))
             .then(editor => {
@@ -569,16 +674,16 @@ x{{-- @extends('layouts.application') --}}
         const saveButton = document.getElementById("save-description");
         const form = document.getElementById("description-form");
 
-        openModal.addEventListener("click", function () {
+        openModal.addEventListener("click", function() {
             modal.classList.remove("hidden");
         });
 
-        closeModal.addEventListener("click", function () {
+        closeModal.addEventListener("click", function() {
             modal.classList.add("hidden");
         });
 
         // Ensure CKEditor content is included in form submission
-        form.addEventListener("submit", function () {
+        form.addEventListener("submit", function() {
             document.querySelector("textarea[name='description']").value = editor.getData();
         });
     });
@@ -591,18 +696,21 @@ x{{-- @extends('layouts.application') --}}
         html2pdf(element, {
             margin: [10, 10, 10, 10], // Top, right, bottom, left margins
             filename: 'Job_Order.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { 
-                scale: 2, 
+            image: {
+                type: 'jpeg',
+                quality: 0.98
+            },
+            html2canvas: {
+                scale: 2,
                 logging: false,
-                scrollX: 0, 
-                scrollY: 0, 
+                scrollX: 0,
+                scrollY: 0,
                 windowWidth: document.documentElement.offsetWidth,
                 windowHeight: document.documentElement.offsetHeight
             },
-            jsPDF: { 
-                unit: 'mm', 
-                format: 'a4', 
+            jsPDF: {
+                unit: 'mm',
+                format: 'a4',
                 orientation: 'portrait'
             }
         }).then(() => {

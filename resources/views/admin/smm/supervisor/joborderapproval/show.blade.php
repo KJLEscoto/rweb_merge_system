@@ -1,10 +1,8 @@
-{{-- @extends('layouts.application') --}}
+<head>
+    <title>{{ env('APP_NAME') }} | SMM | Show Job Order Approval</title>
 
-@section('title', 'Job Order')
-@section('header', 'Job Order')
+    <script src="https://cdn.tailwindcss.com"></script>
 
-{{-- @section('content') --}}
-<script src="https://cdn.tailwindcss.com"></script>
     <style>
         .custom-shadow {
             box-shadow: 0 4px 6px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .3);
@@ -30,9 +28,9 @@
     <!-- Signature Pad Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/signature_pad"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
 
-<x-main-layout breadcumb="SMM" page="Show Job Order Approval">
-    <div class="px-10 pt-10">
+<x-main-layout breadcumb="SMM / Approval" page="Show Job Order Approval">
     <div class="h-auto gap-8 m-4 lg:m-10 p-4 lg:p-10 relative bg-white"
         style="box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.3); border-radius: 8px;">
         <div class="rounded-md text-white flex justify-end mb-10">
@@ -72,21 +70,23 @@
             <div class="hidden lg:block lg:col-span-1"></div>
             <div class="lg:col-span-4">
                 @php
-                    $isDisabled = $job_draft->status != "Submitted to Supervisor";
+                    $isDisabled = $job_draft->status != 'Submitted to Supervisor';
                 @endphp
                 <div class="mt-6 bg-white p-4 rounded-md shadow-md w-fit">
                     <div class="flex justify-between">
                         <h1 class="text-sm font-semibold">Choose Signature Method:</h1>
                         <div class="flex space-x-2">
                             <button id="useUpload"
-                                class="px-2 border rounded {{ Auth::user()->signature ? '' : 'bg-gray-200' }}" {{ $isDisabled ? 'disabled' : '' }}>
+                                class="px-2 border rounded {{ Auth::user()->signature ? '' : 'bg-gray-200' }}"
+                                {{ $isDisabled ? 'disabled' : '' }}>
                                 <i class="fa-solid fa-file-arrow-up" style="color: #fa7011;"></i>
                             </button>
                             <button id="usePad" class="px-2 border rounded" {{ $isDisabled ? 'disabled' : '' }}>
                                 <i class="fa-solid fa-file-signature" style="color: #fa7011;"></i>
                             </button>
                             <button id="useSavedSignature"
-                                class="px-2 border rounded {{ Auth::user()->signature ? 'bg-gray-200' : '' }}" {{ $isDisabled ? 'disabled' : '' }}>
+                                class="px-2 border rounded {{ Auth::user()->signature ? 'bg-gray-200' : '' }}"
+                                {{ $isDisabled ? 'disabled' : '' }}>
                                 <i class="fa-solid fa-cloud-arrow-up" style="color: #fa7011;"></i>
                             </button>
                         </div>
@@ -100,10 +100,12 @@
                         {{-- File Upload --}}
                         <div id="uploadSection" class="{{ Auth::user()->signature ? 'hidden' : '' }}">
                             <input type="file" name="signature_supervisor" accept="image/*"
-                                class="mt-2 border p-2 w-full rounded-md" id="signatureInput" {{ $isDisabled || $isDisabled ? 'disabled' : '' }}>
+                                class="mt-2 border p-2 w-full rounded-md" id="signatureInput"
+                                {{ $isDisabled || $isDisabled ? 'disabled' : '' }}>
                             <div
                                 class="mt-4 w-52 h-32 border border-gray-300 rounded-md overflow-hidden flex items-center justify-center bg-gray-100">
-                                <img id="imagePreview" src="{{ $isDisabled ? asset($job_draft->signature_supervisor) : '' }}"
+                                <img id="imagePreview"
+                                    src="{{ $isDisabled ? asset($job_draft->signature_supervisor) : '' }}"
                                     alt="Selected Image"
                                     class="{{ $isDisabled ? 'block' : 'hidden' }} w-full h-full object-cover">
                             </div>
@@ -114,7 +116,9 @@
                             <canvas id="signature-pad" class="w-[300px] lg:w-[400px]"
                                 style="height:200px; {{ $isDisabled ? 'pointer-events:none;opacity:0.5;' : '' }}"></canvas>
                             <div class="mt-2 flex">
-                                <button type="button" id="clearPad" class="bg-gray-500 text-white px-2 py-1 rounded mr-2" {{ $isDisabled ? 'disabled' : '' }}>
+                                <button type="button" id="clearPad"
+                                    class="bg-gray-500 text-white px-2 py-1 rounded mr-2"
+                                    {{ $isDisabled ? 'disabled' : '' }}>
                                     Clear
                                 </button>
                             </div>
@@ -132,7 +136,7 @@
                             </div>
                         </div>
 
-                        @if($errors->has('signature_supervisor') || $errors->has('signature_pad'))
+                        @if ($errors->has('signature_supervisor') || $errors->has('signature_pad'))
                             <p class="text-sm text-red-600">
                                 {{ $errors->first('signature_supervisor') ?: $errors->first('signature_pad') }}
                             </p>
@@ -146,7 +150,7 @@
 
                         @if ($errors->any())
                             @foreach ($errors->all() as $error)
-                                <p class="text-red-600">{{$error}}</p>
+                                <p class="text-red-600">{{ $error }}</p>
                             @endforeach
                         @endif
 
@@ -176,27 +180,30 @@
     </div>
     </div>
     </div>
-</div>
 </x-main-layout>
 
-    <!-- Decline Modal -->
-    <div id="declineModal" class="fixed inset-0 flex items-center justify-center hidden bg-gray-500 bg-opacity-50 z-50">
-        <div class="bg-white p-6 rounded-md w-[50%]">
-            <h2 class="text-xl font-bold mb-4">Decline Job Order</h2>
-            <form action="{{ url('/admin/smm/supervisor/approve/decline/' . $job_draft->id) }}" method="POST" id="declineForm">
-                @csrf
-                @method('PUT')
-                <div class="mb-4">
-                    <label for="declineReason" class="block text-sm font-semibold mb-2">Reason for Decline:</label>
-                    <textarea name="summary" id="declineReason" rows="4" class="w-full border rounded-md p-2" placeholder="Enter your reason..."></textarea>
-                </div>
-                <div class="flex justify-end space-x-2">
-                    <button type="button" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400" onclick="closeDeclineModal()">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Submit Decline</button>
-                </div>
-            </form>
-        </div>
+<!-- Decline Modal -->
+<div id="declineModal" class="fixed inset-0 flex items-center justify-center hidden bg-gray-500 bg-opacity-50 z-50">
+    <div class="bg-white p-6 rounded-md w-[50%]">
+        <h2 class="text-xl font-bold mb-4">Decline Job Order</h2>
+        <form action="{{ url('/admin/smm/supervisor/approve/decline/' . $job_draft->id) }}" method="POST"
+            id="declineForm">
+            @csrf
+            @method('PUT')
+            <div class="mb-4">
+                <label for="declineReason" class="block text-sm font-semibold mb-2">Reason for Decline:</label>
+                <textarea name="summary" id="declineReason" rows="4" class="w-full border rounded-md p-2"
+                    placeholder="Enter your reason..."></textarea>
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button type="button" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                    onclick="closeDeclineModal()">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Submit
+                    Decline</button>
+            </div>
+        </form>
     </div>
+</div>
 
 {{-- Include the signature modal (hidden by default) --}}
 <x-signature id="signatureModal" class="hidden" />
@@ -225,7 +232,7 @@
     }
 
     // Ensure the CKEditor content is updated into the textarea before the form is submitted
-    document.getElementById("declineForm").addEventListener("submit", function (event) {
+    document.getElementById("declineForm").addEventListener("submit", function(event) {
         if (declineEditor) {
             document.querySelector('#declineReason').value = declineEditor.getData();
         }
@@ -249,13 +256,13 @@
     resizeCanvas(); // Call on page load
 
     // Signature Method Buttons
-    document.getElementById("useUpload").addEventListener("click", function () {
+    document.getElementById("useUpload").addEventListener("click", function() {
         toggleSection("upload");
     });
-    document.getElementById("usePad").addEventListener("click", function () {
+    document.getElementById("usePad").addEventListener("click", function() {
         toggleSection("pad");
     });
-    document.getElementById("useSavedSignature").addEventListener("click", function () {
+    document.getElementById("useSavedSignature").addEventListener("click", function() {
         const userSignature = "{{ Auth::user()->signature }}";
         if (!userSignature) {
             document.getElementById("signatureModal").classList.remove("hidden");
@@ -292,21 +299,22 @@
 
         // Reset hidden inputs
         document.getElementById("signaturePadData").value = "";
-        document.getElementById("savedSignatureData").value = method === "savedSignature" ? "{{ asset(Auth::user()->signature) }}" : "";
+        document.getElementById("savedSignatureData").value = method === "savedSignature" ?
+            "{{ asset(Auth::user()->signature) }}" : "";
     }
 
     // Signature Pad Clear
-    document.getElementById("clearPad").addEventListener("click", function () {
+    document.getElementById("clearPad").addEventListener("click", function() {
         signaturePad.clear();
     });
 
     // Live Preview for File Upload
-    document.getElementById('signatureInput').addEventListener('change', function (event) {
+    document.getElementById('signatureInput').addEventListener('change', function(event) {
         const file = event.target.files[0];
         const preview = document.getElementById('imagePreview');
         if (file) {
             const reader = new FileReader();
-            reader.onload = function (e) {
+            reader.onload = function(e) {
                 preview.src = e.target.result;
                 preview.classList.remove('hidden');
             };
@@ -318,12 +326,12 @@
     });
 
     // Enable Submit Button on Agreement
-    document.getElementById('agree').addEventListener('change', function () {
+    document.getElementById('agree').addEventListener('change', function() {
         document.getElementById('submitBtn').disabled = !this.checked;
     });
 
     // Form Submission - Correctly capture signaturePad value
-    document.getElementById("approvalForm").addEventListener("submit", function (event) {
+    document.getElementById("approvalForm").addEventListener("submit", function(event) {
         // Capture Signature Pad data before submitting
         if (!document.getElementById("uploadSection").classList.contains("hidden")) {
             if (!document.getElementById("signatureInput").value) {
@@ -349,14 +357,14 @@
             }
         }
     });
-    </script>
+</script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const element = document.getElementById('draftContent');
-            if (element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth) {
-                element.classList.add('border', 'border-gray-200', 'p-4');
-            }
-        });
-    </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const element = document.getElementById('draftContent');
+        if (element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth) {
+            element.classList.add('border', 'border-gray-200', 'p-4');
+        }
+    });
+</script>
 {{-- @endsection --}}

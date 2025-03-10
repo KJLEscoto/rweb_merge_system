@@ -3,7 +3,7 @@
 </head>
 
 <x-main-layout breadcumb="DTR / Profile" page="Edit Profile">
-    <main class="h-auto w-full flex flex-col gap-5 px-10 py-10">
+    <main class="h-auto w-full flex flex-col gap-5">
         <form action="{{ route('admin.dtr.settings.update') }}" method="POST"
             class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5"
             enctype="multipart/form-data">
@@ -20,7 +20,7 @@
                 <x-modal.flash-msg msg="invalid" />
             @endif
 
-            <div class="flex items-start gap-10">
+            <div class="flex flex-col items-start gap-5">
                 <section class="flex items-end gap-5">
                     <div class="w-auto h-auto">
                         <div class="w-32 h-32 overflow-hidden rounded-full">
@@ -61,10 +61,9 @@
                         Remove Image
                     </button>
                 </section>
-
             </div>
 
-            <div class="p-10 border border-gray-300 rounded grid grid-cols-3 gap-7">
+            <div class="lg:p-10 p-7 border border-gray-300 rounded lg:grid lg:grid-cols-3 flex flex-col gap-7">
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">First Name</h1>
                     <input type="text" name="firstname" id="firstname" value="{{ $user->firstname }}"
