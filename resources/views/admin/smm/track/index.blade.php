@@ -75,7 +75,7 @@
                     </tr>
                 @empty
                     <tr class="h-[400px]">
-                        <td colspan="4" class="px-6 py-3">
+                        <td colspan="3" class="px-6 py-3">
                             <div class="flex h-full items-center flex-col justify-center space-y-4">
                                 <i class="far fa-grin-beam-sweat text-7xl" style="color: #fa7011;"></i>
                                 <p class="text-[#fa7011]">No Data Found</p>

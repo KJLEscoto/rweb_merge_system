@@ -334,8 +334,8 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
         Route::get('requestForm/create', [RequestFormController::class, 'create'])->name('admin.smm.requestForm');
         Route::post('requestForm/store', [RequestFormController::class, 'store']);
         Route::post('requestForm/approve/{id}', [RequestFormController::class, 'approve'])->name('requestForm.approve');
-        Route::get('requestForm/show/{id}', [RequestFormController::class, 'show']);
-        Route::get('requestForm/edit/{id}', [RequestFormController::class, 'edit']);
+        Route::get('requestForm/show/{id}', [RequestFormController::class, 'show'])->name('admin.smm.requestForm.show');
+        Route::get('requestForm/edit/{id}', [RequestFormController::class, 'edit'])->name('admin.smm.requestForm.edit');
         Route::put('requestForm/update/{id}', [RequestFormController::class, 'update']);
         Route::delete('requestForm/delete/{id}', [RequestFormController::class, 'delete']);
     });

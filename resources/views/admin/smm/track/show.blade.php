@@ -93,10 +93,10 @@
                                             </div>
                                             <div
                                                 onclick="window.location.href='{{ url('admin/smm/track/edit/draft/' . $job_draft->id) }}'">
-                                                <button {{ $job_draft->status === 'completed' ? 'disabled' : '' }}
-                                                    class="px-4 py-2 text-sm text-white {{ $job_draft->status === 'completed' ? 'bg-gray-500 rounded hover:bg-gray-600' : 'bg-blue-500 rounded hover:bg-blue-600' }}">
+                                                <button {{ ($job_draft->status === 'completed' || Auth::user()->roles->position === 'content_writer' || Auth::user()->roles->position === 'graphic_designer') ? 'disabled' : '' }}
+                                                    class="px-4 py-2 text-sm text-white {{ ($job_draft->status === 'completed' || Auth::user()->roles->position === 'content_writer' || Auth::user()->roles->position === 'graphic_designer') ? 'bg-gray-500 rounded hover:bg-gray-600 cursor-not-allowed' : 'bg-blue-500 rounded hover:bg-blue-600' }}">
                                                     Edit
-                                                </button>
+                                                </button>                                                
                                             </div>
                                             <div onclick="deleteJobOrder({{ $job_order->id }})"
                                                 class="px-4 py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600 cursor-pointer">
