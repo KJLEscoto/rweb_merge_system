@@ -8,6 +8,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\UserController;
 use App\Models\Histories;
+use App\Models\Page;
+use App\Models\Privilege;
+use App\Models\RoleChannel;
 use App\Models\User;
 use Carbon\Carbon;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -27,6 +30,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RoleSeeder::class,
+            PageSeeder::class,
+            PrivilegeSeeder::class,
         ]);
 
         // Fetch the admin role ID
@@ -79,11 +84,20 @@ class DatabaseSeeder extends Seeder
             'role_id' => 2,
         ]);
 
-
-
-        //@dd($request->all());
-
         // Call the register method
         $authController->adminRegister($request, app(FileController::class));
+
+        $user_id = User::where('email', 'like', '%admin2@email.com%')->first()->id;
+
+        //get all the privileges for the admin2
+        foreach (Page::get() as $page) {
+            foreach (Privilege::get() as $priv) {
+                RoleChannel::create([
+                    'user_id' => $user_id,
+                    'privilege_id' => $priv->id,
+                    'page_id' => $page->id,
+                ]);
+            }
+        }
     }
 }

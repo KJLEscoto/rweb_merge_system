@@ -71,5 +71,6 @@ class Kernel extends HttpKernel
         'user_role' => \App\Http\Middleware\RedirectBaseOnUserRole::class,
         'role' => \App\Http\Middleware\RoleMiddleware::class,
         'auth.redirect' => \App\Http\Middleware\RedirectIfNotAuthenticated::class,
+        'role_channel' => \App\Http\Middleware\RolesChannel::class,
     ];
 }
