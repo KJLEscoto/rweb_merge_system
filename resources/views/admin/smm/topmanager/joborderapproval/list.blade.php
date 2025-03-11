@@ -1,31 +1,31 @@
-{{-- @extends('layouts.application') --}}
+<head>
+    <title>{{ env('APP_NAME') }} | SMM | List Top Manager</title>
 
-@section('title', 'Clients')
-@section('header', 'List of Job Orders')
+    <script src="https://cdn.tailwindcss.com"></script>
 
-{{-- @section('content') --}}
-<script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .custom-shadow {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .3);
+        }
 
-<style>
-    .custom-shadow {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .3);
-    }
-    .custom-hover-shadow:hover {
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0), 0 4px 6px rgba(0, 0, 0, 0);
-        transition: box-shadow 0.3s ease;
-    }
-    .custom-focus-ring:focus {
-        outline: none;
-        box-shadow: 0 0 0 1px #fa7011;
-        transition: box-shadow 0.3s ease;
-    }
-</style>
+        .custom-hover-shadow:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0), 0 4px 6px rgba(0, 0, 0, 0);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .custom-focus-ring:focus {
+            outline: none;
+            box-shadow: 0 0 0 1px #fa7011;
+            transition: box-shadow 0.3s ease;
+        }
+    </style>
+</head>
 
 <x-main-layout breadcumb="SMM" page="List Top Manager">
-<div class="px-10 pt-10">
+
     <div class="overflow-x-auto overflow-y-auto bg-white shadow-md rounded-lg h-[500px]" style="max-height: 500px;">
         {{-- Success Message Component --}}
-        @if(session('Status'))
+        @if (session('Status'))
             <x-success />
         @endif
 
@@ -44,7 +44,7 @@
                     <tr class="project-row border-b">
                         <td class="w-[30%] px-4 py-3 truncate">{{ $job_draft->jobOrder->title }}</td>
                         <td class="w-[25%] px-4 py-3 truncate">
-                            @if ($job_draft->type == "content_writer")
+                            @if ($job_draft->type == 'content_writer')
                                 Content Writer - {{ $job_draft->contentWriter->name }}
                             @else
                                 Graphic Designer - {{ $job_draft->graphicDesigner->name }}
@@ -54,15 +54,20 @@
                             {{ $job_draft->date_target }}
                         </td>
                         <td class="w-[15%] px-4 py-3 text-center text-white">
-                            <p class="w-full px-2 py-1 rounded-lg text-wrap
-                                {{ $job_draft->status == 'completed' ? 'bg-green-400' : 
-                                ($job_draft->status == 'Revision' ? 'bg-red-600' : 'bg-[#fa6e117e]') }} ">
+                            <p
+                                class="w-full px-2 py-1 rounded-lg text-wrap
+                                {{ $job_draft->status == 'completed'
+                                    ? 'bg-green-400'
+                                    : ($job_draft->status == 'Revision'
+                                        ? 'bg-red-600'
+                                        : 'bg-[#fa6e117e]') }} ">
                                 {{ ucfirst($job_draft->status) }}
                             </p>
                         </td>
                         <td class="w-[15%] px-4 py-3 text-center border-b">
                             <a href="{{ url('admin/smm/topmanager/show/' . $job_draft->id) }}">
-                                <button class="px-4 py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600 whitespace-nowrap">
+                                <button
+                                    class="px-4 py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600 whitespace-nowrap">
                                     View Form
                                 </button>
                             </a>
@@ -81,8 +86,7 @@
             </tbody>
         </table>
     </div>
-</div>
+
 </x-main-layout>
 
 {{-- @endsection --}}
-

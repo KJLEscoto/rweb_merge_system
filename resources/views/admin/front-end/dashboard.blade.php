@@ -3,10 +3,10 @@
 </head>
 
 <x-main-layout breadcumb="Front-end" page="Dashboard">
-    <main class="h-auto w-full flex flex-col gap-5 px-16 py-10">
-        <div class="h-full w-full flex gap-5">
-            <div class="h-auto w-2/3 flex flex-col gap-5">
-                <div class="h-[220px] w-full overflow-hidden shadow-lg">
+    <main class="h-auto w-full flex flex-col gap-10">
+        <div class="h-full w-full flex lg:flex-row flex-col gap-5">
+            <div class="h-auto lg:!w-2/3 w-full flex flex-col gap-10">
+                <div class="h-full w-full overflow-hidden shadow-lg">
                     <img src="{{ asset('image/banner.png') }}" alt="image"
                         class="object-cover w-full h-full bg-gray-300">
                 </div>
@@ -16,10 +16,10 @@
                         <a href="#" class="text-xs font-medium hover:text-[#f56d11]">See
                             all</a>
                     </section>
-                    <section class="w-full h-[300px] bg-white shadow-lg p-5 flex flex-col gap-2 text-sm divide-y">
+                    <section class="w-full h-[300px] bg-white shadow-lg p-5 flex flex-col gap-2 divide-y">
                         <div class="grid grid-cols-3 font-semibold">
-                            <h1>Project Development</h1>
-                            <h1>Status</h1>
+                            <h1 class="lg:!text-sm text-xs flex items-end ">Project Development</h1>
+                            <h1 class="lg:!text-sm text-xs flex items-end ">Status</h1>
                             <h1></h1>
                         </div>
                         <div class="grid grid-cols-3 gap-y-3 text-xs h-full overflow-auto py-3">
@@ -37,8 +37,8 @@
                     </section>
                 </div>
             </div>
-            <div class="w-1/3 h-fit shadow-lg">
-                <div class="h-40 w-full overflow-hidden bg-gray-300 border group relative">
+            <div class="lg:!w-1/3 w-full h-fit shadow-lg">
+                <div class="lg:!h-60 h-40 w-full overflow-hidden bg-gray-300 border group relative">
                     <img class="h-full w-full object-cover" src="{{ asset('image/rweb_posting.png') }}" alt="image">
                     <div
                         class="opacity-0 group-hover:opacity-100 absolute bg-black/20 inset-0 transition-all flex items-center justify-center duration-200 ease-in">
@@ -48,36 +48,37 @@
                             Website</a>
                     </div>
                 </div>
-                <div class="flex gap-2 w-full items-center text-white justify-center bg-white p-3">
+                <div class="flex lg:gap-5 gap-3 w-full items-center text-white justify-center bg-white p-3">
                     <x-admin.socials icon="mage--facebook" />
                     <x-admin.socials icon="ri--instagram-fill" />
                     <x-admin.socials icon="formkit--pinterest" />
                 </div>
             </div>
         </div>
+
+        <article class="wrapper w-full">
+            <div class="marquee">
+                <div class="marquee__group">
+                    @for ($i = 1; $i <= 5; $i++)
+                        @for ($i = 1; $i <= 4; $i++)
+                            <img draggable="false" src="{{ asset('image/carousel-' . $i . '.png') }}"
+                                class="!w-full !h-auto rounded-lg shadow-lg">
+                        @endfor
+                    @endfor
+                </div>
+
+                <div aria-hidden="true" class="marquee__group">
+                    @for ($i = 1; $i <= 5; $i++)
+                        @for ($i = 1; $i <= 4; $i++)
+                            <img draggable="false" src="{{ asset('image/carousel-' . $i . '.png') }}"
+                                class="!w-full !h-auto rounded-lg shadow-lg">
+                        @endfor
+                    @endfor
+                </div>
+            </div>
+        </article>
+
     </main>
-
-    <article class="wrapper">
-        <div class="marquee">
-            <div class="marquee__group">
-                @for ($i = 1; $i <= 5; $i++)
-                    @for ($i = 1; $i <= 4; $i++)
-                        <img draggable="false" src="{{ asset('image/carousel-' . $i . '.png') }}"
-                            class="!w-full !h-auto rounded-lg shadow-lg">
-                    @endfor
-                @endfor
-            </div>
-
-            <div aria-hidden="true" class="marquee__group">
-                @for ($i = 1; $i <= 5; $i++)
-                    @for ($i = 1; $i <= 4; $i++)
-                        <img draggable="false" src="{{ asset('image/carousel-' . $i . '.png') }}"
-                            class="!w-full !h-auto rounded-lg shadow-lg">
-                    @endfor
-                @endfor
-            </div>
-        </div>
-    </article>
 
     <style>
         :root {

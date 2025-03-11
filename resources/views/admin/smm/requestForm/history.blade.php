@@ -1,39 +1,41 @@
-{{-- @extends('layouts.application') --}}
+<head>
+    <title>{{ env('APP_NAME') }} | SMM | History Request Form</title>
 
-@section('title', 'Job Order')
-@section('header', 'Request Form History')
+    <script src="https://cdn.tailwindcss.com"></script>
 
-{{-- @section('content') --}}
-<script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .custom-shadow {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .3);
+        }
 
-<style>
-    .custom-shadow {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .3);
-    }
-    .active-tab {
-        border-bottom: 2px solid #fa7011;
-    }
-    #approval-link {
-        text-decoration: underline;
-    }
-    /* Add a minimum width to each column */
-    th, td {
-        min-width: 150px;
-    }
-</style>
+        .active-tab {
+            border-bottom: 2px solid #fa7011;
+        }
 
+        #approval-link {
+            text-decoration: underline;
+        }
+
+        /* Add a minimum width to each column */
+        th,
+        td {
+            min-width: 150px;
+        }
+    </style>
+</head>
 
 <x-main-layout breadcumb="SMM" page="History Request Form">
-<div class="px-10 pt-10">
-    @if(session('Status'))
+
+    @if (session('Status'))
         <x-success />
     @endif
 
     <div class="w-full h-fit flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
         <div class="flex items-center w-full md:w-auto relative">
             <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-500"></i>
-            <input type="text" id="searchInput" class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                   placeholder="Search..." onkeyup="filterTable()" />
+            <input type="text" id="searchInput"
+                class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                placeholder="Search..." onkeyup="filterTable()" />
         </div>
 
         {{-- <div class="flex justify-between items-center gap-4 px-10">
@@ -63,43 +65,48 @@
                     <tr class="project-row border-b text-sm" data-status="{{ strtolower($request_form->status) }}">
                         <td class="px-4 py-3">
                             <div class="flex items-center space-x-4">
-                                <a id="approval-link" href="{{ url('/admin/smm/requestForm/show/' . $request_form->id) }}" class="text-blue-500 hover:underline">
+                                <a id="approval-link"
+                                    href="{{ url('/admin/smm/requestForm/show/' . $request_form->id) }}"
+                                    class="text-blue-500 hover:underline">
                                     View
                                 </a>
-                                <form action="{{ url('/admin/smm/requestForm/approve/' . $request_form->id) }}" method="POST" class="inline">
+                                <form action="{{ url('/admin/smm/requestForm/approve/' . $request_form->id) }}"
+                                    method="POST" class="inline">
                                     @csrf
-                                    <button 
-                                        {{ (Auth::user()->role_id === 6) || (Auth::user()->role_id === 5 && $request_form->status === "Approved by Top Manager") || (Auth::user()->role_id === 7 && $request_form->status === "Approved by Accounting" || Auth::user()->role_id === 7 && $request_form->status === "Approved by Operation") ? "disabled" : "" }}
+                                    <button
+                                        {{ Auth::user()->role_id === 6 || (Auth::user()->role_id === 5 && $request_form->status === 'Approved by Top Manager') || ((Auth::user()->role_id === 7 && $request_form->status === 'Approved by Accounting') || (Auth::user()->role_id === 7 && $request_form->status === 'Approved by Operation')) ? 'disabled' : '' }}
                                         type="submit"
-                                        class="px-3 py-1 rounded text-white {{ (Auth::user()->role_id === 6) || (Auth::user()->role_id === 5 && $request_form->status === "Approved by Top Manager") || (Auth::user()->role_id === 7 && $request_form->status === "Approved by Accounting" || Auth::user()->role_id === 7 && $request_form->status === "Approved by Operation") ? "bg-gray-300" : "bg-green-500" }}">
+                                        class="px-3 py-1 rounded text-white {{ Auth::user()->role_id === 6 || (Auth::user()->role_id === 5 && $request_form->status === 'Approved by Top Manager') || ((Auth::user()->role_id === 7 && $request_form->status === 'Approved by Accounting') || (Auth::user()->role_id === 7 && $request_form->status === 'Approved by Operation')) ? 'bg-gray-300' : 'bg-green-500' }}">
                                         Approve
                                     </button>
                                 </form>
                             </div>
                         </td>
-                        
-                        
-                        
-                        <td class="px-4 py-3">{{$request_form->id}}</td>
+
+
+
+                        <td class="px-4 py-3">{{ $request_form->id }}</td>
                         <td class="px-4 py-3">
-                            @if(Auth::user()->role_id == 7)
+                            @if (Auth::user()->role_id == 7)
                                 <span class="text-gray-400 cursor-not-allowed">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </span>
                             @else
-                                <a href="{{ url('/admin/smm/requestForm/edit/' . $request_form->id) }}" class="text-blue-500 hover:text-blue-700">
+                                <a href="{{ url('/admin/smm/requestForm/edit/' . $request_form->id) }}"
+                                    class="text-blue-500 hover:text-blue-700">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
                             @endif
                         </td>
-                        
+
                         <td class="px-4 py-3">
-                            @if(Auth::user()->role_id == 7)
+                            @if (Auth::user()->role_id == 7)
                                 <span class="text-gray-400">
                                     <i class="fa-solid fa-trash"></i>
                                 </span>
                             @else
-                                <form action="{{ url('/admin/smm/requestForm/delete/' . $request_form->id) }}" method="POST" class="inline-block">
+                                <form action="{{ url('/admin/smm/requestForm/delete/' . $request_form->id) }}"
+                                    method="POST" class="inline-block">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-500 hover:text-red-700 focus:outline-none">
@@ -108,17 +115,17 @@
                                 </form>
                             @endif
                         </td>
-                        
-                        
-                        <td class="px-4 py-3">{{$request_form->requestedBy->name}}</td>
+
+
+                        <td class="px-4 py-3">{{ $request_form->requestedBy->name }}</td>
                         <td class="px-4 py-3">
                             @foreach ($request_form->particulars as $particular)
-                                {{$particular->particular}} <br>
+                                {{ $particular->particular }} <br>
                             @endforeach
                         </td>
-                        <td class="px-4 py-3">{{$request_form->status}}</td>
+                        <td class="px-4 py-3">{{ $request_form->status }}</td>
                         <td class="px-4 py-3">{!! $request_form->description !!}</td>
-                        <td class="px-4 py-3">{{$request_form->date}}</td>
+                        <td class="px-4 py-3">{{ $request_form->date }}</td>
                     </tr>
                 @empty
                     <tr>
@@ -133,7 +140,7 @@
             </tbody>
         </table>
     </div>
-</div>
+
 </x-main-layout>
 
 <script>
@@ -151,8 +158,10 @@
         buttons.forEach(button => button.classList.remove('active-tab'));
         rows.forEach(row => {
             let rowStatus = row.getAttribute("data-status");
-            if (status === 'pending') row.style.display = (rowStatus === 'submitted to operations') ? "" : "none";
-            else if (status === 'submitted') row.style.display = (rowStatus !== 'revision' && rowStatus !== 'submitted to operations') ? "" : "none";
+            if (status === 'pending') row.style.display = (rowStatus === 'submitted to operations') ? "" :
+                "none";
+            else if (status === 'submitted') row.style.display = (rowStatus !== 'revision' && rowStatus !==
+                'submitted to operations') ? "" : "none";
             else row.style.display = (rowStatus !== 'revision') ? "" : "none";
         });
         document.getElementById(status + 'Btn').classList.add('active-tab');

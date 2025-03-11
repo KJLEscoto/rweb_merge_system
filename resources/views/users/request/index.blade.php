@@ -17,7 +17,7 @@
         <div class="flex lg:!flex-row flex-col justify-between gap-5 items-center">
 
             <!-- Search Input -->
-            <section class="w-1/2">
+            <section class="lg:w-1/2 w-full">
                 <div class="w-full relative flex items-center">
                     <span class="meteor-icons--search w-5 h-5 absolute left-3 text-gray-500"></span>
                     <input type="text" name="search" id="search"

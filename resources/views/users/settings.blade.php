@@ -6,7 +6,7 @@
     <x-modal.forgot-password id="forgot-password-modal" />
     <x-modal.confirmation-email id="confirmation-email-modal" />
     <div class="w-full">
-        <x-form.container routeName="users.settings.update" method="POST" className="h-auto w-full flex flex-col gap-5"
+        <x-form.container routeName="users.settings.update" method="POST" className="h-auto w-full flex flex-col"
             enctype="multipart/form-data">
             @method('PUT')
 
@@ -21,7 +21,7 @@
             @endif
 
             <div
-                class="w-full flex items-center justify-center gap-5 bg-white p-3 border border-gray-200 shadow-lg sticky top-5 z-30 rounded-full">
+                class="w-full flex items-center justify-start gap-5 bg-white p-3 border border-orange-300 shadow-lg sticky top-0 z-30 rounded">
                 <x-button primary label="Save Changes" submit leftIcon="eva--save-outline" className="px-6" />
                 <x-button label="Reset Password" button openModal="forgot-password-modal"
                     className="text-[#F57D11] cursor-pointer hover:underline modal-button lg:text-base text-sm" />

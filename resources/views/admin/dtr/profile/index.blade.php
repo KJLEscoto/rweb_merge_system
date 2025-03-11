@@ -3,7 +3,7 @@
 </head>
 
 <x-main-layout breadcumb="DTR" page="Profile">
-    <main class="h-auto w-full flex flex-col gap-5 px-10 py-10">
+    <main class="h-auto w-full flex flex-col gap-5">
         <div class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
             <div class="flex items-start justify-between gap-5">
                 <section class="flex items-end gap-5">
@@ -40,12 +40,12 @@
                 </section>
 
                 <section class="hover:scale-105 transition">
-                    <a class="text-sm text-white bg-[#f56d11] px-5 py-2 rounded font-medium"
+                    <a class="text-sm text-white bg-[#f56d11] px-5 py-2 rounded font-medium text-nowrap"
                         href="{{ route('admin.dtr.profile.edit') }}">Edit Profile</a>
                 </section>
             </div>
 
-            <div class="p-10 border border-gray-300 rounded grid grid-cols-3 gap-7">
+            <div class="lg:p-10 p-7 border border-gray-300 rounded lg:grid lg:grid-cols-3 flex flex-col gap-7">
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">First Name</h1>
                     <p class="text-gray-600 capitalize">

@@ -47,46 +47,47 @@
 
 <x-main-layout>
     <main class="overflow-hidden">
-        <div class="h-auto w-full bg-white grid grid-cols-12 relative">
-            <section id="right-side" class="h-[calc(100vh)] overflow-auto col-span-8 flex justify-center items-center">
+        <div class="lg:h-auto h-screen w-full bg-white lg:grid lg:grid-cols-12 relative">
+            <section id="right-side"
+                class="lg:h-[calc(100vh)] h-full lg:py-0 py-10 overflow-auto col-span-8 lg:flex justify-center items-center">
                 <div class="container mx-auto max-w-screen-xl">
-                    <div class="w-full px-20 space-y-20">
-                        <div class="space-y-10">
+                    <div class="w-full lg:px-20 px-10 space-y-20">
+                        <div class="space-y-10 w-full">
                             <div class="w-40 h-2 bg-gradient-to-r from-[#F57D11] via-[#F57D11]/90 to-[#F53C11]"></div>
 
                             <div class="space-y-5">
                                 <section class="flex items-end gap-1">
-                                    <img class="w-auto h-16" src="{{ asset('image/rweb_icon.png') }}">
-                                    <h1 class="font-bold text-5xl text-gray-700">Web System</h1>
+                                    <img class="w-auto lg:h-16 h-10" src="{{ asset('image/rweb_icon.png') }}">
+                                    <h1 class="font-bold lg:text-5xl md:text-3xl text-xl text-gray-700">Web System</h1>
                                 </section>
-                                <p class="text-gray-600">Streamlining operations with an all-in-one
+                                <p class="text-gray-600 lg:w-2/3 lg:text-base text-sm">Streamlining operations with an
+                                    all-in-one
                                     system for
                                     <span class="font-bold">SMM</span>,
                                     <span class="font-bold">Front-end</span>,
-                                    <br>
                                     and <span class="font-bold">OJT Daily Time
                                         Records</span>.
                                 </p>
                             </div>
 
-                            <div class="space-y-3">
-                                <h1 class="font-semibold text-lg text-gray-700">For Intern (OJT)</h1>
-                                <div class="flex items-center gap-5">
-                                    <a href="{{ route('show.register') }}"
-                                        class="px-10 py-3 rounded relative overflow-hidden font-medium text-white flex items-center justify-center gap-2 animate-transition bg-gradient-to-r from-[#F57D11] via-[#F57D11]/70 to-[#F53C11] hover:bg-[#F53C11] disabled:opacity-50 lg:text-sm text-xs cursor-pointer">
-                                        Create Account
-                                    </a>
+                            <div class="space-y-3 w-full">
+                                <h1 class="font-semibold lg:text-lg text-base text-gray-700">For Intern (OJT)</h1>
+                                <div class="flex items-center gap-5 w-full">
                                     <a href="{{ route('show.login') }}"
-                                        class="px-14 py-3 border rounded text-[#F57D11] hover:border-[#F57D11] animate-transition flex items-center justify-center gap-2 lg:text-sm text-xs cursor-pointer font-medium">
-                                        Log In
+                                        class="px-8 py-3 rounded relative overflow-hidden font-medium text-white flex items-center justify-center gap-2 animate-transition bg-gradient-to-r from-[#F57D11] via-[#F57D11]/70 to-[#F53C11] hover:bg-[#F53C11] disabled:opacity-50 lg:text-sm text-xs cursor-pointer">
+                                        Login
+                                    </a>
+                                    <a href="{{ route('show.register') }}"
+                                        class="px-8 py-3 border rounded text-[#F57D11] hover:border-[#F57D11] animate-transition flex items-center w-fit justify-center gap-2 lg:text-sm text-xs cursor-pointer font-medium">
+                                        Create Account
                                     </a>
                                 </div>
                             </div>
 
                             <div class="space-y-3">
-                                <h1 class="font-semibold text-lg text-gray-700">SMM Client</h1>
+                                <h1 class="font-semibold lg:text-lg text-base text-gray-700">SMM Client</h1>
                                 <a href="{{ route('admin.smm.login') }}"
-                                    class="px-10 py-3 w-fit rounded relative overflow-hidden font-medium text-white flex items-center justify-center gap-2 animate-transition bg-gradient-to-r from-[#F57D11] via-[#F57D11]/70 to-[#F53C11] hover:bg-[#F53C11] disabled:opacity-50 lg:text-sm text-xs cursor-pointer">
+                                    class="px-8 py-3 w-fit rounded relative overflow-hidden font-medium text-white flex items-center justify-center gap-2 animate-transition bg-gradient-to-r from-[#F57D11] via-[#F57D11]/70 to-[#F53C11] hover:bg-[#F53C11] disabled:opacity-50 lg:text-sm text-xs cursor-pointer">
                                     Login here
                                     <span class="eva--arrow-forward-outline w-5 h-5"></span>
                                 </a>
@@ -112,7 +113,7 @@
             </section>
 
             <section id="left-side"
-                class="h-[calc(100vh)] shadow-xl scale-x-[-1] col-span-4 bg-center bg-no-repeat bg-cover "
+                class="lg:h-[calc(100vh)] lg:block hidden h-full shadow-xl scale-x-[-1] col-span-4 bg-center bg-no-repeat bg-cover "
                 style="background-image: url('resources/img/diamond-pattern.png')">
             </section>
         </div>

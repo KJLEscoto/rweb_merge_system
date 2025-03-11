@@ -1,33 +1,34 @@
-{{-- @extends('layouts.application') --}}
+<head>
+    <title>{{ env('APP_NAME') }} | SMM | Approval</title>
 
-@section('title', 'Job Order')
-@section('header', 'List of Job Orders')
+    <script src="https://cdn.tailwindcss.com"></script>
 
-{{-- @section('content') --}}
-<script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .custom-shadow {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .3);
+        }
 
-<style>
-    .custom-shadow {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .3);
-    }
-    .custom-hover-shadow:hover {
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0), 0 4px 6px rgba(0, 0, 0, 0);
-        transition: box-shadow 0.3s ease;
-    }
-    .custom-focus-ring:focus {
-        outline: none;
-        box-shadow: 0 0 0 1px #fa7011;
-        transition: box-shadow 0.3s ease;
-    }
-    .active-tab {
-        border-bottom: 2px solid #fa7011;
-    }
-</style>
+        .custom-hover-shadow:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0), 0 4px 6px rgba(0, 0, 0, 0);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .custom-focus-ring:focus {
+            outline: none;
+            box-shadow: 0 0 0 1px #fa7011;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .active-tab {
+            border-bottom: 2px solid #fa7011;
+        }
+    </style>
+</head>
 
 <x-main-layout breadcumb="SMM" page="Approval">
-<div class="px-10 pt-10">
+
     {{-- Success Message Component --}}
-    @if(session('Status'))
+    @if (session('Status'))
         <x-success />
     @endif
 
@@ -35,8 +36,9 @@
     <div class="w-full h-fit flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
         <div class="flex items-center w-full md:w-auto relative">
             <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-500"></i>
-            <input type="text" id="searchInput" class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                   placeholder="Search..." onkeyup="filterTable()" />
+            <input type="text" id="searchInput"
+                class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                placeholder="Search..." onkeyup="filterTable()" />
         </div>
 
         <div class="flex justify-between items-center gap-4 px-10">
@@ -66,23 +68,30 @@
                         data-designated="{{ strtolower($job_draft->type == 'content_writer' ? 'content writer - ' . $job_draft->contentWriter->name : 'graphic designer - ' . $job_draft->graphicDesigner->name) }}">
                         <td class="w-[25%] px-2 sm:px-4 py-2 sm:py-3 truncate">{{ $job_draft->jobOrder->title }}</td>
                         <td class="w-[25%] px-2 sm:px-4 py-2 sm:py-3 truncate">
-                            @if ($job_draft->type == "content_writer")
+                            @if ($job_draft->type == 'content_writer')
                                 Content Writer - {{ $job_draft->contentWriter->name }}
                             @else
                                 Graphic Designer - {{ $job_draft->graphicDesigner->name }}
                             @endif
                         </td>
-                        <td class="w-[20%] px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">{{ $job_draft->date_target }}</td>
+                        <td class="w-[20%] px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">{{ $job_draft->date_target }}
+                        </td>
                         <td class="w-[15%] px-2 sm:px-4 py-2 sm:py-3 text-center text-white">
-                            <p class="w-full px-2 py-1 rounded-lg text-wrap
-                                {{ $job_draft->status == 'completed' ? 'bg-green-400' : 
-                                ($job_draft->status == 'Revision' ? 'bg-red-600' : 'bg-[#fa6e117e]') }} ">
+                            <p
+                                class="w-full px-2 py-1 rounded-lg text-wrap
+                                {{ $job_draft->status == 'completed'
+                                    ? 'bg-green-400'
+                                    : ($job_draft->status == 'Revision'
+                                        ? 'bg-red-600'
+                                        : 'bg-[#fa6e117e]') }} ">
                                 {{ ucfirst($job_draft->status) }}
                             </p>
                         </td>
                         <td class="w-[15%] px-2 sm:px-4 py-2 sm:py-3 text-center border-b">
                             <a href="{{ url('admin/smm/supervisor/approve/show/' . $job_draft->id) }}">
-                                <button class="px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm text-white  rounded whitespace-nowrap {{$job_draft->status !== 'Submitted to Supervisor' ? "cursor-not-allowed bg-gray-400" : "bg-green-500 hover:bg-green-600"}}" {{$job_draft->status !== 'Submitted to Supervisor' ? "disabled" : ""}}>
+                                <button
+                                    class="px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm text-white  rounded whitespace-nowrap {{ $job_draft->status !== 'Submitted to Supervisor' ? 'cursor-not-allowed bg-gray-400' : 'bg-green-500 hover:bg-green-600' }}"
+                                    {{ $job_draft->status !== 'Submitted to Supervisor' ? 'disabled' : '' }}>
                                     View Form
                                 </button>
                             </a>
@@ -101,7 +110,7 @@
             </tbody>
         </table>
     </div>
-</div>
+
 </x-main-layout>
 
 {{-- JavaScript --}}
@@ -141,7 +150,8 @@
             }
             // Submitted: All except "Revision" and "Submitted to Operations"
             else if (status === 'submitted') {
-                row.style.display = (rowStatus !== 'revision' && rowStatus !== 'submitted to supervisor') ? "" : "none";
+                row.style.display = (rowStatus !== 'revision' && rowStatus !== 'submitted to supervisor') ? "" :
+                    "none";
             }
             // All: All except "Revision"
             else if (status === 'all') {

@@ -14,7 +14,7 @@
         <x-modal.flash-msg msg="invalid" />
     @endif
 
-    <main class="h-auto w-full flex flex-col gap-5 px-10 py-10">
+    <main class="h-auto w-full flex flex-col gap-5">
         <form action="{{ route('admin.dtr.interns.create.post') }}" method="POST"
             class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
             @csrf

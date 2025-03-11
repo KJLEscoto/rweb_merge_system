@@ -1,68 +1,77 @@
-<div class="flex items-center gap-5 justify-end bg-[#f56d11] text-white px-24 py-6 rounded-bl-[50px] shadow-lg">
-    <p>Hi, <span class="capitalize">{{ Auth::user()->firstname }}</span>!</p>
+<div
+    class="flex items-center md:gap-5 gap-3 justify-end bg-[#f56d11] text-white lg:pl-24 lg:pr-10 px-10 lg:py-6 py-4 lg:rounded-bl-[50px] lg:w-fit w-full shadow-lg">
+    <div class="col-span-1 flex items-center justify-start w-full">
+        <button id="admin-menu-toggle" class="text-2xl lg:hidden w-fit h-fit">
+            ☰
+        </button>
+    </div>
+    <span class="sm:block hidden ">
+        <div class="flex flex-col items-end justify-end">
+            <p class="text-nowrap font-semibold">Hi, <span class="capitalize">{{ Auth::user()->firstname }}</span>!</p>
+            <p class=" text-gray-200 text-sm font-medium">{{ Auth::user()->roles->position }}</p>
+        </div>
+    </span>
     {{-- <h1 class="absolute top-0 z-10 px-3 py-1 rounded bg-[#f56d11] text-white text-sm -left-12">DTR</h1> --}}
     <!-- Profile Dropdown -->
     @php
-        $admin_roles = [
-            'admin',
-            'top_manager',
-            'supervisor',
-            'operations',
-        ];
+        $admin_roles = ['admin', 'top_manager', 'supervisor', 'operations'];
     @endphp
-    @if(
-        in_array(Auth::user()->roles->position, $admin_roles)
-    )
+    @if (in_array(Auth::user()->roles->position, $admin_roles))
         <div class="dropdown relative inline-flex hover:scale-105 transition">
-        <button type="button" id="dropdown-profile" data-target="dropdown-show-profile"
-            class="dropdown-profile inline-flex w-16 h-16 overflow-hidden rounded-full border-4 border-[#fdb783]/50"
-            onclick="toggleDropdown()">
-            <img draggable="false"
-                src="{{ \App\Models\File::where(
-                    'id',
-                    \App\Models\Profile::where('id', Auth::user()->profile_id)->first()->file_id,
-                )->first()->path . '?=s100?t=' . time() }}"
-                alt="user profile" class="w-full h-full object-cover border-4 bg-white rounded-full border-[#fdb783]">
-        </button>
+            <span class="group">
+                <button type="button" id="dropdown-profile" data-target="dropdown-show-profile"
+                    class="dropdown-profile inline-flex w-16 h-16 overflow-hidden rounded-full border-4 border-transparent group-hover:border-[#fdb783]/50"
+                    onclick="toggleDropdown()">
+                    <img draggable="false"
+                        src="{{ \App\Models\File::where(
+                            'id',
+                            \App\Models\Profile::where('id', Auth::user()->profile_id)->first()->file_id,
+                        )->first()->path .
+                            '?=s100?t=' .
+                            time() }}"
+                        alt="user profile"
+                        class="w-full h-full border-2 border-white object-cover bg-white rounded-full">
+                </button>
+            </span>
 
-        <!-- Dropdown Menu -->
-        <div id="dropdown-show-profile"
-            class="dropdown-menu-profile hidden rounded-lg shadow-lg border border-gray-300 bg-white absolute top-full right-0 w-72 divide-y divide-gray-200 text-black">
-            @php
-                $menuItems = [
-                    'admin.smm*' => ['label' => 'SMM', 'route' => 'admin.smm.dashboard'],
-                    'admin.dtr*' => ['label' => 'DTR', 'route' => 'admin.dtr.dashboard'],
-                    'admin.front-end*' => ['label' => 'FRONT-END', 'route' => 'admin.front-end.dashboard'],
-                ];
-            @endphp
+            <!-- Dropdown Menu -->
+            <div id="dropdown-show-profile"
+                class="dropdown-menu-profile hidden rounded-lg shadow-lg border border-gray-300 bg-white absolute top-full right-0 lg:w-72 w-40 divide-y divide-gray-200 text-black">
+                @php
+                    $menuItems = [
+                        'admin.smm*' => ['label' => 'SMM', 'route' => 'admin.smm.dashboard'],
+                        'admin.dtr*' => ['label' => 'DTR', 'route' => 'admin.dtr.dashboard'],
+                        'admin.front-end*' => ['label' => 'FRONT-END', 'route' => 'admin.front-end.dashboard'],
+                    ];
+                @endphp
 
-            <ul class="py-2">
-                @foreach ($menuItems as $route => $item)
-                    <li>
-                        <a href="{{ route($item['route']) }}" @class([
-                            'block px-6 py-2 font-semibold cursor-pointer',
-                            'bg-[#f56d11] text-white' => Request::routeIs($route),
-                            'hover:bg-gray-100 text-gray-900' => !Request::routeIs($route),
-                        ])>
-                            {{ $item['label'] }}
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
+                <ul class="py-2">
+                    @foreach ($menuItems as $route => $item)
+                        <li>
+                            <a href="{{ route($item['route']) }}" @class([
+                                'block px-6 py-2 font-semibold cursor-pointer lg:text-base text-sm',
+                                'bg-[#f56d11] text-white' => Request::routeIs($route),
+                                'hover:bg-gray-100 text-gray-900' => !Request::routeIs($route),
+                            ])>
+                                {{ $item['label'] }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
 
 
+            </div>
         </div>
-    </div>
     @else
-        <div
-            class="inline-flex w-16 h-16 overflow-hidden rounded-full border-4 border-[#fdb783]/50">
-            <img draggable="false"
-                src="{{ \App\Models\File::where(
-                    'id',
-                    \App\Models\Profile::where('id', Auth::user()->profile_id)->first()->file_id,
-                )->first()->path . '?=s100?t=' . time() }}"
-                alt="user profile" class="w-full h-full object-cover border-4 bg-white rounded-full border-[#fdb783]">
-        </div>
+        <img draggable="false"
+            src="{{ \App\Models\File::where(
+                'id',
+                \App\Models\Profile::where('id', Auth::user()->profile_id)->first()->file_id,
+            )->first()->path .
+                '?=s100?t=' .
+                time() }}"
+            alt="user profile" class="w-16 h-16 object-cover bg-white rounded-full border-2 border-white">
+
     @endif
 
     <!-- Logout Button -->

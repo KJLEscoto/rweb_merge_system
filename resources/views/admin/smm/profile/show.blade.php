@@ -1,26 +1,26 @@
-{{-- @extends('layouts.application') --}}
+<head>
+    <title>{{ env('APP_NAME') }} | SMM | Downloadables</title>
 
-@section('title', 'Show User')
-@section('header', 'Show User')
+    <script src="https://cdn.tailwindcss.com"></script>
 
-{{-- @section('content') --}}
-<script src="https://cdn.tailwindcss.com"></script>
-@php
-    $roles = [
-        1 => 'Client',
-        2 => 'Operations Manager',
-        3 => 'Content Writer',
-        4 => 'Graphic Designer',
-        5 => 'Top Manager',
-        6 => 'Supervisor',
-        7 => 'Accounting'
-    ];
-@endphp
+    @php
+        $roles = [
+            1 => 'Client',
+            2 => 'Operations Manager',
+            3 => 'Content Writer',
+            4 => 'Graphic Designer',
+            5 => 'Top Manager',
+            6 => 'Supervisor',
+            7 => 'Accounting',
+        ];
+    @endphp
+</head>
+
 <x-main-layout breadcumb="SMM" page="Profile">
-<div class="px-10 pt-10">
+
     {{-- Middle Part --}}
 
-    <div class="px-10 text-white">
+    <div class=" text-white">
         {{-- <div class="w-full flex justify-end items-end mb-4 cursor-pointer"
             onclick="window.location.assign('{{ url('/admin/smm/') }}')">
             <div class="w-fit px-4 py-1 bg-[#f68e12] rounded-md">Go Back</div>
@@ -33,10 +33,12 @@
                             src="{{ file_exists(public_path($user->image)) && $user->image ? asset($user->image) : asset('/Assets/user-profile-profilepage.png') }}"
                             alt="User Image"> --}}
                         <img class="rounded-full w-32 h-32 object-cover"
-                        src="{{ \App\Models\File::where(
-                            'id',
-                            \App\Models\Profile::where('id', Auth::user()->profile_id)->first()->file_id,
-                        )->first()->path . '?=s100?t=' . time() }}"
+                            src="{{ \App\Models\File::where(
+                                'id',
+                                \App\Models\Profile::where('id', Auth::user()->profile_id)->first()->file_id,
+                            )->first()->path .
+                                '?=s100?t=' .
+                                time() }}"
                             alt="User Image">
                     </div>
                     <div class="text-center mt-4">
@@ -56,17 +58,13 @@
                         {{-- <img class="rounded-full w-32 h-32 object-cover"
                             src="{{ file_exists(public_path($user->image)) && $user->image ? asset($user->image) : asset('/Assets/user-profile-profilepage.png') }}"
                             alt="User Image"> --}}
-                            @if ($user->signature)
-                                <img class="object-fill w-full"
-                                src="{{
-                                    \App\Models\File::where('id', 
-                                        Auth::user()->signatures->file_id
-                                    )->first()->path . '?t=' . time() . '?s=100';
-                                }}"
+                        @if ($user->signature)
+                            <img class="object-fill w-full"
+                                src="{{ \App\Models\File::where('id', Auth::user()->signatures->file_id)->first()->path . '?t=' . time() . '?s=100' }}"
                                 alt="User Image">
-                            @else
-                                <p>No Signature Added.</p>
-                            @endif
+                        @else
+                            <p>No Signature Added.</p>
+                        @endif
                     </div>
                     <div class="text-center w-full flex items-center justify-center">
                         <h1 class="text-[#fa7011] font-bold">Signature</h1>
@@ -83,28 +81,28 @@
                 <div class="space-y-4 mt-4">
                     <div>
                         <div class="flex space-x-2 items-center">
-                            <img src="{{asset('/Assets/name.png')}}" class="w-5 h-5" alt="">
+                            <img src="{{ asset('/Assets/name.png') }}" class="w-5 h-5" alt="">
                             <h1 class="font-medium">Name</h1>
                         </div>
                         <p class="pl-7 text-gray-700">{{ $user->name }}</p>
                     </div>
                     <div>
                         <div class="flex space-x-2 items-center">
-                            <img src="{{asset('/Assets/email.png')}}" class="w-5 h-5" alt="">
+                            <img src="{{ asset('/Assets/email.png') }}" class="w-5 h-5" alt="">
                             <h1 class="font-medium">Email</h1>
                         </div>
                         <p class="pl-7 text-gray-700">{{ $user->email }}</p>
                     </div>
                     <div>
                         <div class="flex space-x-2 items-center">
-                            <img src="{{asset('/Assets/phone-number.png')}}" class="w-5 h-5" alt="">
+                            <img src="{{ asset('/Assets/phone-number.png') }}" class="w-5 h-5" alt="">
                             <h1 class="font-medium">Phone</h1>
                         </div>
                         <p class="pl-7 text-gray-700">{{ $user->phone }}</p>
                     </div>
                     <div>
                         <div class="flex space-x-2 items-center">
-                            <img src="{{asset('/Assets/address.png')}}" class="w-5 h-5" alt="">
+                            <img src="{{ asset('/Assets/address.png') }}" class="w-5 h-5" alt="">
                             <h1 class="font-medium">Address</h1>
                         </div>
                         <p class="pl-7 text-gray-700">{{ $user->address }}</p>
@@ -114,6 +112,6 @@
         </div>
     </div>
 
-</div>
+
 </x-main-layout>
 {{-- @endsection --}}

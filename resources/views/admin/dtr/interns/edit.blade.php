@@ -16,7 +16,7 @@
         <x-modal.flash-msg msg="invalid" />
     @endif
 
-    <main class="h-auto w-full flex flex-col gap-5 px-10 py-10">
+    <main class="h-auto w-full flex flex-col gap-5">
         <form action="{{ route('users.settings.update', $user->id) }}" method="POST"
             class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5"
             enctype="multipart/form-data">
@@ -26,51 +26,54 @@
             <input type="hidden" name="user_id" id="user_id" value="{{ $user->id }}">
 
             <div class="flex items-start gap-10">
-                <section class="flex items-end gap-5">
-                    <div class="w-auto h-auto">
-                        <div class="w-32 h-32 overflow-hidden rounded-full">
-                            <img id="imagePreview" class="w-full h-full object-cover"
-                                src="{{ optional(\App\Models\File::find(optional(\App\Models\Profile::find($user->profile_id))->file_id))->path .
-                                    '?t=' .
-                                    time() ??
-                                    'resources/img/default-male.png' }}"
-                                alt="user profile">
+                <section class="space-y-3">
+                    <div class="flex items-end gap-5">
+                        <div class="w-auto h-auto">
+                            <div class="w-32 h-32 overflow-hidden rounded-full">
+                                <img id="imagePreview" class="w-full h-full object-cover"
+                                    src="{{ optional(\App\Models\File::find(optional(\App\Models\Profile::find($user->profile_id))->file_id))->path .
+                                        '?t=' .
+                                        time() ??
+                                        'resources/img/default-male.png' }}"
+                                    alt="user profile">
+                            </div>
+                        </div>
+
+                        <div>
+                            <h1 class="text-lg font-medium capitalize">
+                                {{ $user->firstname }} {{ substr($user->middlename, 0, 1) }}.
+                                {{ $user->lastname }}
+                            </h1>
+                            @if ($user->status === 'active')
+                                <p class="text-sm font-medium text-green-500">
+                                    {{ $user->status }}
+                                </p>
+                            @else
+                                <p class="text-sm font-medium text-red-500">
+                                    {{ $user->status }}
+                                </p>
+                            @endif
+                            <p>
+                                {{ $user->role }}
+                            </p>
                         </div>
                     </div>
 
-                    <div>
-                        <h1 class="text-lg font-medium capitalize">
-                            {{ $user->firstname }} {{ substr($user->middlename, 0, 1) }}.
-                            {{ $user->lastname }}
-                        </h1>
-                        @if ($user->status === 'active')
-                            <p class="text-sm font-medium text-green-500">
-                                {{ $user->status }}
-                            </p>
-                        @else
-                            <p class="text-sm font-medium text-red-500">
-                                {{ $user->status }}
-                            </p>
-                        @endif
-                        <p>
-                            {{ $user->role }}
-                        </p>
-                    </div>
-                </section>
 
-                <section class="flex items-center gap-3">
-                    <input type="file" id="uploadButton" name="file" class="hidden" accept="image/*">
-                    <label for="uploadButton"
-                        class="bg-[#f56d11] hover:scale-105 cursor-pointer transition text-white px-3 py-2 text-sm rounded font-semibold shadow-md w-fit">
-                        Upload Image</label>
-                    <button type="submit" name="type" value="removeProfile"
-                        class="bg-red-500 hover:scale-105 transition text-white px-3 py-2 text-sm rounded font-semibold shadow-md w-fit">
-                        Remove Image
-                    </button>
+                    <section class="flex items-center gap-3">
+                        <input type="file" id="uploadButton" name="file" class="hidden" accept="image/*">
+                        <label for="uploadButton"
+                            class="bg-[#f56d11] hover:scale-105 cursor-pointer transition text-white px-3 py-2 text-sm rounded font-semibold shadow-md w-fit text-nowrap">
+                            Upload Image</label>
+                        <button type="submit" name="type" value="removeProfile"
+                            class="bg-red-500 hover:scale-105 transition text-white px-3 py-2 text-sm rounded font-semibold shadow-md w-fit text-nowrap">
+                            Remove Image
+                        </button>
+                    </section>
                 </section>
             </div>
 
-            <div class="p-10 border border-gray-300 rounded grid grid-cols-3 gap-7">
+            <div class="lg:p-10 p-7 border border-gray-300 rounded lg:grid lg:!grid-cols-3 flex flex-col gap-7">
 
                 <div class="col-span-3">
                     <p class="font-semibold text-red-500">Personal Information</p>
@@ -144,28 +147,28 @@
                 </div>
 
                 @php
-                $schools = \App\Models\School::get();
-                $school_options = [];
+                    $schools = \App\Models\School::get();
+                    $school_options = [];
 
-                foreach ($schools as $school) {
-                    if (strpos(strtolower($school['description']), 'rweb') !== 0) {
-                        $school_options[] = $school['description'];
+                    foreach ($schools as $school) {
+                        if (strpos(strtolower($school['description']), 'rweb') !== 0) {
+                            $school_options[] = $school['description'];
+                        }
                     }
-                }
-            @endphp
+                @endphp
 
-            <div class="space-y-1">
-                <h1 class="font-bold text-xs">School</h1>
-                <select name="school" id="school"
-                    class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
-                    <option value="" disabled>Select a school</option>
-                    @foreach ($school_options as $school)
-                        <option value="{{ $school }}" {{ $user->school == $school ? 'selected' : '' }}>
-                            {{ $school }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+                <div class="space-y-1">
+                    <h1 class="font-bold text-xs">School</h1>
+                    <select name="school" id="school"
+                        class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
+                        <option value="" disabled>Select a school</option>
+                        @foreach ($school_options as $school)
+                            <option value="{{ $school }}" {{ $user->school == $school ? 'selected' : '' }}>
+                                {{ $school }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
 
 
@@ -272,7 +275,8 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-3">
+
+            <section class="flex items-center gap-3">
                 <a href="{{ route('admin.dtr.interns.details', $user->id) }}"
                     class="border hover:border-[#f56d11] text-[#f56d11] transition flex items-center gap-1 px-3 py-2 text-sm rounded font-semibold w-fit">
                     <span class="eva--arrow-back-fill w-4 h-4"></span>
@@ -282,8 +286,7 @@
                     class="bg-[#f56d11] hover:scale-105 transition text-white px-3 py-2 text-sm rounded font-semibold shadow-md w-fit">
                     Save Changes
                 </button>
-            </div>
-
+            </section>
         </form>
     </main>
 

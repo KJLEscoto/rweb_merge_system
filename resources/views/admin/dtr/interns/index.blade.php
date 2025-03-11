@@ -15,11 +15,11 @@
             'admin',
         ];
     @endphp
-    <div class="w-full h-auto flex flex-col gap-5 px-10 pt-10">
+    <div class="w-full h-auto flex flex-col gap-5">
         @if ($users->whereNotIn('role', $not_intern_roles)->first())
             <section class="flex md:flex-row flex-col-reverse items-center lg:justify-between w-full gap-5">
 
-                <section class="w-1/2">
+                <section class="lg:w-1/2 w-full">
                     <div class="w-full relative flex items-center">
                         <span class="meteor-icons--search w-5 h-5 absolute left-3 text-gray-500"></span>
                         <input type="text" name="search" id="search"
@@ -37,7 +37,7 @@
                 </span>
             </section>
 
-            <section class="grid lg:!grid-cols-5 md:grid-cols-4 grid-cols-2 gap-5" id="user-container">
+            <section class="grid lg:!grid-cols-4 md:grid-cols-3 grid-cols-2 gap-5" id="user-container">
                 @foreach ($users as $user)
                     @if (!in_array($user->roles->position, $not_intern_roles))
                         <a href="{{ route('admin.dtr.interns.details', $user->id) }}"

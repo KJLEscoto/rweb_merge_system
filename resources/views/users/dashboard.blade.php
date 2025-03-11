@@ -85,21 +85,21 @@
             <section class="p-7 rounded-lg border border-gray-200 bg-white w-full flex flex-col gap-3">
                 <x-page-title title="Additional Information" />
                 <hr>
-                <div class="space-y-2">
-                    <section class="flex md:flex-row flex-col items-start flex-wrap text-wrap sm:gap-5 gap-x-2">
-                        <h1 class="text-base font-semibold">Phone No.</h1>
+                <div class="space-y-3">
+                    <section class="flex flex-col flex-wrap text-wrap">
+                        <h1 class="text-xs font-medium">Phone No.</h1>
                         <p class=" text-base">{{ $user->phone }}</p>
                     </section>
-                    <section class="flex md:flex-row flex-col items-start flex-wrap text-wrap sm:gap-5 gap-x-2">
-                        <h1 class="text-base font-semibold">Address</h1>
-                        <p class=" text-base ">{{ $user->address }}</p>
+                    <section class="flex flex-col flex-wrap text-wrap">
+                        <h1 class="text-xs font-medium">Address</h1>
+                        <p class=" text-base">{{ $user->address }}</p>
                     </section>
-                    <section class="flex md:flex-row flex-col items-start flex-wrap text-wrap sm:gap-5 gap-x-2">
-                        <h1 class="text-base font-semibold">School</h1>
+                    <section class="flex flex-col flex-wrap text-wrap">
+                        <h1 class="text-xs font-medium">School</h1>
                         <p class=" text-base ">{{ $user->school }}</p>
                     </section>
-                    <section class="flex md:flex-row flex-col items-start flex-wrap text-wrap sm:gap-5 gap-x-2">
-                        <h1 class="text-base font-semibold">Account Started</h1>
+                    <section class="flex flex-col flex-wrap text-wrap">
+                        <h1 class="text-xs font-medium">Account Started</h1>
                         <p class=" text-base ">{{ $userTimeStarted }}</p>
                     </section>
                 </div>
@@ -108,18 +108,18 @@
             <section class="p-7 rounded-lg border border-gray-200 bg-white w-full flex flex-col gap-3">
                 <x-page-title title="Emergency Contact" />
                 <hr>
-                <div class="space-y-2">
-                    <section class="flex md:flex-row flex-col items-start sm:gap-5 gap-x-2 text-wrap">
-                        <h1 class="text-base font-semibold">Name</h1>
-                        <p class=" text-base capitalize">{{ $user->emergency_contact_fullname }}</p>
+                <div class="space-y-3">
+                    <section class="flex flex-col flex-wrap text-wrap">
+                        <h1 class="text-xs font-medium">Name</h1>
+                        <p class=" text-base">{{ $user->emergency_contact_fullname }}</p>
                     </section>
-                    <section class="flex md:flex-row flex-col items-start sm:gap-5 gap-x-2 text-wrap">
-                        <h1 class="text-base font-semibold">Contact No.</h1>
-                        <p class=" text-base ">{{ $user->emergency_contact_number }}</p>
+                    <section class="flex flex-col flex-wrap text-wrap">
+                        <h1 class="text-xs font-medium">Contact No.</h1>
+                        <p class=" text-base">{{ $user->emergency_contact_number }}</p>
                     </section>
-                    <section class="flex md:flex-row flex-col items-start sm:gap-5 gap-x-2 text-wrap">
-                        <h1 class="text-base font-semibold">Address</h1>
-                        <p class=" text-base ">{{ $user->emergency_contact_address }}</p>
+                    <section class="flex flex-col flex-wrap text-wrap">
+                        <h1 class="text-xs font-medium">Address</h1>
+                        <p class=" text-base">{{ $user->emergency_contact_address }}</p>
                     </section>
                 </div>
             </section>
@@ -141,44 +141,39 @@
             <div class="overflow-auto h-[250px] w-full">
                 @forelse ($downloadRequest as $request)
                     <a href="{{ route('users.request') }}"
-                        class="px-5 py-3 hover:bg-gray-100 border-b border-gray-300 w-full flex items-center justify-between gap-5">
+                        class="lg:px-5 px-2 py-3 hover:bg-gray-100 border-b border-gray-300 w-full grid grid-cols-3 gap-3">
 
-                        <h1 class="truncate">Request for DTR Approval</h1>
-                        @if ($request['status'] === 'approved')
-                            <div class="w-1/2">
-                                <p class="lg:!text-sm text-xs font-semibold text-green-500 truncate">Has been approved.
+                        <h1 class="truncate col-span-1 flex items-center justify-start">Request for DTR Approval</h1>
+
+                        <div class="truncate col-span-1 flex items-center justify-start">
+                            @if ($request['status'] === 'approved')
+                                <p class="lg:!text-sm text-xs font-semibold text-green-500">Has been approved.
                                 </p>
-                                {{-- <p class="lg:!text-sm text-xs font-semibold text-green-500 truncate">Ready to download</p>
-                                <p class="lg:!text-sm text-xs font-semibold text-red-500 truncate">Declined approval</p> --}}
-                            </div>
-                        @endif
-                        @if ($request['status'] === 'declined')
-                            <div class="w-1/2">
-                                <p class="lg:!text-sm text-xs font-semibold text-red-500 truncate">Has been declined.
+                            @endif
+                            @if ($request['status'] === 'declined')
+                                <p class="lg:!text-sm text-xs font-semibold text-red-500">Has been declined.
                                 </p>
-                                {{-- <p class="lg:!text-sm text-xs font-semibold text-green-500 truncate">Ready to download</p>
-                                <p class="lg:!text-sm text-xs font-semibold text-red-500 truncate">Declined approval</p> --}}
-                            </div>
-                        @endif
-                        @if ($request['status'] === 'pending')
-                            <div class="w-1/2">
-                                <p class="lg:!text-sm text-xs font-semibold text-blue-500 truncate">Waiting for
+                            @endif
+                            @if ($request['status'] === 'pending')
+                                <p class="lg:!text-sm text-xs font-semibold text-blue-500">Waiting for
                                     approval...
                                 </p>
-                                {{-- <p class="lg:!text-sm text-xs font-semibold text-green-500 truncate">Ready to download</p>
-                                <p class="lg:!text-sm text-xs font-semibold text-red-500 truncate">Declined approval</p> --}}
-                            </div>
-                        @endif
-                        <div>
-                            <p class="text-sm font-semibold text-gray-600">
+                            @endif
+                        </div>
+                        <div class="col-span-1 truncate flex items-center justify-end">
+                            <p class="text-sm font-semibold text-gray-600 text-nowrap">
                                 {{ Carbon\Carbon::parse($request['created_at'])->format('M d, Y') }}</p>
                         </div>
                     </a>
                 @empty
-                    <div class="flex items-center justify-center h-full w-full text-gray-600 font-semibold text-sm">You
-                        don't have DTR request yet. <a href="{{ route('users.dtr') }}"
-                            class="underline underline-offset-4 hover:text-[#F53C11] cursor-pointer ml-2">Request
-                            Now.</a></div>
+                    <div
+                        class="flex lg:!flex-row flex-col text-wrap items-center justify-center h-full w-full text-gray-600 font-semibold text-sm">
+                        You don't have DTR request yet.
+                        <a href="{{ route('users.dtr') }}"
+                            class="underline underline-offset-4 hover:text-[#F53C11] cursor-pointer ml-2">
+                            Request Now.
+                        </a>
+                    </div>
                 @endforelse
 
                 {{-- <p class="flex items-center justify-center h-full w-full font-semibold text-gray-500">You don't have

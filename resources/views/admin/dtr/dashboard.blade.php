@@ -59,7 +59,7 @@
     <x-flash-msg msg="Time Out checked successfully"/>
     </span> --}}
 
-    <div class="flex flex-col gap-5 w-auto h-auto px-16 pt-10">
+    <div class="flex flex-col gap-5 w-auto h-auto">
 
         <div class="h-full w-full">
             <section class="h-full w-full p-7 border bg-white shadow-lg border-gray-200">

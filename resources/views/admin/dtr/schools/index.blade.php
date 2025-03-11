@@ -32,7 +32,7 @@
         ];
     @endphp --}}
 
-    <main class="w-full h-auto flex flex-col lg:!gap-7 gap-5 px-16 py-10">
+    <main class="w-full h-auto flex flex-col lg:!gap-7 gap-5">
         @if (session('success'))
             <x-modal.flash-msg msg="success" />
         @elseif (session('update'))
