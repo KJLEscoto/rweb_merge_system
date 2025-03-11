@@ -297,8 +297,8 @@
                             <strong>Manager:</strong>
                             <p>{{ $request_form?->manager->name ?? '' }}</p> <br>
                             @if ($request_form?->status != 'Approved by Operation')
-                                @if (!empty($request_form?->receiver->signature))
-                                    <img src="{{ asset($request_form?->receiver->signature) }}"
+                                @if (!empty($request_form?->manager->signature))
+                                    <img src="{{ asset($request_form?->manager->signature) }}"
                                         alt="Supervisor Signature">
                                 @endif
                             @endif
