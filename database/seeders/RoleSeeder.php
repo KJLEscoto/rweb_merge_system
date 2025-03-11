@@ -23,7 +23,15 @@ class RoleSeeder extends Seeder
             ['position' => 'supervisor'],
             ['position' => 'accounting'],
             ['position' => 'user'],
+            ['position' => 'ui_ux'],
+            ['position' => 'front_end'],
+            ['position' => 'back_end'],
         ];
+
+        foreach ($roles as &$role) {
+            $role['created_at'] = now();
+            $role['updated_at'] = now();
+        }
 
         DB::table('roles')->insert($roles);
     }

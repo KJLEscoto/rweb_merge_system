@@ -158,4 +158,36 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Signature::class, 'signature_id');
     }
+
+
+    //Front end relations
+    public function role_channels()
+    {
+        return $this->hasMany(RoleChannel::class, 'user_id');
+    }
+
+    public function web_job_orders()
+    {
+        return $this->hasMany(WebJobOrder::class, 'user_id');
+    }
+
+    public function web_project_channels()
+    {
+        return $this->hasMany(WebProjectChannel::class, 'user_id');
+    }
+
+    public function web_projects()
+    {
+        return $this->hasMany(WebProject::class, 'web_project_id');
+    }
+
+    public function web_signatures()
+    {
+        return $this->hasOne(WebSignature::class, 'user_id');
+    }
+
+    public function web_revisions()
+    {
+        return $this->hasMany(WebRevisions::class, 'user_id');
+    }
 }

@@ -41,7 +41,7 @@
                     $menuItems = [
                         'admin.smm*' => ['label' => 'SMM', 'route' => 'admin.smm.dashboard'],
                         'admin.dtr*' => ['label' => 'DTR', 'route' => 'admin.dtr.dashboard'],
-                        'admin.front-end*' => ['label' => 'FRONT-END', 'route' => 'admin.front-end.dashboard'],
+                        'admin.web*' => ['label' => 'WEB DEVELOPMENT', 'route' => 'admin.web.dashboard'],
                     ];
                 @endphp
 
