@@ -50,6 +50,9 @@ use App\Http\Controllers\SupervisorRenewalController;
 use App\Http\Controllers\SupervisorRevisionController;
 use App\Http\Controllers\SupervisorTaskController;
 use App\Http\Controllers\TopApprovalController;
+use App\Http\Controllers\WebUserController;
+use App\Models\Page;
+use App\Models\Privilege;
 
 Route::get('/', function () {
     return view('welcome');
@@ -59,7 +62,7 @@ Route::get('/', function () {
 //Route::view('/admin/smm/dashboard', 'admin.smm.dashboard')->name('admin.smm.dashboard');
 
 // For front-end operations
-Route::view('/admin/front-end/dashboard', 'admin.front-end.dashboard')->name('admin.front-end.dashboard');
+Route::view('/admin/front-end/dashboard', 'admin.web-development.dashboard')->name('admin.web-development.dashboard');
 Route::view('/admin/front-end/project-development', 'admin.front-end.project-development.index')->name('admin.front-end.project-development');
 Route::view('/admin/front-end/project-development/1', 'admin.front-end.project-development.show')->name('admin.front-end.project-development.show');
 Route::view('/admin/front-end/profile', 'admin.front-end.profile.index')->name('admin.front-end.profile');
@@ -334,8 +337,8 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
         Route::get('requestForm/create', [RequestFormController::class, 'create'])->name('admin.smm.requestForm');
         Route::post('requestForm/store', [RequestFormController::class, 'store']);
         Route::post('requestForm/approve/{id}', [RequestFormController::class, 'approve'])->name('requestForm.approve');
-        Route::get('requestForm/show/{id}', [RequestFormController::class, 'show']);
-        Route::get('requestForm/edit/{id}', [RequestFormController::class, 'edit']);
+        Route::get('requestForm/show/{id}', [RequestFormController::class, 'show'])->name('admin.smm.requestForm.show');
+        Route::get('requestForm/edit/{id}', [RequestFormController::class, 'edit'])->name('admin.smm.requestForm.edit');
         Route::put('requestForm/update/{id}', [RequestFormController::class, 'update']);
         Route::delete('requestForm/delete/{id}', [RequestFormController::class, 'delete']);
     });
@@ -447,6 +450,62 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
         Route::get('/supervisor/revision/edit/{id}', [SupervisorRevisionController::class, 'edit'])->name('supervisor.edit');
         Route::put('/supervisor/revision/update/{id}', [SupervisorRevisionController::class, 'update'])->name('supervisor.update');
     });
+});
+
+// web development routes
+//pages
+$dashboard          = optional(Page::where('description', 'like', '%dashboard%')->first())->id;
+$direct_job_order   = optional(Page::where('description', 'like', '%direct_job_order%')->first())->id;
+$operation_job_order = optional(Page::where('description', 'like', '%operation_job_order%')->first())->id;
+$task               = optional(Page::where('description', 'like', '%task%')->first())->id;
+$revision           = optional(Page::where('description', 'like', '%revision%')->first())->id;
+$approvals          = optional(Page::where('description', 'like', '%approvals%')->first())->id;
+$track              = optional(Page::where('description', 'like', '%track%')->first())->id;
+$users              = optional(Page::where('description', 'like', '%users%')->first())->id;
+$downloadables      = optional(Page::where('description', 'like', '%downloadables%')->first())->id;
+$profile            = optional(Page::where('description', 'like', '%profile%')->first())->id;
+
+//privileges
+$can_read   = optional(Privilege::where('description', 'like', '%can_read%')->first())->id;
+$can_update = optional(Privilege::where('description', 'like', '%can_update%')->first())->id;
+$can_create   = optional(Privilege::where('description', 'like', '%can_create%')->first())->id;
+$can_delete = optional(Privilege::where('description', 'like', '%can_delete%')->first())->id;
+
+//web development routes
+Route::prefix('/admin/web_development')->group(function () use (
+    $dashboard,
+    $direct_job_order,
+    $operation_job_order,
+    $task,
+    $revision,
+    $approvals,
+    $track,
+    $users,
+    $downloadables,
+    $profile,
+    $can_read,
+    $can_update,
+    $can_create,
+    $can_delete,
+) {
+    // Route::get('/supervisor/directjob', [Dashboard::class, 'index'])
+    // Route::prefix('dashboard')->group(function () use ($dashboard, $can_read, $can_update, $can_create, $can_delete) {
+    //     Route::get('/', function () {
+    //         @dd('success!');
+    //     })->middleware("role_channel:$dashboard, $can_read");
+    // });
+    Route::get('/dashboard', function () {
+        return view('admin.web-development.dashboard');
+    })->name('admin.web.dashboard');
+
+    Route::get('/123')->name('admin.web.direct-job-order');
+    Route::get('/321')->name('admin.web.revision-checklist');
+    Route::get('/231')->name('admin.web.promotions');
+    Route::get('/421')->name('admin.web.instructions-manual');
+    Route::get('/425')->name('admin.web.profile');
+    Route::get('/423')->name('admin.web.instructions-manual');
+    Route::get('/442')->name('admin.web.instructions-manual');
+    Route::get('/users', [WebUserController::class, 'index'])->name('admin.web.users');
 });
 
 require __DIR__ . '/auth.php';
