@@ -50,7 +50,7 @@
         <x-modal.confirmation-email id="confirmation-email-modal" />
 
         <x-form.container routeName="login" method="POST"
-            className="w-full lg:h-full h-auto lg:flex items-center justify-center bg-white container mx-auto max-w-screen-2xl">
+            className="w-full lg:!h-full h-auto lg:!flex items-center justify-center bg-white container mx-auto max-w-screen-2xl">
             <div class="w-full flex flex-col items-center justify-center gap-7 overflow-x-hidden md:!p-10 p-5">
                 @if (session('success'))
                     <x-modal.flash-msg msg="success" />

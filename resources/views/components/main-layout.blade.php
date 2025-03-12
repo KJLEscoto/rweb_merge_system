@@ -333,19 +333,27 @@
 
                 {{-- admin web-development navbar --}}
                 @if (Request::routeIs('admin.web*'))
-                <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
-                routeName="admin.web.dashboard" />
-                    @if (Auth::user()->role_channels->where('page_id', \App\Models\Page::where('description', 'like', '%direct_job_order%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())    
-                    <x-admin.sidebar-menu icon="mdi--file-cog" label="Direct Job Order"
-                        routeName="admin.web.direct-job-order" />
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
+                        routeName="admin.web.dashboard" />
+                    @if (Auth::user()->role_channels->where(
+                                'page_id',
+                                \App\Models\Page::where('description', 'like', '%direct_job_order%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
+                        <x-admin.sidebar-menu icon="carbon--direction-loop-right-filled" label="Direct Job Order"
+                            routeName="admin.web.direct-job-order" />
                     @endif
-                    <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="Revision Checklist"
-                        routeName="admin.web.revision-checklist" />
-                    <x-admin.sidebar-menu icon="ic--baseline-discount" label="Promotions"
-                        routeName="admin.web.promotions" />
-                    <x-admin.sidebar-menu icon="streamline--manual-book-solid" label="Instruction Manual"
+                    <x-admin.sidebar-menu icon="clarity--directory-solid-badged" label="Operation Job Order"
+                        routeName="admin.web.operation-job-order" />
+                    <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="Task"
+                        routeName="admin.web.task" />
+                    <x-admin.sidebar-menu icon="mdi--file-cog" label="Revision" routeName="admin.web.revision" />
+                    <x-admin.sidebar-menu icon="mdi--clipboard-text-history" label="Approvals"
+                        routeName="admin.web.approvals" />
+                    <x-admin.sidebar-menu icon="fa--users" label="Users" routeName="admin.web.users" />
+                    <x-admin.sidebar-menu icon="ic--round-date-range" label="Track" routeName="admin.web.track" />
+                    <x-admin.sidebar-menu icon="tdesign--file-download-filled" label="Downloadables"
+                        routeName="admin.web.downloadables" />
+                    <x-admin.sidebar-menu icon="streamline--manual-book-solid" label="Instructions Manual"
                         routeName="admin.web.instructions-manual" />
-                        <x-admin.sidebar-menu icon="fa--user" label="Users" routeName="admin.web.users" />
                     <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.web.profile" />
 
                     {{-- admin dtr navbar --}}
@@ -466,16 +474,28 @@
                         @if (Request::routeIs('admin.web*'))
                             <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
                                 routeName="admin.web.dashboard" />
-                            <x-admin.sidebar-menu icon="mdi--file-cog" label="Project Development"
-                                routeName="admin.web.direct-job-order" />
-                            <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled"
-                                label="Revision Checklist" routeName="admin.web.revision-checklist" />
-                            <x-admin.sidebar-menu icon="ic--baseline-discount" label="Promotions"
-                                routeName="admin.web.promotions" />
-                            <x-admin.sidebar-menu icon="streamline--manual-book-solid" label="Instruction Manual"
+                            @if (Auth::user()->role_channels->where(
+                                        'page_id',
+                                        \App\Models\Page::where('description', 'like', '%direct_job_order%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
+                                <x-admin.sidebar-menu icon="carbon--direction-loop-right-filled"
+                                    label="Direct Job Order" routeName="admin.web.direct-job-order" />
+                            @endif
+                            <x-admin.sidebar-menu icon="clarity--directory-solid-badged" label="Operation Job Order"
+                                routeName="admin.web.operation-job-order" />
+                            <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="Task"
+                                routeName="admin.web.task" />
+                            <x-admin.sidebar-menu icon="mdi--file-cog" label="Revision"
+                                routeName="admin.web.revision" />
+                            <x-admin.sidebar-menu icon="mdi--clipboard-text-history" label="Approvals"
+                                routeName="admin.web.approvals" />
+                            <x-admin.sidebar-menu icon="fa--users" label="Users" routeName="admin.web.users" />
+                            <x-admin.sidebar-menu icon="ic--round-date-range" label="Track"
+                                routeName="admin.web.track" />
+                            <x-admin.sidebar-menu icon="tdesign--file-download-filled" label="Downloadables"
+                                routeName="admin.web.downloadables" />
+                            <x-admin.sidebar-menu icon="streamline--manual-book-solid" label="Instructions Manual"
                                 routeName="admin.web.instructions-manual" />
-                            <x-admin.sidebar-menu icon="fa--user" label="Profile"
-                                routeName="admin.web.profile" />
+                            <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.web.profile" />
 
                             {{-- admin dtr navbar --}}
                         @elseif (Request::routeIs('admin.dtr*'))
@@ -588,7 +608,7 @@
                     </nav>
                 </aside>
 
-                <div class="px-10 lg:px-16 pt-32 lg:pt-20">
+                <div class="px-10 lg:px-16 pt-32">
                     <div class="w-full flex items-end justify-between">
 
                         <x-admin.page-title breadcumb="{{ $breadcumb }}" page="{{ $page }}" />
