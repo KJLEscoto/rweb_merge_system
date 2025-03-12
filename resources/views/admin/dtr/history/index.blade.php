@@ -69,7 +69,7 @@
                                                         <td>{{ $record['user']->email }}</td>
                                                         <td>
                                                             <span class="text-sm font-semibold 
-                                                                                                    {{ $record['history']->description === 'time in'
+                                                                                                                                                            {{ $record['history']->description === 'time in'
                                             ? (isset($record['history']->extra_description) && $record['history']->extra_description === 'late'
                                                 ? 'text-red-500 font-bold'
                                                 : 'text-green-500')

@@ -53,6 +53,7 @@ use App\Http\Controllers\TopApprovalController;
 use App\Http\Controllers\WebUserController;
 use App\Models\Page;
 use App\Models\Privilege;
+use Illuminate\Support\Facades\Schema;
 
 Route::get('/', function () {
     return view('welcome');
@@ -454,22 +455,29 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
 
 // web development routes
 //pages
-$dashboard          = optional(Page::where('description', 'like', '%dashboard%')->first())->id;
-$direct_job_order   = optional(Page::where('description', 'like', '%direct_job_order%')->first())->id;
-$operation_job_order = optional(Page::where('description', 'like', '%operation_job_order%')->first())->id;
-$task               = optional(Page::where('description', 'like', '%task%')->first())->id;
-$revision           = optional(Page::where('description', 'like', '%revision%')->first())->id;
-$approvals          = optional(Page::where('description', 'like', '%approvals%')->first())->id;
-$track              = optional(Page::where('description', 'like', '%track%')->first())->id;
-$users              = optional(Page::where('description', 'like', '%users%')->first())->id;
-$downloadables      = optional(Page::where('description', 'like', '%downloadables%')->first())->id;
-$profile            = optional(Page::where('description', 'like', '%profile%')->first())->id;
 
-//privileges
-$can_read   = optional(Privilege::where('description', 'like', '%can_read%')->first())->id;
-$can_update = optional(Privilege::where('description', 'like', '%can_update%')->first())->id;
-$can_create   = optional(Privilege::where('description', 'like', '%can_create%')->first())->id;
-$can_delete = optional(Privilege::where('description', 'like', '%can_delete%')->first())->id;
+if (Schema::hasTable('pages') && Schema::hasTable('privileges')) {
+    $dashboard          = optional(Page::where('description', 'like', '%dashboard%')->first())->id;
+    $direct_job_order   = optional(Page::where('description', 'like', '%direct_job_order%')->first())->id;
+    $operation_job_order = optional(Page::where('description', 'like', '%operation_job_order%')->first())->id;
+    $task               = optional(Page::where('description', 'like', '%task%')->first())->id;
+    $revision           = optional(Page::where('description', 'like', '%revision%')->first())->id;
+    $approvals          = optional(Page::where('description', 'like', '%approvals%')->first())->id;
+    $track              = optional(Page::where('description', 'like', '%track%')->first())->id;
+    $users              = optional(Page::where('description', 'like', '%users%')->first())->id;
+    $downloadables      = optional(Page::where('description', 'like', '%downloadables%')->first())->id;
+    $profile            = optional(Page::where('description', 'like', '%profile%')->first())->id;
+
+    // Privileges
+    $can_read   = optional(Privilege::where('description', 'like', '%can_read%')->first())->id;
+    $can_update = optional(Privilege::where('description', 'like', '%can_update%')->first())->id;
+    $can_create = optional(Privilege::where('description', 'like', '%can_create%')->first())->id;
+    $can_delete = optional(Privilege::where('description', 'like', '%can_delete%')->first())->id;
+} else {
+    // Handle the case where the tables do not exist
+    return response()->json(['error' => 'Required tables do not exist in the system_merge database.'], 500);
+}
+
 
 //web development routes
 Route::prefix('/admin/web_development')->group(function () use (
