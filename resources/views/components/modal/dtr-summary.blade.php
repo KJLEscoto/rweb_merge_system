@@ -6,17 +6,17 @@
         class="w-full h-full fixed top-0 left-0 z-[100] flex items-center justify-center  overflow-x-hidden overflow-y-auto bg-black bg-opacity-70">
         <div
             class="w-full flex items-center justify-center p-10 transition-all ease-out opacity-0 sm:mx-auto modal-open:opacity-100 modal-open:duration-500">
-            <div class="lg:!w-1/3 md:w-1/2 w-full flex flex-col p-10 gap-5 bg-white rounded-2xl">
+            <div class="lg:!w-2/3 md:w-1/2 w-full flex flex-col lg:!p-10 p-5 gap-5 bg-white rounded-2xl">
                 <div class="flex w-full items-center justify-between gap-3 text-nowrap">
-                    <x-page-title title="DTR Summary" titleClass="text-xl" />
+                    <x-page-title title="DTR Summary" titleClass="lg:!text-xl text-sm" />
 
                     <div>
                         <x-button primary label="Close" button closeModal="{{ $id }}"
-                            className="close-modal-button px-7" />
+                            className="close-modal-button lg:!px-7 px-4" />
                     </div>
                 </div>
 
-                <div class=" bg-white shadow-md rounded-lg p-4 w-full max-w-3xl border">
+                <div class=" bg-white shadow-md rounded-lg p-4 w-full border">
                     {{-- <div class="flex items-start space-x-6 border-b pb-4">
                         <img src="{{ $profile_image ?? 'https://via.placeholder.com/100' }}" alt="Profile Image"
                             class="w-24 h-24 rounded-full border">
@@ -56,14 +56,19 @@
                                 <div class="mb-8">
                                     <h4
                                         class="md:text-base text-sm font-semibold bg-gray-100 p-3 rounded flex justify-between flex-wrap gap-2 items-center">
-                                        <p>Year {{ $yearData['year'] }}</p>
-                                        <p class="float-right">Total of
+                                        <p><span class="!text-sm">Year</span> {{ $yearData['year'] }}</p>
+                                        <p class="float-right">
                                             @if (floor((int) filter_var($yearData['total_hours'], FILTER_SANITIZE_NUMBER_INT) / 60) > 0)
                                                 {{ floor((int) filter_var($yearData['total_hours'], FILTER_SANITIZE_NUMBER_INT) / 60) }}
-                                                hours
+                                                <span class="text-xs"> hrs </span>
                                             @endif
+
                                             {{ round((int) filter_var($yearData['total_hours'], FILTER_SANITIZE_NUMBER_INT) % 60) }}
-                                            minutes
+                                            @if (round((int) filter_var($yearData['total_hours'], FILTER_SANITIZE_NUMBER_INT) % 60) <= 1)
+                                                <span class="!text-xs">min</span>
+                                            @else
+                                                <span class="!text-xs">min</span>
+                                            @endif
                                         </p>
                                     </h4>
 
@@ -73,43 +78,64 @@
                                             </tr>
                                         </thead>
                                         <tbody class="divide-y divide-gray-200">
-    @foreach ($yearData['months'] as $monthData)
-        <tr class="hover:bg-gray-50">
-            <td class="px-4 py-3 flex justify-between w-full gap-2 flex-wrap items-center">
-                <p>{{ $monthData['month_name'] }}</p>
-                <p class="float-right">
-                    @php
-                        $totalMinutes = (int) filter_var($monthData['total_hours'], FILTER_SANITIZE_NUMBER_INT);
-                        $hours = floor($totalMinutes / 60);
-                        $minutes = $totalMinutes % 60;
-                    @endphp
+                                            @foreach ($yearData['months'] as $monthData)
+                                                <tr class="hover:bg-gray-50">
+                                                    <td
+                                                        class="px-4 py-3 flex justify-between w-full gap-2 flex-wrap items-center">
+                                                        <p class="font-medium lg:!text-sm text-xs flex self-end">
+                                                            {{ $monthData['month_name'] }}
+                                                        </p>
+                                                        <p class="float-right">
+                                                            @php
+                                                                $totalMinutes = (int) filter_var(
+                                                                    $monthData['total_hours'],
+                                                                    FILTER_SANITIZE_NUMBER_INT,
+                                                                );
+                                                                $hours = floor($totalMinutes / 60);
+                                                                $minutes = $totalMinutes % 60;
+                                                            @endphp
 
-                    @if ($hours > 0)
-                        {{ $hours }} hours
-                    @endif
+                                                            @if ($hours > 0)
+                                                                <span class="font-medium">
+                                                                    {{ $hours }}</span> hrs
+                                                            @elseif ($hours == 1)
+                                                                <span class="font-medium">
+                                                                    {{ $hours }}</span> hr
+                                                            @endif
 
-                    {{ $minutes }} minutes
-                </p>
-            </td>
-        </tr>
-    @endforeach
-</tbody>
+                                                            <span class="font-medium">
+                                                                {{ $minutes }}
+                                                            </span>
+                                                            @if ($minutes <= 1)
+                                                                <span class="!text-xs">min</span>
+                                                            @else
+                                                                <span class="!text-xs">mins</span>
+                                                            @endif
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
 
                                     </table>
                                 </div>
                             @endforeach
 
-                            <div class="mt-6 border-t pt-4">
+                            <div class="p-4 bg-orange-500 rounded">
                                 <div
-                                    class="md:!text-lg text-base font-semibold flex flex-wrap gap-2 justify-between text-[#F53C11]">
-                                    <span>Overall Hours</span>
+                                    class="md:!text-lg text-base font-semibold items-center flex flex-wrap gap-2 justify-between text-white">
+                                    <span class="!text-sm">Overall Hours</span>
                                     <span>
                                         @if (floor((int) filter_var($totalHoursOverall, FILTER_SANITIZE_NUMBER_INT) / 60) > 0)
                                             {{ floor((int) filter_var($totalHoursOverall, FILTER_SANITIZE_NUMBER_INT) / 60) }}
-                                            hours
+                                            <span class="text-sm">hrs</span>
                                         @endif
                                         {{ round((int) filter_var($totalHoursOverall, FILTER_SANITIZE_NUMBER_INT) % 60) }}
-                                        minutes
+                                        @if (round((int) filter_var($totalHoursOverall, FILTER_SANITIZE_NUMBER_INT) % 60) <= 1)
+                                            <span class="text-sm">min</span>
+                                        @else
+                                            <span class="text-sm">mins</span>
+                                        @endif
                                     </span>
                                 </div>
                             </div>

@@ -16,7 +16,7 @@
                         leftIcon="eva--arrow-back-fill" className="lg:px-8 px-3" />
                 </section>
 
-                <section class="flex items-center gap-3 col-span-1 justify-end w-full h-auto capitalize px-10">
+                <section class="flex items-center gap-3 col-span-1 justify-end w-full h-auto capitalize">
                     @if ($status === 'approved')
                         <span class="text-green-500 font-semibold md:text-sm text-xs">
                             Ready to Download
