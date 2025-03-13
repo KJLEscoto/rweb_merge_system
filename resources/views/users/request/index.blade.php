@@ -80,10 +80,10 @@
                                 'statusText' => $statuses[$statusKey],
                                 'statusColor' =>
                                     $statusKey === 'approved'
-                                        ? 'text-green-500'
-                                        : ($statusKey === 'pending'
-                                            ? 'text-blue-500'
-                                            : 'text-red-500'),
+                                    ? 'text-green-500'
+                                    : ($statusKey === 'pending'
+                                        ? 'text-blue-500'
+                                        : 'text-red-500'),
                                 'date' => strtotime('2025-02-' . (20 - $i)), // Convert date to timestamp for sorting
                                 'formattedDate' => 'Feb ' . (20 - $i) . ', 2025', // Display format
                             ];
@@ -116,8 +116,7 @@
 
                                 @if ($request['statusKey'] === 'approved')
                                     <div class="relative group">
-                                        <button
-                                            class="px-2 py-1 bg-green-500 text-white rounded flex items-center gap-1"
+                                        <button class="px-2 py-1 bg-green-500 text-white rounded flex items-center gap-1"
                                             onclick="downloadRequest({{ $request['id'] }}, {{ $request['month'] }}, {{ $request['year'] }})">
                                             <span class="material-symbols--download-rounded !w-6 !h-6"></span>
                                         </button>
@@ -143,7 +142,7 @@
     <script>
         const APP_URL = document.querySelector('meta[name="app-url"]').getAttribute("content");
 
-        document.getElementById('search').addEventListener('input', function() {
+        document.getElementById('search').addEventListener('input', function () {
             let filter = this.value.toLowerCase();
             let rows = document.querySelectorAll('#recordsTable tbody tr');
 
