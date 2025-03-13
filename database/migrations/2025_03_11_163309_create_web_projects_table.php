@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('instructions')->nullable();
             $table->foreignId('issued_by_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->foreignId('request_id')->nullable()->constrained('users')->cascadeOnDelete();
+            $table->foreignId('client_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->foreignId('supervisor_signed_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });

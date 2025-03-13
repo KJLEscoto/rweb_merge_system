@@ -1,5 +1,5 @@
 <head>
-    <title>{{ env('APP_NAME') }} | Web Development | Create Direct Job Order</title>
+    <title>{{ env('APP_NAME') }} | Web Development | Edit Direct Job Order</title>
 
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
@@ -12,13 +12,13 @@
     </style>
 </head>
 
-<x-main-layout breadcumb="Web Development / Direct Job Order" page="Create Direct Job Order">
+<x-main-layout breadcumb="Web Development / Direct Job Order" page="Edit Direct Job Order">
     <form action="{{ route('admin.web.direct-job-order.store') }}" method="POST"
         class="bg-white p-6 rounded border-l-8 border-[#F57D11] shadow-md flex flex-col gap-5">
         @csrf
 
         <div class="flex items-center gap-3">
-            <a href="{{ route('admin.web.direct-job-order') }}"
+            <a href="{{ route('admin.web.direct-job-order.showProjectChannels', $web_project->id) }}"
                 class="border hover:border-[#f56d11] text-[#f56d11] transition flex items-center gap-1 px-3 py-2 text-sm rounded font-semibold w-fit">
                 <span class="eva--arrow-back-fill w-4 h-4"></span>
                 Back
@@ -32,8 +32,9 @@
         <div class="space-y-5 lg:p-10 p-7 border rounded">
             <div class="space-y-1 w-full">
                 <h1 class="font-bold text-xs">Title</h1>
-                <input type="text" name="title" id="title" value="{{ old('title') }}"
+                <input type="text" name="title" id="title" value="{{ old('title', $web_project->title) }}"
                     class="border px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11]">
+
             </div>
             <div class="space-y-1 w-full">
                 <h1 class="font-bold text-xs">Web Designer</h1>
@@ -77,9 +78,12 @@
                     <option value="">Select a client</option>
 
                     @foreach ($employee as $client)
-                        <option value="{{ $client->id }}">{{ $client->name }}</option>
+                        <option value="{{ $client->id }}" @if (old('client_id', $web_project->client->id) == $client->id) selected @endif>
+                            {{ $client->name }}
+                        </option>
                     @endforeach
                 </select>
+
 
 
                 @error('role_id')
@@ -90,18 +94,21 @@
             <section class="flex lg:flex-row flex-col gap-5 w-full">
                 <div class="space-y-1 w-full">
                     <h1 class="font-bold text-xs">Date Started</h1>
-                    <input type="date" name="date_started" id="date_started" value="{{ old('date_started') }}"
+                    <input type="date" name="date_started" id="date_started"
+                        value="{{ old('date_started', $web_project->web_project_channels[0]->date_started) }}"
                         class="border px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11]">
                 </div>
                 <div class="space-y-1 w-full">
+
                     <h1 class="font-bold text-xs">Date Target</h1>
-                    <input type="date" name="date_target" id="date_target" value="{{ old('date_target') }}"
+                    <input type="date" name="date_target" id="date_target"
+                        value="{{ old('date_target', $web_project->web_project_channels[0]->date_targeted) }}"
                         class="border px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11]">
                 </div>
             </section>
             <div class="space-y-1 w-full">
                 <h1 class="font-bold text-xs">Instructions</h1>
-                <textarea name="instructions" id="editor" class="w-full border-gray-200 rounded-lg">{{ old('instructions') }}</textarea>
+                <textarea name="instructions" id="editor" class="w-full border-gray-200 rounded-lg">{{ old('instructions', $web_project->instructions) }}</textarea>
             </div>
         </div>
 

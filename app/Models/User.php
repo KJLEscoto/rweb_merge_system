@@ -190,4 +190,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(WebRevisions::class, 'user_id');
     }
+    public function webProjectsAsClient()
+    {
+        return $this->hasMany(WebProject::class, 'client_id');
+    }
 }
