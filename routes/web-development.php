@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\WebAuthenticatedSessionController;
 use App\Http\Controllers\WebDirectJobOrderController;
+use App\Http\Controllers\WebTaskController;
 use App\Http\Controllers\WebUserController;
 use App\Models\Page;
 use App\Models\Privilege;
@@ -34,6 +37,8 @@ if (Schema::hasTable('pages') && Schema::hasTable('privileges')) {
   return response()->json(['error' => 'Required tables do not exist in the system_merge database.'], 500);
 }
 
+Route::get('web/login', [WebAuthenticatedSessionController::class, 'create'])->name('web.login');
+Route::post('web/login', [WebAuthenticatedSessionController::class, 'store'])->name('web.login.store');
 
 //web development routes
 Route::prefix('/admin/web-development')->group(function () use ($dashboard, $direct_job_order, $operation_job_order, $task, $revision, $approvals, $track, $users, $downloadables, $profile, $can_read, $can_update, $can_create, $can_delete,) {
@@ -66,8 +71,11 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
   Route::view('/operation-job-order/{id}/edit', 'admin.web-development.operation-job-order.edit')->name('admin.web.operation-job-order.edit');
 
   // task pages
-  Route::view('/task', 'admin.web-development.task.index')->name('admin.web.task');
-  Route::view('/task/create/{id}', 'admin.web-development.task.create')->name('admin.web.task.create');
+  Route::get('/task', [WebTaskController::class, 'index'])->name('admin.web.task');
+  Route::put('/task/accept/{id}', [WebTaskController::class, 'accept'])->name('admin.web.task.accept');
+  Route::get('/task/create/{id}', [WebTaskController::class, 'create'])->name('admin.web.task.create');
+  Route::put('/task/store/{id}', [WebTaskController::class, 'store'])->name('admin.web.task.store');
+  // Route::view('/task/create/{id}', 'admin.web-development.task.create')->name('admin.web.task.create');
 
   // revision pages
   Route::view('/revision', 'admin.web-development.revision.index')->name('admin.web.revision');
