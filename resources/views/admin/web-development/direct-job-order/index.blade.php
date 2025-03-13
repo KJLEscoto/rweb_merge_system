@@ -36,6 +36,14 @@
 @endphp
 
 <x-main-layout breadcumb="Web Development" page="Direct Job Order">
+    @if (session('success'))
+        <x-modal.flash-msg msg="success" />
+    @elseif ($errors->has('invalid'))
+        <x-modal.flash-msg msg="invalid" />
+    @elseif (session('invalid'))
+        <x-modal.flash-msg msg="invalid" />
+    @endif
+
     <div class="space-y-5">
         @if ($direct_job_order)
             <div class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
@@ -66,21 +74,21 @@
                             <tr
                                 class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
                                 <th>Title</th>
-                                <th>Designated</th>
-                                <th class="!text-center">Status</th>
+                                <th>Client</th>
+                                <th>Issuer</th>
                                 <th class="!text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($direct_job_order as $direct)
+                            @foreach ($web_projects as $direct)
                                 <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
                                     <td class="flex items-center gap-2">
                                         {{-- <div class="p-2 rounded bg-[#F57D11] text-white">
                                             <span class="mingcute--file-fill w-6 h-6"></span>
                                         </div> --}}
-                                        {{ $direct['title'] }}
+                                        {{ $direct->title }}
                                     </td>
-                                    <td>{{ $direct['designated'] }}</td>
+                                    <td>{{ $direct->client->name }}</td>
                                     <td class="flex justify-center items-center">
                                         @php
                                             $statusClasses = [
@@ -92,23 +100,23 @@
                                         @endphp
 
                                         <span
-                                            class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $statusClasses[$direct['status']['type']] ?? 'text-gray-700 bg-gray-300' }}">
-                                            {{ $direct['status']['message'] }}
+                                            class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $statusClasses[$direct['status']] ?? 'text-gray-700 bg-gray-300' }}">
+                                            {{ $direct->client->name }}
                                         </span>
                                     </td>
 
                                     <td>
                                         <div class="flex items-center justify-center gap-2">
-                                            <a href="#"
+                                            <a href="{{ route('admin.web.direct-job-order.showProjectChannels', $direct['id']) }}"
                                                 class="approve-btn px-2 py-1 font-medium bg-green-500 text-white rounded flex items-center justify-center gap-1">
                                                 <span class="basil--eye-solid !w-4 !h-4"></span>
                                                 <p>View</p>
                                             </a>
-                                            <a href="{{ route('admin.web.direct-job-order.edit', $direct['id']) }}"
+                                            {{-- <a href="{{ route('admin.web.direct-job-order.edit', $direct['id']) }}"
                                                 class="approve-btn px-2 py-1 font-medium bg-blue-500 text-white rounded flex items-center justify-center gap-1">
                                                 <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
                                                 <p>Edit</p>
-                                            </a>
+                                            </a> --}}
                                         </div>
                                     </td>
                                 </tr>

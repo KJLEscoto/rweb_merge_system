@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('draft')->nullable();
             $table->date('date_started')->nullable();
             $table->date('date_targeted')->nullable();
+            $table->date('date_completed')->nullable();
             $table->timestamps();
         });
     }

@@ -25,4 +25,9 @@ class WebProjectChannel extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function web_project()
+    {
+        return $this->belongsTo(WebProject::class, 'web_job_order_id');
+    }
 }

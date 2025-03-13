@@ -37,7 +37,7 @@ Route::view('/admin/front-end/revision-checklist/create', 'admin.front-end.revis
 Route::view('/admin/front-end/promotions', 'admin.front-end.promotions')->name('admin.front-end.promotions');
 Route::view('/admin/front-end/instructions-manual', 'admin.front-end.instructions-manual')->name('admin.front-end.instructions-manual');
 
-Route::middleware('guest')->group(function () { });
+Route::middleware('guest')->group(function () {});
 //users page transition
 Route::get('/users', [UserController::class, 'showUsers'])->name('show.users');
 
