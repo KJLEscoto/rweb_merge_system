@@ -88,7 +88,7 @@
             </div>
             <p>pagination here.</p>
         @else
-            <div class="w-full h-full flex flex-col gap-10 items-center justify-center select-none">
+            <div class="w-full h-auto flex flex-col gap-10 items-center justify-center select-none">
                 <h1 class="text-4xl font-semibold italic">No Updates Yet</h1>
                 <img draggable="false" src="{{ asset('image/revisions_empty.png') }}" class="w-auto h-80">
             </div>

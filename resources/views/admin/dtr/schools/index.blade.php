@@ -76,7 +76,7 @@
                 @endforeach
             </div>
         @else
-            <div class="w-full h-full flex items-center justify-center flex-col gap-10">
+            <div class="w-full h-auto flex items-center justify-center flex-col gap-10">
                 <h1 class="text-3xl italic font-semibold">No Schools Yet.</h1>
                 <img draggable="false" class="w-auto h-80" src="{{ asset('image/revisions_empty.png') }}">
                 <a href="{{ route('admin.dtr.schools.create') }}"

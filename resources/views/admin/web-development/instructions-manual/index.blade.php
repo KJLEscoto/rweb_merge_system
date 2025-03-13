@@ -1,5 +1,5 @@
 <head>
-    <title>{{ env('APP_NAME') }} | Front-end | Instructions Manual</title>
+    <title>{{ env('APP_NAME') }} | Web Development | Instructions Manual</title>
 </head>
 
 @php
@@ -11,7 +11,7 @@
     ];
 @endphp
 
-<x-main-layout breadcumb="Front-end" page="Instructions Manual">
+<x-main-layout breadcumb="Web Development" page="Instructions Manual">
     <main class="h-auto w-full flex flex-col gap-5">
 
         @if ($manuals)
@@ -22,7 +22,8 @@
                             <tr
                                 class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
                                 <th>File Name</th>
-                                <th class="!text-center">Date</th>
+                                <th>Date</th>
+                                <th class="!text-center"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -35,6 +36,28 @@
                                         {{ $manual['file_name'] }}
                                     </td>
                                     <td class="!text-center">{{ $manual['date'] }}</td>
+                                    {{-- <td class="flex justify-center items-center">
+                                        @php
+                                            $statusClasses = [
+                                                'approved' => 'text-green-700 bg-green-300',
+                                                'pending' => 'text-yellow-700 bg-yellow-300',
+                                                'review' => 'text-blue-700 bg-blue-300',
+                                                'delayed' => 'text-red-700 bg-red-300',
+                                            ];
+                                        @endphp
+
+                                        <span
+                                            class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $statusClasses[$direct['status']['type']] ?? 'text-gray-700 bg-gray-300' }}">
+                                            {{ $direct['status']['message'] }}
+                                        </span>
+                                    </td> --}}
+                                    <td>
+                                        <button
+                                            class="px-3 py-2 bg-[#1f2835] text-white rounded hover:scale-105 transition-all duration-150 ease-in flex items-center gap-1">
+                                            <span class="tdesign--file-download-filled w-4 h-4"></span>
+                                            <p class="text-xs font-medium">Download</p>
+                                        </button>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

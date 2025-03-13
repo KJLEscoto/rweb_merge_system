@@ -23,7 +23,8 @@
 
                 <div class="flex lg:flex-row flex-row-reverse items-center w-full justify-end gap-2">
                     <div>
-                        <input class="px-5 py-1.5 rounded cursor-pointer border border-gray-200" type="month" id="month">
+                        <input class="px-5 py-1.5 rounded cursor-pointer border border-gray-200" type="month"
+                            id="month">
 
                     </div>
 
@@ -59,33 +60,34 @@
                         </thead>
                         <tbody id="recordsBody">
                             @foreach ($records as $record)
-                                        @if ($record['history'] != null)
-                                                    <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap">
-                                                        <td class="capitalize">
-                                                            {{ $record['user']->firstname }}
-                                                            {{ substr($record['user']->middlename, 0, 1) }}.
-                                                            {{ $record['user']->lastname }}
-                                                        </td>
-                                                        <td>{{ $record['user']->email }}</td>
-                                                        <td>
-                                                            <span class="text-sm font-semibold 
+                                @if ($record['history'] != null)
+                                    <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap">
+                                        <td class="capitalize">
+                                            {{ $record['user']->firstname }}
+                                            {{ substr($record['user']->middlename, 0, 1) }}.
+                                            {{ $record['user']->lastname }}
+                                        </td>
+                                        <td>{{ $record['user']->email }}</td>
+                                        <td>
+                                            <span
+                                                class="text-sm font-semibold 
                                                                                                                                                             {{ $record['history']->description === 'time in'
-                                            ? (isset($record['history']->extra_description) && $record['history']->extra_description === 'late'
-                                                ? 'text-red-500 font-bold'
-                                                : 'text-green-500')
-                                            : 'text-red-500' }}">
+                                                                                                                                                                ? (isset($record['history']->extra_description) && $record['history']->extra_description === 'late'
+                                                                                                                                                                    ? 'text-red-500 font-bold'
+                                                                                                                                                                    : 'text-green-500')
+                                                                                                                                                                : 'text-red-500' }}">
 
-                                                                {{ $record['history']->description }}
-                                                                @if (isset($record['history']->extra_description))
-                                                                    ({{ $record['history']->extra_description }})
-                                                                @endif
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            {{ \Carbon\Carbon::parse($record['history']->datetime)->format('F d - h:i A') }}
-                                                        </td>
-                                                        <td>
-                                                            {{-- <button
+                                                {{ $record['history']->description }}
+                                                @if (isset($record['history']->extra_description))
+                                                    ({{ $record['history']->extra_description }})
+                                                @endif
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($record['history']->datetime)->format('F d - h:i A') }}
+                                        </td>
+                                        <td>
+                                            {{-- <button
                                                                 class="flex items-center px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                                     stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
@@ -96,16 +98,16 @@
                                                                 Edit
                                                             </button> --}}
 
-                                                            <div class="relative group">
-                                                                <a href=""
-                                                                    class="approve-btn px-2 py-1 bg-blue-500 text-white rounded flex items-center justify-center gap-1">
-                                                                    <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
-                                                                    <p>Edit</p>
-                                                                </a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                        @endif
+                                            <div class="">
+                                                <a href=""
+                                                    class="approve-btn px-2 py-1 bg-blue-500 text-white rounded flex items-center justify-center gap-1">
+                                                    <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
+                                                    <p>Edit</p>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endif
                             @endforeach
                         </tbody>
 
@@ -144,7 +146,7 @@
 <script>
     const APP_URL = document.querySelector('meta[name="app-url"]').getAttribute("content");
 
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
@@ -158,10 +160,10 @@
             let app_url = `{{ url('/admin/dtr/history/search') }}`;
 
             axios.post(app_url, {
-                query: searchQuery,
-                date: selectedMonth,
-                page: page
-            })
+                    query: searchQuery,
+                    date: selectedMonth,
+                    page: page
+                })
                 .then(response => {
                     let data = response.data;
                     totalRecords = data.total;
@@ -242,7 +244,7 @@
                 .catch(error => console.error('Error:', error));
         }
 
-        document.getElementById('search').addEventListener('keyup', function () {
+        document.getElementById('search').addEventListener('keyup', function() {
             let searchQuery = this.value;
             let selectedMonth = document.getElementById('month').value;
             if (searchQuery.length > 2 || searchQuery.length === 0) {
@@ -251,14 +253,14 @@
             }
         });
 
-        document.getElementById('month').addEventListener('change', function () {
+        document.getElementById('month').addEventListener('change', function() {
             let selectedMonth = this.value;
             let searchQuery = document.getElementById('search').value;
             currentPage = 1;
             fetchRecords(searchQuery, selectedMonth, currentPage);
         });
 
-        document.getElementById('prev-page').addEventListener('click', function () {
+        document.getElementById('prev-page').addEventListener('click', function() {
             if (currentPage > 1) {
                 currentPage--;
                 let searchQuery = document.getElementById('search').value;
@@ -267,7 +269,7 @@
             }
         });
 
-        document.getElementById('next-page').addEventListener('click', function () {
+        document.getElementById('next-page').addEventListener('click', function() {
             if (currentPage * perPage < totalRecords) {
                 currentPage++;
                 let searchQuery = document.getElementById('search').value;
@@ -285,7 +287,7 @@
     });
 </script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("month").value = "";
     });
 </script>

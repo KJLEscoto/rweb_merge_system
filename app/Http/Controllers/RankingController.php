@@ -16,71 +16,85 @@ class RankingController extends Controller
         $selectedMonth = request('month', Carbon::now()->month);
         $selectedYear = request('year', Carbon::now()->year);
 
-        $groupedData = [];
-        $hours_worked = 0;
+        $workSchedules = [
+            'Monday'    => ['start' => '09:00', 'end' => '18:00'],
+            'Tuesday'   => ['start' => '08:00', 'end' => '18:00'],
+            'Wednesday' => ['start' => '08:00', 'end' => '18:00'],
+            'Thursday'  => ['start' => '08:00', 'end' => '18:00'],
+            'Friday'    => ['start' => '08:00', 'end' => '18:00'],
+            'Saturday'  => ['start' => '08:00', 'end' => '12:00'],
+            'Sunday'    => ['start' => null, 'end' => null],
+        ];
 
-        // Retrieve all users
+        $groupedData = [];
+
         $users = User::all();
 
         foreach ($users as $user) {
-            //echo "Retrieving logs for user: {$user->firstname}<br>"; // Echo user retrieval
-
             $userLogs = Histories::where('user_id', $user->id)
                 ->whereYear('datetime', $selectedYear)
                 ->whereMonth('datetime', $selectedMonth)
                 ->orderBy('datetime', 'asc')
                 ->get();
 
-            $logsByDate = $userLogs->groupBy(function ($log) {
-                return Carbon::parse($log->datetime)->format('Y-m-d');
-            });
+            $logsByDate = $userLogs->groupBy(fn($log) => Carbon::parse($log->datetime)->format('Y-m-d'));
 
             $daysInMonth = Carbon::createFromDate($selectedYear, $selectedMonth, 1)->daysInMonth;
             $totalHours = 0;
             $firstname = $user->firstname;
 
-            // Loop through each day in the selected month
             for ($day = 1; $day <= $daysInMonth; $day++) {
                 $dateKey = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->format('Y-m-d');
+                $dayName = Carbon::parse($dateKey)->format('l'); // Get day name (Monday, Tuesday, etc.)
 
-                // Check if the day has logs (time in and time out)
+                if (!isset($workSchedules[$dayName]) || is_null($workSchedules[$dayName]['start'])) {
+                    continue; // Skip non-working days (like Sunday)
+                }
+
+                $workStart = Carbon::parse("$dateKey " . $workSchedules[$dayName]['start']);
+                $workEnd = Carbon::parse("$dateKey " . $workSchedules[$dayName]['end']);
+
+                $lunchStart = Carbon::parse("$dateKey 12:00");
+                $lunchEnd = Carbon::parse("$dateKey 13:00");
+
                 if (isset($logsByDate[$dateKey])) {
-                    //echo "Logs found for {$dateKey} - user: {$user->firstname}<br>"; // Echo log existence
-
                     $logs = $logsByDate[$dateKey];
                     $firstTimeIn = null;
                     $lastTimeOut = null;
                     $dailyHours = 0;
 
-                    // Iterate through the logs for the day
                     foreach ($logs as $log) {
-                        // Check for the first "time in" of the day
+                        $logTime = Carbon::parse($log->datetime);
+
                         if ($log->description === 'time in' && !$firstTimeIn) {
-                            $firstTimeIn = Carbon::parse($log->datetime);
-                            //echo "First time in for {$dateKey}: {$firstTimeIn}<br>"; // Echo first time in
+                            $firstTimeIn = $logTime;
                         }
 
-                        // Check for the last "time out" of the day
                         if ($log->description === 'time out') {
-                            $lastTimeOut = Carbon::parse($log->datetime);
-                            //echo "Last time out for {$dateKey}: {$lastTimeOut}<br>"; // Echo last time out
+                            $lastTimeOut = $logTime;
                         }
                     }
 
-                    // Only calculate if both time in and time out are present
                     if ($firstTimeIn && $lastTimeOut) {
-                        $dailyHours = $firstTimeIn->diffInMinutes($lastTimeOut) / 60;
-                        //echo "Total hours for {$dateKey}: {$dailyHours} hours<br>"; // Echo daily total
+                        if ($firstTimeIn->lt($workStart)) {
+                            $firstTimeIn = $workStart;
+                        }
+                        if ($lastTimeOut->gt($workEnd)) {
+                            $lastTimeOut = $workEnd;
+                        }
+
+                        $dailyMinutes = $firstTimeIn->diffInMinutes($lastTimeOut);
+
+                        if ($firstTimeIn->lt($lunchEnd) && $lastTimeOut->gt($lunchStart)) {
+                            $dailyMinutes -= $lunchStart->diffInMinutes($lunchEnd);
+                        }
+
+                        $dailyHours = $dailyMinutes / 60;
                         $totalHours += $dailyHours;
-                    } else {
-                        //echo "Skipping {$dateKey} due to missing time in or time out.<br>"; // Echo if missing time
                     }
-                } else {
-                    //echo "No logs found for {$dateKey} for user {$user->firstname}.<br>"; // Echo no logs found
                 }
             }
 
-            // Store the total hours worked for each user
             $groupedData[$user->id] = [
                 'schools' => $user->schools,
                 'profiles' => $user->profiles,
@@ -89,23 +103,14 @@ class RankingController extends Controller
                 'user_id' => $user->id,
                 'hours_worked' => floor($totalHours),
             ];
-
-            //echo "Total hours worked by {$user->firstname}: {$totalHours} hours.<br><br>"; // Echo user total hours
         }
 
-        // Sort the array by hours_worked in descending order and take the top 3
         $topUsers = collect($groupedData)
-            ->sortByDesc('hours_worked') // Sort from highest to lowest
-            ->take(3) // Get only top 3
-            ->values() // Reset array keys
+            ->sortByDesc('hours_worked')
+            ->take(3)
+            ->values()
             ->toArray();
-
-        //echo "Top 3 users based on hours worked:<br>";
-        foreach ($topUsers as $user) {
-            //echo "User: {$user['name']} - Hours Worked: {$user['hours_worked']}<br>"; // Echo top users
-        }
 
         return $topUsers;
     }
-
 }

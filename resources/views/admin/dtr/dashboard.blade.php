@@ -53,10 +53,10 @@
     <x-modal.time-in-time-out-modal id="time-in-time-out-modal" />
 
     {{-- <span name="time_in_success" id="time_in_success" class="hidden">
-    <x-flash-msg msg="Time In checked successfully"/>
+        <x-flash-msg msg="Time In checked successfully" />
     </span>
     <span name="time_out_success" id="time_out_success" class="hidden">
-    <x-flash-msg msg="Time Out checked successfully"/>
+        <x-flash-msg msg="Time Out checked successfully" />
     </span> --}}
 
     <div class="flex flex-col gap-5 w-auto h-auto">
@@ -79,7 +79,8 @@
                     </div>
 
                     <div class="md:!text-sm text-xs font-semibold text-red-500">
-                        {{ \Carbon\Carbon::now()->format('M d, Y') }}</div>
+                        {{ \Carbon\Carbon::now()->format('M d, Y') }}
+                    </div>
                 </div>
                 <div class="h-full pb-7 w-full bg-white overflow-y-auto border border-gray-200">
                     @forelse ($array_daily as $daily)
@@ -100,7 +101,8 @@
                                             {{ $daily['timeFormat'] }}
                                         </section>
                                         <p class="text-sm font-medium text-gray-700 capitalize truncate">
-                                            {{ $daily['name'] }}</p>
+                                            {{ $daily['name'] }}
+                                        </p>
                                     </div>
                                     @if ($daily['description'] === 'time in')
                                         <div class="flex items-center gap-1 select-none text-sm font-semibold">
@@ -110,8 +112,7 @@
                                             </p>
                                         </div>
                                     @else
-                                        <div
-                                            class="text-red-500 flex items-center gap-1 select-none text-sm font-semibold">
+                                        <div class="text-red-500 flex items-center gap-1 select-none text-sm font-semibold">
                                             <p>Time out</p>
                                         </div>
                                     @endif
@@ -120,8 +121,7 @@
                             </div>
                         </a>
                     @empty
-                        <h1
-                            class="text-center flex text-sm items-center justify-center h-full font-semibold text-gray-500">
+                        <h1 class="text-center flex text-sm items-center justify-center h-full font-semibold text-gray-500">
                             Waiting for attendees
                             <span class="eos-icons--three-dots-loading w-10 h-10"></span>
                         </h1>
@@ -135,7 +135,9 @@
                     <div class="flex lg:items-start items-center gap-2">
                         <p class="font-semibold lg:!text-base text-sm">Top 3 Attendance</p>
                     </div>
-                    <p class="md:!text-sm text-xs font-semibold text-red-500">Highest Hour Basis</p>
+                    <p class="md:!text-sm text-xs font-semibold text-red-500">
+                        {{ \Carbon\Carbon::now()->format('F Y') }}
+                    </p>
                 </div>
 
                 <!--HTML CODE-->
@@ -143,55 +145,50 @@
                     <div class="swiper progress-slide-carousel swiper-container h-full flex">
                         <div class="swiper-wrapper h-full flex">
                             @forelse ($ranking as $index => $user)
-                                @if ($user['role'] != 'admin' && $user['hours_worked'] > 0)
-                                    <div class="swiper-slide h-full flex">
-                                        <div
-                                            class="bg-[#F57D11]/5 h-full w-full overflow-hidden flex flex-col justify-center">
-                                            <section
-                                                class="flex items-end text-center gap-2 w-full p-5 relative h-full">
-                                                <div class="w-full space-y-1 px-5">
-                                                    <p class="text-sm font-semibold">TOP {{ $index + 1 }}</p>
-                                                    <h1 class="text-sm truncate capitalize">
-                                                        {{ $user['name'] }}
-                                                    </h1>
-                                                    <p class="text-xl font-semibold text-[#F57D11]">
-                                                        {{ $user['hours_worked'] }} hours
-                                                    </p>
-                                                </div>
-                                                <x-image
-                                                    path="{{ \App\Models\File::where('id', $user['profiles']['file_id'])->first()->path . '?t=' . time() }}"
-                                                    className="absolute inset-0 mx-auto h-full scale-125 w-auto opacity-50 z-0" />
-                                            </section>
-                                        </div>
-                                    </div>
-                                @elseif ($index > 0 && $user['hours_worked'] > 0)
-                                    <div class="swiper-slide h-full flex">
-                                        <div
-                                            class="bg-[#F57D11]/5 h-full w-full overflow-hidden flex flex-col justify-center">
-                                            <section
-                                                class="flex items-end text-center gap-2 w-full p-5 relative h-full">
-                                                <div class="w-full space-y-1 px-5">
-                                                    <p class="text-sm font-semibold">TOP {{ $index + 2 }}</p>
-                                                    <h1 class="text-sm truncate capitalize text-gray-500/80">
-                                                        ???
-                                                    </h1>
-                                                    <p class="text-xl font-semibold text-[#F57D11]">
-                                                        ???
-                                                    </p>
-                                                </div>
-                                                <x-image
-                                                    path="{{ optional(\App\Models\File::find(id: $user['profiles']['file_id']))->path . '?t=' . time() ??
-                                                        'resources/img/default-male.png' }}"
-                                                    className="absolute inset-0 mx-auto h-full scale-125 w-auto opacity-20 z-0" />
-                                            </section>
-                                        </div>
-                                    </div>
-                                @elseif ($index <= 0)
-                                    <div
-                                        class="flex text-sm w-full items-center justify-center h-full font-semibold text-gray-500">
-                                        No top performer yet.
-                                    </div>
-                                @endif
+                                                @if ($user['role'] != 'admin' && $user['hours_worked'] > 0)
+                                                    <div class="swiper-slide h-full flex">
+                                                        <div class="bg-[#F57D11]/5 h-full w-full overflow-hidden flex flex-col justify-center">
+                                                            <section class="flex items-end text-center gap-2 w-full p-5 relative h-full">
+                                                                <div class="w-full space-y-1 px-5">
+                                                                    <p class="text-sm font-semibold">TOP {{ $index + 1 }}</p>
+                                                                    <h1 class="text-sm truncate capitalize">
+                                                                        {{ $user['name'] }}
+                                                                    </h1>
+                                                                    <p class="text-xl font-semibold text-[#F57D11]">
+                                                                        {{ $user['hours_worked'] }} hours
+                                                                    </p>
+                                                                </div>
+                                                                <x-image
+                                                                    path="{{ \App\Models\File::where('id', $user['profiles']['file_id'])->first()->path . '?t=' . time() }}"
+                                                                    className="absolute inset-0 mx-auto h-full scale-125 w-auto opacity-50 z-0" />
+                                                            </section>
+                                                        </div>
+                                                    </div>
+                                                @elseif ($index > 0 && $user['hours_worked'] > 0)
+                                                                    <div class="swiper-slide h-full flex">
+                                                                        <div class="bg-[#F57D11]/5 h-full w-full overflow-hidden flex flex-col justify-center">
+                                                                            <section class="flex items-end text-center gap-2 w-full p-5 relative h-full">
+                                                                                <div class="w-full space-y-1 px-5">
+                                                                                    <p class="text-sm font-semibold">TOP {{ $index + 2 }}</p>
+                                                                                    <h1 class="text-sm truncate capitalize text-gray-500/80">
+                                                                                        ???
+                                                                                    </h1>
+                                                                                    <p class="text-xl font-semibold text-[#F57D11]">
+                                                                                        ???
+                                                                                    </p>
+                                                                                </div>
+                                                                                <x-image path="{{ optional(\App\Models\File::find(id: $user['profiles']['file_id']))->path . '?t=' . time() ??
+                                                    'resources/img/default-male.png' }}"
+                                                                                    className="absolute inset-0 mx-auto h-full scale-125 w-auto opacity-20 z-0" />
+                                                                            </section>
+                                                                        </div>
+                                                                    </div>
+                                                @elseif ($index <= 0)
+                                                    <div
+                                                        class="flex text-sm w-full items-center justify-center h-full font-semibold text-gray-500">
+                                                        No top performer yet.
+                                                    </div>
+                                                @endif
                             @empty
                                 <div
                                     class="flex text-sm w-full items-center justify-center h-full font-semibold text-gray-500">
@@ -248,8 +245,7 @@
                                 <p>{{ $user['ago'] }}</p>
                             </a>
                         @elseif($index <= 0)
-                            <div
-                                class="flex text-sm w-full items-center justify-center h-full font-semibold text-gray-500">
+                            <div class="flex text-sm w-full items-center justify-center h-full font-semibold text-gray-500">
                                 No user yet.
                             </div>
                         @endif
@@ -375,7 +371,7 @@
 
 
             // Add event listeners
-            newButtonTimeIn.addEventListener('click', async function() {
+            newButtonTimeIn.addEventListener('click', async function () {
                 try {
                     newButtonTimeIn.classList.add('hidden');
                     newButtonTimeOut.classList.add('hidden');
@@ -401,7 +397,7 @@
                 }
             });
 
-            newButtonTimeOut.addEventListener('click', async function() {
+            newButtonTimeOut.addEventListener('click', async function () {
                 try {
                     newButtonTimeIn.classList.add('hidden');
                     newButtonTimeOut.classList.add('hidden');

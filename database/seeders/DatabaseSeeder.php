@@ -29,6 +29,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+<<<<<<< HEAD
+=======
+                // SchoolSeeder::class,
+>>>>>>> 2e7013581e4a1fdc305f50bfdf53a058a6f94606
             RoleSeeder::class,
             PageSeeder::class,
             PrivilegeSeeder::class,

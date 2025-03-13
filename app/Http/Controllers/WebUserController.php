@@ -18,7 +18,6 @@ class WebUserController extends Controller
         $pages = Page::all();
         $privilege = Privilege::all();
 
-        @dd();
         return view('admin.web-development.users.index', compact('pages', 'privilege'));
     }
 

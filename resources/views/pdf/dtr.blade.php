@@ -17,31 +17,31 @@
 
 <body style="font-family: Arial, sans-serif; margin: 20px; padding: 0;">
 
-    <div style="position: relative; height: 120px; margin-bottom: 50px;">
+    <div style="position: relative; height: 120px; margin-bottom: 5px;">
         <!-- Left Image -->
-        <img src="resources/img/rweb_logo.png" 
-             alt="RWEB Logo" 
-             style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 250px; height: auto;">
+        <img src="resources/img/rweb_logo.png" alt="RWEB Logo"
+            style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 250px; height: auto;">
 
         <!-- Right Image -->
-        <img src="{{ $file_path }}" 
-             alt="Profile Image" 
-             onerror="this.onerror=null;this.src='/resources/img/default.png';"
-             style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 70px; height: auto;">
+        <img src="{{ $file_path }}" alt="Profile Image"
+            onerror="this.onerror=null;this.src='/resources/img/default.png';"
+            style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 70px; height: auto;">
     </div>
 
-    <div style="text-align: center; margin: 20px 0;">
+    <div style="text-align: center; margin: 0;">
         <h4 style="font-weight: bold; color: #F57D11; margin: 0;">OJT Daily Time Record</h4>
         <h1 style="font-size: 24px; margin-top: 5px;">{{ $pagination['currentMonth']['name'] }}</h1>
     </div>
 
     <hr>
 
-    <p><strong>Name:</strong> {{ $user->firstname }} {{ $user->middlename }} {{ $user->lastname }}</p>
+    <p><strong>Name:</strong> <span style="text-transform: capitalize;">{{ $user->firstname }}
+            {{ substr($user->middlename, 0, 1) }}. {{ $user->lastname }}</span></p>
     <p><strong>Position:</strong> Intern</p>
     <div style="position: relative; height: auto; margin-top: -20px;">
         <!-- Left Image -->
-        <p><strong>Hours This Month:</strong> {{ floor($totalHoursPerMonth / 60) }} hours {{ $totalHoursPerMonth % 60 }} minutes</p>
+        <p><strong>Hours This Month:</strong> {{ floor($totalHoursPerMonth / 60) }} hours {{ $totalHoursPerMonth % 60 }}
+            minutes</p>
         {{-- <img src="resources/img/rweb_logo.png" 
              alt="RWEB Logo" 
              style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 250px; height: auto;"> --}}
@@ -52,7 +52,8 @@
              onerror="this.onerror=null;this.src='/resources/img/default.png';"
              style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 70px; height: auto;"> --}}
         @if (!empty($approved_by))
-            <p style="position: absolute; right: 0; top: 0; width: auto; margin: 0; text-align: right; text-transform: capitalize;">
+            <p
+                style="position: absolute; right: 0; top: 0; width: auto; margin: 0; text-align: right; text-transform: capitalize;">
                 <strong>Approved By:</strong> {{ $approved_by }}
             </p>
         @endif
@@ -68,20 +69,29 @@
     <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
         <thead>
             <tr>
-                <th style="border: 1px solid #ccc; padding: 10px; text-align: center; background-color: #F57D11; color: white;">Day</th>
-                <th style="border: 1px solid #ccc; padding: 10px; text-align: center; background-color: #F57D11; color: white;">Time In</th>
-                <th style="border: 1px solid #ccc; padding: 10px; text-align: center; background-color: #F57D11; color: white;">Time Out</th>
-                <th style="border: 1px solid #ccc; padding: 10px; text-align: center; background-color: #F57D11; color: white;">Total Hours</th>
+                <th
+                    style="border: 1px solid #ccc; padding: 10px; text-align: center; background-color: #F57D11; color: white;">
+                    Day</th>
+                <th
+                    style="border: 1px solid #ccc; padding: 10px; text-align: center; background-color: #F57D11; color: white;">
+                    Time In</th>
+                <th
+                    style="border: 1px solid #ccc; padding: 10px; text-align: center; background-color: #F57D11; color: white;">
+                    Time Out</th>
+                <th
+                    style="border: 1px solid #ccc; padding: 10px; text-align: center; background-color: #F57D11; color: white;">
+                    Total Hours</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($records as $date => $data)
+            @foreach ($records as $date => $data)
                 <tr>
-                    <td style="border: 1px solid #ccc; padding: 10px; text-align: center;">{{ \Carbon\Carbon::parse($data['date'])->format('j') }}</td>
+                    <td style="border: 1px solid #ccc; padding: 10px; text-align: center;">
+                        {{ \Carbon\Carbon::parse($data['date'])->format('j') }}</td>
                     <td style="border: 1px solid #ccc; padding: 10px; text-align: center;">{{ $data['time_in'] }}</td>
                     <td style="border: 1px solid #ccc; padding: 10px; text-align: center;">{{ $data['time_out'] }}</td>
                     <td style="border: 1px solid #ccc; padding: 10px; text-align: center;">
-                        {{ $data['hours_worked'] == '—' ? '—' : floor($data['hours_worked'] / 60) . ' hours ' . ($data['hours_worked'] % 60) . ' minutes' }}
+                        {{ $data['hours_worked'] == '—' ? '—' : floor($data['hours_worked'] / 60) . ' hours ' . $data['hours_worked'] % 60 . ' minutes' }}
                     </td>
                 </tr>
             @endforeach

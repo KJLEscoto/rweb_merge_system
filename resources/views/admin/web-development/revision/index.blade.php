@@ -1,28 +1,28 @@
 <head>
-    <title>{{ env('APP_NAME') }} | Front-end | Revision Checklist</title>
+    <title>{{ env('APP_NAME') }} | Web Development | Revision</title>
 </head>
 
 @php
     $revisions = [
         [
-            'file_name' => 'RWS024 REVISION CHECKLIST - COMMMODITIX',
-            'date' => 'Feb 26, 2025',
+            'title' => 'RWS024 REVISION CHECKLIST - COMMMODITIX',
+            'designated' => 'Content Writer - Supervisor',
             'status' => 'Done',
         ],
         [
-            'file_name' => 'RWS025 REVISION REPORT - PROJECT X',
-            'date' => 'Feb 27, 2025',
+            'title' => 'RWS025 REVISION REPORT - PROJECT X',
+            'designated' => 'Content Writer - Supervisor',
             'status' => 'Pending',
         ],
         [
-            'file_name' => 'RWS026 REVISION DOCUMENT - SITE AUDIT',
-            'date' => 'Feb 28, 2025',
+            'title' => 'RWS026 REVISION DOCUMENT - SITE AUDIT',
+            'designated' => 'Content Writer - Supervisor',
             'status' => 'Delayed',
         ],
     ];
 @endphp
 
-<x-main-layout breadcumb="Front-end" page="Revision Checklist">
+<x-main-layout breadcumb="Web Development" page="Revision">
     <main class="h-auto w-full flex flex-col gap-5">
 
         @if ($revisions)
@@ -39,34 +39,35 @@
                         </div>
                     </section>
 
-                    <div class="w-auto">
+                    {{-- <div class="w-auto">
                         <section class="w-fit hover:scale-105 transition">
                             <a href="{{ route('admin.front-end.revision-checklist.create') }}"
                                 class="text-sm text-white bg-[#f56d11] px-5 py-2 rounded font-medium text-nowrap">Add
                                 Revision Checklist</a>
                         </section>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse border border-gray-300">
                         <thead>
                             <tr
                                 class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
-                                <th>File Name</th>
-                                <th>Date</th>
+                                <th>Title</th>
+                                <th>Designated</th>
                                 <th class="!text-center">Status</th>
+                                <th class="!text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($revisions as $revision)
                                 <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
                                     <td class="flex items-center gap-2">
-                                        <div class="p-2 rounded bg-[#F57D11] text-white">
+                                        {{-- <div class="p-2 rounded bg-[#F57D11] text-white">
                                             <span class="mingcute--file-fill w-6 h-6"></span>
-                                        </div>
-                                        {{ $revision['file_name'] }}
+                                        </div> --}}
+                                        {{ $revision['title'] }}
                                     </td>
-                                    <td>{{ $revision['date'] }}</td>
+                                    <td>{{ $revision['designated'] }}</td>
                                     <td class="flex justify-center items-center">
                                         @php
                                             $statusClasses = [
@@ -80,6 +81,20 @@
                                             {{ $revision['status'] }}
                                         </p>
                                     </td>
+                                    <td>
+                                        <div class="flex items-center justify-center gap-2">
+                                            <a href="#"
+                                                class="approve-btn px-2 py-1 font-medium bg-green-500 text-white rounded flex items-center justify-center gap-1 hover:scale-105 transition">
+                                                <span class="basil--eye-solid !w-4 !h-4"></span>
+                                                <p>View</p>
+                                            </a>
+                                            {{-- <a href="#"
+                                                class="approve-btn px-2 py-1 font-medium bg-blue-500 text-white rounded flex items-center justify-center gap-1">
+                                                <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
+                                                <p>Edit</p>
+                                            </a> --}}
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -88,8 +103,8 @@
             </div>
             <p>pagination here.</p>
         @else
-            <div class="w-full h-full flex flex-col gap-10 items-center justify-center select-none">
-                <h1 class="text-4xl font-semibold italic">No Updates Yet</h1>
+            <div class="w-full h-auto flex flex-col gap-10 items-center justify-center select-none">
+                <h1 class="text-4xl font-semibold italic">No Revisions Yet</h1>
                 <img draggable="false" src="{{ asset('image/revisions_empty.png') }}" class="w-auto h-80">
             </div>
         @endif
