@@ -42,15 +42,15 @@
         <!-- Left Image -->
         <p><strong>Hours This Month:</strong> {{ floor($totalHoursPerMonth / 60) }} hours {{ $totalHoursPerMonth % 60 }}
             minutes</p>
-        {{-- <img src="resources/img/rweb_logo.png" 
-             alt="RWEB Logo" 
-             style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 250px; height: auto;"> --}}
+        {{-- <img src="resources/img/rweb_logo.png" alt="RWEB Logo"
+            style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 250px; height: auto;">
+        --}}
 
         <!-- Right Image -->
-        {{-- <img src="{{ $file_path }}" 
-             alt="Profile Image" 
-             onerror="this.onerror=null;this.src='/resources/img/default.png';"
-             style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 70px; height: auto;"> --}}
+        {{-- <img src="{{ $file_path }}" alt="Profile Image"
+            onerror="this.onerror=null;this.src='/resources/img/default.png';"
+            style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 70px; height: auto;">
+        --}}
         @if (!empty($approved_by))
             <p
                 style="position: absolute; right: 0; top: 0; width: auto; margin: 0; text-align: right; text-transform: capitalize;">
@@ -58,11 +58,13 @@
             </p>
         @endif
     </div>
-    {{-- <p><strong>Hours This Month:</strong> {{ floor($totalHoursPerMonth / 60) }} hours {{ $totalHoursPerMonth % 60 }} minutes</p>
+    {{-- <p><strong>Hours This Month:</strong> {{ floor($totalHoursPerMonth / 60) }} hours {{ $totalHoursPerMonth % 60
+        }} minutes</p>
     @if (!empty($approved_by))
-        <p style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 70px; text-align: right; text-transform: uppercase;">
-            <strong>Approved By:</strong> {{ strtoupper($approved_by) }}
-        </p>
+    <p
+        style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 70px; text-align: right; text-transform: uppercase;">
+        <strong>Approved By:</strong> {{ strtoupper($approved_by) }}
+    </p>
     @endif --}}
 
 
@@ -70,34 +72,34 @@
         <thead>
             <tr>
                 <th
-                    style="border: 1px solid #ccc; padding: 10px; text-align: center; background-color: #F57D11; color: white;">
+                    style="border: 1px solid #ccc; padding: 2px; text-align: center; background-color: #F57D11; color: white;">
                     Day</th>
                 <th
-                    style="border: 1px solid #ccc; padding: 10px; text-align: center; background-color: #F57D11; color: white;">
+                    style="border: 1px solid #ccc; padding: 2px; text-align: center; background-color: #F57D11; color: white;">
                     Time In</th>
                 <th
-                    style="border: 1px solid #ccc; padding: 10px; text-align: center; background-color: #F57D11; color: white;">
+                    style="border: 1px solid #ccc; padding: 2px; text-align: center; background-color: #F57D11; color: white;">
                     Time Out</th>
                 <th
-                    style="border: 1px solid #ccc; padding: 10px; text-align: center; background-color: #F57D11; color: white;">
+                    style="border: 1px solid #ccc; padding: 2px; text-align: center; background-color: #F57D11; color: white;">
                     Total Hours</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($records as $date => $data)
                 <tr>
-                    <td style="border: 1px solid #ccc; padding: 10px; text-align: center;">
-                        {{ \Carbon\Carbon::parse($data['date'])->format('j') }}</td>
-                    <td style="border: 1px solid #ccc; padding: 10px; text-align: center;">{{ $data['time_in'] }}</td>
-                    <td style="border: 1px solid #ccc; padding: 10px; text-align: center;">{{ $data['time_out'] }}</td>
-                    <td style="border: 1px solid #ccc; padding: 10px; text-align: center;">
+                    <td style="border: 1px solid #ccc; padding: 2px; text-align: center;">
+                        {{ \Carbon\Carbon::parse($data['date'])->format('j') }}
+                    </td>
+                    <td style="border: 1px solid #ccc; padding: 2px; text-align: center;">{{ $data['time_in'] }}</td>
+                    <td style="border: 1px solid #ccc; padding: 2px; text-align: center;">{{ $data['time_out'] }}</td>
+                    <td style="border: 1px solid #ccc; padding: 2px; text-align: center;">
                         {{ $data['hours_worked'] == '—' ? '—' : floor($data['hours_worked'] / 60) . ' hours ' . $data['hours_worked'] % 60 . ' minutes' }}
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-
 </body>
 
 </html>
