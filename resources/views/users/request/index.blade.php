@@ -54,6 +54,7 @@
                         class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
                         <th>#</th>
                         <th>Title</th>
+                        <th>Month</th>
                         <th>Status</th>
                         <th>Date Requested</th>
                         <th>Date Approved</th>
@@ -102,6 +103,9 @@
                         <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap">
                             <td class="font-semibold text-gray-700">{{ $loop->iteration }}</td>
                             <td>{{ $request['title'] }}</td>
+                            <td class="text-orange-500 font-semibold">
+                                {{ \Carbon\Carbon::createFromFormat('m', $request['month'])->format('F Y') }}
+                            </td>
                             <td class="font-semibold {{ $request['statusColor'] }}">{{ $request['statusText'] }}</td>
                             <td>{{ $request['formattedDate'] }}</td>
                             <td>{{ $request['date_approved'] ?? '—' }}</td>

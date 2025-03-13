@@ -72,7 +72,18 @@ class PDFController extends Controller
             abort(500, 'Failed to generate PDF');
         }
 
-        return $pdf->download('DTR_Report.pdf');
+        //$pdfName = 'Requested_DTR_MONTH_SURNAME';
+        //$adminPdfName = 'DTR_MONTH_SURNAME';
+
+
+        $pagination = is_string($request->pagination) ? json_decode($request->pagination, true) : $request->pagination;
+        $records = is_string($request->records) ? json_decode($request->records, true) : $request->records;
+
+        $pdfFormat = 'Requested_DTR_' . $pagination['currentMonth']['name'] . '_' . $user->lastname;
+
+        return $pdf->download(
+            $pdfFormat . '.pdf'
+        );
     }
 
     public function admin_download(Request $request)
@@ -125,13 +136,20 @@ class PDFController extends Controller
             'pagination' => $request->pagination,
             'totalHoursPerMonth' => $request->totalHoursPerMonth,
             'approved_by' => $request->approved_by,
-        ]);
+        ])->setPaper('legal', 'portrait');;
 
         // Debugging: Check if $pdf is null
         if (!$pdf) {
             abort(500, 'Failed to generate PDF');
         }
 
-        return $pdf->download('DTR_Report.pdf');
+        $pagination = is_string($request->pagination) ? json_decode($request->pagination, true) : $request->pagination;
+        $records = is_string($request->records) ? json_decode($request->records, true) : $request->records;
+
+        $pdfFormat = 'DTR_' . $pagination['currentMonth']['name'] . '_' . $user->lastname;
+
+        return $pdf->download(
+            $pdfFormat . '.pdf'
+        );
     }
 }
