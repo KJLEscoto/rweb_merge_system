@@ -480,7 +480,9 @@ if (Schema::hasTable('pages') && Schema::hasTable('privileges')) {
 
 
 //web development routes
-Route::prefix('/admin/web_development')->group(function () use (
+Route::prefix('/admin/web_development')
+->middleware(['role'])
+->group(function () use (
     $dashboard,
     $direct_job_order,
     $operation_job_order,
@@ -496,12 +498,6 @@ Route::prefix('/admin/web_development')->group(function () use (
     $can_create,
     $can_delete,
 ) {
-    // Route::get('/supervisor/directjob', [Dashboard::class, 'index'])
-    // Route::prefix('dashboard')->group(function () use ($dashboard, $can_read, $can_update, $can_create, $can_delete) {
-    //     Route::get('/', function () {
-    //         @dd('success!');
-    //     })->middleware("role_channel:$dashboard, $can_read");
-    // });
     Route::get('/dashboard', function () {
         return view('admin.web-development.dashboard');
     })->name('admin.web.dashboard');
