@@ -36,4 +36,9 @@ class WebProject extends Model
     {
         return $this->belongsTo(User::class, 'supervisor_signed_id');
     }
+
+    public function web_requests()
+    {
+        return $this->hasOne(WebRequest::class, 'project_id');
+    }
 }

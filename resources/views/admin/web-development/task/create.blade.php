@@ -58,6 +58,22 @@
                 <h1 class="font-bold text-xs">Instruction</h1>
                 <p class="p-3 rounded-sm border">{{ $web_project_channel->web_project->instructions }}</p>
             </div>
+            @if ($web_project_channel->where('project_id', $web_project_channel->project_id)->where('type', 'like', '%web_designer%')->where('status', 'like', '%Completed%')->exists())
+                <div class="space-y-1 w-full">
+                    <h1 class="font-bold text-xs">Web Designer Draft:</h1>
+                    <p class="p-3 rounded-sm border">
+                        {{ $web_project_channel->where('project_id', $web_project_channel->project_id)->where('type', 'like', '%web_designer%')->where('status', 'like', '%Completed%')->first()->draft }}
+                    </p>
+                </div>
+            @endif
+            @if ($web_project_channel->where('project_id', $web_project_channel->project_id)->where('type', 'like', '%front_end%')->where('status', 'like', '%Completed%')->exists())
+                <div class="space-y-1 w-full">
+                    <h1 class="font-bold text-xs">Front End Draft:</h1>
+                    <p class="p-3 rounded-sm border">
+                        {{ $web_project_channel->where('project_id', $web_project_channel->project_id)->where('type', 'like', '%front_end%')->where('status', 'like', '%Completed%')->first()->draft }}
+                    </p>
+                </div>
+            @endif
             <hr class="border border-[#f56d11]">
             <div class="space-y-1 w-full">
                 <h1 class="font-bold text-xs">Draft</h1>

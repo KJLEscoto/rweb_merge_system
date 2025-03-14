@@ -104,7 +104,7 @@
                                             {{-- <div class="p-2 rounded bg-[#F57D11] text-white">
                                             <span class="mingcute--file-fill w-6 h-6"></span>
                                         </div> --}}
-                                            {{ $web_project_channel->web_project->title }}
+                                            {{ $web_project_channel->type }}
                                         </td>
                                         <td>{{ $web_project_channel->date_targeted ? $web_project_channel->date_targeted : 'null' }}
                                         </td>
