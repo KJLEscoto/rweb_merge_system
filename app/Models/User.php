@@ -194,4 +194,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(WebProject::class, 'client_id');
     }
+
+    public function web_requests()
+    {
+        return $this->hasOne(WebRequest::class, 'user_id');
+    }
 }

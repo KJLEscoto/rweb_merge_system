@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\WebApprovalController;
 use App\Http\Controllers\WebAuthenticatedSessionController;
 use App\Http\Controllers\WebDirectJobOrderController;
+use App\Http\Controllers\WebOperationJobOrder;
+use App\Http\Controllers\WebRequestController;
 use App\Http\Controllers\WebTaskController;
 use App\Http\Controllers\WebUserController;
 use App\Models\Page;
@@ -66,8 +69,11 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
   // Route::view('/direct-job-order/{id}/edit', 'admin.web-development.direct-job-order.edit')->name('admin.web.direct-job-order.edit');
 
   // operation job order pages
-  Route::view('/operation-job-order', 'admin.web-development.operation-job-order.index')->name('admin.web.operation-job-order');
-  Route::view('/operation-job-order/create', 'admin.web-development.operation-job-order.create')->name('admin.web.operation-job-order.create');
+  Route::get('/operation-job-order', [WebOperationJobOrder::class, 'index'])->name('admin.web.operation-job-order');
+  Route::get('/operation-job-order/create', [WebOperationJobOrder::class, 'create'])->name('admin.web.operation-job-order.create');
+  Route::post('/operation-job-order/store', [WebOperationJobOrder::class, 'store'])->name('admin.web.operation-job-order.store');
+  // Route::view('/operation-job-order', 'admin.web-development.operation-job-order.index')->name('admin.web.operation-job-order');
+  // Route::view('/operation-job-order/create', 'admin.web-development.operation-job-order.create')->name('admin.web.operation-job-order.create');
   Route::view('/operation-job-order/{id}/edit', 'admin.web-development.operation-job-order.edit')->name('admin.web.operation-job-order.edit');
 
   // task pages
@@ -81,7 +87,10 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
   Route::view('/revision', 'admin.web-development.revision.index')->name('admin.web.revision');
 
   // approvals pages
-  Route::view('/approvals', 'admin.web-development.approvals.index')->name('admin.web.approvals');
+  Route::get('/approvals', [WebApprovalController::class, 'index'])->name('admin.web.approvals');
+  Route::get('/approvals/{id}', [WebApprovalController::class, 'show'])->name('admin.web.approvals.show');
+  Route::post('/approvals/{id}/approve', [WebApprovalController::class, 'approve'])->name('admin.web.approvals.approve');
+  // Route::view('/approvals', 'admin.web-development.approvals.index')->name('admin.web.approvals');
 
   // users pages
   // Route::view('/users', 'admin.web-development.users.index')->name('admin.web.users');
@@ -102,6 +111,11 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
 
   // instructions manual pages
   Route::view('/instructions-manual', 'admin.web-development.instructions-manual.index')->name('admin.web.instructions-manual');
+
+  // incoming request pages
+  Route::get('/incoming-requests', [WebRequestController::class, 'index'])->name('admin.web.incoming-requests');
+  Route::post('/incoming-requests/{id}', [WebRequestController::class, 'show'])->name('admin.web.incoming-requests.show');
+  Route::get('/incoming-requests/create', [WebRequestController::class, 'create'])->name('admin.web.incoming-requests.create');
 
   // profile pages
   Route::view('/profile', 'admin.web-development.profile.index')->name('admin.web.profile');

@@ -7,6 +7,7 @@ use App\Models\WebJobOrder;
 use App\Models\WebProject;
 use App\Models\WebProjectChannel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class WebDirectJobOrderController extends Controller
 {
@@ -40,60 +41,67 @@ class WebDirectJobOrderController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'clients' => 'required|array',
-            'clients.web_designer' => 'required|array',
-            'clients.front_end' => 'required|array',
-            'clients.back_end' => 'required|array',
-            'client_id' => 'required|integer', // Assuming client_id exists in clients table
-            'date_started' => 'required|date|before_or_equal:date_target',
-            'date_target' => 'required|date|after_or_equal:date_started',
-            'instructions' => 'required|string',
-        ]);
+        try {
+            DB::beginTransaction();
 
-        // Create the web job order
-        $web_job_order = WebJobOrder::create([
-            'status' => 'oten ni kent'
-        ]);
+            $request->validate([
+                'title' => 'required|string|max:255',
+                'clients' => 'required|array',
+                'clients.web_designer' => 'required|array',
+                'clients.front_end' => 'required|array',
+                'clients.back_end' => 'required|array',
+                'client_id' => 'required|integer', // Assuming client_id exists in clients table
+                'date_started' => 'required|date|before_or_equal:date_target',
+                'date_target' => 'required|date|after_or_equal:date_started',
+                'instructions' => 'required|string',
+            ]);
 
-        // Create the web project
-        $web_project = WebProject::create([
-            'title' => $request->title,
-            'instructions' => $request->instructions,
-            'issued_by_id' => auth()->user()->id,
-            'supervisor_signed_id' => auth()->user()->id,
-            'client_id' => $request->client_id
-        ]);
+            // Create the web job order
+            $web_job_order = WebJobOrder::create([
+                'status' => 'oten ni kent'
+            ]);
 
-        // Define the roles and their corresponding user IDs
-        $roles = [
-            'web_designer' => $request->clients['web_designer'],
-            'front_end' => $request->clients['front_end'],
-            'back_end' => $request->clients['back_end']
-        ];
+            // Create the web project
+            $web_project = WebProject::create([
+                'title' => $request->title,
+                'instructions' => $request->instructions,
+                'issued_by_id' => auth()->user()->id,
+                'supervisor_signed_id' => auth()->user()->id,
+                'client_id' => $request->client_id
+            ]);
 
-        // Loop through each role and create a WebProjectChannel for each user in that role
-        $firstIteration = true; // Flag to ensure date_started is saved only once
+            // Define the roles and their corresponding user IDs
+            $roles = [
+                'web_designer' => $request->clients['web_designer'],
+                'front_end' => $request->clients['front_end'],
+                'back_end' => $request->clients['back_end']
+            ];
 
-        foreach ($roles as $role => $users) {
-            foreach ($users as $user_id) {
-                WebProjectChannel::create([
-                    'user_id' => $user_id,
-                    'web_job_order_id' => $web_job_order->id,
-                    'project_id' => $web_project->id,
-                    'type' => $role,
-                    'status' => 'pending',
-                    'date_started' => $firstIteration ? $request->date_started : null, // Save only once
-                    'date_targeted' => $firstIteration ? $request->date_target : null,
-                ]);
+            // Loop through each role and create a WebProjectChannel for each user in that role
+            $firstIteration = true; // Flag to ensure date_started is saved only once
 
-                $firstIteration = false; // After the first save, set to false
+
+            $debug = null;
+            foreach ($roles as $role => $users) {
+                foreach ($users as $user_id) {
+                    $debug = WebProjectChannel::create([
+                        'user_id' => $user_id,
+                        'web_job_order_id' => $web_job_order->id,
+                        'project_id' => $web_project->id,
+                        'type' => $role,
+                        'status' => 'pending',
+                        'date_started' => $role != 'web_designer' ? null : $request->date_started, // Save only once
+                        'date_targeted' => $role != 'web_designer' ? null : $request->date_target,
+                    ]);
+                }
             }
+
+            DB::commit();
+            return redirect()->route('admin.web.direct-job-order')->with('success', 'Job Order Created Successfully');
+        } catch (\Exception $ex) {
+            @dd($ex->getMessage());
+            DB::rollback();
         }
-
-
-        return redirect()->route('admin.web.direct-job-order')->with('success', 'Job Order Created Successfully');
     }
 
 

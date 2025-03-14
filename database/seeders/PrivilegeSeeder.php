@@ -20,6 +20,8 @@ class PrivilegeSeeder extends Seeder
             'can_update',
             'can_read',
             'can_delete',
+            'can_decline',
+            'can_approve',
         ];
 
         foreach ($description as $desc) {

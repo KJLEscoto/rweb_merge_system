@@ -379,6 +379,12 @@
                         <x-admin.sidebar-menu icon="streamline--manual-book-solid" label="Instructions Manual"
                             routeName="admin.web.instructions-manual" />
                     @endif
+                    @if (Auth::user()->role_channels->where(
+                                'page_id',
+                                \App\Models\Page::where('description', 'like', '%incoming_requests%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
+                        <x-admin.sidebar-menu icon="fa--user" label="Incoming Requests"
+                            routeName="admin.web.incoming-requests" />
+                    @endif
                     @if (Auth::user()->role_channels->where('page_id', \App\Models\Page::where('description', 'like', '%profile%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
                         <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.web.profile" />
                     @endif

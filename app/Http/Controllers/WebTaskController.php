@@ -15,7 +15,7 @@ class WebTaskController extends Controller
      */
     public function index()
     {
-        $web_project_channels = WebProjectChannel::with('web_project')->where('user_id', auth()->user()->id)->whereNot('date_started', null)->whereIn('status', ['pending', 'accept'])->get();
+        $web_project_channels = WebProjectChannel::with('web_project')->where('user_id', auth()->user()->id)->whereNot('date_started', null)->whereIn('status', ['pending', 'accepted'])->get();
         return view('admin.web-development.task.index', compact('web_project_channels'));
     }
 
@@ -38,17 +38,16 @@ class WebTaskController extends Controller
      */
     public function store(Request $request, $id)
     {
-        $request->validate([
+        $data = $request->validate([
             'draft' => 'required'
         ]);
 
         $web_project_channel = WebProjectChannel::find($id);
 
         $web_project_channel->update([
-            'draft' => $request->instructions,
+            'draft' => $data['draft'],
             'status' => 'Submitted to Operation'
         ]);
-
         return redirect()->route('admin.web.task')->with('success', 'Project Submitted Successfully');
     }
 

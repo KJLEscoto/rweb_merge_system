@@ -3,6 +3,13 @@
 </head>
 
 <x-main-layout breadcumb="Web Development" page="Dashboard">
+    @if (!Auth::user()->signature)
+        <form action="{{ url('admin/smm/signature/store') }}" method="POST" id="modalSignatureForm">
+            @csrf
+            @method('PUT')
+            <x-save-signature />
+        </form>
+    @endif
     <main class="h-auto w-full flex flex-col gap-10">
         <div class="h-full w-full flex lg:flex-row flex-col gap-5">
             <div class="h-auto lg:!w-2/3 w-full flex flex-col gap-10">

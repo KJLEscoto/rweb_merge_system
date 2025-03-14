@@ -13,10 +13,9 @@
 </head>
 
 <x-main-layout breadcumb="Web Development / Operation Job Order" page="Create New Job Order">
-    <form action="#" method="POST"
+    <form action="{{ route('admin.web.operation-job-order.store') }}" method="POST"
         class="bg-white p-6 rounded border-l-8 border-[#F57D11] shadow-md flex flex-col gap-5">
         @csrf
-        @method('PUT')
 
         <div class="flex items-center gap-3">
             <a href="{{ route('admin.web.operation-job-order') }}"
@@ -41,11 +40,11 @@
                 <select name="client" id="client"
                     class="border px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11]">
                     <option value="" disabled selected>Select an Operator</option>
-                    {{-- @foreach ($clients as $client)
+                    @foreach ($employees as $client)
                         <option value="{{ $client->id }}" {{ old('client') == $client->id ? 'selected' : '' }}>
                             {{ $client->name }}
                         </option>
-                    @endforeach --}}
+                    @endforeach
                 </select>
             </div>
             <div class="space-y-1 w-full">

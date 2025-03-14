@@ -45,34 +45,48 @@
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
                 <!-- Project Name -->
                 <div class="lg:col-span-1 font-semibold">Project Name:</div>
-                <div class="lg:col-span-4">{{ $job_draft->jobOrder->title }}</div>
+                <div class="lg:col-span-4">{{ $web_project_channel->web_project->title }}</div>
 
                 <!-- Designation -->
                 <div class="lg:col-span-1 font-semibold">Designation:</div>
-                <div class="lg:col-span-4">{{ Str::title(str_replace('_', ' ', $job_draft->type)) }}</div>
+                <div class="lg:col-span-4">{{ Str::title(str_replace('_', ' ', $web_project_channel->type)) }}</div>
 
                 <!-- Google Drive Link -->
                 <div class="lg:col-span-1 font-semibold">Google Drive Link:</div>
                 <div class="lg:col-span-4">
                     <div id="draftContent" class="max-h-[300px] rounded-lg overflow-y-auto break-all">
-                        {!! $job_draft->draft !!}
+
                     </div>
                 </div>
 
                 <!-- Date -->
                 <div class="lg:col-span-1 font-semibold">Date:</div>
-                <div class="lg:col-span-4">{{ $job_draft->date_target }}</div>
+                <div class="lg:col-span-4">{{ $web_project_channel->date_target }}</div>
 
                 <!-- Client Name -->
                 <div class="lg:col-span-1 font-semibold">Client Name:</div>
-                <div class="lg:col-span-4">{{ $job_draft->client->name }}</div>
+                <div class="lg:col-span-4">{{ $web_project_channel->web_project->client->name }}</div>
 
                 <!-- Signature Upload Section (Full Width) -->
                 <div class="hidden lg:block lg:col-span-1"></div>
                 <div class="lg:col-span-4">
                     @php
-                        $isDisabled = $job_draft->status != 'Submitted to Operations';
-                        $isSigned = !empty($job_draft->signature_admin);
+                        switch (Auth::user()->roles->position) {
+                            case 'supervisor':
+                                $isDisabled = $web_project_channel->status != 'Submitted to Supervisor';
+                                break;
+                            case 'top_manager':
+                                $isDisabled = $web_project_channel->status != 'Submitted to Top Manager';
+                                break;
+                            case 'client':
+                                $isDisabled = $web_project_channel->status != 'Submitted to Client';
+                                break;
+                            case 'operations':
+                                $isDisabled = $web_project_channel->status != 'Submitted to Operation';
+                                break;
+                            default:
+                                $isDisabled = true;
+                        }
                     @endphp
 
                     <div class="mt-6 bg-white p-4 rounded-md shadow-md w-fit">
@@ -81,47 +95,44 @@
                             <div class="flex space-x-2">
                                 <button id="useUpload"
                                     class="px-2 border rounded {{ Auth::user()->signature ? '' : 'bg-gray-200' }}"
-                                    {{ $isSigned ? 'disabled' : '' }}>
+                                    {{ $isDisabled ? 'disabled' : '' }}>
                                     <i class="fa-solid fa-file-arrow-up" style="color: #fa7011;"></i>
                                 </button>
-                                <button id="usePad" class="px-2 border rounded" {{ $isSigned ? 'disabled' : '' }}>
+                                <button id="usePad" class="px-2 border rounded" {{ $isDisabled ? 'disabled' : '' }}>
                                     <i class="fa-solid fa-file-signature" style="color: #fa7011;"></i>
                                 </button>
                                 <button id="useSavedSignature"
                                     class="px-2 border rounded {{ Auth::user()->signature ? 'bg-gray-200' : '' }}"
-                                    {{ $isSigned ? 'disabled' : '' }}>
+                                    {{ $isDisabled ? 'disabled' : '' }}>
                                     <i class="fa-solid fa-cloud-arrow-up" style="color: #fa7011;"></i>
                                 </button>
                             </div>
                         </div>
 
-                        <form action="{{ url('/admin/smm/operation/update/' . $job_draft->id) }}" method="POST"
-                            enctype="multipart/form-data" id="approvalForm">
+                        <form action="{{ route('admin.web.approvals.approve', $web_project_channel->id) }}"
+                            method="POST" enctype="multipart/form-data" id="approvalForm">
                             @csrf
-                            @method('PUT')
 
                             {{-- File Upload --}}
                             <div id="uploadSection" class="{{ Auth::user()->signature ? 'hidden' : '' }}">
                                 <input type="file" name="signature_admin" accept="image/*"
                                     class="mt-2 border p-2 w-full rounded-md" id="signatureInput"
-                                    {{ $isDisabled || $isSigned ? 'disabled' : '' }}>
+                                    {{ $isDisabled || $isDisabled ? 'disabled' : '' }}>
                                 <div
                                     class="mt-4 w-52 h-32 border border-gray-300 rounded-md overflow-hidden flex items-center justify-center bg-gray-100">
-                                    <img id="imagePreview"
-                                        src="{{ $isSigned ? asset($job_draft->signature_admin) : '' }}"
-                                        alt="Selected Image"
-                                        class="{{ $isSigned ? 'block' : 'hidden' }} w-full h-full object-cover">
+                                    <img id="imagePreview" src="{{ $isDisabled ? '' : '' }}" alt="Selected Image"
+                                        class="{{ $isDisabled ? 'block' : 'hidden' }} w-full h-full object-cover">
                                 </div>
                             </div>
 
                             {{-- Signature Pad --}}
                             <div id="padSection" class="hidden">
                                 <canvas id="signature-pad" class="w-[300px] lg:w-[400px]"
-                                    style="height:200px; {{ $isSigned ? 'pointer-events:none;opacity:0.5;' : '' }}"></canvas>
+                                    style="height:200px; {{ $isDisabled ? 'pointer-events:none;opacity:0.5;' : '' }}"></canvas>
                                 <div class="mt-2 flex">
                                     <button type="button" id="clearPad"
                                         class="bg-gray-500 text-white px-2 py-1 rounded mr-2"
-                                        {{ $isSigned ? 'disabled' : '' }}>
+                                        {{ $isDisabled ? 'disabled' : '' }}>
                                         Clear
                                     </button>
                                 </div>
@@ -151,7 +162,7 @@
 
                             {{-- Agreement Checkbox --}}
                             <div class="mt-4 flex items-center space-x-2">
-                                <input type="checkbox" id="agree" required {{ $isSigned ? 'disabled' : '' }}>
+                                <input type="checkbox" id="agree" required {{ $isDisabled ? 'disabled' : '' }}>
                                 <label for="agree">I agree to the terms and conditions.</label>
                             </div>
 
@@ -165,13 +176,13 @@
                             <div class="mt-4 flex space-x-4">
                                 <button type="submit"
                                     class="px-4 py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    id="submitBtn" {{ $isSigned ? 'disabled' : '' }}>
+                                    id="submitBtn" {{ $isDisabled ? 'disabled' : '' }}>
                                     Submit Approval
                                 </button>
 
                                 <button type="button"
                                     class="px-4 py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    id="declineBtn" {{ $isSigned ? 'disabled' : '' }} onclick="openDeclineModal()">
+                                    id="declineBtn" {{ $isDisabled ? 'disabled' : '' }} onclick="openDeclineModal()">
                                     Decline
                                 </button>
 
@@ -195,7 +206,7 @@
     <div id="declineModal" class="fixed inset-0 flex items-center justify-center hidden bg-gray-500 bg-opacity-50 z-50">
         <div class="bg-white p-6 rounded-md w-[50%]">
             <h2 class="text-xl font-bold mb-4">Decline Job Order</h2>
-            <form action="{{ url('/admin/smm/operation/decline/' . $job_draft->id) }}" method="POST"
+            <form action="{{ url('/admin/smm/operation/decline/' . $web_project_channel->id) }}" method="POST"
                 id="declineForm">
                 @csrf
                 <div class="mb-4">
