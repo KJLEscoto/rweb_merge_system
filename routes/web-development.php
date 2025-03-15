@@ -1,4 +1,12 @@
 <?php
+
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\WebApprovalController;
+use App\Http\Controllers\WebAuthenticatedSessionController;
+use App\Http\Controllers\WebDirectJobOrderController;
+use App\Http\Controllers\WebOperationJobOrder;
+use App\Http\Controllers\WebRequestController;
+use App\Http\Controllers\WebTaskController;
 use App\Http\Controllers\WebUserController;
 use App\Models\Page;
 use App\Models\Privilege;
@@ -32,9 +40,11 @@ if (Schema::hasTable('pages') && Schema::hasTable('privileges')) {
   return response()->json(['error' => 'Required tables do not exist in the system_merge database.'], 500);
 }
 
+Route::get('web/login', [WebAuthenticatedSessionController::class, 'create'])->name('web.login');
+Route::post('web/login', [WebAuthenticatedSessionController::class, 'store'])->name('web.login.store');
 
 //web development routes
-Route::prefix('/admin/web-development')->group(function () use ($dashboard, $direct_job_order, $operation_job_order, $task, $revision, $approvals, $track, $users, $downloadables, $profile, $can_read, $can_update, $can_create, $can_delete, ) {
+Route::prefix('/admin/web-development')->group(function () use ($dashboard, $direct_job_order, $operation_job_order, $task, $revision, $approvals, $track, $users, $downloadables, $profile, $can_read, $can_update, $can_create, $can_delete,) {
   // Route::get('/supervisor/directjob', [Dashboard::class, 'index'])
   // Route::prefix('dashboard')->group(function () use ($dashboard, $can_read, $can_update, $can_create, $can_delete) {
   //     Route::get('/', function () {
@@ -50,29 +60,45 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
 
   // views only
   // direct job order pages
-  Route::view('/direct-job-order', 'admin.web-development.direct-job-order.index')->name('admin.web.direct-job-order');
-  Route::view('/direct-job-order/create', 'admin.web-development.direct-job-order.create')->name('admin.web.direct-job-order.create');
-  Route::view('/direct-job-order/{id}/edit', 'admin.web-development.direct-job-order.edit')->name('admin.web.direct-job-order.edit');
+  Route::get('/direct-job-order', [WebDirectJobOrderController::class, 'index'])->name('admin.web.direct-job-order');
+  Route::get('/direct-job-order/create', [WebDirectJobOrderController::class, 'create'])->name('admin.web.direct-job-order.create');
+  Route::post('/direct-job-order/store', [WebDirectJobOrderController::class, 'store'])->name('admin.web.direct-job-order.store');
+  Route::get('/direct-job-order/{id}/show', [WebDirectJobOrderController::class, 'show'])->name('admin.web.direct-job-order.show');
+  Route::get('/direct-job-order/{id}/showProjectChannels', [WebDirectJobOrderController::class, 'showProjectChannels'])->name('admin.web.direct-job-order.showProjectChannels');
+  Route::get('/direct-job-order/{id}/edit', [WebDirectJobOrderController::class, 'edit'])->name('admin.web.direct-job-order.edit');
+  // Route::view('/direct-job-order/{id}/edit', 'admin.web-development.direct-job-order.edit')->name('admin.web.direct-job-order.edit');
 
   // operation job order pages
-  Route::view('/operation-job-order', 'admin.web-development.operation-job-order.index')->name('admin.web.operation-job-order');
-  Route::view('/operation-job-order/create', 'admin.web-development.operation-job-order.create')->name('admin.web.operation-job-order.create');
+  Route::get('/operation-job-order', [WebOperationJobOrder::class, 'index'])->name('admin.web.operation-job-order');
+  Route::get('/operation-job-order/create', [WebOperationJobOrder::class, 'create'])->name('admin.web.operation-job-order.create');
+  Route::post('/operation-job-order/store', [WebOperationJobOrder::class, 'store'])->name('admin.web.operation-job-order.store');
+  // Route::view('/operation-job-order', 'admin.web-development.operation-job-order.index')->name('admin.web.operation-job-order');
+  // Route::view('/operation-job-order/create', 'admin.web-development.operation-job-order.create')->name('admin.web.operation-job-order.create');
   Route::view('/operation-job-order/{id}/edit', 'admin.web-development.operation-job-order.edit')->name('admin.web.operation-job-order.edit');
 
   // task pages
-  Route::view('/task', 'admin.web-development.task.index')->name('admin.web.task');
-  Route::view('/task/create/{id}', 'admin.web-development.task.create')->name('admin.web.task.create');
+  Route::get('/task', [WebTaskController::class, 'index'])->name('admin.web.task');
+  Route::put('/task/accept/{id}', [WebTaskController::class, 'accept'])->name('admin.web.task.accept');
+  Route::get('/task/create/{id}', [WebTaskController::class, 'create'])->name('admin.web.task.create');
+  Route::put('/task/store/{id}', [WebTaskController::class, 'store'])->name('admin.web.task.store');
+  // Route::view('/task/create/{id}', 'admin.web-development.task.create')->name('admin.web.task.create');
 
   // revision pages
   Route::view('/revision', 'admin.web-development.revision.index')->name('admin.web.revision');
 
   // approvals pages
-  Route::view('/approvals', 'admin.web-development.approvals.index')->name('admin.web.approvals');
+  Route::get('/approvals', [WebApprovalController::class, 'index'])->name('admin.web.approvals');
+  Route::get('/approvals/{id}', [WebApprovalController::class, 'show'])->name('admin.web.approvals.show');
+  Route::post('/approvals/{id}/approve', [WebApprovalController::class, 'approve'])->name('admin.web.approvals.approve');
+  // Route::view('/approvals', 'admin.web-development.approvals.index')->name('admin.web.approvals');
 
   // users pages
-  Route::view('/users', 'admin.web-development.users.index')->name('admin.web.users');
-  Route::view('/users/create', 'admin.web-development.users.create')->name('admin.web.users.create');
-  Route::view('/users/{id}', 'admin.web-development.users.show')->name('admin.web.users.show');
+  // Route::view('/users', 'admin.web-development.users.index')->name('admin.web.users');
+  Route::get('/users', [WebUserController::class, 'index'])->name('admin.web.users');
+  Route::get('/users/create', [WebUserController::class, 'create'])->name('admin.web.users.create');
+  Route::post('/users/store', [WebUserController::class, 'store'])->name('admin.web.users.store');
+  Route::get('/users/{id}', [WebUserController::class, 'show'])->name('admin.web.users.show');
+  Route::get('/users/edit/{id}', [WebUserController::class, 'edit'])->name('admin.web.users.edit');
 
   // track pages
   Route::view('/track', 'admin.web-development.track.index')->name('admin.web.track');
@@ -85,6 +111,11 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
 
   // instructions manual pages
   Route::view('/instructions-manual', 'admin.web-development.instructions-manual.index')->name('admin.web.instructions-manual');
+
+  // incoming request pages
+  Route::get('/incoming-requests', [WebRequestController::class, 'index'])->name('admin.web.incoming-requests');
+  Route::post('/incoming-requests/{id}', [WebRequestController::class, 'show'])->name('admin.web.incoming-requests.show');
+  Route::get('/incoming-requests/create', [WebRequestController::class, 'create'])->name('admin.web.incoming-requests.create');
 
   // profile pages
   Route::view('/profile', 'admin.web-development.profile.index')->name('admin.web.profile');

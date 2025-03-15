@@ -36,8 +36,10 @@
 @endphp
 
 <x-main-layout breadcumb="Web Development" page="Task">
+
+
     <div class="space-y-5">
-        @if ($direct_job_order)
+        @if ($web_project_channels)
             <div class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
 
                 <div class="flex lg:flex-row flex-col items-end justify-between w-full gap-5">
@@ -72,15 +74,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($direct_job_order as $direct)
+                            @foreach ($web_project_channels as $web_project_channel)
                                 <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
                                     <td class="flex items-center gap-2">
                                         {{-- <div class="p-2 rounded bg-[#F57D11] text-white">
                                             <span class="mingcute--file-fill w-6 h-6"></span>
                                         </div> --}}
-                                        {{ $direct['title'] }}
+                                        {{ $web_project_channel->web_project->title }}
                                     </td>
-                                    <td>{{ $direct['designated'] }}</td>
+                                    <td>{{ $web_project_channel->type }}</td>
                                     <td class="flex justify-center items-center">
                                         @php
                                             $statusClasses = [
@@ -92,8 +94,8 @@
                                         @endphp
 
                                         <span
-                                            class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $statusClasses[$direct['status']['type']] ?? 'text-gray-700 bg-gray-300' }}">
-                                            {{ $direct['status']['message'] }}
+                                            class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $statusClasses[$web_project_channel->status] ?? 'text-gray-700 bg-gray-300' }}">
+                                            {{ $web_project_channel->status }}
                                         </span>
                                     </td>
 
@@ -104,18 +106,25 @@
                                                 <span class="basil--eye-solid !w-4 !h-4"></span>
                                                 <p>View</p>
                                             </a>
-                                            @if ($direct['status']['type'] == 'accepted')
-                                                <a href="{{ route('admin.web.task.create', $direct['id']) }}"
+                                            @if ($web_project_channel->status == 'accepted')
+                                                <a href="{{ route('admin.web.task.create', $web_project_channel->id) }}"
                                                     class="approve-btn px-2 py-1 font-medium bg-blue-500 text-white rounded flex items-center justify-center gap-1 hover:scale-105 transition">
                                                     <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
                                                     <p>Create</p>
                                                 </a>
                                             @else
-                                                <a href="#"
-                                                    class="approve-btn px-2 py-1 font-medium bg-blue-500 text-white rounded flex items-center justify-center gap-1 hover:scale-105 transition">
-                                                    <span class="uil--check !w-4 !h-4"></span>
-                                                    <p>Accept</p>
-                                                </a>
+                                                <form
+                                                    action="{{ route('admin.web.task.accept', $web_project_channel->id) }}"
+                                                    method="POST" class="inline">
+                                                    @csrf
+                                                    @method('PUT')
+
+                                                    <button type="submit"
+                                                        class="approve-btn px-2 py-1 font-medium bg-blue-500 text-white rounded flex items-center justify-center gap-1 hover:scale-105 transition">
+                                                        <span class="uil--check !w-4 !h-4"></span>
+                                                        <p>Accept</p>
+                                                    </button>
+                                                </form>
                                             @endif
                                         </div>
                                     </td>

@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('web_projects', function (Blueprint $table) {
+        Schema::create('web_requests', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable();
             $table->string('instructions')->nullable();
-            $table->foreignId('issued_by_id')->nullable()->constrained('users')->cascadeOnDelete();
-            $table->foreignId('request_id')->nullable()->constrained('users')->cascadeOnDelete();
-            $table->foreignId('client_id')->nullable()->constrained('users')->cascadeOnDelete();
-            $table->foreignId('supervisor_signed_id')->nullable()->constrained('users')->cascadeOnDelete();
+            $table->foreignId('assigned_to')->nullable()->constrained('users')->cascadeOnDelete();
+            $table->string('status')->nullable();
+            $table->string('deadline')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('web_projects');
+        Schema::dropIfExists('web_requests');
     }
 };

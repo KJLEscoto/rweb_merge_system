@@ -27,6 +27,8 @@ class PageSeeder extends Seeder
             'users',
             'downloadables',
             'profile',
+            'instructions_manual',
+            'incoming_requests',
         ];
 
         foreach ($description as $desc) {
