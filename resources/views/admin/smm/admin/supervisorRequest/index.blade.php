@@ -38,7 +38,7 @@
                 <tr>
                     <th class="px-6 py-3">Title</th>
                     <th class="px-6 py-3">Assigned By</th>
-                    <th class="px-6 py-3">Status</th>
+                    <th class="px-6 py-3 text-center">Status</th>
                     <th class="px-6 py-3">Actions</th>
                 </tr>
             </thead>
@@ -47,7 +47,13 @@
                     <tr class="border-b">
                         <td class="px-6 py-3">{{ $supervisor_request->title }}</td>
                         <td class="px-6 py-3">{{ $supervisor_request->issuer->name }}</td>
-                        <td class="px-6 py-3">{{ $supervisor_request->status }}</td>
+                        <td class="px-6 py-3 text-center">{{ $supervisor_request->status }}
+                        <br />
+                        @if ($supervisor_request->deadline < now()) <!-- Check if deadline has passed -->
+                            <span class="text-sm font-bold text-red-500">{{ $supervisor_request->deadline }} LATE</span>
+                        @else
+                            <span class="text-sm font-bold text-green-500">{{ $supervisor_request->deadline }} ONGOING</span>
+                        @endif</td>
                         <td class="px-6 py-3">
                             @if ($supervisor_request->status == 'Waiting for Operation Approval')
                                 <form

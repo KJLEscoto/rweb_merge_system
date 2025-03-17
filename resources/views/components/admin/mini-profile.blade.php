@@ -8,7 +8,10 @@
     <span class="sm:block hidden ">
         <div class="flex flex-col items-end justify-end">
             <p class="text-nowrap font-semibold">Hi, <span class="capitalize">{{ Auth::user()->firstname }}</span>!</p>
-            <p class=" text-gray-200 text-sm font-medium">{{ Auth::user()->roles->position }}</p>
+            <p class="text-gray-200 text-sm font-medium text-nowrap">
+                {{ ucwords(str_replace('_', ' ', Auth::user()->roles->position)) }}
+            </p>
+
         </div>
     </span>
     {{-- <h1 class="absolute top-0 z-10 px-3 py-1 rounded bg-[#f56d11] text-white text-sm -left-12">DTR</h1> --}}
