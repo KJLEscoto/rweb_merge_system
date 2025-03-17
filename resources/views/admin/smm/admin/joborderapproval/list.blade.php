@@ -53,16 +53,16 @@
         <table class="w-full table-fixed text-left border-collapse min-w-[600px] sm:min-w-max" id="projectTable">
             <thead class="sticky top-0 bg-[#fa7011] text-white">
                 <tr>
-                    <th class="w-[25%] px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-base">Title</th>
-                    <th class="w-[25%] px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-base">Designated</th>
-                    <th class="w-[20%] px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-base">Deadline</th>
-                    <th class="w-[15%] px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-base text-center">Status</th>
-                    <th class="w-[15%] px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-base text-center">Actions</th>
+                    <th class="w-[25%] px-2 sm:px-4 py-2 sm:py-3">Title</th>
+                    <th class="w-[25%] px-2 sm:px-4 py-2 sm:py-3">Designated</th>
+                    <th class="w-[20%] px-2 sm:px-4 py-2 sm:py-3">Deadline</th>
+                    <th class="w-[15%] px-2 sm:px-4 py-2 sm:py-3 text-center">Status</th>
+                    <th class="w-[15%] px-2 sm:px-4 py-2 sm:py-3 text-center">Actions</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
                 @forelse ($job_drafts as $job_draft)
-                    <tr class="project-row border-b text-xs sm:text-sm"
+                    <tr class="project-row border-b "
                         data-status="{{ strtolower($job_draft->status) }}"
                         data-title="{{ strtolower($job_draft->jobOrder->title) }}"
                         data-designated="{{ strtolower($job_draft->type == 'content_writer' ? 'content writer - ' . $job_draft->contentWriter->name : 'graphic designer - ' . $job_draft->graphicDesigner->name) }}">
@@ -76,7 +76,11 @@
                             @endif
                         </td>
                         <td class="w-[20%] px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">
-                            {{ $job_draft->date_target }}</td>
+                            @if ($job_draft->date_target < now()) <!-- Check if deadline has passed -->
+                                <span class="text-sm font-bold text-red-500">{{ $job_draft->date_target }} LATE</span>
+                            @else
+                                <span class="text-sm font-bold text-green-500">{{ $job_draft->date_target }} ONGOING</span>
+                            @endif</td>
                         <td class="w-[15%] px-2 sm:px-4 py-2 sm:py-3 text-center text-white">
                             <p
                                 class="w-full px-2 py-1 rounded-lg text-wrap
@@ -91,7 +95,7 @@
                         <td class="w-[15%] px-2 sm:px-4 py-2 sm:py-3 text-center border-b">
                             <a href="{{ url('admin/smm/operation/show/' . $job_draft->id) }}">
                                 <button
-                                    class="px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm text-white  rounded whitespace-nowrap {{ $job_draft->status !== 'Submitted to Operations' ? 'cursor-not-allowed bg-gray-400' : 'bg-green-500 hover:bg-green-600' }}"
+                                    class="px-2 sm:px-3 py-1 sm:py-2  text-white  rounded whitespace-nowrap {{ $job_draft->status !== 'Submitted to Operations' ? 'cursor-not-allowed bg-gray-400' : 'bg-green-500 hover:bg-green-600' }}"
                                     {{ $job_draft->status !== 'Submitted to Operations' ? 'disabled' : '' }}>
                                     View Form
                                 </button>
