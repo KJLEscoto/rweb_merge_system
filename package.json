@@ -14,6 +14,8 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
-        "html5-qrcode": "^2.2.7"
+        "akar-icons-fonts": "^1.1.22",
+        "alpinejs": "^3.14.9",
+        "html5-qrcode": "^2.3.8"
     }
 }

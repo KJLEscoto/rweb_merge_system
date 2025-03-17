@@ -26,12 +26,24 @@
     <meta name="app-url" content="{{ config('app.url') }}">
 
     <!-- HTML5 QR Code Scanner -->
-    <script src="https://unpkg.com/html5-qrcode"></script>
+    {{--
+    <script src="https://unpkg.com/html5-qrcode"></script> --}}
+    {{--
+    <script src="../node_modules/html5-qrcode/html5-qrcode.min.js"></script> --}}
 
-    <link rel="stylesheet" href="../resources/css/app.css">
-    <script src="../resources/js/app.js"></script>
+    {{-- @vite(['resources/js/scanner.js']); --}}
 
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+    <script src="{{asset('js/html5-qrcode.min.js')}}"></script>
+
+    {{--
+    <link rel="stylesheet" href="../resources/css/app.css"> --}}
+    {{--
+    <script src="../resources/js/app.js"></script> --}}
+    {{--
+    <script src="{{ asset('js/scanner.js')}}"></script> --}}
+
+    <!-- ✅ Correct TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Camera -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
@@ -263,8 +275,8 @@
     </div>
 </x-main-layout>
 
-
 <script>
+
     let scannerInstance = null; // Store scanner instance globally
 
     //const APP_URL = document.querySelector('meta[name="app-url"]').getAttribute("content");
@@ -299,7 +311,7 @@
 
     // Initialize QR Scanner
     function initScanner() {
-        scannerInstance = new Html5QrcodeScanner('reader', {
+        const scannerInstance = new Html5QrcodeScanner('reader', {
             qrbox: {
                 width: 400,
                 height: 400
@@ -365,10 +377,8 @@
             const newButtonTimeIn = document.querySelector('[name="button_time_in"]');
             const newButtonTimeOut = document.querySelector('[name="button_time_out"]');
 
-
             //new config for the api route
             app_url = `{{ url('/history/') }}`;
-
 
             // Add event listeners
             newButtonTimeIn.addEventListener('click', async function () {
