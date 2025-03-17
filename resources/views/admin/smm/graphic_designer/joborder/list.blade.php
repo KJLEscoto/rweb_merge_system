@@ -86,6 +86,12 @@
                                         ? 'bg-red-600'
                                         : 'bg-[#fa6e117e]') }} ">
                                 {{ ucfirst($job_draft->status) }}
+                                <br />
+                                @if ($job_draft->date_target < now()) <!-- Check if deadline has passed -->
+                                    <span class="text-sm font-bold text-red-500">{{ $job_draft->date_target }} LATE</span>
+                                @else
+                                    <span class="text-sm font-bold text-green-500">{{ $job_draft->date_target }} ONGOING</span>
+                                @endif
                             </p>
                         </td>
                         <td class="px-6 py-3">
