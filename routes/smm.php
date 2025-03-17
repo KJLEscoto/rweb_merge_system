@@ -111,6 +111,7 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
       Route::resource('track', JobOrderTrackerController::class);
       Route::get('/track/show/draft/{id}', [JobOrderTrackerController::class, 'showDraft'])->name('track.showDraft');
       Route::get('/track/edit/draft/{id}', [JobOrderTrackerController::class, 'editDraft'])->name('track.editDraft');
+      Route::delete('/track/delete/draft/{id}', [JobOrderTrackerController::class, 'destroyDraft'])->name('track.destroyDraft');
     });
 
 

@@ -202,4 +202,15 @@ class JobOrderTrackerController extends Controller
 
         return redirect()->route('admin.smm.track.index')->with('Status', 'Job Order Deleted');
     }
+
+    public function destroyDraft($id)
+    {
+        $job_draft = JobDraft::findOrFail($id);
+
+        // Delete related job drafts first to avoid foreign key constraint issues
+        $job_draft->delete();
+
+        // Redirect back to the previous page with a status message
+        return back()->with('Status', 'Job Order Deleted');
+    }
 }
