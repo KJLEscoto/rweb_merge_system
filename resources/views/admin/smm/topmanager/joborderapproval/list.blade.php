@@ -51,7 +51,11 @@
                             @endif
                         </td>
                         <td class="w-[15%] px-4 py-3 text-center whitespace-nowrap">
-                            {{ $job_draft->date_target }}
+                            @if ($job_draft->date_target < now()) <!-- Check if deadline has passed -->
+                                <span class="text-sm font-bold text-red-500">{{ $job_draft->date_target }} LATE</span>
+                            @else
+                                <span class="text-sm font-bold text-green-500">{{ $job_draft->date_target }} ONGOING</span>
+                            @endif
                         </td>
                         <td class="w-[15%] px-4 py-3 text-center text-white">
                             <p

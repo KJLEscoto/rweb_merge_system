@@ -49,7 +49,12 @@
                                 Graphic Designer - {{ $job_draft->graphicDesigner->name }}
                             @endif
                         </td>
-                        <td class="px-4 sm:px-6 py-3 whitespace-nowrap">{{ $job_draft->date_target }}</td>
+                        <td class="px-4 sm:px-6 py-3 whitespace-nowrap">
+                            @if ($job_draft->date_target < now()) <!-- Check if deadline has passed -->
+                                <span class="text-sm font-bold text-red-500">{{ $job_draft->date_target }} LATE</span>
+                            @else
+                                <span class="text-sm font-bold text-green-500">{{ $job_draft->date_target }} ONGOING</span>
+                            @endif</td>
                         <td class="px-4 sm:px-6 py-3 text-center text-white">
                             <p
                                 class="w-full px-2 py-1 rounded-lg text-wrap
