@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail;
+namespace App\Http\Mail;
 
 use App\Models\Histories;
 use App\Models\User;

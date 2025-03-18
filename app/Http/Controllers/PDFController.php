@@ -15,15 +15,17 @@ class PDFController extends Controller
 {
     public function download(Request $request)
     {
+        ini_set('max_execution_time', 300);
+
         // Get current month and year
         $month = Carbon::now()->format('F Y');
-        
+
         // Get the number of days in the current month
         $daysInMonth = Carbon::now()->daysInMonth;
         $days = range(1, $daysInMonth);
-        
+
         $user = Auth::user();
-        
+
         $full_name = $user->firstname . ' ' . substr($user->middlename, 0, 1) . '. ' . $user->lastname;
         $hoursThisMonth = str(20) . ' hours';
 
@@ -63,26 +65,38 @@ class PDFController extends Controller
             'pagination' => $request->pagination,
             'totalHoursPerMonth' => $request->totalHoursPerMonth,
             'approved_by' => $request->approved_by,
-        ]);
-        
+        ])->setPaper('legal', 'portrait');
+
         // Debugging: Check if $pdf is null
         if (!$pdf) {
             abort(500, 'Failed to generate PDF');
         }
-        
-        return $pdf->download('DTR_Report.pdf');        
+
+        //$pdfName = 'Requested_DTR_MONTH_SURNAME';
+        //$adminPdfName = 'DTR_MONTH_SURNAME';
+
+
+        $pagination = is_string($request->pagination) ? json_decode($request->pagination, true) : $request->pagination;
+        $records = is_string($request->records) ? json_decode($request->records, true) : $request->records;
+
+        $pdfFormat = 'Requested_DTR_' . $pagination['currentMonth']['name'] . '_' . $user->lastname;
+
+        return $pdf->download(
+            $pdfFormat . '.pdf'
+        );
     }
 
-    public function admin_download(Request $request){
+    public function admin_download(Request $request)
+    {
         // Get current month and year
         $month = Carbon::now()->format('F Y');
-        
+
         // Get the number of days in the current month
         $daysInMonth = Carbon::now()->daysInMonth;
         $days = range(1, $daysInMonth);
-        
+
         $user = (object) $request['user'];
-        
+
         $full_name = $user->firstname . ' ' . substr($user->middlename, 0, 1) . '. ' . $user->lastname;
         $hoursThisMonth = str(20) . ' hours';
 
@@ -122,13 +136,20 @@ class PDFController extends Controller
             'pagination' => $request->pagination,
             'totalHoursPerMonth' => $request->totalHoursPerMonth,
             'approved_by' => $request->approved_by,
-        ]);
-        
+        ])->setPaper('legal', 'portrait');;
+
         // Debugging: Check if $pdf is null
         if (!$pdf) {
             abort(500, 'Failed to generate PDF');
         }
-        
-        return $pdf->download('DTR_Report.pdf');
+
+        $pagination = is_string($request->pagination) ? json_decode($request->pagination, true) : $request->pagination;
+        $records = is_string($request->records) ? json_decode($request->records, true) : $request->records;
+
+        $pdfFormat = 'DTR_' . $pagination['currentMonth']['name'] . '_' . $user->lastname;
+
+        return $pdf->download(
+            $pdfFormat . '.pdf'
+        );
     }
 }

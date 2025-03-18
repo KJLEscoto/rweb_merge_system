@@ -75,60 +75,59 @@
                         </thead>
                         <tbody>
                             @foreach ($web_project_channels as $web_project_channel)
-                                <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
-                                    <td class="flex items-center gap-2">
-                                        {{-- <div class="p-2 rounded bg-[#F57D11] text-white">
-                                            <span class="mingcute--file-fill w-6 h-6"></span>
-                                        </div> --}}
-                                        {{ $web_project_channel->web_project->title }}
-                                    </td>
-                                    <td>{{ $web_project_channel->type }}</td>
-                                    <td class="flex justify-center items-center">
-                                        @php
-                                            $statusClasses = [
-                                                'approved' => 'text-green-700 bg-green-300',
-                                                'pending' => 'text-yellow-700 bg-yellow-300',
-                                                'review' => 'text-blue-700 bg-blue-300',
-                                                'delayed' => 'text-red-700 bg-red-300',
-                                            ];
-                                        @endphp
+                                                <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
+                                                    <td class="flex items-center gap-2">
+                                                        {{-- <div class="p-2 rounded bg-[#F57D11] text-white">
+                                                            <span class="mingcute--file-fill w-6 h-6"></span>
+                                                        </div> --}}
+                                                        {{ $web_project_channel->web_project ? $web_project_channel->web_project->title : 'No Project Assigned' }}
+                                                    </td>
+                                                    <td>{{ $web_project_channel->type }}</td>
+                                                    <td class="flex justify-center items-center">
+                                                        @php
+                                                            $statusClasses = [
+                                                                'approved' => 'text-green-700 bg-green-300',
+                                                                'pending' => 'text-yellow-700 bg-yellow-300',
+                                                                'review' => 'text-blue-700 bg-blue-300',
+                                                                'delayed' => 'text-red-700 bg-red-300',
+                                                            ];
+                                                        @endphp
 
-                                        <span
-                                            class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $statusClasses[$web_project_channel->status] ?? 'text-gray-700 bg-gray-300' }}">
-                                            {{ $web_project_channel->status }}
-                                        </span>
-                                    </td>
+                                                        <span
+                                                            class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $statusClasses[$web_project_channel->status] ?? 'text-gray-700 bg-gray-300' }}">
+                                                            {{ $web_project_channel->status }}
+                                                        </span>
+                                                    </td>
 
-                                    <td>
-                                        <div class="flex items-center justify-center gap-2">
-                                            <a href="#"
-                                                class="approve-btn px-2 py-1 font-medium bg-green-500 text-white rounded flex items-center justify-center gap-1 hover:scale-105 transition">
-                                                <span class="basil--eye-solid !w-4 !h-4"></span>
-                                                <p>View</p>
-                                            </a>
-                                            @if ($web_project_channel->status == 'accepted')
-                                                <a href="{{ route('admin.web.task.create', $web_project_channel->id) }}"
-                                                    class="approve-btn px-2 py-1 font-medium bg-blue-500 text-white rounded flex items-center justify-center gap-1 hover:scale-105 transition">
-                                                    <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
-                                                    <p>Create</p>
-                                                </a>
-                                            @else
-                                                <form
-                                                    action="{{ route('admin.web.task.accept', $web_project_channel->id) }}"
-                                                    method="POST" class="inline">
-                                                    @csrf
-                                                    @method('PUT')
+                                                    <td>
+                                                        <div class="flex items-center justify-center gap-2">
+                                                            <a href="#"
+                                                                class="approve-btn px-2 py-1 font-medium bg-green-500 text-white rounded flex items-center justify-center gap-1 hover:scale-105 transition">
+                                                                <span class="basil--eye-solid !w-4 !h-4"></span>
+                                                                <p>View</p>
+                                                            </a>
+                                                            @if ($web_project_channel->status == 'accepted')
+                                                                <a href="{{ route('admin.web.task.create', $web_project_channel->id) }}"
+                                                                    class="approve-btn px-2 py-1 font-medium bg-blue-500 text-white rounded flex items-center justify-center gap-1 hover:scale-105 transition">
+                                                                    <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
+                                                                    <p>Create</p>
+                                                                </a>
+                                                            @else
+                                                                <form action="{{ route('admin.web.task.accept', $web_project_channel->id) }}"
+                                                                    method="POST" class="inline">
+                                                                    @csrf
+                                                                    @method('PUT')
 
-                                                    <button type="submit"
-                                                        class="approve-btn px-2 py-1 font-medium bg-blue-500 text-white rounded flex items-center justify-center gap-1 hover:scale-105 transition">
-                                                        <span class="uil--check !w-4 !h-4"></span>
-                                                        <p>Accept</p>
-                                                    </button>
-                                                </form>
-                                            @endif
-                                        </div>
-                                    </td>
-                                </tr>
+                                                                    <button type="submit"
+                                                                        class="approve-btn px-2 py-1 font-medium bg-blue-500 text-white rounded flex items-center justify-center gap-1 hover:scale-105 transition">
+                                                                        <span class="uil--check !w-4 !h-4"></span>
+                                                                        <p>Accept</p>
+                                                                    </button>
+                                                                </form>
+                                                            @endif
+                                                        </div>
+                                                    </td>
+                                                </tr>
                             @endforeach
                         </tbody>
                     </table>

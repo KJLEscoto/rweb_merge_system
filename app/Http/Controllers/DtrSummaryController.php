@@ -17,7 +17,7 @@ class DtrSummaryController extends Controller
     //post function
     public function ShowUserDtrPagination(Request $request)
     {
-        
+
         $currentDate = Carbon::now();
         $selectedMonth = $request->input('month', $currentDate->month);
         $selectedYear = $request->input('year', $currentDate->year);
@@ -129,31 +129,31 @@ class DtrSummaryController extends Controller
             'month' => $selectedMonth,
             'year' => $selectedYear
         ])->with('records', [
-                    'user' => Auth::user(),
-                    'records' => $groupedData,
-                    'totalHoursPerMonth' => $totalHoursPerMonth,
-                    'selectedMonth' => $selectedMonth,
-                    'selectedYear' => $selectedYear,
-                    'pagination' => [
-                        'currentMonth' => [
-                            'name' => $selectedDate->format('F Y'),
-                            'month' => $selectedMonth,
-                            'year' => $selectedYear
-                        ],
-                        'previousMonth' => [
-                            'name' => $previousMonth->format('F Y'),
-                            'month' => $previousMonth->month,
-                            'year' => $previousMonth->year,
-                            'url' => route('users.dtr', ['month' => $previousMonth->month, 'year' => $previousMonth->year])
-                        ],
-                        'nextMonth' => [
-                            'name' => $nextMonth->format('F Y'),
-                            'month' => $nextMonth->month,
-                            'year' => $nextMonth->year,
-                            'url' => route('users.dtr', ['month' => $nextMonth->month, 'year' => $nextMonth->year])
-                        ]
-                    ]
-                ]);
+            'user' => Auth::user(),
+            'records' => $groupedData,
+            'totalHoursPerMonth' => $totalHoursPerMonth,
+            'selectedMonth' => $selectedMonth,
+            'selectedYear' => $selectedYear,
+            'pagination' => [
+                'currentMonth' => [
+                    'name' => $selectedDate->format('F Y'),
+                    'month' => $selectedMonth,
+                    'year' => $selectedYear
+                ],
+                'previousMonth' => [
+                    'name' => $previousMonth->format('F Y'),
+                    'month' => $previousMonth->month,
+                    'year' => $previousMonth->year,
+                    'url' => route('users.dtr', ['month' => $previousMonth->month, 'year' => $previousMonth->year])
+                ],
+                'nextMonth' => [
+                    'name' => $nextMonth->format('F Y'),
+                    'month' => $nextMonth->month,
+                    'year' => $nextMonth->year,
+                    'url' => route('users.dtr', ['month' => $nextMonth->month, 'year' => $nextMonth->year])
+                ]
+            ]
+        ]);
     }
 
     public function showUserDtrSummary()
@@ -173,8 +173,8 @@ class DtrSummaryController extends Controller
         }
 
         $currentDate = Carbon::now();
-        $selectedMonth = $currentDate->month; 
-        $selectedYear = $currentDate->year; 
+        $selectedMonth = $currentDate->month;
+        $selectedYear = $currentDate->year;
         $selectedDate = Carbon::createFromDate($selectedYear, $selectedMonth, 1);
         $previousMonth = (clone $selectedDate)->subMonth();
         $nextMonth = (clone $selectedDate)->addMonth();
@@ -183,25 +183,24 @@ class DtrSummaryController extends Controller
         $endDate = Carbon::parse($lastRecord->datetime)->endOfMonth();
         $yearlyTotals = [];
 
-
         $workSchedules = [
-        'Monday'    => ['start' => '09:00', 'end' => '18:00'],
-        'Tuesday'   => ['start' => '08:00', 'end' => '18:00'],
-        'Wednesday' => ['start' => '08:00', 'end' => '18:00'],
-        'Thursday'  => ['start' => '08:00', 'end' => '18:00'],
-        'Friday'    => ['start' => '08:00', 'end' => '18:00'],
-        'Saturday'  => ['start' => '08:00', 'end' => '12:00'],
-        'Sunday'    => ['start' => null, 'end' => null],
-    ];
+            'Monday'    => ['start' => '09:00', 'end' => '18:00'],
+            'Tuesday'   => ['start' => '08:00', 'end' => '18:00'],
+            'Wednesday' => ['start' => '08:00', 'end' => '18:00'],
+            'Thursday'  => ['start' => '08:00', 'end' => '18:00'],
+            'Friday'    => ['start' => '08:00', 'end' => '18:00'],
+            'Saturday'  => ['start' => '08:00', 'end' => '12:00'],
+            'Sunday'    => ['start' => null, 'end' => null],
+        ];
 
-    $lunchBreakStart = "12:00";
-    $lunchBreakEnd = "13:00";
+        $lunchBreakStart = "12:00";
+        $lunchBreakEnd = "13:00";
 
-    $userLogs = Histories::where('user_id', Auth::id())
-        ->whereYear('datetime', $selectedYear)
-        ->whereMonth('datetime', $selectedMonth)
-        ->orderBy('datetime', 'asc')
-        ->get();
+        $userLogs = Histories::where('user_id', Auth::id())
+            ->whereYear('datetime', $selectedYear)
+            ->whereMonth('datetime', $selectedMonth)
+            ->orderBy('datetime', 'asc')
+            ->get();
 
         while ($startDate->lte($endDate)) {
             $currentYear = $startDate->year;
@@ -220,10 +219,10 @@ class DtrSummaryController extends Controller
             });
 
             $monthlyHours = 0;
+            $groupedData = [];
 
             // Calculate total hours for the month
             foreach ($logsByDate as $dateKey => $logs) {
-                
                 $dayOfWeek = Carbon::parse($dateKey)->format('l');
 
                 $timeInLogs = $logs->where('description', 'time in')->sortBy('datetime');
@@ -257,19 +256,18 @@ class DtrSummaryController extends Controller
                     }
 
                     if ($timeOut->gt($timeIn)) {
-                        $monthlyHours = $timeIn->diffInMinutes($timeOut);
+                        $workedMinutes = $timeIn->diffInMinutes($timeOut);
 
-                        // Adjust for lunch break
-                        if ($timeIn->lte($lunchStartTime) && $timeOut->gt($lunchStartTime)) {
-                            if ($timeOut->gte($lunchEndTime)) {
-                                // Full lunch break
-                                $monthlyHours -= 60;
-                            } else {
-                                // Partial lunch break
-                                $monthlyHours = $timeIn->diffInMinutes($lunchStartTime);
-                                $timeOut = $lunchStartTime;
+                        // Adjust for lunch break only if they worked through lunch time
+                        if ($timeIn->lt($lunchEndTime) && $timeOut->gt($lunchStartTime)) {
+                            if ($timeIn->lte($lunchStartTime) && $timeOut->gte($lunchEndTime)) {
+                                $workedMinutes -= 60; // Full lunch break
+                            } elseif ($timeIn->lt($lunchStartTime) && $timeOut->lt($lunchEndTime)) {
+                                $workedMinutes -= $timeOut->diffInMinutes($lunchStartTime); // Partial lunch break
                             }
                         }
+
+                        $monthlyHours += $workedMinutes;
                     }
                 }
             }
@@ -286,7 +284,7 @@ class DtrSummaryController extends Controller
 
                 $yearlyTotals[$currentYear]['months'][$startDate->format('Y-m')] = [
                     'month_name' => $startDate->format('F Y'),
-                    'total_hours' => $monthlyHours
+                    'total_hours' => $monthlyHours,
                 ];
 
                 $yearlyTotals[$currentYear]['total_hours'] += $monthlyHours;
@@ -313,151 +311,149 @@ class DtrSummaryController extends Controller
 
     //get function
 
-public function showUserDtr(Request $request, DtrSummaryController $dtrSummaryController)
-{
-    $currentDate = Carbon::now();
-    $selectedMonth = $request->input('month', $currentDate->month);
-    $selectedYear = $request->input('year', $currentDate->year);
-    $selectedDate = Carbon::createFromDate($selectedYear, $selectedMonth, 1);
-    $previousMonth = (clone $selectedDate)->subMonth();
-    $nextMonth = (clone $selectedDate)->addMonth();
+    public function showUserDtr(Request $request, DtrSummaryController $dtrSummaryController)
+    {
+        $currentDate = Carbon::now();
+        $selectedMonth = $request->input('month', $currentDate->month);
+        $selectedYear = $request->input('year', $currentDate->year);
+        $selectedDate = Carbon::createFromDate($selectedYear, $selectedMonth, 1);
+        $previousMonth = (clone $selectedDate)->subMonth();
+        $nextMonth = (clone $selectedDate)->addMonth();
 
-    $workSchedules = [
-        'Monday'    => ['start' => '09:00', 'end' => '18:00'],
-        'Tuesday'   => ['start' => '08:00', 'end' => '18:00'],
-        'Wednesday' => ['start' => '08:00', 'end' => '18:00'],
-        'Thursday'  => ['start' => '08:00', 'end' => '18:00'],
-        'Friday'    => ['start' => '08:00', 'end' => '18:00'],
-        'Saturday'  => ['start' => '08:00', 'end' => '12:00'],
-        'Sunday'    => ['start' => null, 'end' => null],
-    ];
+        $workSchedules = [
+            'Monday'    => ['start' => '09:00', 'end' => '18:00'],
+            'Tuesday'   => ['start' => '08:00', 'end' => '18:00'],
+            'Wednesday' => ['start' => '08:00', 'end' => '18:00'],
+            'Thursday'  => ['start' => '08:00', 'end' => '18:00'],
+            'Friday'    => ['start' => '08:00', 'end' => '18:00'],
+            'Saturday'  => ['start' => '08:00', 'end' => '12:00'],
+            'Sunday'    => ['start' => null, 'end' => null],
+        ];
 
-    $lunchBreakStart = "12:00";
-    $lunchBreakEnd = "13:00";
+        $lunchBreakStart = "12:00";
+        $lunchBreakEnd = "13:00";
 
-    $userLogs = Histories::where('user_id', Auth::id())
-        ->whereYear('datetime', $selectedYear)
-        ->whereMonth('datetime', $selectedMonth)
-        ->orderBy('datetime', 'asc')
-        ->get();
+        $userLogs = Histories::where('user_id', Auth::id())
+            ->whereYear('datetime', $selectedYear)
+            ->whereMonth('datetime', $selectedMonth)
+            ->orderBy('datetime', 'asc')
+            ->get();
 
-    $logsByDate = $userLogs->groupBy(fn($log) => Carbon::parse($log->datetime)->format('Y-m-d'));
+        $logsByDate = $userLogs->groupBy(fn($log) => Carbon::parse($log->datetime)->format('Y-m-d'));
 
-    $daysInMonth = $selectedDate->daysInMonth;
-    $groupedData = [];
-    $totalMinutesPerMonth = 0;
+        $daysInMonth = $selectedDate->daysInMonth;
+        $groupedData = [];
+        $totalMinutesPerMonth = 0;
 
-    for ($day = 1; $day <= $daysInMonth; $day++) {
-        $dateKey = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->format('Y-m-d');
-        $dayOfWeek = Carbon::parse($dateKey)->format('l');
+        for ($day = 1; $day <= $daysInMonth; $day++) {
+            $dateKey = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->format('Y-m-d');
+            $dayOfWeek = Carbon::parse($dateKey)->format('l');
 
-        $workStart = $workSchedules[$dayOfWeek]['start'];
-        $workEnd = $workSchedules[$dayOfWeek]['end'];
+            $workStart = $workSchedules[$dayOfWeek]['start'];
+            $workEnd = $workSchedules[$dayOfWeek]['end'];
 
-        if (!$workStart || !$workEnd) {
-            $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
-            continue;
-        }
+            if (!$workStart || !$workEnd) {
+                $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
+                continue;
+            }
 
-        if (isset($logsByDate[$dateKey])) {
-            $logs = $logsByDate[$dateKey];
+            if (isset($logsByDate[$dateKey])) {
+                $logs = $logsByDate[$dateKey];
 
-            $timeInLogs = $logs->where('description', 'time in')->sortBy('datetime');
-            $timeOutLogs = $logs->where('description', 'time out')->sortByDesc('datetime');
+                $timeInLogs = $logs->where('description', 'time in')->sortBy('datetime');
+                $timeOutLogs = $logs->where('description', 'time out')->sortByDesc('datetime');
 
-            $firstTimeIn = $timeInLogs->first();
-            $lastTimeOut = $timeOutLogs->first();
+                $firstTimeIn = $timeInLogs->first();
+                $lastTimeOut = $timeOutLogs->first();
 
-            if ($firstTimeIn && $lastTimeOut) {
-                $timeIn = Carbon::parse($firstTimeIn->datetime);
-                $timeOut = Carbon::parse($lastTimeOut->datetime);
+                if ($firstTimeIn && $lastTimeOut) {
+                    $timeIn = Carbon::parse($firstTimeIn->datetime);
+                    $timeOut = Carbon::parse($lastTimeOut->datetime);
 
-                $workStartTime = Carbon::parse("$dateKey $workStart");
-                $workEndTime = Carbon::parse("$dateKey $workEnd");
-                $lunchStartTime = Carbon::parse("$dateKey $lunchBreakStart");
-                $lunchEndTime = Carbon::parse("$dateKey $lunchBreakEnd");
+                    $workStartTime = Carbon::parse("$dateKey $workStart");
+                    $workEndTime = Carbon::parse("$dateKey $workEnd");
+                    $lunchStartTime = Carbon::parse("$dateKey $lunchBreakStart");
+                    $lunchEndTime = Carbon::parse("$dateKey $lunchBreakEnd");
 
-                if ($timeIn->lt($workStartTime)) {
-                    $timeIn = $workStartTime;
-                }
-                if ($timeOut->gt($workEndTime)) {
-                    $timeOut = $workEndTime;
-                }
-
-                if ($timeOut->gt($timeIn)) {
-                    $minutesWorked = $timeIn->diffInMinutes($timeOut);
-
-                    // Adjust for lunch break
-                    if ($timeIn->lte($lunchStartTime) && $timeOut->gt($lunchStartTime)) {
-                        if ($timeOut->gte($lunchEndTime)) {
-                            // Full lunch break
-                            $minutesWorked -= 60;
-                        } else {
-                            // Partial lunch break
-                            $minutesWorked = $timeIn->diffInMinutes($lunchStartTime);
-                            $timeOut = $lunchStartTime;
-                        }
+                    if ($timeIn->lt($workStartTime)) {
+                        $timeIn = $workStartTime;
+                    }
+                    if ($timeOut->gt($workEndTime)) {
+                        $timeOut = $workEndTime;
                     }
 
-                    $totalMinutesPerMonth += $minutesWorked;
+                    if ($timeOut->gt($timeIn)) {
+                        $minutesWorked = $timeIn->diffInMinutes($timeOut);
 
+                        // Adjust for lunch break
+                        if ($timeIn->lte($lunchStartTime) && $timeOut->gt($lunchStartTime)) {
+                            if ($timeOut->gte($lunchEndTime)) {
+                                // Full lunch break
+                                $minutesWorked -= 60;
+                            } else {
+                                // Partial lunch break
+                                $minutesWorked = $timeIn->diffInMinutes($lunchStartTime);
+                                $timeOut = $lunchStartTime;
+                            }
+                        }
+
+                        $totalMinutesPerMonth += $minutesWorked;
+
+                        $groupedData[$dateKey] = [
+                            'time_in' => $timeIn->format('h:i A'),
+                            'time_out' => $timeOut->format('h:i A'),
+                            'hours_worked' => $minutesWorked,
+                        ];
+                    }
+                } else {
                     $groupedData[$dateKey] = [
-                        'time_in' => $timeIn->format('h:i A'),
-                        'time_out' => $timeOut->format('h:i A'),
-                        'hours_worked' => $minutesWorked,
+                        'time_in' => $firstTimeIn ? Carbon::parse($firstTimeIn->datetime)->format('h:i A') : '—',
+                        'time_out' => $lastTimeOut ? Carbon::parse($lastTimeOut->datetime)->format('h:i A') : '—',
+                        'hours_worked' => '—',
                     ];
                 }
             } else {
-                $groupedData[$dateKey] = [
-                    'time_in' => $firstTimeIn ? Carbon::parse($firstTimeIn->datetime)->format('h:i A') : '—',
-                    'time_out' => $lastTimeOut ? Carbon::parse($lastTimeOut->datetime)->format('h:i A') : '—',
-                    'hours_worked' => '—',
-                ];
+                $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
             }
-        } else {
-            $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
         }
+
+        $records = collect($groupedData)->map(fn($data, $date) => [
+            'date' => $date,
+            'time_in' => $data['time_in'],
+            'time_out' => $data['time_out'],
+            'hours_worked' => $data['hours_worked'],
+        ])->values()->all();
+
+        $yearlyTotals = $dtrSummaryController->showUserDtrSummary()['yearlyTotals'];
+
+        return view('users.dtr', [
+            'user' => Auth::user(),
+            'yearlyTotals' => $yearlyTotals,
+            'records' => $records,
+            'totalHoursPerMonth' => $totalMinutesPerMonth,
+            'selectedMonth' => $selectedMonth,
+            'selectedYear' => $selectedYear,
+            'pagination' => [
+                'currentMonth' => ['name' => $selectedDate->format('F Y'), 'month' => $selectedMonth, 'year' => $selectedYear],
+                'previousMonth' => ['name' => $previousMonth->format('F Y'), 'month' => $previousMonth->month, 'year' => $previousMonth->year, 'url' => route('users.dtr', ['month' => $previousMonth->month, 'year' => $previousMonth->year])],
+                'nextMonth' => ['name' => $nextMonth->format('F Y'), 'month' => $nextMonth->month, 'year' => $nextMonth->year, 'url' => route('users.dtr', ['month' => $nextMonth->month, 'year' => $nextMonth->year])],
+            ]
+        ]);
     }
-
-    $records = collect($groupedData)->map(fn($data, $date) => [
-        'date' => $date,
-        'time_in' => $data['time_in'],
-        'time_out' => $data['time_out'],
-        'hours_worked' => $data['hours_worked'],
-    ])->values()->all();
-
-    $yearlyTotals = $dtrSummaryController->showUserDtrSummary()['yearlyTotals'];
-
-    return view('users.dtr', [
-        'user' => Auth::user(),
-        'yearlyTotals' => $yearlyTotals,
-        'records' => $records,
-        'totalHoursPerMonth' => $totalMinutesPerMonth,
-        'selectedMonth' => $selectedMonth,
-        'selectedYear' => $selectedYear,
-        'pagination' => [
-            'currentMonth' => ['name' => $selectedDate->format('F Y'), 'month' => $selectedMonth, 'year' => $selectedYear],
-            'previousMonth' => ['name' => $previousMonth->format('F Y'), 'month' => $previousMonth->month, 'year' => $previousMonth->year, 'url' => route('users.dtr', ['month' => $previousMonth->month, 'year' => $previousMonth->year])],
-            'nextMonth' => ['name' => $nextMonth->format('F Y'), 'month' => $nextMonth->month, 'year' => $nextMonth->year, 'url' => route('users.dtr', ['month' => $nextMonth->month, 'year' => $nextMonth->year])],
-        ]
-    ]);
-}
 
     public function showUserRequestedDtr($id, Request $request, DtrSummaryController $dtrSummaryController)
     {
         $user = optional(DtrDownloadRequest::with('users')->where('id', $id)->first())->users;
         $downloadRequest = DtrDownloadRequest::where('id', $id)->first();
-        
+
         if (Auth::user()->role === 'admin') {
             return redirect()->route('admin.users.approvals.view', [
                 'id' => $id,
                 'type' => 'view',
             ]);
         }
-        if(Auth::user()->role != 'admin')
-        {
-            if(Auth::id() != $user->id)
-            {
+        if (Auth::user()->role != 'admin') {
+            if (Auth::id() != $user->id) {
                 return back()->with('invalid', 'You do not have permission to see this!');
             }
         }
@@ -494,8 +490,8 @@ public function showUserDtr(Request $request, DtrSummaryController $dtrSummaryCo
             ->whereMonth('datetime', $selectedMonth)
             ->orderBy('datetime', 'asc')
             ->get();
-            
-            $logsByDate = $userLogs->groupBy(function ($log) {
+
+        $logsByDate = $userLogs->groupBy(function ($log) {
             return Carbon::parse($log->datetime)->format('Y-m-d');
         });
 
@@ -508,117 +504,117 @@ public function showUserDtr(Request $request, DtrSummaryController $dtrSummaryCo
         $totalMinutesPerMonth = 0;
 
         for ($day = 1; $day <= $daysInMonth; $day++) {
-        $dateKey = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->format('Y-m-d');
-        $dayOfWeek = Carbon::parse($dateKey)->format('l'); // Get the day name (e.g., Monday)
+            $dateKey = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->format('Y-m-d');
+            $dayOfWeek = Carbon::parse($dateKey)->format('l'); // Get the day name (e.g., Monday)
 
-        // Get work schedule for the day
-        $workStart = $workSchedules[$dayOfWeek]['start'];
-        $workEnd = $workSchedules[$dayOfWeek]['end'];
+            // Get work schedule for the day
+            $workStart = $workSchedules[$dayOfWeek]['start'];
+            $workEnd = $workSchedules[$dayOfWeek]['end'];
 
-        if (!$workStart || !$workEnd) { 
-            // Skip non-working days (e.g., Sunday)
-            $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
-            continue;
-        }
-
-        
-        if (isset($logsByDate[$dateKey])) {
-            $logs = $logsByDate[$dateKey];
-            
-            // Filter logs within working hours
-            $timeInLogs = $logs->where('description', 'time in')->sortBy('datetime');
-
-            $firstTimeIn = $timeInLogs->first();
-
-            if ($firstTimeIn) {
-                $timeIn = Carbon::parse($firstTimeIn->datetime);
-                $workStartTime = Carbon::parse("$dateKey $workStart");
-
-                // If time in is earlier than work start, adjust it to work start
-                if ($timeIn->lt($workStartTime)) {
-                    $timeIn = $workStartTime;
-                }
+            if (!$workStart || !$workEnd) {
+                // Skip non-working days (e.g., Sunday)
+                $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
+                continue;
             }
-            
-            // $timeOutLogs = $logs->where('description', 'time out')
-            // ->filter(fn($log) => Carbon::parse($log->datetime)->between(Carbon::parse("$dateKey $workStart"), Carbon::parse("$dateKey $workEnd")))
-            // ->sortByDesc('datetime');
 
-            $timeOutLogs = $logs->where('description', 'time out')->sortBy('datetime');
-            
-            //@dd($logsByDate[$dateKey], $logs ,$timeInLogs, $timeOutLogs, $dateKey, $workStart);
-            $firstTimeIn = $timeInLogs->first();
-            $lastTimeOut = $timeOutLogs->first();
 
-            if ($firstTimeIn && $lastTimeOut) {
-                $timeIn = Carbon::parse($firstTimeIn->datetime);
-                $timeOut = Carbon::parse($lastTimeOut->datetime);
+            if (isset($logsByDate[$dateKey])) {
+                $logs = $logsByDate[$dateKey];
 
-                // Ensure time out is after time in
-                if ($timeOut->gt($timeIn)) {
+                // Filter logs within working hours
+                $timeInLogs = $logs->where('description', 'time in')->sortBy('datetime');
+
+                $firstTimeIn = $timeInLogs->first();
+
+                if ($firstTimeIn) {
+                    $timeIn = Carbon::parse($firstTimeIn->datetime);
                     $workStartTime = Carbon::parse("$dateKey $workStart");
-                    $workEndTime = Carbon::parse("$dateKey $workEnd");
-                    $lunchStartTime = Carbon::parse("$dateKey $lunchBreakStart");
-                    $lunchEndTime = Carbon::parse("$dateKey $lunchBreakEnd");
 
-                    // Adjust time in/out if outside working hours
+                    // If time in is earlier than work start, adjust it to work start
                     if ($timeIn->lt($workStartTime)) {
                         $timeIn = $workStartTime;
                     }
-                    if ($timeOut->gt($workEndTime)) {
-                        $timeOut = $workEndTime;
-                    }
-
-                    // $minutesWorked = $timeIn->diffInMinutes($timeOut);
-                    // $totalMinutesPerMonth += $minutesWorked;
-
-                    // $groupedData[$dateKey] = [
-                    //     'time_in' => $timeIn->format('h:i A'),
-                    //     'time_out' => $timeOut->format('h:i A'),
-                    //     'hours_worked' => round($minutesWorked / 60, 2), // Convert minutes to hours
-                    // ];
-                    if ($timeOut->gt($timeIn)) {
-                    $minutesWorked = $timeIn->diffInMinutes($timeOut);
-
-                    // Adjust for lunch break
-                    if ($timeIn->lte($lunchStartTime) && $timeOut->gt($lunchStartTime)) {
-                        if ($timeOut->gte($lunchEndTime)) {
-                            // Full lunch break
-                            $minutesWorked -= 60;
-                        } else {
-                            // Partial lunch break
-                            $minutesWorked = $timeIn->diffInMinutes($lunchStartTime);
-                            $timeOut = $lunchStartTime;
-                        }
-                    }
-
-                    $totalMinutesPerMonth += $minutesWorked;
-
-                    $groupedData[$dateKey] = [
-                        'time_in' => $timeIn->format('h:i A'),
-                        'time_out' => $timeOut->format('h:i A'),
-                        'hours_worked' => $minutesWorked,
-                    ];
                 }
+
+                // $timeOutLogs = $logs->where('description', 'time out')
+                // ->filter(fn($log) => Carbon::parse($log->datetime)->between(Carbon::parse("$dateKey $workStart"), Carbon::parse("$dateKey $workEnd")))
+                // ->sortByDesc('datetime');
+
+                $timeOutLogs = $logs->where('description', 'time out')->sortBy('datetime');
+
+                //@dd($logsByDate[$dateKey], $logs ,$timeInLogs, $timeOutLogs, $dateKey, $workStart);
+                $firstTimeIn = $timeInLogs->first();
+                $lastTimeOut = $timeOutLogs->first();
+
+                if ($firstTimeIn && $lastTimeOut) {
+                    $timeIn = Carbon::parse($firstTimeIn->datetime);
+                    $timeOut = Carbon::parse($lastTimeOut->datetime);
+
+                    // Ensure time out is after time in
+                    if ($timeOut->gt($timeIn)) {
+                        $workStartTime = Carbon::parse("$dateKey $workStart");
+                        $workEndTime = Carbon::parse("$dateKey $workEnd");
+                        $lunchStartTime = Carbon::parse("$dateKey $lunchBreakStart");
+                        $lunchEndTime = Carbon::parse("$dateKey $lunchBreakEnd");
+
+                        // Adjust time in/out if outside working hours
+                        if ($timeIn->lt($workStartTime)) {
+                            $timeIn = $workStartTime;
+                        }
+                        if ($timeOut->gt($workEndTime)) {
+                            $timeOut = $workEndTime;
+                        }
+
+                        // $minutesWorked = $timeIn->diffInMinutes($timeOut);
+                        // $totalMinutesPerMonth += $minutesWorked;
+
+                        // $groupedData[$dateKey] = [
+                        //     'time_in' => $timeIn->format('h:i A'),
+                        //     'time_out' => $timeOut->format('h:i A'),
+                        //     'hours_worked' => round($minutesWorked / 60, 2), // Convert minutes to hours
+                        // ];
+                        if ($timeOut->gt($timeIn)) {
+                            $minutesWorked = $timeIn->diffInMinutes($timeOut);
+
+                            // Adjust for lunch break
+                            if ($timeIn->lte($lunchStartTime) && $timeOut->gt($lunchStartTime)) {
+                                if ($timeOut->gte($lunchEndTime)) {
+                                    // Full lunch break
+                                    $minutesWorked -= 60;
+                                } else {
+                                    // Partial lunch break
+                                    $minutesWorked = $timeIn->diffInMinutes($lunchStartTime);
+                                    $timeOut = $lunchStartTime;
+                                }
+                            }
+
+                            $totalMinutesPerMonth += $minutesWorked;
+
+                            $groupedData[$dateKey] = [
+                                'time_in' => $timeIn->format('h:i A'),
+                                'time_out' => $timeOut->format('h:i A'),
+                                'hours_worked' => $minutesWorked,
+                            ];
+                        }
+                    } else {
+                        $groupedData[$dateKey] = [
+                            'time_in' => $timeIn->format('h:i A'),
+                            'time_out' => $timeOut->format('h:i A'),
+                            'hours_worked' => '—',
+                        ];
+                    }
                 } else {
                     $groupedData[$dateKey] = [
-                        'time_in' => $timeIn->format('h:i A'),
-                        'time_out' => $timeOut->format('h:i A'),
+                        'time_in' => $firstTimeIn ? Carbon::parse($firstTimeIn->datetime)->format('h:i A') : '—',
+                        'time_out' => $lastTimeOut ? Carbon::parse($lastTimeOut->datetime)->format('h:i A') : '—',
                         'hours_worked' => '—',
                     ];
                 }
             } else {
-                $groupedData[$dateKey] = [
-                    'time_in' => $firstTimeIn ? Carbon::parse($firstTimeIn->datetime)->format('h:i A') : '—',
-                    'time_out' => $lastTimeOut ? Carbon::parse($lastTimeOut->datetime)->format('h:i A') : '—',
-                    'hours_worked' => '—',
-                ];
+                $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
             }
-        } else {
-            $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
         }
-    }
-        
+
         $totalHoursPerMonth = 0;
         foreach ($groupedData as $key => $value) {
             if ($value['hours_worked'] !== '—') {
@@ -630,34 +626,34 @@ public function showUserDtr(Request $request, DtrSummaryController $dtrSummaryCo
         //echo "\nFinal total hours for month: $totalHoursPerMonth\n";
 
         $records = collect($groupedData)->map(fn($data, $date) => [
-        'date' => $date,
-        'time_in' => $data['time_in'],
-        'time_out' => $data['time_out'],
-        'hours_worked' => $data['hours_worked'],
-    ])->values()->all();
+            'date' => $date,
+            'time_in' => $data['time_in'],
+            'time_out' => $data['time_out'],
+            'hours_worked' => $data['hours_worked'],
+        ])->values()->all();
 
         //I remove the user becausue its just redundant to Auth::user();
         $yearlyTotals = $dtrSummaryController->showUserDtrSummary()['yearlyTotals'];
-        
+
         $approved_by_user = null;
-        if($downloadRequest->approved_by != null && isset($downloadRequest->approved_by)){
+        if ($downloadRequest->approved_by != null && isset($downloadRequest->approved_by)) {
             $approved_by_user = User::with('downloadRequests')->where('id', $downloadRequest->approved_by)->first();
             $approved_by_user = $approved_by_user->firstname . ' ' . substr($approved_by_user->middlename, 0, 1) . '. ' . $approved_by_user->lastname;
         }
 
         $declined_by_user = null;
-        if($downloadRequest->declined_by != null && isset($downloadRequest->declined_by)){
+        if ($downloadRequest->declined_by != null && isset($downloadRequest->declined_by)) {
             $declined_by_user = User::with('downloadRequests')->where('id', $downloadRequest->declined_by)->first();
             $declined_by_user = $declined_by_user->firstname . ' ' . substr($declined_by_user->middlename, 0, 1) . '. ' . $declined_by_user->lastname;
         }
-        
+
         if ($request->type === 'download') {
             // Check if the request is approved
             $dtrRequest = DtrDownloadRequest::where('id', $id)->first();
             if (!$dtrRequest || $dtrRequest->status !== 'approved') {
                 return back()->with('invalid', 'This document is not yet approved!');
             }
-            
+
             // Pass data to the view, which will submit a POST request
             return view('download-dtr', [
                 'user' => $user,
@@ -728,10 +724,8 @@ public function showUserDtr(Request $request, DtrSummaryController $dtrSummaryCo
     {
         $user = optional(DtrDownloadRequest::with('users')->where('id', $id)->first())->users;
         $downloadRequest = DtrDownloadRequest::where('id', $id)->first();
-        if(Auth::user()->role != 'admin')
-        {
-            if(Auth::id() != $user->id)
-            {
+        if (Auth::user()->role != 'admin') {
+            if (Auth::id() != $user->id) {
                 return back()->with('invalid', 'You do not have permission to see this!');
             }
         }
@@ -777,116 +771,116 @@ public function showUserDtr(Request $request, DtrSummaryController $dtrSummaryCo
         $totalHours = 0;
 
         for ($day = 1; $day <= $daysInMonth; $day++) {
-        $dateKey = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->format('Y-m-d');
-        $dayOfWeek = Carbon::parse($dateKey)->format('l'); // Get the day name (e.g., Monday)
+            $dateKey = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->format('Y-m-d');
+            $dayOfWeek = Carbon::parse($dateKey)->format('l'); // Get the day name (e.g., Monday)
 
-        // Get work schedule for the day
-        $workStart = $workSchedules[$dayOfWeek]['start'];
-        $workEnd = $workSchedules[$dayOfWeek]['end'];
+            // Get work schedule for the day
+            $workStart = $workSchedules[$dayOfWeek]['start'];
+            $workEnd = $workSchedules[$dayOfWeek]['end'];
 
-        if (!$workStart || !$workEnd) { 
-            // Skip non-working days (e.g., Sunday)
-            $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
-            continue;
-        }
-
-        
-        if (isset($logsByDate[$dateKey])) {
-            $logs = $logsByDate[$dateKey];
-            
-            // Filter logs within working hours
-            $timeInLogs = $logs->where('description', 'time in')->sortBy('datetime');
-
-            $firstTimeIn = $timeInLogs->first();
-
-            if ($firstTimeIn) {
-                $timeIn = Carbon::parse($firstTimeIn->datetime);
-                $workStartTime = Carbon::parse("$dateKey $workStart");
-
-                // If time in is earlier than work start, adjust it to work start
-                if ($timeIn->lt($workStartTime)) {
-                    $timeIn = $workStartTime;
-                }
+            if (!$workStart || !$workEnd) {
+                // Skip non-working days (e.g., Sunday)
+                $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
+                continue;
             }
-            
-            // $timeOutLogs = $logs->where('description', 'time out')
-            // ->filter(fn($log) => Carbon::parse($log->datetime)->between(Carbon::parse("$dateKey $workStart"), Carbon::parse("$dateKey $workEnd")))
-            // ->sortByDesc('datetime');
 
-            $timeOutLogs = $logs->where('description', 'time out')->sortBy('datetime');
-            
-            //@dd($logsByDate[$dateKey], $logs ,$timeInLogs, $timeOutLogs, $dateKey, $workStart);
-            $firstTimeIn = $timeInLogs->first();
-            $lastTimeOut = $timeOutLogs->first();
 
-            if ($firstTimeIn && $lastTimeOut) {
-                $timeIn = Carbon::parse($firstTimeIn->datetime);
-                $timeOut = Carbon::parse($lastTimeOut->datetime);
+            if (isset($logsByDate[$dateKey])) {
+                $logs = $logsByDate[$dateKey];
 
-                // Ensure time out is after time in
-                if ($timeOut->gt($timeIn)) {
+                // Filter logs within working hours
+                $timeInLogs = $logs->where('description', 'time in')->sortBy('datetime');
+
+                $firstTimeIn = $timeInLogs->first();
+
+                if ($firstTimeIn) {
+                    $timeIn = Carbon::parse($firstTimeIn->datetime);
                     $workStartTime = Carbon::parse("$dateKey $workStart");
-                    $workEndTime = Carbon::parse("$dateKey $workEnd");
-                    $lunchStartTime = Carbon::parse("$dateKey $lunchBreakStart");
-                    $lunchEndTime = Carbon::parse("$dateKey $lunchBreakEnd");
 
-                    // Adjust time in/out if outside working hours
+                    // If time in is earlier than work start, adjust it to work start
                     if ($timeIn->lt($workStartTime)) {
                         $timeIn = $workStartTime;
                     }
-                    if ($timeOut->gt($workEndTime)) {
-                        $timeOut = $workEndTime;
-                    }
-
-                    // $minutesWorked = $timeIn->diffInMinutes($timeOut);
-                    // $totalMinutesPerMonth += $minutesWorked;
-
-                    // $groupedData[$dateKey] = [
-                    //     'time_in' => $timeIn->format('h:i A'),
-                    //     'time_out' => $timeOut->format('h:i A'),
-                    //     'hours_worked' => round($minutesWorked / 60, 2), // Convert minutes to hours
-                    // ];
-                    if ($timeOut->gt($timeIn)) {
-                    $minutesWorked = $timeIn->diffInMinutes($timeOut);
-
-                    // Adjust for lunch break
-                    if ($timeIn->lte($lunchStartTime) && $timeOut->gt($lunchStartTime)) {
-                        if ($timeOut->gte($lunchEndTime)) {
-                            // Full lunch break
-                            $minutesWorked -= 60;
-                        } else {
-                            // Partial lunch break
-                            $minutesWorked = $timeIn->diffInMinutes($lunchStartTime);
-                            $timeOut = $lunchStartTime;
-                        }
-                    }
-
-                    $totalMinutesPerMonth += $minutesWorked;
-
-                    $groupedData[$dateKey] = [
-                        'time_in' => $timeIn->format('h:i A'),
-                        'time_out' => $timeOut->format('h:i A'),
-                        'hours_worked' => $minutesWorked,
-                    ];
                 }
+
+                // $timeOutLogs = $logs->where('description', 'time out')
+                // ->filter(fn($log) => Carbon::parse($log->datetime)->between(Carbon::parse("$dateKey $workStart"), Carbon::parse("$dateKey $workEnd")))
+                // ->sortByDesc('datetime');
+
+                $timeOutLogs = $logs->where('description', 'time out')->sortBy('datetime');
+
+                //@dd($logsByDate[$dateKey], $logs ,$timeInLogs, $timeOutLogs, $dateKey, $workStart);
+                $firstTimeIn = $timeInLogs->first();
+                $lastTimeOut = $timeOutLogs->first();
+
+                if ($firstTimeIn && $lastTimeOut) {
+                    $timeIn = Carbon::parse($firstTimeIn->datetime);
+                    $timeOut = Carbon::parse($lastTimeOut->datetime);
+
+                    // Ensure time out is after time in
+                    if ($timeOut->gt($timeIn)) {
+                        $workStartTime = Carbon::parse("$dateKey $workStart");
+                        $workEndTime = Carbon::parse("$dateKey $workEnd");
+                        $lunchStartTime = Carbon::parse("$dateKey $lunchBreakStart");
+                        $lunchEndTime = Carbon::parse("$dateKey $lunchBreakEnd");
+
+                        // Adjust time in/out if outside working hours
+                        if ($timeIn->lt($workStartTime)) {
+                            $timeIn = $workStartTime;
+                        }
+                        if ($timeOut->gt($workEndTime)) {
+                            $timeOut = $workEndTime;
+                        }
+
+                        // $minutesWorked = $timeIn->diffInMinutes($timeOut);
+                        // $totalMinutesPerMonth += $minutesWorked;
+
+                        // $groupedData[$dateKey] = [
+                        //     'time_in' => $timeIn->format('h:i A'),
+                        //     'time_out' => $timeOut->format('h:i A'),
+                        //     'hours_worked' => round($minutesWorked / 60, 2), // Convert minutes to hours
+                        // ];
+                        if ($timeOut->gt($timeIn)) {
+                            $minutesWorked = $timeIn->diffInMinutes($timeOut);
+
+                            // Adjust for lunch break
+                            if ($timeIn->lte($lunchStartTime) && $timeOut->gt($lunchStartTime)) {
+                                if ($timeOut->gte($lunchEndTime)) {
+                                    // Full lunch break
+                                    $minutesWorked -= 60;
+                                } else {
+                                    // Partial lunch break
+                                    $minutesWorked = $timeIn->diffInMinutes($lunchStartTime);
+                                    $timeOut = $lunchStartTime;
+                                }
+                            }
+
+                            $totalMinutesPerMonth += $minutesWorked;
+
+                            $groupedData[$dateKey] = [
+                                'time_in' => $timeIn->format('h:i A'),
+                                'time_out' => $timeOut->format('h:i A'),
+                                'hours_worked' => $minutesWorked,
+                            ];
+                        }
+                    } else {
+                        $groupedData[$dateKey] = [
+                            'time_in' => $timeIn->format('h:i A'),
+                            'time_out' => $timeOut->format('h:i A'),
+                            'hours_worked' => '—',
+                        ];
+                    }
                 } else {
                     $groupedData[$dateKey] = [
-                        'time_in' => $timeIn->format('h:i A'),
-                        'time_out' => $timeOut->format('h:i A'),
+                        'time_in' => $firstTimeIn ? Carbon::parse($firstTimeIn->datetime)->format('h:i A') : '—',
+                        'time_out' => $lastTimeOut ? Carbon::parse($lastTimeOut->datetime)->format('h:i A') : '—',
                         'hours_worked' => '—',
                     ];
                 }
             } else {
-                $groupedData[$dateKey] = [
-                    'time_in' => $firstTimeIn ? Carbon::parse($firstTimeIn->datetime)->format('h:i A') : '—',
-                    'time_out' => $lastTimeOut ? Carbon::parse($lastTimeOut->datetime)->format('h:i A') : '—',
-                    'hours_worked' => '—',
-                ];
+                $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
             }
-        } else {
-            $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
         }
-    }
 
         $totalHoursPerMonth = 0;
         foreach ($groupedData as $key => $value) {
@@ -899,11 +893,11 @@ public function showUserDtr(Request $request, DtrSummaryController $dtrSummaryCo
         //echo "\nFinal total hours for month: $totalHoursPerMonth\n";
 
         $records = collect($groupedData)->map(fn($data, $date) => [
-        'date' => $date,
-        'time_in' => $data['time_in'],
-        'time_out' => $data['time_out'],
-        'hours_worked' => $data['hours_worked'],
-    ])->values()->all();
+            'date' => $date,
+            'time_in' => $data['time_in'],
+            'time_out' => $data['time_out'],
+            'hours_worked' => $data['hours_worked'],
+        ])->values()->all();
 
         //I remove the user becausue its just redundant to Auth::user();
         $yearlyTotals = $dtrSummaryController->showUserDtrSummary()['yearlyTotals'];
@@ -981,117 +975,117 @@ public function showUserDtr(Request $request, DtrSummaryController $dtrSummaryCo
         $totalHours = 0;
 
         for ($day = 1; $day <= $daysInMonth; $day++) {
-        $dateKey = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->format('Y-m-d');
-        $dayOfWeek = Carbon::parse($dateKey)->format('l'); // Get the day name (e.g., Monday)
+            $dateKey = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->format('Y-m-d');
+            $dayOfWeek = Carbon::parse($dateKey)->format('l'); // Get the day name (e.g., Monday)
 
-        // Get work schedule for the day
-        $workStart = $workSchedules[$dayOfWeek]['start'];
-        $workEnd = $workSchedules[$dayOfWeek]['end'];
+            // Get work schedule for the day
+            $workStart = $workSchedules[$dayOfWeek]['start'];
+            $workEnd = $workSchedules[$dayOfWeek]['end'];
 
-        if (!$workStart || !$workEnd) { 
-            // Skip non-working days (e.g., Sunday)
-            $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
-            continue;
-        }
-
-        
-        if (isset($logsByDate[$dateKey])) {
-            $logs = $logsByDate[$dateKey];
-            
-            // Filter logs within working hours
-            $timeInLogs = $logs->where('description', 'time in')->sortBy('datetime');
-
-            $firstTimeIn = $timeInLogs->first();
-
-            if ($firstTimeIn) {
-                $timeIn = Carbon::parse($firstTimeIn->datetime);
-                $workStartTime = Carbon::parse("$dateKey $workStart");
-
-                // If time in is earlier than work start, adjust it to work start
-                if ($timeIn->lt($workStartTime)) {
-                    $timeIn = $workStartTime;
-                }
+            if (!$workStart || !$workEnd) {
+                // Skip non-working days (e.g., Sunday)
+                $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
+                continue;
             }
-            
-            // $timeOutLogs = $logs->where('description', 'time out')
-            // ->filter(fn($log) => Carbon::parse($log->datetime)->between(Carbon::parse("$dateKey $workStart"), Carbon::parse("$dateKey $workEnd")))
-            // ->sortByDesc('datetime');
-            $timeOutLogs = $logs->where('description', 'time out')->sortBy('datetime');
-            
-            //@dd($logsByDate[$dateKey], $logs ,$timeInLogs, $timeOutLogs, $dateKey, $workStart);
-            $firstTimeIn = $timeInLogs->first();
-            $lastTimeOut = $timeOutLogs->first();
-            
-            //@dd($firstTimeIn, $lastTimeOut, $logs, $timeOutLogs, $logs->where('description', 'time out'), $workEnd);
-            if ($firstTimeIn && $lastTimeOut) {
-                $timeIn = Carbon::parse($firstTimeIn->datetime);
-                $timeOut = Carbon::parse($lastTimeOut->datetime);
 
-                // Ensure time out is after time in
-                if ($timeOut->gt($timeIn)) {
+
+            if (isset($logsByDate[$dateKey])) {
+                $logs = $logsByDate[$dateKey];
+
+                // Filter logs within working hours
+                $timeInLogs = $logs->where('description', 'time in')->sortBy('datetime');
+
+                $firstTimeIn = $timeInLogs->first();
+
+                if ($firstTimeIn) {
+                    $timeIn = Carbon::parse($firstTimeIn->datetime);
                     $workStartTime = Carbon::parse("$dateKey $workStart");
-                    $workEndTime = Carbon::parse("$dateKey $workEnd");
-                    $lunchStartTime = Carbon::parse("$dateKey $lunchBreakStart");
-                    $lunchEndTime = Carbon::parse("$dateKey $lunchBreakEnd");
 
-                    // Adjust time in/out if outside working hours
+                    // If time in is earlier than work start, adjust it to work start
                     if ($timeIn->lt($workStartTime)) {
                         $timeIn = $workStartTime;
                     }
-                    if ($timeOut->gt($workEndTime)) {
-                        $timeOut = $workEndTime;
-                    }
-
-
-                    // $minutesWorked = $timeIn->diffInMinutes($timeOut);
-                    // $totalMinutesPerMonth += $minutesWorked;
-
-                    // $groupedData[$dateKey] = [
-                    //     'time_in' => $timeIn->format('h:i A'),
-                    //     'time_out' => $timeOut->format('h:i A'),
-                    //     'hours_worked' => round($minutesWorked / 60, 2), // Convert minutes to hours
-                    // ];
-                        if ($timeOut->gt($timeIn)) {
-                    $minutesWorked = $timeIn->diffInMinutes($timeOut);
-
-                    // Adjust for lunch break
-                    if ($timeIn->lte($lunchStartTime) && $timeOut->gt($lunchStartTime)) {
-                        if ($timeOut->gte($lunchEndTime)) {
-                            // Full lunch break
-                            $minutesWorked -= 60;
-                        } else {
-                            // Partial lunch break
-                            $minutesWorked = $timeIn->diffInMinutes($lunchStartTime);
-                            $timeOut = $lunchStartTime;
-                        }
-                    }
-
-                    $totalMinutesPerMonth += $minutesWorked;
-
-                    $groupedData[$dateKey] = [
-                        'time_in' => $timeIn->format('h:i A'),
-                        'time_out' => $timeOut->format('h:i A'),
-                        'hours_worked' => $minutesWorked,
-                    ];
                 }
+
+                // $timeOutLogs = $logs->where('description', 'time out')
+                // ->filter(fn($log) => Carbon::parse($log->datetime)->between(Carbon::parse("$dateKey $workStart"), Carbon::parse("$dateKey $workEnd")))
+                // ->sortByDesc('datetime');
+                $timeOutLogs = $logs->where('description', 'time out')->sortBy('datetime');
+
+                //@dd($logsByDate[$dateKey], $logs ,$timeInLogs, $timeOutLogs, $dateKey, $workStart);
+                $firstTimeIn = $timeInLogs->first();
+                $lastTimeOut = $timeOutLogs->first();
+
+                //@dd($firstTimeIn, $lastTimeOut, $logs, $timeOutLogs, $logs->where('description', 'time out'), $workEnd);
+                if ($firstTimeIn && $lastTimeOut) {
+                    $timeIn = Carbon::parse($firstTimeIn->datetime);
+                    $timeOut = Carbon::parse($lastTimeOut->datetime);
+
+                    // Ensure time out is after time in
+                    if ($timeOut->gt($timeIn)) {
+                        $workStartTime = Carbon::parse("$dateKey $workStart");
+                        $workEndTime = Carbon::parse("$dateKey $workEnd");
+                        $lunchStartTime = Carbon::parse("$dateKey $lunchBreakStart");
+                        $lunchEndTime = Carbon::parse("$dateKey $lunchBreakEnd");
+
+                        // Adjust time in/out if outside working hours
+                        if ($timeIn->lt($workStartTime)) {
+                            $timeIn = $workStartTime;
+                        }
+                        if ($timeOut->gt($workEndTime)) {
+                            $timeOut = $workEndTime;
+                        }
+
+
+                        // $minutesWorked = $timeIn->diffInMinutes($timeOut);
+                        // $totalMinutesPerMonth += $minutesWorked;
+
+                        // $groupedData[$dateKey] = [
+                        //     'time_in' => $timeIn->format('h:i A'),
+                        //     'time_out' => $timeOut->format('h:i A'),
+                        //     'hours_worked' => round($minutesWorked / 60, 2), // Convert minutes to hours
+                        // ];
+                        if ($timeOut->gt($timeIn)) {
+                            $minutesWorked = $timeIn->diffInMinutes($timeOut);
+
+                            // Adjust for lunch break
+                            if ($timeIn->lte($lunchStartTime) && $timeOut->gt($lunchStartTime)) {
+                                if ($timeOut->gte($lunchEndTime)) {
+                                    // Full lunch break
+                                    $minutesWorked -= 60;
+                                } else {
+                                    // Partial lunch break
+                                    $minutesWorked = $timeIn->diffInMinutes($lunchStartTime);
+                                    $timeOut = $lunchStartTime;
+                                }
+                            }
+
+                            $totalMinutesPerMonth += $minutesWorked;
+
+                            $groupedData[$dateKey] = [
+                                'time_in' => $timeIn->format('h:i A'),
+                                'time_out' => $timeOut->format('h:i A'),
+                                'hours_worked' => $minutesWorked,
+                            ];
+                        }
+                    } else {
+                        $groupedData[$dateKey] = [
+                            'time_in' => $timeIn->format('h:i A'),
+                            'time_out' => $timeOut->format('h:i A'),
+                            'hours_worked' => '—',
+                        ];
+                    }
                 } else {
                     $groupedData[$dateKey] = [
-                        'time_in' => $timeIn->format('h:i A'),
-                        'time_out' => $timeOut->format('h:i A'),
+                        'time_in' => $firstTimeIn ? Carbon::parse($firstTimeIn->datetime)->format('h:i A') : '—',
+                        'time_out' => $lastTimeOut ? Carbon::parse($lastTimeOut->datetime)->format('h:i A') : '—',
                         'hours_worked' => '—',
                     ];
                 }
             } else {
-                $groupedData[$dateKey] = [
-                    'time_in' => $firstTimeIn ? Carbon::parse($firstTimeIn->datetime)->format('h:i A') : '—',
-                    'time_out' => $lastTimeOut ? Carbon::parse($lastTimeOut->datetime)->format('h:i A') : '—',
-                    'hours_worked' => '—',
-                ];
+                $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
             }
-        } else {
-            $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
         }
-    }
 
         $totalHoursPerMonth = 0;
         foreach ($groupedData as $key => $value) {
@@ -1104,18 +1098,20 @@ public function showUserDtr(Request $request, DtrSummaryController $dtrSummaryCo
         //echo "\nFinal total hours for month: $totalHoursPerMonth\n";
 
         $records = collect($groupedData)->map(fn($data, $date) => [
-        'date' => $date,
-        'time_in' => $data['time_in'],
-        'time_out' => $data['time_out'],
-        'hours_worked' => $data['hours_worked'],
-    ])->values()->all();
+            'date' => $date,
+            'time_in' => $data['time_in'],
+            'time_out' => $data['time_out'],
+            'hours_worked' => $data['hours_worked'],
+        ])->values()->all();
 
         return view('admin.dtr.interns.dtr', [
             'ranking' => $rankingController->getRankings(),
             'array_daily' => $historyController->AllUserDailyAttendance(),
             'user' => User::find($request->id),
-            'image_url' => File::where('id',
-                School::where('id', 
+            'image_url' => File::where(
+                'id',
+                School::where(
+                    'id',
                     User::where('id', $request->id)->first()->school_id
                 )->first()->file_id
             )->first()->path,
@@ -1194,115 +1190,115 @@ public function showUserDtr(Request $request, DtrSummaryController $dtrSummaryCo
         $totalHours = 0;
 
         for ($day = 1; $day <= $daysInMonth; $day++) {
-        $dateKey = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->format('Y-m-d');
-        $dayOfWeek = Carbon::parse($dateKey)->format('l'); // Get the day name (e.g., Monday)
+            $dateKey = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->format('Y-m-d');
+            $dayOfWeek = Carbon::parse($dateKey)->format('l'); // Get the day name (e.g., Monday)
 
-        // Get work schedule for the day
-        $workStart = $workSchedules[$dayOfWeek]['start'];
-        $workEnd = $workSchedules[$dayOfWeek]['end'];
+            // Get work schedule for the day
+            $workStart = $workSchedules[$dayOfWeek]['start'];
+            $workEnd = $workSchedules[$dayOfWeek]['end'];
 
-        if (!$workStart || !$workEnd) { 
-            // Skip non-working days (e.g., Sunday)
-            $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
-            continue;
-        }
-
-        
-        if (isset($logsByDate[$dateKey])) {
-            $logs = $logsByDate[$dateKey];
-            
-            // Filter logs within working hours
-            $timeInLogs = $logs->where('description', 'time in')->sortBy('datetime');
-
-            $firstTimeIn = $timeInLogs->first();
-
-            if ($firstTimeIn) {
-                $timeIn = Carbon::parse($firstTimeIn->datetime);
-                $workStartTime = Carbon::parse("$dateKey $workStart");
-
-                // If time in is earlier than work start, adjust it to work start
-                if ($timeIn->lt($workStartTime)) {
-                    $timeIn = $workStartTime;
-                }
+            if (!$workStart || !$workEnd) {
+                // Skip non-working days (e.g., Sunday)
+                $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
+                continue;
             }
-            
-            // $timeOutLogs = $logs->where('description', 'time out')
-            // ->filter(fn($log) => Carbon::parse($log->datetime)->between(Carbon::parse("$dateKey $workStart"), Carbon::parse("$dateKey $workEnd")))
-            // ->sortByDesc('datetime');
 
-            $timeOutLogs = $logs->where('description', 'time out')->sortBy('datetime');
-            
-            //@dd($logsByDate[$dateKey], $logs ,$timeInLogs, $timeOutLogs, $dateKey, $workStart);
-            $firstTimeIn = $timeInLogs->first();
-            $lastTimeOut = $timeOutLogs->first();
 
-            if ($firstTimeIn && $lastTimeOut) {
-                $timeIn = Carbon::parse($firstTimeIn->datetime);
-                $timeOut = Carbon::parse($lastTimeOut->datetime);
+            if (isset($logsByDate[$dateKey])) {
+                $logs = $logsByDate[$dateKey];
 
-                // Ensure time out is after time in
-                if ($timeOut->gt($timeIn)) {
+                // Filter logs within working hours
+                $timeInLogs = $logs->where('description', 'time in')->sortBy('datetime');
+
+                $firstTimeIn = $timeInLogs->first();
+
+                if ($firstTimeIn) {
+                    $timeIn = Carbon::parse($firstTimeIn->datetime);
                     $workStartTime = Carbon::parse("$dateKey $workStart");
-                    $workEndTime = Carbon::parse("$dateKey $workEnd");
-                    $lunchStartTime = Carbon::parse("$dateKey $lunchBreakStart");
-                    $lunchEndTime = Carbon::parse("$dateKey $lunchBreakEnd");
 
-                    // Adjust time in/out if outside working hours
+                    // If time in is earlier than work start, adjust it to work start
                     if ($timeIn->lt($workStartTime)) {
                         $timeIn = $workStartTime;
                     }
-                    if ($timeOut->gt($workEndTime)) {
-                        $timeOut = $workEndTime;
-                    }
+                }
 
-                    // $minutesWorked = $timeIn->diffInMinutes($timeOut);
-                    // $totalMinutesPerMonth += $minutesWorked;
+                // $timeOutLogs = $logs->where('description', 'time out')
+                // ->filter(fn($log) => Carbon::parse($log->datetime)->between(Carbon::parse("$dateKey $workStart"), Carbon::parse("$dateKey $workEnd")))
+                // ->sortByDesc('datetime');
 
-                    // $groupedData[$dateKey] = [
-                    //     'time_in' => $timeIn->format('h:i A'),
-                    //     'time_out' => $timeOut->format('h:i A'),
-                    //     'hours_worked' => round($minutesWorked / 60, 2), // Convert minutes to hours
-                    // ];
-                        if ($timeOut->gt($timeIn)) {
-                        $minutesWorked = $timeIn->diffInMinutes($timeOut);
+                $timeOutLogs = $logs->where('description', 'time out')->sortBy('datetime');
 
-                        if ($timeIn->lte($lunchStartTime) && $timeOut->gt($lunchStartTime)) {
-                            if ($timeOut->gte($lunchEndTime)) {
-                                // Full lunch break
-                                $minutesWorked -= 60;
-                            } else {
-                                // Partial lunch break
-                                $minutesWorked = $timeIn->diffInMinutes($lunchStartTime);
-                                $timeOut = $lunchStartTime;
-                            }
+                //@dd($logsByDate[$dateKey], $logs ,$timeInLogs, $timeOutLogs, $dateKey, $workStart);
+                $firstTimeIn = $timeInLogs->first();
+                $lastTimeOut = $timeOutLogs->first();
+
+                if ($firstTimeIn && $lastTimeOut) {
+                    $timeIn = Carbon::parse($firstTimeIn->datetime);
+                    $timeOut = Carbon::parse($lastTimeOut->datetime);
+
+                    // Ensure time out is after time in
+                    if ($timeOut->gt($timeIn)) {
+                        $workStartTime = Carbon::parse("$dateKey $workStart");
+                        $workEndTime = Carbon::parse("$dateKey $workEnd");
+                        $lunchStartTime = Carbon::parse("$dateKey $lunchBreakStart");
+                        $lunchEndTime = Carbon::parse("$dateKey $lunchBreakEnd");
+
+                        // Adjust time in/out if outside working hours
+                        if ($timeIn->lt($workStartTime)) {
+                            $timeIn = $workStartTime;
+                        }
+                        if ($timeOut->gt($workEndTime)) {
+                            $timeOut = $workEndTime;
                         }
 
-                        $totalMinutesPerMonth += $minutesWorked;
+                        // $minutesWorked = $timeIn->diffInMinutes($timeOut);
+                        // $totalMinutesPerMonth += $minutesWorked;
 
+                        // $groupedData[$dateKey] = [
+                        //     'time_in' => $timeIn->format('h:i A'),
+                        //     'time_out' => $timeOut->format('h:i A'),
+                        //     'hours_worked' => round($minutesWorked / 60, 2), // Convert minutes to hours
+                        // ];
+                        if ($timeOut->gt($timeIn)) {
+                            $minutesWorked = $timeIn->diffInMinutes($timeOut);
+
+                            if ($timeIn->lte($lunchStartTime) && $timeOut->gt($lunchStartTime)) {
+                                if ($timeOut->gte($lunchEndTime)) {
+                                    // Full lunch break
+                                    $minutesWorked -= 60;
+                                } else {
+                                    // Partial lunch break
+                                    $minutesWorked = $timeIn->diffInMinutes($lunchStartTime);
+                                    $timeOut = $lunchStartTime;
+                                }
+                            }
+
+                            $totalMinutesPerMonth += $minutesWorked;
+
+                            $groupedData[$dateKey] = [
+                                'time_in' => $timeIn->format('h:i A'),
+                                'time_out' => $timeOut->format('h:i A'),
+                                'hours_worked' => $minutesWorked,
+                            ];
+                        }
+                    } else {
                         $groupedData[$dateKey] = [
                             'time_in' => $timeIn->format('h:i A'),
                             'time_out' => $timeOut->format('h:i A'),
-                            'hours_worked' => $minutesWorked,
+                            'hours_worked' => '—',
                         ];
                     }
                 } else {
                     $groupedData[$dateKey] = [
-                        'time_in' => $timeIn->format('h:i A'),
-                        'time_out' => $timeOut->format('h:i A'),
+                        'time_in' => $firstTimeIn ? Carbon::parse($firstTimeIn->datetime)->format('h:i A') : '—',
+                        'time_out' => $lastTimeOut ? Carbon::parse($lastTimeOut->datetime)->format('h:i A') : '—',
                         'hours_worked' => '—',
                     ];
                 }
             } else {
-                $groupedData[$dateKey] = [
-                    'time_in' => $firstTimeIn ? Carbon::parse($firstTimeIn->datetime)->format('h:i A') : '—',
-                    'time_out' => $lastTimeOut ? Carbon::parse($lastTimeOut->datetime)->format('h:i A') : '—',
-                    'hours_worked' => '—',
-                ];
+                $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
             }
-        } else {
-            $groupedData[$dateKey] = ['time_in' => '—', 'time_out' => '—', 'hours_worked' => '—'];
         }
-    }
 
         $totalHoursPerMonth = 0;
         foreach ($groupedData as $key => $value) {
@@ -1315,18 +1311,20 @@ public function showUserDtr(Request $request, DtrSummaryController $dtrSummaryCo
         //echo "\nFinal total hours for month: $totalHoursPerMonth\n";
 
         $records = collect($groupedData)->map(fn($data, $date) => [
-        'date' => $date,
-        'time_in' => $data['time_in'],
-        'time_out' => $data['time_out'],
-        'hours_worked' => $data['hours_worked'],
-    ])->values()->all();
+            'date' => $date,
+            'time_in' => $data['time_in'],
+            'time_out' => $data['time_out'],
+            'hours_worked' => $data['hours_worked'],
+        ])->values()->all();
 
         return view('admin.dtr.interns.dtr', [
             'user' => User::find($id),
             'ranking' => $rankingController->getRankings(),
             'array_daily' => $historyController->AllUserDailyAttendance(),
-            'image_url' => File::where('id',
-                School::where('id', 
+            'image_url' => File::where(
+                'id',
+                School::where(
+                    'id',
                     User::where('id', $request->id)->first()->school_id
                 )->first()->file_id
             )->first()->path,

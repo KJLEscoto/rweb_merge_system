@@ -35,7 +35,7 @@
                 <input type="text" name="title" id="title" value="{{ old('title') }}"
                     class="border px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11]">
             </div>
-            <div class="space-y-1 w-full">
+            <div class="space-y-1 w-full overflow-y-auto max-h-[250px]">
                 <h1 class="font-bold text-xs">Web Designer</h1>
                 @foreach ($employee as $client)
                     <label class="flex items-center space-x-2">
@@ -47,7 +47,7 @@
                 @endforeach
             </div>
 
-            <div class="space-y-1 w-full">
+            <div class="space-y-1 w-full overflow-y-auto max-h-[250px]">
                 <h1 class="font-bold text-xs">Front-End Developer</h1>
                 @foreach ($employee as $client)
                     <label class="flex items-center space-x-2">
@@ -59,7 +59,7 @@
                 @endforeach
             </div>
 
-            <div class="space-y-1 w-full">
+            <div class="space-y-1 w-full overflow-y-auto max-h-[250px]">
                 <h1 class="font-bold text-xs">Back-End Developer</h1>
                 @foreach ($employee as $client)
                     <label class="flex items-center space-x-2">

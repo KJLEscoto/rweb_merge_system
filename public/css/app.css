@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .gradient {
 background: linear-gradient(to right, #F57D11, rgba(245, 125, 17, 0.7), #F53C11);
 transition: background 0.3s ease-in;

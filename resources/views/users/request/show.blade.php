@@ -9,12 +9,14 @@
             <div
                 class="w-full grid grid-cols-2 text-nowrap gap-5 bg-white p-3 border border-orange-300 shadow-lg sticky top-5 z-30 rounded max-w-screen-xl mx-auto">
 
+
+
                 <section class="col-span-1 flex items-center justify-start">
                     <x-button routePath="users.request" label="Back" tertiary button showLabel="{{ true }}"
                         leftIcon="eva--arrow-back-fill" className="lg:px-8 px-3" />
                 </section>
 
-                <section class="flex items-center gap-3 col-span-1 justify-end w-full h-auto capitalize px-10">
+                <section class="flex items-center gap-3 col-span-1 justify-end w-full h-auto capitalize">
                     @if ($status === 'approved')
                         <span class="text-green-500 font-semibold md:text-sm text-xs">
                             Ready to Download

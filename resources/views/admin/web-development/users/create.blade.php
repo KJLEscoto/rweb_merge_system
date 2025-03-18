@@ -62,7 +62,8 @@
                 </div>
             </a>
         </div>
-        <form method="POST" class="relative" action="{{ route('admin.web.users.store') }}" enctype="multipart/form-data">
+        <form method="POST" class="relative" action="{{ route('admin.web.users.store') }}"
+            enctype="multipart/form-data">
             @csrf
             <h1 class="mt-10 text-xl font-bold">Register User</h1>
             <div class="image-upload-container absolute -top-14 cursor-pointer right-0 size-24">
@@ -116,18 +117,15 @@
 
                         <option value="{{ $clientRoleId }}" {{ old('role_id') == $clientRoleId ? 'selected' : '' }}>
                             Client</option>
-                        <option value="{{ $operationsRoleId }}"
-                            {{ old('role_id') == $operationsRoleId ? 'selected' : '' }}>Operation</option>
+                        <option value="{{ $operationsRoleId }}" {{ old('role_id') == $operationsRoleId ? 'selected' : '' }}>Operation</option>
                         <option value="{{ $uiUxRoleId }}" {{ old('role_id') == $uiUxRoleId ? 'selected' : '' }}>Web
                             Designer</option>
-                        <option value="{{ $frontEndRoleId }}"
-                            {{ old('role_id') == $frontEndRoleId ? 'selected' : '' }}>Front-End Developer</option>
+                        <option value="{{ $frontEndRoleId }}" {{ old('role_id') == $frontEndRoleId ? 'selected' : '' }}>
+                            Front-End Developer</option>
                         <option value="{{ $backEndRoleId }}" {{ old('role_id') == $backEndRoleId ? 'selected' : '' }}>
                             Back-End Developer</option>
-                        <option value="{{ $topManagerRoleId }}"
-                            {{ old('role_id') == $topManagerRoleId ? 'selected' : '' }}>Top Manager</option>
-                        <option value="{{ $supervisorRoleId }}"
-                            {{ old('role_id') == $supervisorRoleId ? 'selected' : '' }}>Supervisor</option>
+                        <option value="{{ $topManagerRoleId }}" {{ old('role_id') == $topManagerRoleId ? 'selected' : '' }}>Top Manager</option>
+                        <option value="{{ $supervisorRoleId }}" {{ old('role_id') == $supervisorRoleId ? 'selected' : '' }}>Supervisor</option>
                     </select>
 
                     @error('role_id')
@@ -156,6 +154,21 @@
                                 <thead>
                                     <tr
                                         class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-gray-200 *:text-black *:text-nowrap">
+                                        <th colspan="2">
+                                            <button id="toggleSelection">
+                                                <div
+                                                    class="w-fit px-4 py-1 bg-[#fa7011] rounded-md text-white custom-shadow custom-hover-shadow">
+                                                    Select All
+                                                </div>
+                                            </button>
+                                            {{-- <button id="toggleSelection"
+                                                class="px-4 py-2 bg-blue-500 text-white rounded">
+                                                Select All
+                                            </button> --}}
+                                        </th>
+                                    </tr>
+                                    <tr
+                                        class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-gray-200 *:text-black *:text-nowrap">
                                         <th>Page Access</th>
                                         <th>Privileges</th>
                                     </tr>
@@ -166,7 +179,8 @@
                                             <td class="my-auto px-4 py-1">
                                                 <div class="flex items-center">
                                                     <input id="pages{{ $page->id }}" type="checkbox" name="pages[]"
-                                                        value="{{ $page->description }}" class="h-6 bg-slate-700">
+                                                        value="{{ $page->description }}"
+                                                        class="h-6 bg-slate-700 page-checkbox">
                                                     <label class="checkbox-label"
                                                         for="pages{{ $page->id }}">{{ $page->description }}</label>
                                                 </div>
@@ -175,10 +189,10 @@
                                                 <div class="grid grid-cols-2 px-4 py-1">
                                                     @foreach ($privileges as $privilege)
                                                         <div class="flex items-center space-x-2">
-                                                            <input id="priv{{ $page->id }}_{{ $privilege->id }}"
-                                                                type="checkbox"
+                                                            <input id="priv{{ $page->id }}_{{ $privilege->id }}" type="checkbox"
                                                                 name="privileges[{{ $page->description }}][]"
-                                                                value="{{ $privilege->description }}" class="h-6">
+                                                                value="{{ $privilege->description }}"
+                                                                class="h-6 privilege-checkbox">
                                                             <label for="priv{{ $page->id }}_{{ $privilege->id }}"
                                                                 class="checkbox-label">
                                                                 {{ $privilege->description }}
@@ -188,49 +202,27 @@
                                                 </div>
                                             </td>
                                         </tr>
-
-                                        {{-- <div class="flex items-center space-x-2">
-                                                <input type="checkbox" name="pages[]" value="{{ $page->id }}"
-                                                    class="h-6 bg-slate-700">
-                                                <label class="checkbox-label">{{ $page->description }}</label>
-
-                                                <div class="ml-4">
-                                                    <p class="font-semibold">Privileges for
-                                                        {{ $page->description }}:</p>
-                                                    @foreach ($privileges as $privilege)
-                                                        <div class="flex items-center space-x-2">
-                                                            <input type="checkbox"
-                                                                name="privileges[{{ $page->id }}][]"
-                                                                value="{{ $privilege->id }}" class="h-6">
-                                                            <label
-                                                                class="checkbox-label">{{ $privilege->description }}</label>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            </div> --}}
                                     @endforeach
                                 </tbody>
-
                             </table>
                         </div>
                         {{-- @foreach ($pages as $page)
-                                <div class="flex items-center space-x-2">
-                                    <input type="checkbox" name="pages[]" value="{{ $page->id }}"
-                                        class="h-6 bg-slate-700">
-                                    <label class="checkbox-label">{{ $page->description }}</label>
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" name="pages[]" value="{{ $page->id }}" class="h-6 bg-slate-700">
+                            <label class="checkbox-label">{{ $page->description }}</label>
 
-                                    <div class="ml-4">
-                                        <p class="font-semibold">Privileges for {{ $page->description }}:</p>
-                                        @foreach ($privileges as $privilege)
-                                            <div class="flex items-center space-x-2">
-                                                <input type="checkbox" name="privileges[{{ $page->id }}][]"
-                                                    value="{{ $privilege->id }}" class="h-6">
-                                                <label class="checkbox-label">{{ $privilege->description }}</label>
-                                            </div>
-                                        @endforeach
-                                    </div>
+                            <div class="ml-4">
+                                <p class="font-semibold">Privileges for {{ $page->description }}:</p>
+                                @foreach ($privileges as $privilege)
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" name="privileges[{{ $page->id }}][]"
+                                        value="{{ $privilege->id }}" class="h-6">
+                                    <label class="checkbox-label">{{ $privilege->description }}</label>
                                 </div>
-                            @endforeach --}}
+                                @endforeach
+                            </div>
+                        </div>
+                        @endforeach --}}
                     </div>
                 </div>
 
@@ -276,7 +268,7 @@
 <script>
     function previewImage(event) {
         const reader = new FileReader();
-        reader.onload = function() {
+        reader.onload = function () {
             const output = document.getElementById('image-preview');
             output.src = reader.result;
         }
@@ -284,11 +276,11 @@
     }
 </script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const pageCheckboxes = document.querySelectorAll('input[name="pages[]"]');
 
         pageCheckboxes.forEach(pageCheckbox => {
-            pageCheckbox.addEventListener("change", function() {
+            pageCheckbox.addEventListener("change", function () {
                 const pageId = this.value; // Get the page description (unique value)
                 const privilegeCheckboxes = document.querySelectorAll(
                     `input[name="privileges[${pageId}][]"]`);
@@ -317,7 +309,7 @@
             // Add event listener for each privilege checkbox
             document.querySelectorAll(`input[name="privileges[${pageCheckbox.value}][]"]`).forEach(
                 privilegeCheckbox => {
-                    privilegeCheckbox.addEventListener("change", function() {
+                    privilegeCheckbox.addEventListener("change", function () {
                         const privilegeList = Array.from(document.querySelectorAll(
                             `input[name="privileges[${pageCheckbox.value}][]"]:checked`
                         ));
@@ -337,5 +329,19 @@
             // Trigger change event on page load to set the correct state
             pageCheckbox.dispatchEvent(new Event("change"));
         });
+    });
+</script>
+<script>
+    document.getElementById('toggleSelection').addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent form submission if inside a form
+
+        let checkboxes = document.querySelectorAll('.page-checkbox, .privilege-checkbox');
+        let allChecked = [...checkboxes].every(checkbox => checkbox.checked);
+
+        checkboxes.forEach(checkbox => checkbox.checked = !allChecked);
+
+        this.textContent = allChecked ? "Select All" : "Deselect All";
+
+
     });
 </script>
