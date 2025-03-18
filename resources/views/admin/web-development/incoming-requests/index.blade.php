@@ -43,15 +43,14 @@
                 </tr>
             </thead>
             <tbody id="tableBody" class="overflow-y-auto">
-                @forelse ($supervisor_requests as $supervisor_request)
+                @forelse ($web_requests as $web_request)
                     <tr class="border-b">
-                        <td class="px-6 py-3">{{ $supervisor_request->title }}</td>
-                        <td class="px-6 py-3">{{ $supervisor_request->issuer->name }}</td>
-                        <td class="px-6 py-3">{{ $supervisor_request->status }}</td>
+                        <td class="px-6 py-3">{{ $web_request->title }}</td>
+                        <td class="px-6 py-3">{{ $web_request->issued_by->name }}</td>
+                        <td class="px-6 py-3">{{ $web_request->status }}</td>
                         <td class="px-6 py-3">
-                            @if ($supervisor_request->status == 'Waiting for Operation Approval')
-                                <form
-                                    action="{{ url('admin/smm/operation/request/accept/' . $supervisor_request->id) }}"
+                            @if ($web_request->status == 'pending')
+                                <form action="{{ route('admin.web.incoming-requests.accept', $web_request->id) }}"
                                     method="POST" class="inline">
                                     @csrf
                                     @method('PUT')
@@ -60,15 +59,14 @@
                                         Accept
                                     </button>
                                 </form>
-                                <a href="{{ url('admin/smm/operation/request/show/' . $supervisor_request->id) }}">
+                                <a href="{{ url('admin/smm/operation/request/show/' . $web_request->id) }}">
                                     <button
                                         class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
                                         Show
                                     </button>
                                 </a>
                             @else
-                                <form
-                                    action="{{ url('admin/smm/operation/request/accept/' . $supervisor_request->id) }}"
+                                <form action="{{ url('admin/smm/operation/request/accept/' . $web_request->id) }}"
                                     method="POST" class="inline">
                                     @csrf
                                     @method('PUT')
@@ -77,7 +75,7 @@
                                         Accept
                                     </button>
                                 </form>
-                                <a href="{{ url('admin/smm/operation/request/show/' . $supervisor_request->id) }}">
+                                <a href="{{ url('admin/smm/operation/request/show/' . $web_request->id) }}">
                                     <button
                                         class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
                                         Show

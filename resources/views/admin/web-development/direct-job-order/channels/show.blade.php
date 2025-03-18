@@ -168,10 +168,11 @@
 
                             {{ $web_project_channel->users->name }}
 
-                            @if ($web_project_channel->status == 'accepted')
+                            @if (!in_array($web_project_channel->status, ['pending', 'declined']))
                                 <img src="{{ asset($web_project_channel->users->signature) }}"
                                     alt="Supervisor Signature">
                             @endif
+
 
                             {{-- @if ($web_project_channel->type == 'content_writer')
                                 {{ $web_project_channel->type }} <br />

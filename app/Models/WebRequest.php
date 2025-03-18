@@ -20,4 +20,14 @@ class WebRequest extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function issued_to()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function issued_by()
+    {
+        return $this->belongsTo(User::class, 'assigned_by');
+    }
 }

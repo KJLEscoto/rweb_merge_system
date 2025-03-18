@@ -25,7 +25,7 @@
 <x-main-layout breadcumb="Web Development" page="Revision">
     <main class="h-auto w-full flex flex-col gap-5">
 
-        @if ($revisions)
+        @if ($web_project_channels)
             <div class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
 
                 <div class="flex lg:flex-row flex-col-reverse items-end justify-between w-full gap-5">
@@ -59,31 +59,32 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($revisions as $revision)
+                            @foreach ($web_project_channels as $web_project_channel)
                                 <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
                                     <td class="flex items-center gap-2">
                                         {{-- <div class="p-2 rounded bg-[#F57D11] text-white">
                                             <span class="mingcute--file-fill w-6 h-6"></span>
                                         </div> --}}
-                                        {{ $revision['title'] }}
+                                        {{ $web_project_channel->web_project->title }}
                                     </td>
-                                    <td>{{ $revision['designated'] }}</td>
+                                    <td>{{ $web_project_channel->type }}</td>
                                     <td class="flex justify-center items-center">
                                         @php
                                             $statusClasses = [
                                                 'Done' => 'text-green-700 bg-green-300',
                                                 'Pending' => 'text-yellow-700 bg-yellow-300',
                                                 'Delayed' => 'text-red-700 bg-red-300',
+                                                'Revision' => 'text-red-700 bg-red-300',
                                             ];
                                         @endphp
                                         <p
-                                            class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $statusClasses[$revision['status']] }}">
-                                            {{ $revision['status'] }}
+                                            class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $statusClasses[$web_project_channel->status] }}">
+                                            {{ $web_project_channel->status }}
                                         </p>
                                     </td>
                                     <td>
                                         <div class="flex items-center justify-center gap-2">
-                                            <a href="#"
+                                            <a href="{{ route('admin.web.revision.show', $web_project_channel->id) }}"
                                                 class="approve-btn px-2 py-1 font-medium bg-green-500 text-white rounded flex items-center justify-center gap-1 hover:scale-105 transition">
                                                 <span class="basil--eye-solid !w-4 !h-4"></span>
                                                 <p>View</p>

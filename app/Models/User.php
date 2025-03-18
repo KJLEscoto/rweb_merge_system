@@ -199,4 +199,19 @@ class User extends Authenticatable
     {
         return $this->hasOne(WebRequest::class, 'user_id');
     }
+
+    public function declined_by()
+    {
+        return $this->hasMany(WebRevisions::class, 'declined_by_id');
+    }
+
+    public function issued_to()
+    {
+        return $this->hasOne(WebRequest::class, 'assigned_to');
+    }
+
+    public function issued_by()
+    {
+        return $this->hasOne(WebRequest::class, 'assigned_by');
+    }
 }

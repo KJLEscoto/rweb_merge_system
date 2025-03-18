@@ -48,6 +48,17 @@ class WebTaskController extends Controller
             'draft' => $data['draft'],
             'status' => 'Submitted to Operation'
         ]);
+
+        if ($web_project_channel->type == 'web_designer') {
+            switch ($web_project_channel->sub_status) {
+                case null:
+                    $web_project_channel->update([
+                        'sub_status' => 'Site Map',
+                    ]);
+                    break;
+            }
+        }
+
         return redirect()->route('admin.web.task')->with('success', 'Project Submitted Successfully');
     }
 
@@ -104,6 +115,16 @@ class WebTaskController extends Controller
         $web_project_channel->update([
             'status' => 'accepted'
         ]);
+
+        if ($web_project_channel->type == 'web_designer') {
+            switch ($web_project_channel->sub_status) {
+                case null:
+                    $web_project_channel->update([
+                        'sub_status' => 'Site Map',
+                    ]);
+                    break;
+            }
+        }
         return redirect()->back()->with('success', 'Project accepted successfully!');
     }
 }

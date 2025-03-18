@@ -206,7 +206,7 @@
     <div id="declineModal" class="fixed inset-0 flex items-center justify-center hidden bg-gray-500 bg-opacity-50 z-50">
         <div class="bg-white p-6 rounded-md w-[50%]">
             <h2 class="text-xl font-bold mb-4">Decline Job Order</h2>
-            <form action="{{ url('/admin/smm/operation/decline/' . $web_project_channel->id) }}" method="POST"
+            <form action="{{ route('admin.web.approvals.decline', $web_project_channel->id) }}" method="POST"
                 id="declineForm">
                 @csrf
                 <div class="mb-4">

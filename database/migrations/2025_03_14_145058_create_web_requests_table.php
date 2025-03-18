@@ -18,8 +18,10 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->string('instructions')->nullable();
             $table->foreignId('assigned_to')->nullable()->constrained('users')->cascadeOnDelete();
+            $table->foreignId('assigned_by')->nullable()->constrained('users')->cascadeOnDelete();
+            $table->date('date_accepted')->nullable();
+            $table->date('deadline')->nullable();
             $table->string('status')->nullable();
-            $table->string('deadline')->nullable();
             $table->timestamps();
         });
     }

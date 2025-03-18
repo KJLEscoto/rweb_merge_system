@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('web_revisions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('web_job_order_id')->nullable()->constrained('web_job_orders')->cascadeOnDelete();
+            $table->foreignId('web_project_channel_id')->nullable()->constrained('web_project_channels')->onDelete('cascade');
             $table->foreignId('declined_by_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->string('summary')->nullable();
             $table->string('last_draft')->nullable();
