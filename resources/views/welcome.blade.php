@@ -92,6 +92,14 @@
                                     <span class="eva--arrow-forward-outline w-5 h-5"></span>
                                 </a>
                             </div>
+                            <div class="space-y-3">
+                                <h1 class="font-semibold lg:text-lg text-base text-gray-700">Web Development Client</h1>
+                                <a href="{{ route('web.login') }}"
+                                    class="px-8 py-3 w-fit rounded relative overflow-hidden font-medium text-white flex items-center justify-center gap-2 animate-transition bg-gradient-to-r from-[#F57D11] via-[#F57D11]/70 to-[#F53C11] hover:bg-[#F53C11] disabled:opacity-50 lg:text-sm text-xs cursor-pointer">
+                                    Login here
+                                    <span class="eva--arrow-forward-outline w-5 h-5"></span>
+                                </a>
+                            </div>
                         </div>
 
                         <div class="flex items-center gap-4">

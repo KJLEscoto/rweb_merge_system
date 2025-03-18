@@ -18,7 +18,7 @@ class WebProject extends Model
 
     public function web_project_channels()
     {
-        return $this->hasMany(WebProjectChannel::class, 'web_job_order_id');
+        return $this->hasMany(WebProjectChannel::class, 'project_id');
     }
 
 

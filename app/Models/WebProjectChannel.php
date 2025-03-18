@@ -28,6 +28,6 @@ class WebProjectChannel extends Model
 
     public function web_project()
     {
-        return $this->belongsTo(WebProject::class, 'web_job_order_id');
+        return $this->belongsTo(WebProject::class, 'project_id');
     }
 }

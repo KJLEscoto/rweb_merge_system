@@ -56,11 +56,6 @@ class WebDirectJobOrderController extends Controller
                 'instructions' => 'required|string',
             ]);
 
-            // Create the web job order
-            $web_job_order = WebJobOrder::create([
-                'status' => 'oten ni kent'
-            ]);
-
             // Create the web project
             $web_project = WebProject::create([
                 'title' => $request->title,
@@ -84,7 +79,13 @@ class WebDirectJobOrderController extends Controller
             $debug = null;
             foreach ($roles as $role => $users) {
                 foreach ($users as $user_id) {
-                    $debug = WebProjectChannel::create([
+                    $web_job_order = WebJobOrder::create([
+                        'operation_signed_draft_id' => null,
+                        'supervisor_signed_draft_id' => null,
+                        'client_signed_id' => null,
+                        'status' => 'Job order for ' . User::where('id', $user_id)->first()->name,
+                    ]);
+                    $web_project_channel = WebProjectChannel::create([
                         'user_id' => $user_id,
                         'web_job_order_id' => $web_job_order->id,
                         'project_id' => $web_project->id,
