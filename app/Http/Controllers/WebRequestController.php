@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\WebRequest;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class WebRequestController extends Controller
@@ -14,7 +15,8 @@ class WebRequestController extends Controller
      */
     public function index()
     {
-        return view('admin.web-development.incoming-requests.index');
+        $web_requests = WebRequest::with('issued_to', 'issued_by')->where('assigned_to', auth()->user()->id)->get();
+        return view('admin.web-development.incoming-requests.index', compact('web_requests'));
     }
 
     /**
@@ -44,9 +46,9 @@ class WebRequestController extends Controller
      * @param  \App\Models\WebRequest  $webRequest
      * @return \Illuminate\Http\Response
      */
-    public function show(WebRequest $webRequest)
+    public function show($id)
     {
-        //
+        @dd($id);
     }
 
     /**
@@ -81,5 +83,14 @@ class WebRequestController extends Controller
     public function destroy(WebRequest $webRequest)
     {
         //
+    }
+
+    public function accept($id)
+    {
+        WebRequest::find($id)->update([
+            'status' => 'accepted',
+            'date_accepted' => Carbon::now(),
+        ]);
+        return redirect()->route('admin.web.incoming-requests');
     }
 }

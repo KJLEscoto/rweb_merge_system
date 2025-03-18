@@ -121,7 +121,7 @@ class WebDirectJobOrderController extends Controller
     public function showProjectChannels($id)
     {
         $web_project = WebProject::find($id);
-        $web_project_channels = WebProjectChannel::with('web_project', 'web_job_orders', 'web_project.client', 'web_project.issuer', 'users', 'web_project.supervisor')->where('web_job_order_id', $id)->get();
+        $web_project_channels = WebProjectChannel::with('web_project', 'web_job_orders', 'web_project.client', 'web_project.issuer', 'users', 'web_project.supervisor')->where('project_id', $id)->get();
         return view('admin.web-development.direct-job-order.channels.index', compact('web_project_channels', 'web_project'));
     }
 

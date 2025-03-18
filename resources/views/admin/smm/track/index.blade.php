@@ -45,8 +45,6 @@
                             {{ $job_order->latestJobDraft->client->name }}
                         </td>
 
-
-
                         <td class="w-[25%] px-4 py-3">
                             <div class="flex items-center justify-center space-x-2">
                                 <div>
@@ -70,8 +68,6 @@
                                 </div>
                             </div>
                         </td>
-
-
                     </tr>
                 @empty
                     <tr class="h-[400px]">

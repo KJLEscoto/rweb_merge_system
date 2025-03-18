@@ -6,7 +6,9 @@ use App\Http\Controllers\WebAuthenticatedSessionController;
 use App\Http\Controllers\WebDirectJobOrderController;
 use App\Http\Controllers\WebOperationJobOrder;
 use App\Http\Controllers\WebRequestController;
+use App\Http\Controllers\WebRevisionController;
 use App\Http\Controllers\WebTaskController;
+use App\Http\Controllers\WebTrackController;
 use App\Http\Controllers\WebUserController;
 use App\Models\Page;
 use App\Models\Privilege;
@@ -75,6 +77,7 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
   // Route::view('/operation-job-order', 'admin.web-development.operation-job-order.index')->name('admin.web.operation-job-order');
   // Route::view('/operation-job-order/create', 'admin.web-development.operation-job-order.create')->name('admin.web.operation-job-order.create');
   Route::view('/operation-job-order/{id}/edit', 'admin.web-development.operation-job-order.edit')->name('admin.web.operation-job-order.edit');
+  Route::get('/operation-job-order/{id}/show', [WebOperationJobOrder::class, 'show'])->name('admin.web.operation-job-order.show');
 
   // task pages
   Route::get('/task', [WebTaskController::class, 'index'])->name('admin.web.task');
@@ -84,12 +87,18 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
   // Route::view('/task/create/{id}', 'admin.web-development.task.create')->name('admin.web.task.create');
 
   // revision pages
-  Route::view('/revision', 'admin.web-development.revision.index')->name('admin.web.revision');
+  // Route::view('/revision', 'admin.web-development.revision.index')->name('admin.web.revision');
+
+  Route::get('/revision', [WebRevisionController::class, 'index'])->name('admin.web.revision');
+  Route::get('/revision/{id}/show', [WebRevisionController::class, 'show'])->name('admin.web.revision.show');
+  Route::put('/revision/{id}/edit', [WebRevisionController::class, 'edit'])->name('admin.web.revision.edit');
+
 
   // approvals pages
   Route::get('/approvals', [WebApprovalController::class, 'index'])->name('admin.web.approvals');
   Route::get('/approvals/{id}', [WebApprovalController::class, 'show'])->name('admin.web.approvals.show');
   Route::post('/approvals/{id}/approve', [WebApprovalController::class, 'approve'])->name('admin.web.approvals.approve');
+  Route::post('/approvals/{id}/decline', [WebApprovalController::class, 'decline'])->name('admin.web.approvals.decline');
   // Route::view('/approvals', 'admin.web-development.approvals.index')->name('admin.web.approvals');
 
   // users pages
@@ -101,8 +110,8 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
   Route::get('/users/edit/{id}', [WebUserController::class, 'edit'])->name('admin.web.users.edit');
 
   // track pages
-  Route::view('/track', 'admin.web-development.track.index')->name('admin.web.track');
-  Route::view('/track/{id}', 'admin.web-development.track.show')->name('admin.web.track.show');
+  Route::get('/track', [WebTrackController::class, 'index'])->name('admin.web.track');
+  Route::get('/track/{id}', [WebTrackController::class, 'show'])->name('admin.web.track.show');
   Route::view('/track/{track_id}/draft/{draft_id}', 'admin.web-development.track.draft.show')->name('admin.web.track.draft.show');
   Route::view('/track/{track_id}/draft/{draft_id}/edit', 'admin.web-development.track.draft.edit')->name('admin.web.track.draft.edit');
 
@@ -114,6 +123,7 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
 
   // incoming request pages
   Route::get('/incoming-requests', [WebRequestController::class, 'index'])->name('admin.web.incoming-requests');
+  Route::put('/incoming-requests/{id}/accept', [WebRequestController::class, 'accept'])->name('admin.web.incoming-requests.accept');
   Route::post('/incoming-requests/{id}', [WebRequestController::class, 'show'])->name('admin.web.incoming-requests.show');
   Route::get('/incoming-requests/create', [WebRequestController::class, 'create'])->name('admin.web.incoming-requests.create');
 

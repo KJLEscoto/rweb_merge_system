@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('feedback_id')->nullable()->constrained('web_feedback')->cascadeOnDelete();
             $table->foreignId('project_id')->nullable()->constrained('web_projects')->cascadeOnDelete();
             $table->string('status')->nullable();
+            $table->string('sub_status')->nullable();
             $table->string('type')->nullable();
             $table->string('draft')->nullable();
             $table->date('date_started')->nullable();

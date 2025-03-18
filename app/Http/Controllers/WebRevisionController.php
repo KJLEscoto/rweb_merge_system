@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\WebRequest;
+use App\Models\Revision;
+use App\Models\WebProjectChannel;
+use App\Models\WebRevisions;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class WebOperationJobOrder extends Controller
+class WebRevisionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +17,8 @@ class WebOperationJobOrder extends Controller
      */
     public function index()
     {
-        $web_requests = WebRequest::with('issued_to')->get();
-        return view('admin.web-development.operation-job-order.index', compact('web_requests'));
+        $web_project_channels = WebProjectChannel::with('web_project')->where('user_id', auth()->user()->id)->where('status', 'Revision')->get();
+        return view('admin.web-development.revision.index', compact('web_project_channels'));
     }
 
     /**
@@ -26,8 +28,7 @@ class WebOperationJobOrder extends Controller
      */
     public function create()
     {
-        $employees = User::all();
-        return view('admin.web-development.operation-job-order.create', compact('employees'));
+        //
     }
 
     /**
@@ -38,21 +39,7 @@ class WebOperationJobOrder extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'client' => 'required',
-            'deadline' => 'required',
-            'instructions' => 'required'
-        ]);
-
-        WebRequest::create([
-            'title' => $request->title,
-            'instructions' => $request->instructions,
-            'assigned_to' => $request->client,
-            'assigned_by' => auth()->user()->id,
-            'status' => 'pending',
-            'deadline' => $request->deadline
-        ]);
+        //
     }
 
     /**
@@ -63,8 +50,8 @@ class WebOperationJobOrder extends Controller
      */
     public function show($id)
     {
-        $web_request = WebRequest::with('issued_to', 'issued_by')->find($id);
-        return view('admin.web-development.operation-job-order.show', compact('web_request'));
+        $web_revision = WebRevisions::with('web_project_channel', 'web_project_channel.web_project', 'web_project_channel.users', 'web_project_channel.web_project.client')->where('web_project_channel_id', $id)->first();
+        return view('admin.web-development.revision.show', compact('web_revision'));
     }
 
     /**
@@ -73,9 +60,21 @@ class WebOperationJobOrder extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        //
+        $web_revision = WebRevisions::with('web_project_channel')->find($id);
+
+        $web_revision->update([
+            'date_submitted' => Carbon::now(),
+            'latest_draft' => $request->draft
+        ]);
+
+        WebProjectChannel::find($web_revision->web_project_channel->id)->update([
+            'status' => 'Submitted to Operation',
+            'draft' => $request->draft
+        ]);
+
+        return redirect()->route('admin.web.revision');
     }
 
     /**

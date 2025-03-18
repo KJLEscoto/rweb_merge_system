@@ -2,24 +2,9 @@
     <title>{{ env('APP_NAME') }} | Web Development | Track</title>
 </head>
 
-@php
-    $direct_job_order = [
-        [
-            'id' => 1,
-            'title' => 'Direct Job Order',
-            'designated' => 'Content Writer - Supervisor',
-            'status' => [
-                'type' => 'pending',
-                'message' => 'Waiting for Content Writer Approval',
-            ],
-        ],
-    ];
-
-@endphp
-
 <x-main-layout breadcumb="Web Development" page="Track">
     <div class="space-y-5">
-        @if ($direct_job_order)
+        @if ($web_projects)
             <div class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
 
                 <div class="flex lg:flex-row flex-col-reverse items-end justify-between w-full gap-5">
@@ -53,15 +38,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($direct_job_order as $direct)
+                            @foreach ($web_projects as $web_project)
                                 <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
                                     <td class="flex items-center gap-2">
                                         {{-- <div class="p-2 rounded bg-[#F57D11] text-white">
                                             <span class="mingcute--file-fill w-6 h-6"></span>
                                         </div> --}}
-                                        {{ $direct['title'] }}
+                                        {{ $web_project->title }}
                                     </td>
-                                    <td>client here</td>
+                                    <td>{{ $web_project->client->name }}</td>
                                     {{-- <td class="flex justify-center items-center">
                                         @php
                                             $statusClasses = [
@@ -80,7 +65,7 @@
 
                                     <td>
                                         <div class="flex items-center justify-center gap-2">
-                                            <a href="{{ route('admin.web.track.show', $direct['id']) }}"
+                                            <a href="{{ route('admin.web.track.show', $web_project->id) }}"
                                                 class="hover:scale-105 transition px-2 py-1 font-medium bg-green-500 text-white rounded flex items-center justify-center gap-1">
                                                 <span class="basil--eye-solid !w-4 !h-4"></span>
                                                 <p>View</p>
