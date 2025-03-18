@@ -255,7 +255,6 @@ class WebApprovalController extends Controller
                         }
                     }
 
-                    //@dd('stop 1', WebProjectChannel::all());
                     break;
                 case "operations":
                     $web_project_channel->status = "Submitted to Supervisor";
