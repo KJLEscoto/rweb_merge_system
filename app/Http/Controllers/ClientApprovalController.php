@@ -92,7 +92,6 @@ class ClientApprovalController extends Controller
             $content_draft = JobDraft::where('id', $job_draft->reference_draft_id)->first();
             if ($content_draft) {
                 $content_draft->update([
-                    'client_signature' => $imagePath,
                     'feedback' => $request->summary,
                     'date_completed' => now(),
                 ]);
