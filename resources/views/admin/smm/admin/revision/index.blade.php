@@ -31,7 +31,7 @@
                     <th class="w-[35%] px-4 py-3">Title</th>
                     <th class="w-[35%] px-4 py-3">Designated</th>
                     <th class="w-[20%] px-4 py-3">Deadline</th>
-                    <th class="w-[10%] px-4 py-3 text-center">Actions</th>
+                    <th class="w-[20%] px-4 py-3 text-center">Actions</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
@@ -48,10 +48,18 @@
                         <td class="w-[20%] px-4 py-3 whitespace-nowrap">
                             {{ $job_draft->date_target }}
                         </td>
-                        <td class="w-[10%] px-4 py-3 text-center border-b">
+                        <td class="w-fulll gap-4 px-4 py-3 text-center border-b flex">
                             <a href="{{ url('admin/smm/operation/revision/edit/' . $job_draft->id) }}">
-                                <button class="px-4 py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
+                                <button
+                                    class="px-4 py-2 text-sm text-white rounded-md
+           {{ $job_draft->status != 'Revision' ? 'bg-green-200 cursor-not-allowed' : 'bg-green-500 rounded hover:bg-green-600' }}"
+                                    {{ $job_draft->status != 'Revision' ? 'disabled' : '' }}>
                                     Edit Draft
+                                </button>
+                            </a>
+                            <a href="{{ url('admin/smm/operation/revision/show/' . $job_draft->id) }}">
+                                <button class="px-4 py-2 text-sm text-white bg-blue-500 rounded hover:bg-blue-600">
+                                    Show
                                 </button>
                             </a>
                         </td>

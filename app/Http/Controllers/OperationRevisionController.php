@@ -11,7 +11,7 @@ class OperationRevisionController extends Controller
     public function index()
     {
         $job_drafts = JobDraft::with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client', 'revisions'])
-            ->where('status', 'Revision')
+            ->whereHas('revisions')
             ->where(function ($query) {
                 $query->where('content_writer_id', auth()->user()->id)
                     ->orWhere('graphic_designer_id', auth()->user()->id);
@@ -19,6 +19,12 @@ class OperationRevisionController extends Controller
             ->get(); // Retrieve all records
 
         return view('admin.smm.admin.revision.index', compact('job_drafts'));
+    }
+
+    public function show($id)
+    {
+        $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client', 'revisions')->find($id);
+        return view('admin.smm.admin.revision.show', compact('job_draft'));
     }
 
     public function edit($id)
@@ -37,6 +43,6 @@ class OperationRevisionController extends Controller
             'status' => 'Submitted to Operations',
             'draft' => $request->draft
         ]);
-        return redirect()->route('operation.revision', compact('job_draft'));
+        return redirect()->route('admin.smm.operation.revision', compact('job_draft'));
     }
 }

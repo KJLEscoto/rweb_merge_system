@@ -9,10 +9,10 @@
 
     <link rel="icon" href="{{ asset('resources/img/rweb_icon.png') }}" type="image/x-icon">
 
-    <link href="{{asset('css/app.css')}}" rel="stylesheet" />
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="{{asset('js/alpinejs.min.js')}}"></script>
+    <script src="{{ asset('js/alpinejs.min.js') }}"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
@@ -112,12 +112,10 @@
         </div>
 
         {{-- intern layout --}}
-    @elseif (
-    Request::routeIs('users.dashboard*') ||
-    Request::routeIs('users.settings*') ||
-    Request::routeIs('users.dtr*') ||
-    Request::routeIs('users.request*')
-)
+    @elseif (Request::routeIs('users.dashboard*') ||
+            Request::routeIs('users.settings*') ||
+            Request::routeIs('users.dtr*') ||
+            Request::routeIs('users.request*'))
         <div class="h-full w-full lg:grid lg:grid-cols-12">
             <section class="sticky h-auto lg:hidden top-0 w-full bg-white shadow-lg py-4 z-50">
                 <div class="flex items-center justify-between w-full lg:px-10 px-5 gap-5">
@@ -135,8 +133,8 @@
             </section>
 
             @php
-    $profile = \App\Models\Profile::where('id', Auth::user()->profile_id)->first();
-    $file = \App\Models\File::where('id', $profile->file_id)->first();
+                $profile = \App\Models\Profile::where('id', Auth::user()->profile_id)->first();
+                $file = \App\Models\File::where('id', $profile->file_id)->first();
             @endphp
 
             <!-- Sidebar Menu (Hidden on Large Screens) -->
@@ -335,21 +333,15 @@
                         <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
                             routeName="admin.web.dashboard" />
                     @endif
-                    @if (
-            Auth::user()->role_channels->where(
-                'page_id',
-                \App\Models\Page::where('description', 'like', '%direct_job_order%')->first()->id
-            )->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first()
-        )
+                    @if (Auth::user()->role_channels->where(
+                                'page_id',
+                                \App\Models\Page::where('description', 'like', '%direct_job_order%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
                         <x-admin.sidebar-menu icon="carbon--direction-loop-right-filled" label="Direct Job Order"
                             routeName="admin.web.direct-job-order" />
                     @endif
-                    @if (
-            Auth::user()->role_channels->where(
-                'page_id',
-                \App\Models\Page::where('description', 'like', '%operation_job_order%')->first()->id
-            )->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first()
-        )
+                    @if (Auth::user()->role_channels->where(
+                                'page_id',
+                                \App\Models\Page::where('description', 'like', '%operation_job_order%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
                         <x-admin.sidebar-menu icon="clarity--directory-solid-badged" label="Operation Job Order"
                             routeName="admin.web.operation-job-order" />
                     @endif
@@ -371,30 +363,21 @@
                         <x-admin.sidebar-menu icon="ic--round-date-range" label="Track"
                             routeName="admin.web.track" />
                     @endif
-                    @if (
-            Auth::user()->role_channels->where(
-                'page_id',
-                \App\Models\Page::where('description', 'like', '%downloadables%')->first()->id
-            )->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first()
-        )
+                    @if (Auth::user()->role_channels->where(
+                                'page_id',
+                                \App\Models\Page::where('description', 'like', '%downloadables%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
                         <x-admin.sidebar-menu icon="tdesign--file-download-filled" label="Downloadables"
                             routeName="admin.web.downloadables" />
                     @endif
-                    @if (
-            Auth::user()->role_channels->where(
-                'page_id',
-                \App\Models\Page::where('description', 'like', '%instructions_manual%')->first()->id
-            )->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first()
-        )
+                    @if (Auth::user()->role_channels->where(
+                                'page_id',
+                                \App\Models\Page::where('description', 'like', '%instructions_manual%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
                         <x-admin.sidebar-menu icon="streamline--manual-book-solid" label="Instructions Manual"
                             routeName="admin.web.instructions-manual" />
                     @endif
-                    @if (
-            Auth::user()->role_channels->where(
-                'page_id',
-                \App\Models\Page::where('description', 'like', '%incoming_requests%')->first()->id
-            )->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first()
-        )
+                    @if (Auth::user()->role_channels->where(
+                                'page_id',
+                                \App\Models\Page::where('description', 'like', '%incoming_requests%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
                         <x-admin.sidebar-menu icon="fa--user" label="Incoming Requests"
                             routeName="admin.web.incoming-requests" />
                     @endif
@@ -426,8 +409,7 @@
                         routeName="admin.smm.joborder" />
                     <x-admin.sidebar-menu icon="mdi--clipboard-text-history" label="Approvals"
                         routeName="admin.smm.operation.approve" />
-                    <x-admin.sidebar-menu icon="mdi--file-cog" label="My Revisions"
-                        routeName="admin.smm.operation.revision" />
+                    <x-admin.sidebar-menu icon="mdi--file-cog" label="My Revisions" routeName="admin.smm.revision" />
                     <x-admin.sidebar-menu icon="ic--round-date-range" label="Track Job Orders"
                         routeName="admin.smm.track.index" />
                     <x-admin.sidebar-menu icon="fa--users" label="Users" routeName="admin.smm.users" />
@@ -520,12 +502,9 @@
                         @if (Request::routeIs('admin.web*'))
                             <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
                                 routeName="admin.web.dashboard" />
-                            @if (
-            Auth::user()->role_channels->where(
-                'page_id',
-                \App\Models\Page::where('description', 'like', '%direct_job_order%')->first()->id
-            )->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first()
-        )
+                            @if (Auth::user()->role_channels->where(
+                                        'page_id',
+                                        \App\Models\Page::where('description', 'like', '%direct_job_order%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
                                 <x-admin.sidebar-menu icon="carbon--direction-loop-right-filled"
                                     label="Direct Job Order" routeName="admin.web.direct-job-order" />
                             @endif

@@ -70,6 +70,7 @@ Route::prefix('/smm')->middleware('auth.redirect')->group(function () {
     Route::get('/content/revisions/', [ContentRevisionController::class, 'index'])->name('content.revisions');
     Route::get('/content/revisions/edit/{id}', [ContentRevisionController::class, 'edit']);
     Route::put('/content/revisions/update/{id}', [ContentRevisionController::class, 'update']);
+    Route::put('/content/revisions/update/{id}', [ContentRevisionController::class, 'update']);
 
     Route::get('/content/history', [ContentHistoryController::class, 'index'])->name('admin.smm.content.history');
     Route::get('/content/history/show/{id}', [ContentHistoryController::class, 'show'])->name('content.history.show');
@@ -176,7 +177,8 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
 
     //Create "My Revisions" tab for Admin DONE
     Route::get('/operation/revision', [OperationRevisionController::class, 'index'])->name('admin.smm.operation.revision');
-    Route::get('/operation/revision/edit/{id}', [OperationRevisionController::class, 'edit'])->name('operation.edit');
+    Route::get('/operation/revision/edit/{id}', [OperationRevisionController::class, 'edit'])->name('admin.smm.operation.edit');
+    Route::get('/operation/revision/show/{id}', [OperationRevisionController::class, 'show'])->name('admin.smm.operation.show');
     Route::put('/operation/revision/update/{id}', [OperationRevisionController::class, 'update'])->name('operation.update');
   });
 
