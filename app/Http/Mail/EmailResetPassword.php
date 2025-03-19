@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail;
+namespace App\Http\Mail;
 
 use App\Models\User;
 use Carbon\Carbon;

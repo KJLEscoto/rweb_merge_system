@@ -1108,13 +1108,7 @@ class DtrSummaryController extends Controller
             'ranking' => $rankingController->getRankings(),
             'array_daily' => $historyController->AllUserDailyAttendance(),
             'user' => User::find($request->id),
-            'image_url' => File::where(
-                'id',
-                School::where(
-                    'id',
-                    User::where('id', $request->id)->first()->school_id
-                )->first()->file_id
-            )->first()->path,
+            'image_url' => ($file = File::where('id', optional(School::where('id', optional(User::where('id', $request->id)->first())->school_id)->first())->file_id)->first()) ? $file->path : asset(User::find($request->id)->schools->image),
             'records' => $records,
             'totalHoursPerMonth' => $totalHoursPerMonth,
             'selectedMonth' => $selectedMonth,
