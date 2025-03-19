@@ -106,6 +106,29 @@ class RegisteredUserController extends Controller
                 'role' => Role::where('id', $request->role_id)->first()->position,
             ]);
 
+            //top management role
+            $top_management_role = [
+                'top_manager',
+                'supervisor',
+                'operations',
+            ];
+
+            //employee role
+            $employee_role = [
+                'content_writer',
+                'client',
+                'graphic_designer',
+                'accounting',
+            ];
+
+            if (in_array($user->role, $top_management_role)) {
+                // Assign role-specific permissions
+
+            } else if (in_array($user->role, $employee_role)) {
+                // Assign role-specific permissions
+            }
+
+            @dd($user);
 
             DB::commit();
 

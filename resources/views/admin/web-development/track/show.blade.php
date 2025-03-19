@@ -56,25 +56,25 @@
             <section class="grid lg:grid-cols-3 grid-cols-1 lg:gap-2 gap-5">
                 <div class="space-y-1 w-full">
                     <h1 class="font-bold text-xs">Title</h1>
-                    <p>title here</p>
+                    <p>{{ $web_project->title }}</p>
                 </div>
                 <div class="space-y-1 w-full">
                     <h1 class="font-bold text-xs">Client</h1>
-                    <p>client here</p>
+                    <p>{{ $web_project->client->name }}</p>
                 </div>
                 <div class="space-y-1 w-full">
                     <h1 class="font-bold text-xs">Issuer</h1>
-                    <p>issuer here</p>
+                    <p>{{ $web_project->issuer->name }}</p>
                 </div>
             </section>
             <div class="space-y-1 w-full">
                 <h1 class="font-bold text-xs">Description</h1>
-                <p class="p-3 border rounded">description here</p>
+                <p class="p-3 border rounded">{{ $web_project->instructions }}</p>
             </div>
             <hr class="border border-[#f56d11]">
             <div class="space-y-1 w-full">
                 <h1 class="font-bold text-xs">Drafts</h1>
-                @if ($direct_job_order)
+                @if ($web_project->web_project_channels)
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse border border-gray-300">
                             <thead>
@@ -87,15 +87,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($direct_job_order as $direct)
+                                @foreach ($web_project->web_project_channels as $web_project_channel)
                                     <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
                                         <td class="flex items-center gap-2">
                                             {{-- <div class="p-2 rounded bg-[#F57D11] text-white">
                                             <span class="mingcute--file-fill w-6 h-6"></span>
                                         </div> --}}
-                                            {{ $direct['title'] }}
+                                            {{ $web_project_channel->type }}
                                         </td>
-                                        <td>date here</td>
+                                        <td>{{ $web_project_channel->date_targeted }}</td>
                                         <td class="flex justify-center items-center">
                                             @php
                                                 $statusClasses = [
@@ -107,18 +107,18 @@
                                             @endphp
 
                                             <span
-                                                class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $statusClasses[$direct['status']['type']] ?? 'text-gray-700 bg-gray-300' }}">
-                                                {{ $direct['status']['message'] }}
+                                                class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $statusClasses[$web_project_channel->status] ?? 'text-gray-700 bg-gray-300' }}">
+                                                {{ $web_project_channel->status }}
                                             </span>
                                         </td>
                                         <td>
                                             <div class="flex items-center justify-center gap-2">
-                                                <a href="{{ route('admin.web.track.draft.show', [1, $direct['id']]) }}"
+                                                <a href="{{ route('admin.web.track.draft.show', [1, $web_project_channel->id]) }}"
                                                     class="hover:scale-105 transition px-2 py-1 font-medium bg-green-500 text-white rounded flex items-center justify-center gap-1">
                                                     <span class="basil--eye-solid !w-4 !h-4"></span>
                                                     <p>View</p>
                                                 </a>
-                                                <a href="{{ route('admin.web.track.draft.edit', [1, $direct['id']]) }}"
+                                                <a href="{{ route('admin.web.track.draft.edit', [1, $web_project_channel->id]) }}"
                                                     class="hover:scale-105 transition px-2 py-1 font-medium bg-blue-500 text-white rounded flex items-center justify-center gap-1">
                                                     <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
                                                     <p>Edit</p>

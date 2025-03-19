@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\WebRequest;
+use App\Models\WebProject;
 use Illuminate\Http\Request;
 
-class WebOperationJobOrder extends Controller
+class WebTrackController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +14,8 @@ class WebOperationJobOrder extends Controller
      */
     public function index()
     {
-        $web_requests = WebRequest::with('issued_to')->get();
-        return view('admin.web-development.operation-job-order.index', compact('web_requests'));
+        $web_projects = WebProject::with('client')->get();
+        return view('admin.web-development.track.index', compact('web_projects'));
     }
 
     /**
@@ -26,8 +25,7 @@ class WebOperationJobOrder extends Controller
      */
     public function create()
     {
-        $employees = User::all();
-        return view('admin.web-development.operation-job-order.create', compact('employees'));
+        //
     }
 
     /**
@@ -38,21 +36,7 @@ class WebOperationJobOrder extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'client' => 'required',
-            'deadline' => 'required',
-            'instructions' => 'required'
-        ]);
-
-        WebRequest::create([
-            'title' => $request->title,
-            'instructions' => $request->instructions,
-            'assigned_to' => $request->client,
-            'assigned_by' => auth()->user()->id,
-            'status' => 'pending',
-            'deadline' => $request->deadline
-        ]);
+        //
     }
 
     /**
@@ -63,8 +47,8 @@ class WebOperationJobOrder extends Controller
      */
     public function show($id)
     {
-        $web_request = WebRequest::with('issued_to', 'issued_by')->find($id);
-        return view('admin.web-development.operation-job-order.show', compact('web_request'));
+        $web_project = WebProject::with('client', 'web_project_channels', 'issuer')->find($id);
+        return view('admin.web-development.track.show', compact('web_project'));
     }
 
     /**

@@ -37,7 +37,7 @@
 
 <x-main-layout breadcumb="Web Development" page="Operation Job Order">
     <div class="space-y-5">
-        @if ($direct_job_order)
+        @if ($web_requests)
             <div class="rounded bg-white border-l-8 border-[#f56d11] h-auto w-full flex flex-col gap-5 p-5">
 
                 <div class="flex lg:flex-row flex-col-reverse items-end justify-between w-full gap-5">
@@ -67,22 +67,23 @@
                                 class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
                                 <th>Title</th>
                                 <th>Issued To</th>
-                                <th class="!text-center">Status</th>
+                                <th class="!text-center">Deadline</th>
                                 <th class="!text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($direct_job_order as $direct)
+                            @foreach ($web_requests as $web_request)
                                 <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
                                     <td class="flex items-center gap-2">
                                         {{-- <div class="p-2 rounded bg-[#F57D11] text-white">
                                             <span class="mingcute--file-fill w-6 h-6"></span>
                                         </div> --}}
-                                        {{ $direct['title'] }}
+                                        {{ $web_request->title }}
                                     </td>
-                                    <td>{{ $direct['designated'] }}</td>
+                                    <td>{{ $web_request->issued_to->name }}</td>
                                     <td class="flex justify-center items-center">
-                                        @php
+                                        {{ $web_request->deadline }}
+                                        {{-- @php
                                             $statusClasses = [
                                                 'approved' => 'text-green-700 bg-green-300',
                                                 'pending' => 'text-yellow-700 bg-yellow-300',
@@ -94,17 +95,17 @@
                                         <span
                                             class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $statusClasses[$direct['status']['type']] ?? 'text-gray-700 bg-gray-300' }}">
                                             {{ $direct['status']['message'] }}
-                                        </span>
+                                        </span> --}}
                                     </td>
 
                                     <td>
                                         <div class="flex items-center justify-center gap-2">
-                                            <a href="#"
+                                            <a href="{{ route('admin.web.operation-job-order.show', $web_request->id) }}"
                                                 class="approve-btn px-2 py-1 font-medium bg-green-500 text-white rounded flex items-center justify-center gap-1">
                                                 <span class="basil--eye-solid !w-4 !h-4"></span>
                                                 <p>View</p>
                                             </a>
-                                            <a href="{{ route('admin.web.operation-job-order.edit', $direct['id']) }}"
+                                            <a href="{{ route('admin.web.operation-job-order.edit', $web_request->id) }}"
                                                 class="approve-btn px-2 py-1 font-medium bg-blue-500 text-white rounded flex items-center justify-center gap-1">
                                                 <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
                                                 <p>Edit</p>

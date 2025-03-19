@@ -82,7 +82,7 @@
                                         </div> --}}
                                         {{ $direct->web_project->title }}
                                     </td>
-                                    <td>{{ $direct->type }}</td>
+                                    <td>{{ $direct->users->name . ' - ' . $direct->type }}</td>
                                     <td>{{ $direct->date_targeted }}</td>
                                     <td class="flex justify-center items-center">
                                         @php

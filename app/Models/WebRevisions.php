@@ -11,13 +11,18 @@ class WebRevisions extends Model
 
     protected $guarded = [];
 
-    public function web_job_orders()
+    public function web_project_channel()
     {
-        return $this->belongsTo(WebJobOrder::class, 'web_job_order_id');
+        return $this->belongsTo(WebProjectChannel::class, 'web_project_channel_id');
     }
 
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function declined_by()
+    {
+        return $this->belongsTo(User::class, 'declined_by_id');
     }
 }
