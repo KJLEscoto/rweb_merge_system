@@ -10,7 +10,7 @@ class SupervisorRevisionController extends Controller
     public function index()
     {
         $job_drafts = JobDraft::with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client', 'revisions'])
-            ->where('status', 'Revision')
+            ->whereHas('revisions')
             ->where(function ($query) {
                 $query->where('content_writer_id', auth()->user()->id)
                     ->orWhere('graphic_designer_id', auth()->user()->id);
@@ -18,6 +18,12 @@ class SupervisorRevisionController extends Controller
             ->get(); // Retrieve all records
 
         return view('admin.smm.supervisor.revision.index', compact('job_drafts'));
+    }
+
+    public function show($id)
+    {
+        $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client', 'revisions')->find($id);
+        return view('admin.smm.supervisor.revision.show', compact('job_draft'));
     }
 
     public function edit($id)

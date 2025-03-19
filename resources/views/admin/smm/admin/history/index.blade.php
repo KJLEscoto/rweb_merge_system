@@ -59,7 +59,9 @@
                         <td class="px-2 sm:px-4 py-2 sm:py-3 border-b">
                             <a href="{{ route('operation.history.download', $job_draft->id) }}">
                                 <button
-                                    class="px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm text-white bg-orange-500 rounded hover:bg-orange-600 whitespace-nowrap">
+                                    class="px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm text-white  whitespace-nowrap
+        {{ $job_draft->status == 'Waiting for Content Writer Approval' || $job_draft->status == 'Waiting for Graphic Designer Approval' ? 'bg-orange-200' : 'bg-orange-500 rounded hover:bg-orange-600' }}"
+                                    {{ $job_draft->status == 'Waiting for Content Writer Approval' || $job_draft->status == 'Waiting for Graphic Designer Approval' ? 'disabled' : '' }}>
                                     <span><i class="fa-solid fa-download" style="color: #ffffff;"></i></span>
                                     Download PDF
                                 </button>

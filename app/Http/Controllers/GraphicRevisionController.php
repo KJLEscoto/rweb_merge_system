@@ -10,7 +10,7 @@ class GraphicRevisionController extends Controller
     public function index()
     {
         $job_drafts = JobDraft::with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client', 'revisions'])
-            ->where('status', 'Revision')
+            ->whereHas('revisions')
             ->where('type', 'graphic_designer')
             ->where('graphic_designer_id', auth()->user()->id) // Cleaner way to get the authenticated user's ID
             ->get(); // Retrieve all records
