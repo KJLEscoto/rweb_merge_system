@@ -4,7 +4,7 @@
     <head>
         <title>{{ env('APP_NAME') }} | Admin Login</title>
     </head>
-    <x-main-layout>
+    <x-main-layout class="">
         @if (session('success'))
             <x-modal.flash-msg msg="success" />
         @elseif ($errors->has('invalid'))
@@ -13,8 +13,9 @@
             <x-modal.flash-msg msg="invalid" />
         @endif
 
-        <main class="container mx-auto max-w-screen-xl">
-            <div class="flex items-center justify-center h-screen w-full md:p-10 p-5 overflow-auto">
+        <main class=" bg-gray-100">
+            <div
+                class="flex items-center justify-center h-screen container mx-auto max-w-screen-xl w-full md:p-10 p-5 overflow-auto">
                 <form action="{{ route('admin.login') }}" method="POST"
                     class="md:w-1/2 w-full bg-white rounded-lg p-10 flex flex-col gap-5 h-auto shadow-lg border border-gray-100">
                     @csrf
