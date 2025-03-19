@@ -35,38 +35,10 @@ class TopApprovalController extends Controller
 
         $job_draft = JobDraft::findOrFail($id);
 
-        if ($job_draft->type == "content_writer") {
-            if ($job_draft->works == "Content Only") {
-                $job_draft->update([
-                    'status' => 'Submitted to Client',
-                ]);
-            } elseif ($job_draft->works == "Both") {
-
-                $job_draft->update([
-                    'status' => 'completed',
-                ]);
-                JobDraft::create([
-                    'job_order_id' => $job_draft->job_order_id,
-                    'type' => 'graphic_designer',
-                    'date_started' => Carbon::now()->toDateString(), // Set date_started to today
-                    'date_target' => Carbon::now()->addDays(3)->toDateString(),
-                    'status' => 'Waiting for Graphic Designer Approval',
-                    'content_writer_id' => $job_draft->content_writer_id,
-                    'graphic_designer_id' => $job_draft->graphic_designer_id,
-                    'client_id' => $job_draft->client_id,
-                    'reference_draft_id' => $id,
-                    'signature_supervisor' => $job_draft->signature_supervisor,
-                    'supervisor_signed' => $job_draft->supervisor_signed,
-                    'works' => $job_draft->works
-                ]);
-            }
-        } elseif ($job_draft->type == "graphic_designer") {
-            // Update Database with Signature Path
-            $job_draft->update([
-                'status' => 'Submitted to Client',
-            ]);
-        }
-
+        // Update Database with Signature Path
+        $job_draft->update([
+            'status' => 'Submitted to Client',
+        ]);
 
         return redirect()->route('admin.smm.topmanager.approve')->with('Status', 'Job Order Approved Successfully');
     }

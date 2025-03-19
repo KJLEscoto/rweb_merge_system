@@ -16,6 +16,7 @@ class ClientHistoryController extends Controller
         // Fetch all job drafts for the authenticated user
         $job_drafts = JobDraft::where('client_id', $authuser->id)
             ->with('jobOrder', 'contentWriter', 'graphicDesigner', 'client') // Corrected ->with() usage
+            ->whereNotNull('client_signature')
             ->get();
         return view('admin.smm.client.history.index', compact('job_drafts'));
     }
@@ -32,15 +33,14 @@ class ClientHistoryController extends Controller
 
         $pdf = Pdf::loadView('admin.smm.client.history.show', compact('job_draft'));
 
-        if($job_draft->type === "content_writer"){
+        if ($job_draft->type === "content_writer") {
             $worker = $job_draft->contentWriter->name;
-        }else{
+        } else {
             $worker = $job_draft->graphicDesigner->name;
         }
 
         return $pdf->download(
             str_replace(' ', '', $job_draft->type . '-' . $worker . '-' . $job_draft->client->name . '-' . $job_draft->date_started) . '.pdf'
-        );  
-        
+        );
     }
 }
