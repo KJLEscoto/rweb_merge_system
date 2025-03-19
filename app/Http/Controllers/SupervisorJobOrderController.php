@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JobOrder;
 use App\Models\Request as ModelsRequest; // Alias to avoid conflict
 use App\Models\User;
+use App\Models\WebRequest;
 use Illuminate\Http\Request;
 
 class SupervisorJobOrderController extends Controller
@@ -12,7 +13,6 @@ class SupervisorJobOrderController extends Controller
     public function index()
     {
         $supervisor_requests = ModelsRequest::with('assignee')
-            ->doesntHave('jobOrders') // Requests that have no job orders
             ->get();
 
         return view('admin.smm.supervisor.job_order.index', compact('supervisor_requests'));
@@ -76,5 +76,11 @@ class SupervisorJobOrderController extends Controller
             'deadline' => $request->deadline
         ]);
         return redirect()->route('admin.smm.supervisor.joborder')->with('Status', 'Job Order Updated Successfully');
+    }
+
+    public function delete($id)
+    {
+        ModelsRequest::find($id)->delete();
+        return redirect()->back();
     }
 }

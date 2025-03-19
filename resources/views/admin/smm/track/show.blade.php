@@ -91,18 +91,21 @@
                                                     Show
                                                 </button>
                                             </div>
-                                            <div
-                                                onclick="window.location.href='{{ url('admin/smm/track/edit/draft/' . $job_draft->id) }}'">
-                                                <button
-                                                    {{ $job_draft->status === 'completed' || Auth::user()->roles->position === 'content_writer' || Auth::user()->roles->position === 'graphic_designer' ? 'disabled' : '' }}
-                                                    class="px-4 py-2 text-sm text-white {{ $job_draft->status === 'completed' || Auth::user()->roles->position === 'content_writer' || Auth::user()->roles->position === 'graphic_designer' ? 'bg-gray-500 rounded hover:bg-gray-600 cursor-not-allowed' : 'bg-blue-500 rounded hover:bg-blue-600' }}">
-                                                    Edit
-                                                </button>
-                                            </div>
-                                            <div onclick="deleteJobOrder({{ $job_order->id }})"
-                                                class="px-4 py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600 cursor-pointer">
-                                                Delete
-                                            </div>
+
+                                            @if (Auth::user()->role_id == 6 || Auth::user()->role_id == 2 || Auth::user()->role_id == 5)
+                                                <div
+                                                    onclick="window.location.href='{{ url('admin/smm/track/edit/draft/' . $job_draft->id) }}'">
+                                                    <button
+                                                        {{ $job_draft->status === 'completed' || Auth::user()->roles->position === 'content_writer' || Auth::user()->roles->position === 'graphic_designer' ? 'disabled' : '' }}
+                                                        class="px-4 py-2 text-sm text-white {{ $job_draft->status === 'completed' || Auth::user()->roles->position === 'content_writer' || Auth::user()->roles->position === 'graphic_designer' ? 'bg-gray-500 rounded hover:bg-gray-600 cursor-not-allowed' : 'bg-blue-500 rounded hover:bg-blue-600' }}">
+                                                        Edit
+                                                    </button>
+                                                </div>
+                                                <div onclick="deleteJobOrder({{ $job_order->id }})"
+                                                    class="px-4 py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600 cursor-pointer">
+                                                    Delete
+                                                </div>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

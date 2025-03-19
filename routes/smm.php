@@ -210,6 +210,7 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
     Route::get('/supervisor/joborder/create', [SupervisorJobOrderController::class, 'create'])->name('admin.smm.supervisor.create');
     Route::post('/supervisor/joborder/store', [SupervisorJobOrderController::class, 'store'])->name('supervisor.store');
     Route::get('/supervisor/joborder/show/{id}', [SupervisorJobOrderController::class, 'show'])->name('admin.smm.supervisor.show');
+    Route::get('/supervisor/joborder/delete/{id}', [SupervisorJobOrderController::class, 'delete'])->name('admin.smm.supervisor.delete');
     Route::get('/supervisor/joborder/edit/{id}', [SupervisorJobOrderController::class, 'edit'])->name('admin.smm.supervisor.edit');
     Route::put('/supervisor/joborder/update/{id}', [SupervisorJobOrderController::class, 'update'])->name('supervisor.update');
 
