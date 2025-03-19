@@ -10,7 +10,7 @@
                 <x-page-title title="User Details Found" titleClass="text-xl" />
                 <div class="w-fit">
                     <img name="profile_picture" class="w-40 h-40 rounded-full border border-[#F57D11]"
-                        src="resources/img/default-male.png" />
+                        src="{{asset('resources/img/default-male.png')}}" />
                 </div>
                 <div class="text-center space-y-1">
                     <h1 class="font-semibold text-xl capitalize" name="fullname">fullname_placeholder</h1>
