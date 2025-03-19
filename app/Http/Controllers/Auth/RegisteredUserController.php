@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FileController;
 use App\Models\File;
+use App\Models\Page;
+use App\Models\Privilege;
 use App\Models\Profile;
 use App\Models\Role;
+use App\Models\RoleChannel;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -108,14 +111,13 @@ class RegisteredUserController extends Controller
                 'role' => Role::where('id', $request->role_id)->first()->position,
             ]);
 
-            //top management role
+            // Define role groups
             $top_management_role = [
                 'top_manager',
                 'supervisor',
                 'operations',
             ];
 
-            //employee role
             $employee_role = [
                 'content_writer',
                 'client',
@@ -123,11 +125,65 @@ class RegisteredUserController extends Controller
                 'accounting',
             ];
 
-            if (in_array($user->role, $top_management_role)) {
-                // Assign role-specific permissions
+            // Define accessible pages per role
+            $role_pages = [
+                'top_manager' => Page::all(),
+                'supervisor' => Page::all(),
+                'operations' => [
+                    'dashboard',
+                    'task',
+                    'revision',
+                    'approvals',
+                    'track',
+                    'users',
+                    'instructions_manual',
+                    'incoming_requests',
+                    'profile',
+                    'downloadables',
+                    'users',
+                ],
+                'employee' => [
+                    'dashboard',
+                    'task',
+                    'revision',
+                    'approvals',
+                    'track',
+                    'profile',
+                ],
+            ];
 
-            } else if (in_array($user->role, $employee_role)) {
-                // Assign role-specific permissions
+            // Initialize pages and privileges
+            $pages = null;
+            $privileges = null;
+
+            // Assign pages and privileges based on role
+            if (isset($role_pages[$user->role])) {
+                if (is_array($role_pages[$user->role])) {
+                    // If the role has specific pages
+                    $pages = Page::whereIn('description', $role_pages[$user->role])->get();
+                    $privileges = Privilege::all();
+                } else {
+                    // If the role gets all pages (top managers & supervisors)
+                    $pages = Page::all();
+                    $privileges = Privilege::all();
+                }
+            } elseif (in_array($user->role, $employee_role)) {
+                // Default employee pages
+                $pages = Page::whereIn('description', $role_pages['employee'])->get();
+                $privileges = Privilege::all();
+            }
+
+            // Assign role-specific permissions
+            if ($pages && $privileges) {
+                foreach ($pages as $page) {
+                    foreach ($privileges as $privilege) {
+                        RoleChannel::create([
+                            'user_id' => $user->id,
+                            'page_id' => $page->id,
+                            'privilege_id' => $privilege->id,
+                        ]);
+                    }
+                }
             }
 
             DB::commit();
