@@ -28,8 +28,7 @@
 
                     <x-form.input big label="Email" name_id="email" value="" placeholder="admin@email.com" />
 
-                    <x-form.input big label="Password" type="password" name_id="password" value=""
-                        placeholder="••••••••" />
+                    <x-form.input big label="Password" type="password" name_id="password" value="" placeholder="••••••••" />
 
                     <x-button primary submit label="Login" big />
                 </form>
@@ -97,7 +96,7 @@
                                     @foreach ($schools as $school)
                                         @if ($school['is_featured'] == 'on')
                                             <x-image className="w-full h-full rounded-lg border shadow"
-                                                path="{{ \App\Models\File::where('id', $school['file_id'])->first()['path'] }}" />
+                                                path="{{ $school['file_id'] != null ? \App\Models\File::where('id', $school['file_id'])->first()['path'] : asset($school['image']) }}" />
                                         @endif
                                     @endforeach
                                 @endfor
@@ -108,7 +107,7 @@
                                     @foreach ($schools as $school)
                                         @if ($school['is_featured'] == 'on')
                                             <x-image className="w-full h-full rounded-lg border shadow"
-                                                path="{{ \App\Models\File::where('id', $school['file_id'])->first()['path'] }}" />
+                                                path="{{ $school['file_id'] != null ? \App\Models\File::where('id', $school['file_id'])->first()['path'] : asset($school['image']) }}" />
                                         @endif
                                     @endforeach
                                 @endfor

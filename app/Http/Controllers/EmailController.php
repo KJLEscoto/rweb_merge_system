@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\EmailResetPassword;
+use App\Http\Mail\EmailResetPassword;
 use App\Http\Mail\EmailShiftNotification;
 use App\Models\Histories;
 use App\Models\User;
@@ -47,8 +47,6 @@ class EmailController extends Controller
             }
         }
 
-
-        //dd($user->email);
         Mail::to($user->email)->send(new EmailResetPassword($user));
 
         return response()->json(['message' => 'Email sent successfully', 'valid' => true]);
@@ -110,7 +108,17 @@ class EmailController extends Controller
         //delete the token
         DB::table('password_reset_tokens')->where('email', $email)->delete();
 
-        return redirect()->route('show.login')->with(['success' => 'Password reset successfully!', 'valid' => true]);
+        if (Auth::check()) {
+            return redirect()->route('users.settings')->with([
+                'success' => 'Password reset Successfully',
+                'valid' => true
+            ]);
+        }
+
+        return redirect()->route('show.login')->with([
+            'success' => 'Password reset successfully!',
+            'valid' => true
+        ]);
     }
 
     public function EmailShiftNotification(User $user, Histories $history)
