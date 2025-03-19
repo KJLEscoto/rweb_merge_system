@@ -234,7 +234,7 @@ class AuthController extends Controller
         $dailyAttendance = $history->AllUserDailyAttendance();
         $recentlyAddedUser = $history->AllMonthlyUsers();
 
-        return redirect()->route('admin.dtr.dashboard')->with([
+        return redirect()->route('admin.smm.dashboard')->with([
             'user' => $users,
             'totalScans' => $totalScan,
             'totalTimeIn' => $totalTimeIn,
