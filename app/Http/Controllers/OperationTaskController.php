@@ -11,7 +11,6 @@ class OperationTaskController extends Controller
     public function index()
     {
         $authuser = auth()->user();
-
         // Fetch all job drafts for the authenticated user
         $job_drafts = JobDraft::where(function ($query) use ($authuser) {
             $query->where('content_writer_id', $authuser->id)

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FileController;
+use App\Models\File;
 use App\Models\Profile;
 use App\Models\Role;
 use App\Models\User;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
@@ -106,6 +108,27 @@ class RegisteredUserController extends Controller
                 'role' => Role::where('id', $request->role_id)->first()->position,
             ]);
 
+            //top management role
+            $top_management_role = [
+                'top_manager',
+                'supervisor',
+                'operations',
+            ];
+
+            //employee role
+            $employee_role = [
+                'content_writer',
+                'client',
+                'graphic_designer',
+                'accounting',
+            ];
+
+            if (in_array($user->role, $top_management_role)) {
+                // Assign role-specific permissions
+
+            } else if (in_array($user->role, $employee_role)) {
+                // Assign role-specific permissions
+            }
 
             DB::commit();
 
@@ -129,7 +152,7 @@ class RegisteredUserController extends Controller
         return view('admin.smm.users.edit', compact('user'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, FileController $filecontroller)
     {
         $user = User::findOrFail($id);
 
@@ -147,16 +170,43 @@ class RegisteredUserController extends Controller
                 Rule::unique('users')->ignore($user->id) // Ignore the current user's email
             ],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+            'type' => 'nullable|string',
         ]);
 
         $picturePath = $user->image; // Preserve existing image if not updating
+        $file_id = null;
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
+            $file_records = $filecontroller->edit(new Request(['file' => $request['image']]), File::find(User::find($id)->profiles->id)->description);
+
             $file_name = time() . '.' . $file->getClientOriginalExtension();
             $destination = public_path('uploads');
             $file->move($destination, $file_name);
             $picturePath = 'uploads/' . $file_name;
+        } else if ($request->type == 'removeProfile') {
+            $profile_image = 'https://lh3.googleusercontent.com/d/1x1vyLdfoXxUjCTmab_5fGSDXU_zVJ3RI'; // Image in the public/images folder
+            $response = Http::get($profile_image);
+            if ($response->failed()) {
+                return back()->with('Status', 'Failed to download file: ' . $response->body());
+            }
+
+            $tempFilePath = tempnam(sys_get_temp_dir(), 'profile_');
+            file_put_contents($tempFilePath, $response->body());
+
+            $file = new \Illuminate\Http\UploadedFile(
+                $tempFilePath,
+                'profile.jpg',
+                'image/jpeg',
+                null,
+                true,
+            );
+
+            // $request = new Request();
+
+            // $request->files->set('file', $file);
+
+            $file_records = $filecontroller->edit(new Request(['file' => $file]), File::find(User::find($id)->profiles->id)->description);
         }
 
         // Prepare the update array

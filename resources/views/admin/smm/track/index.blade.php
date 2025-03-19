@@ -62,10 +62,12 @@
                                             </button>
                                         </a>
                                     </div> --}}
-                                <div onclick="deleteJobOrder({{ $job_order->id }})"
-                                    class="px-4 py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600 cursor-pointer">
-                                    Delete
-                                </div>
+                                @if (Auth::user()->role_id == 6 || Auth::user()->role_id == 2 || Auth::user()->role_id == 5)
+                                    <div onclick="deleteJobOrder({{ $job_order->id }})"
+                                        class="px-4 py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600 cursor-pointer">
+                                        Delete
+                                    </div>
+                                @endif
                             </div>
                         </td>
                     </tr>
