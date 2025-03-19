@@ -64,7 +64,7 @@
                                     all-in-one
                                     system for
                                     <span class="font-bold">SMM</span>,
-                                    <span class="font-bold">Front-end</span>,
+                                    <span class="font-bold">Web Development</span>,
                                     and <span class="font-bold">OJT Daily Time
                                         Records</span>.
                                 </p>
