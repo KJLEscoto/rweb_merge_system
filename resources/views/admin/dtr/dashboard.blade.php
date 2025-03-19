@@ -462,6 +462,6 @@
         initScanner();
 
         // Attach event listener to close button after DOM is ready
-        document.getElementById("closeButton").addEventListener("click", closeCamera);
+        // document.getElementById("closeButton").addEventListener("click", closeCamera);
     });
 </script>

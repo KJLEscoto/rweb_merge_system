@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            // SchoolSeeder::class,
+            SchoolSeeder::class,
             RoleSeeder::class,
             PageSeeder::class,
             PrivilegeSeeder::class,

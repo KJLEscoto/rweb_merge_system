@@ -565,7 +565,7 @@ class UserController extends Controller
     public function update(Request $request, FileController $fileController)
     {
         try {
-            
+
             DB::beginTransaction();
 
             $data = $request->validate([

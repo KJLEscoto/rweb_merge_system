@@ -4,32 +4,32 @@
 
 <x-main-layout breadcumb="DTR" page="Schools">
     {{-- @php
-        $schools = [
-            [
-                'id' => 1,
-                'name' => 'STI College Davao',
-                'image' => 'resources/img/school-logo/sti.png',
-                'is_featured' => true,
-            ],
-            [
-                'id' => 2,
-                'name' => 'Ateneo De Davao University',
-                'image' => 'resources/img/school-logo/addu.png',
-                'is_featured' => true,
-            ],
-            [
-                'id' => 3,
-                'name' => 'Holy Cross of Davao College',
-                'image' => 'resources/img/school-logo/hcdc.png',
-                'is_featured' => true,
-            ],
-            [
-                'id' => 4,
-                'name' => 'University of Mindanao',
-                'image' => 'resources/img/school-logo/um.png',
-                'is_featured' => true,
-            ],
-        ];
+    $schools = [
+    [
+    'id' => 1,
+    'name' => 'STI College Davao',
+    'image' => 'resources/img/school-logo/sti.png',
+    'is_featured' => true,
+    ],
+    [
+    'id' => 2,
+    'name' => 'Ateneo De Davao University',
+    'image' => 'resources/img/school-logo/addu.png',
+    'is_featured' => true,
+    ],
+    [
+    'id' => 3,
+    'name' => 'Holy Cross of Davao College',
+    'image' => 'resources/img/school-logo/hcdc.png',
+    'is_featured' => true,
+    ],
+    [
+    'id' => 4,
+    'name' => 'University of Mindanao',
+    'image' => 'resources/img/school-logo/um.png',
+    'is_featured' => true,
+    ],
+    ];
     @endphp --}}
 
     <main class="w-full h-auto flex flex-col lg:!gap-7 gap-5">
@@ -54,11 +54,12 @@
                 @foreach ($schools as $school)
                     <a href="{{ route('admin.dtr.schools.show', $school['id']) }}"
                         class="relative bg-white rounded-xl shadow-md lg:!p-7 p-4 flex flex-col items-center justify-between cursor-pointer border border-gray-200 group animate-transition hover:border-[#F57D11]">
-
                         <div class="flex flex-col gap-5 items-center w-full h-full">
                             <div class="w-auto h-auto mt-5">
                                 <div class="w-auto h-20 overflow-hidden">
-                                    <x-image path="{{ $school['image'] }}" className="w-full h-full object-cover" />
+                                    <x-image
+                                        path="{{ ($school['image'] != '') ? $school['image'] : asset(\App\Models\School::find($school['id'])->image) }}"
+                                        className="w-full h-full object-cover" />
                                 </div>
                             </div>
                             <h2
