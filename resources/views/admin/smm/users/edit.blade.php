@@ -29,7 +29,7 @@
                         class="col-span-3 px-4 lg:col-span-1 h-fit pb-10 bg-white shadow-md rounded-md pt-10 border border-[#e1e1e1]">
                         <div class="w-full flex justify-center items-center">
                             <img id="profileImage" class="rounded-full w-32 h-32 object-cover"
-                                src="{{ $user->image ? asset($user->image) : asset('/Assets/user-profile-profilepage.png') }}"
+                                src="{{ $user->image ? \App\Models\File::find($user->profiles->id)->path . '?t=' . time() . 's=100' : asset('/Assets/user-profile-profilepage.png') }}"
                                 alt="Profile Picture">
                         </div>
                         <div class="text-center">
@@ -41,9 +41,11 @@
                             <div id="changeProfileBtn"
                                 class="px-4 py-1 bg-[#fa7011] rounded-md cursor-pointer text-nowrap text-sm">Change
                                 Profile</div>
-                            <div id="removeProfileBtn"
-                                class="px-4 py-1 bg-red-500 rounded-md cursor-pointer text-nowrap text-sm">Remove
-                                Profile</div>
+                            <div class="px-4 py-1 bg-red-500 rounded-md cursor-pointer text-nowrap text-sm">
+                                <button type="submit" value="removeProfile" name="type">
+                                    Remove Profile
+                                </button>
+                            </div>
                         </div>
                         <input type="file" name="image" id="profileImageInput" accept="image/*" class="hidden">
                     </div>
@@ -74,7 +76,7 @@
                             <div class="gap-4 items-center">
                                 <h1 class="text-slate-500 font-bold">Role</h1>
                                 <select name="role_id"
-                                    class="w-full border-gray-200 px-3 py-1 rounded-lg custom-shadow custom-focus-ring"
+                                    class="w-full border-gray-200 px-3 py-1 rounded-lg custom-shadow custom-focus-ring border"
                                     required>
                                     <option value="1" {{ old('role_id', $user->role_id) == 1 ? 'selected' : '' }}>
                                         Client</option>
@@ -88,7 +90,7 @@
                                         Top Manager</option>
                                     <option value="6" {{ old('role_id', $user->role_id) == 6 ? 'selected' : '' }}>
                                         Supervisor</option>
-                                    <option value="6" {{ old('role_id', $user->role_id) == 6 ? 'selected' : '' }}>
+                                    <option value="7" {{ old('role_id', $user->role_id) == 7 ? 'selected' : '' }}>
                                         Accounting</option>
                                 </select>
                                 @error('role_id')
