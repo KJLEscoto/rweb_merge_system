@@ -10,6 +10,7 @@ class ProjectEndorsementForm extends Model
     use HasFactory;
 
     protected $fillable = [
+        'title',
         'client_id',
         'date_issued',
         'person_in_charge',
@@ -20,6 +21,7 @@ class ProjectEndorsementForm extends Model
         'prepared_by',
         'noted_by',
         'approved_by',
+        'status'
     ];
 
     public function client()

@@ -38,7 +38,31 @@ class ProjectEndorsementFormController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate request before proceeding
+        $request->validate([
+            'title' => 'required',
+            'client_id' => 'required',
+            'person_in_charge' => 'required',
+            'project_scope' => 'required',
+            'timeline' => 'required',
+            'deliverables' => 'required',
+            'prepared_by' => 'required',
+        ]);
+
+        ProjectEndorsementForm::create([
+            'title' => $request->title,
+            'client_id' => $request->client_id,
+            'date_issued' => now(),
+            'person_in_charge' => $request->person_in_charge,
+            'issued_by' => auth()->user()->id,
+            'project_scope' => $request->project_scope,
+            'timeline' => $request->timeline,
+            'deliverables' => $request->deliverables,
+            'prepared_by' => auth()->user()->id,
+            'status' => 'pending'
+        ]);
+
+        return redirect()->route('admin.smm.endorsement')->with('success', 'Project Endorsement Form Created Successfully!');
     }
 
     /**
