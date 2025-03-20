@@ -95,7 +95,7 @@ class SupervisorTaskController extends Controller
             'status' => 'Submitted to Operations',
         ]);
 
-        return redirect()->route('admin.smmsupervisor.task')->with('Status', 'Draft Updated Successfully');
+        return redirect()->route('admin.smm.supervisor.task')->with('Status', 'Draft Updated Successfully');
     }
 
     public function accept($id)
