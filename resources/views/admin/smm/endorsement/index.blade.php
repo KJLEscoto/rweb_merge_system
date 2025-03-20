@@ -51,7 +51,7 @@
             <tbody id="tableBody" class="overflow-y-auto">
                 @forelse ($endorsements as $endorsement)
                     <tr class="border-b">
-                        <td class="px-4 py-3">{{ $endorsement->jobOrder->title }}</td>
+                        <td class="px-4 py-3">{{ $endorsement->title }}</td>
                         <td class="px-4 py-3">{{ $endorsement->client->name }}</td>
                         <td class="px-4 py-3">{{ $endorsement->status }}</td>
                         <td class="px-4 py-3 text-center">
@@ -62,15 +62,15 @@
                                     Edit
                                 </button>
                             </a>
-                            <a href="{{ url('admin/smm/supervisor/directjob/show/' . $endorsement->id) }}">
+                            <a href="{{ route('admin.smm.endorsement.show', $endorsement->id) }}">
                                 <button
-                                    class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
+                                    class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-blue-700 rounded hover:bg-blue-800">
                                     Show
                                 </button>
                             </a>
                             <a href="{{ url('admin/smm/supervisor/directjob/show/' . $endorsement->id) }}">
                                 <button
-                                    class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
+                                    class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-red-700 rounded hover:bg-red-800">
                                     Delete
                                 </button>
                             </a>

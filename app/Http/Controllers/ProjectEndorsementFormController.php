@@ -48,8 +48,9 @@ class ProjectEndorsementFormController extends Controller
             'project_scope' => 'required',
             'timeline' => 'required',
             'deliverables' => 'required',
-            'prepared_by' => 'required',
         ]);
+
+
 
         ProjectEndorsementForm::create([
             'title' => $request->title,
@@ -73,9 +74,10 @@ class ProjectEndorsementFormController extends Controller
      * @param  \App\Models\ProjectEndorsementForm  $projectEndorsementForm
      * @return \Illuminate\Http\Response
      */
-    public function show(ProjectEndorsementForm $projectEndorsementForm)
+    public function show($id)
     {
-        //
+        $endorsement = ProjectEndorsementForm::with('client', 'notedBy', 'personInCharge', 'approvedBy')->find($id);
+        return view('admin.smm.endorsement.show', compact('endorsement'));
     }
 
     /**
@@ -110,5 +112,11 @@ class ProjectEndorsementFormController extends Controller
     public function destroy(ProjectEndorsementForm $projectEndorsementForm)
     {
         //
+    }
+
+    public function approval()
+    {
+        $endorsements = ProjectEndorsementForm::all();
+        return view('admin.smm.endorsement.approval', compact('endorsements'));
     }
 }
