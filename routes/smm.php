@@ -187,6 +187,9 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
     Route::get('/operation/revision/edit/{id}', [OperationRevisionController::class, 'edit'])->name('admin.smm.operation.edit');
     Route::get('/operation/revision/show/{id}', [OperationRevisionController::class, 'show'])->name('admin.smm.operation.show');
     Route::put('/operation/revision/update/{id}', [OperationRevisionController::class, 'update'])->name('operation.update');
+
+    //Letter
+    Route::view('/operation/letter', 'admin.smm.letter.index')->name('admin.smm.letter.index');
   });
 
   Route::middleware(['auth', 'role:top_manager'])->group(function () {
