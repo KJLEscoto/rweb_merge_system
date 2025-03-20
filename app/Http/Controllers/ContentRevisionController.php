@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\JobDraft;
 use App\Models\Revision;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ContentRevisionController extends Controller
@@ -41,6 +42,7 @@ class ContentRevisionController extends Controller
             'status' => 'Submitted to Operations',
             'draft' => $request->draft
         ]);
+
         return redirect()->route('content.revisions', compact('job_draft'));
     }
 }
