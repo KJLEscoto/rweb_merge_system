@@ -39,6 +39,7 @@ class ProjectEndorsementFormController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request);
         // Validate request before proceeding
         $request->validate([
             'title' => 'required',

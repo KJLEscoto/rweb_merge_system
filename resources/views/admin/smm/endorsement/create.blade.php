@@ -138,8 +138,7 @@
                                 <p class="text-red-600 text-sm">{{ $message }}</p>
                             @enderror
                             <div class="relative">
-                                <input type="text"
-                                    value="{{Auth::user()->name}}"
+                                <input type="text" value="{{ Auth::user()->name }}"
                                     class="w-full border px-3 py-2  border-gray-200 rounded-lg cursor-pointer" readonly>
                             </div>
                             @error('graphic_designer_id')
@@ -485,8 +484,8 @@
 </script>
 
 <script>
-        // Initialize CKEditor
-        ClassicEditor
+    // Initialize CKEditor
+    ClassicEditor
         .create(document.querySelector('#timeline'))
         .then(editor => {
             console.log('CKEditor initialized');
@@ -499,25 +498,25 @@
 <script>
     // Initialize CKEditor
     ClassicEditor
-    .create(document.querySelector('#project-scope'))
-    .then(editor => {
-        console.log('CKEditor initialized');
-    })
-    .catch(error => {
-        console.error(error);
-    });
+        .create(document.querySelector('#project-scope'))
+        .then(editor => {
+            console.log('CKEditor initialized');
+        })
+        .catch(error => {
+            console.error(error);
+        });
 </script>
 
 <script>
     // Initialize CKEditor
     ClassicEditor
-    .create(document.querySelector('#deliverables'))
-    .then(editor => {
-        console.log('CKEditor initialized');
-    })
-    .catch(error => {
-        console.error(error);
-    });
+        .create(document.querySelector('#deliverables'))
+        .then(editor => {
+            console.log('CKEditor initialized');
+        })
+        .catch(error => {
+            console.error(error);
+        });
 </script>
 
 
