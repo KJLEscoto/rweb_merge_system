@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProjectEndorsementForm;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ProjectEndorsementFormController extends Controller
@@ -39,7 +40,6 @@ class ProjectEndorsementFormController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
         // Validate request before proceeding
         $request->validate([
             'title' => 'required',
@@ -54,7 +54,7 @@ class ProjectEndorsementFormController extends Controller
         ProjectEndorsementForm::create([
             'title' => $request->title,
             'client_id' => $request->client_id,
-            'date_issued' => now(),
+            'date_issued' => Carbon::today(), // Ensures only the date is stored
             'person_in_charge' => $request->person_in_charge,
             'issued_by' => auth()->user()->id,
             'project_scope' => $request->project_scope,
