@@ -114,9 +114,20 @@ class ProjectEndorsementFormController extends Controller
         //
     }
 
-    public function approval()
+    public function approve($id)
     {
-        $endorsements = ProjectEndorsementForm::all();
-        return view('admin.smm.endorsement.approval', compact('endorsements'));
+        if (auth()->user()->role_id == 5) {
+            ProjectEndorsementForm::find($id)->update([
+                'approved_by' => auth()->user()->id,
+                'status' => 'Approved by Top Management'
+            ]);
+        } elseif (auth()->user()->role_id == 6) {
+            ProjectEndorsementForm::find($id)->update([
+                'noted_by' => auth()->user()->id,
+                'status' => 'Approved by Operations Supervisor'
+            ]);
+        }
+
+        return redirect()->back()->with('Success', 'Endorsement Approved Successfully');
     }
 }

@@ -20,12 +20,14 @@
         </div>
     </a>
     <div class="w-full h-fit flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-        <a href="{{ route('admin.smm.endorsement.create') }}">
-            <div
-                class="bg-[#fa7011] hidden text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center w-full md:w-auto lg:block">
-                Create Endorsement
-            </div>
-        </a>
+        @if (Auth::user()->role_id == 12)
+            <a href="{{ route('admin.smm.endorsement.create') }}">
+                <div
+                    class="bg-[#fa7011] hidden text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center w-full md:w-auto lg:block">
+                    Create Endorsement
+                </div>
+            </a>
+        @endif
 
 
         <div class="flex items-center w-full md:w-auto relative">
@@ -55,25 +57,42 @@
                         <td class="px-4 py-3">{{ $endorsement->client->name }}</td>
                         <td class="px-4 py-3">{{ $endorsement->status }}</td>
                         <td class="px-4 py-3 text-center">
-                            <a href="{{ url('admin/smm/supervisor/directjob/edit/' . $endorsement->id) }}">
-                                <button
-                                    class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white {{ $endorsement->status === 'pending' || $endorsement->status === 'Waiting for Content Writer Approval' || $endorsement->status === 'Waiting for Graphic Designer Approval' ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-400 cursor-not-allowed' }} rounded "
-                                    {{ $endorsement->status === 'pending' || $endorsement->status === 'Waiting for Content Writer Approval' || $endorsement->status === 'Waiting for Graphic Designer Approval' ? '' : 'disabled' }}>
-                                    Edit
-                                </button>
-                            </a>
+                            @if (Auth::user()->role_id != 12)
+                                <form action="{{ route('admin.smm.endorsement.approve', $endorsement->id) }}"
+                                    method="POST" class="inline-block">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit"
+                                        class="px-4 py-2 text-white  rounded-lg shadow-md transition duration-300 {{ ($endorsement->status != 'pending' && Auth::user()->role_id == 5) || ($endorsement->status != 'Approved by Top Management' && Auth::user()->role_id == 6) ? 'bg-gray-600 ' : 'bg-green-600 hover:bg-green-700' }}"
+                                        {{ $endorsement->status != 'pending' && Auth::user()->role_id == 5 ? 'disabled ' : '' }}>
+                                        Approve
+                                    </button>
+                                </form>
+                            @endif
+
+                            @if (Auth::user()->role_id == 12)
+                                <a href="{{ url('admin/smm/supervisor/directjob/edit/' . $endorsement->id) }}">
+                                    <button
+                                        class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white {{ $endorsement->status === 'pending' || $endorsement->status === 'Waiting for Content Writer Approval' || $endorsement->status === 'Waiting for Graphic Designer Approval' ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-400 cursor-not-allowed' }} rounded "
+                                        {{ $endorsement->status === 'pending' || $endorsement->status === 'Waiting for Content Writer Approval' || $endorsement->status === 'Waiting for Graphic Designer Approval' ? '' : 'disabled' }}>
+                                        Edit
+                                    </button>
+                                </a>
+                            @endif
                             <a href="{{ route('admin.smm.endorsement.show', $endorsement->id) }}">
                                 <button
                                     class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-blue-700 rounded hover:bg-blue-800">
                                     Show
                                 </button>
                             </a>
-                            <a href="{{ url('admin/smm/supervisor/directjob/show/' . $endorsement->id) }}">
-                                <button
-                                    class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-red-700 rounded hover:bg-red-800">
-                                    Delete
-                                </button>
-                            </a>
+                            @if (Auth::user()->role_id == 12)
+                                <a href="{{ url('admin/smm/supervisor/directjob/show/' . $endorsement->id) }}">
+                                    <button
+                                        class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-red-700 rounded hover:bg-red-800">
+                                        Delete
+                                    </button>
+                                </a>
+                            @endif
                         </td>
                     </tr>
                 @empty

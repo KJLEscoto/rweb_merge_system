@@ -428,6 +428,8 @@
                     <x-admin.sidebar-menu icon="mdi--file-cog" label="My Revision" routeName="admin.smm.revision" />
                     <x-admin.sidebar-menu icon="mdi--clipboard-text-history" label="Approvals"
                         routeName="admin.smm.supervisor.approve" />
+                    <x-admin.sidebar-menu icon="mdi--clipboard-text-history" label="Endorsement Form"
+                        routeName="admin.smm.endorsement" />
                     <x-admin.sidebar-menu icon="ic--round-date-range" label="Track"
                         routeName="admin.smm.track.index" />
                     <x-admin.sidebar-menu icon="mdi--file-check" label="Renewal"
@@ -443,6 +445,8 @@
                         routeName="admin.smm.dashboard" />
                     <x-admin.sidebar-menu icon="mdi--clipboard-text-history" label="Approval"
                         routeName="admin.smm.topmanager.approve" />
+                    <x-admin.sidebar-menu icon="mdi--clipboard-text-history" label="Endorsement Approval"
+                        routeName="admin.smm.endorsement" />
                     <x-admin.sidebar-menu icon="ic--round-date-range" label="Track Job Order"
                         routeName="admin.smm.track.index" />
                     <x-admin.sidebar-menu icon="mdi--file-cog" label="Request Form"
