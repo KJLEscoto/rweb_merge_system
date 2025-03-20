@@ -487,6 +487,13 @@
                     <x-admin.sidebar-menu icon="mdi--file-cog" label="Request Form"
                         routeName="admin.smm.requestForm" />
                     <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
+                @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'sales')
+                    <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
+                        routeName="admin.smm.dashboard" />
+                    <x-admin.sidebar-menu icon="mdi--file-cog" label="Endorsement Form"
+                        routeName="admin.smm.endorsement" />
+                    <x-admin.sidebar-menu icon="fa--users" label="Users" routeName="admin.smm.users" />
+                    <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
                 @endif
 
 

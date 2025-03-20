@@ -81,17 +81,20 @@
                                     <option value="1" {{ old('role_id', $user->role_id) == 1 ? 'selected' : '' }}>
                                         Client</option>
                                     <option value="2" {{ old('role_id', $user->role_id) == 2 ? 'selected' : '' }}>
-                                        Operations Manager</option>
+                                        Assistant Supervisor</option>
                                     <option value="3" {{ old('role_id', $user->role_id) == 3 ? 'selected' : '' }}>
                                         Content Writer</option>
                                     <option value="4" {{ old('role_id', $user->role_id) == 4 ? 'selected' : '' }}>
                                         Graphic Designer</option>
                                     <option value="5" {{ old('role_id', $user->role_id) == 5 ? 'selected' : '' }}>
-                                        Top Manager</option>
+                                        Top Management</option>
                                     <option value="6" {{ old('role_id', $user->role_id) == 6 ? 'selected' : '' }}>
-                                        Supervisor</option>
+                                        Operations Supervisor</option>
                                     <option value="7" {{ old('role_id', $user->role_id) == 7 ? 'selected' : '' }}>
                                         Accounting</option>
+                                    <option value="12"
+                                        {{ old('role_id', $user->role_id) == 12 ? 'selected' : '' }}>
+                                        Sales Assistant</option>
                                 </select>
                                 @error('role_id')
                                     <p class="text-sm text-red-700">{{ $message }}</p>

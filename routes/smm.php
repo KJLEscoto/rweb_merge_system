@@ -21,6 +21,7 @@ use App\Http\Controllers\OperationRenewalController;
 use App\Http\Controllers\OperationRevisionController;
 use App\Http\Controllers\OperationTaskController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectEndorsementFormController;
 use App\Http\Controllers\RequestFormController;
 use App\Http\Controllers\RevisionController;
 use App\Http\Controllers\SignatureController;
@@ -32,6 +33,7 @@ use App\Http\Controllers\SupervisorRenewalController;
 use App\Http\Controllers\SupervisorRevisionController;
 use App\Http\Controllers\SupervisorTaskController;
 use App\Http\Controllers\TopApprovalController;
+use App\Models\ProjectEndorsementForm;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('/smm')->middleware('auth.redirect')->group(function () {
@@ -126,6 +128,9 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
     Route::get('requestForm/edit/{id}', [RequestFormController::class, 'edit'])->name('admin.smm.requestForm.edit');
     Route::put('requestForm/update/{id}', [RequestFormController::class, 'update']);
     Route::delete('requestForm/delete/{id}', [RequestFormController::class, 'delete']);
+
+    Route::get('endorsement', [ProjectEndorsementFormController::class, 'index'])->name('admin.smm.endorsement');
+    Route::get('endorsement/create', [ProjectEndorsementFormController::class, 'create'])->name('admin.smm.endorsement.create');
   });
 
   Route::middleware('auth')->group(function () {
@@ -190,8 +195,6 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
     Route::get('/topmanager/decline/{id}', [TopApprovalController::class, 'declineForm']);
     Route::post('/topmanager/decline/{id}', [TopApprovalController::class, 'decline']);
   });
-
-
 
   Route::middleware(['auth', 'role:supervisor'])->group(function () {
     Route::get('/supervisor/approve', [SupervisorApprovalController::class, 'index'])->name('admin.smm.supervisor.approve');

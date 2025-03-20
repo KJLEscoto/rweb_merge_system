@@ -137,15 +137,18 @@ class RequestFormController extends Controller
         // Determine the status based on the role
         $status = null;
         if ($authuser->role_id == 5) {
-            $status = 'Approved by Top Manager';
+            $request_form->update([
+                'manager_id' => $authuser->id,
+                'status' => 'Approved by Top Manager',
+            ]);
         } elseif ($authuser->role_id == 7) {
-            $status = 'Approved by Accounting';
+            $request_form->update([
+                'receiver_id' => $authuser->id,
+                'status' => 'Approved by Accounting',
+            ]);
         }
 
-        $request_form->update([
-            'manager_id' => $authuser->id,
-            'status' => $status,
-        ]);
+
 
         return redirect()->route('admin.smm.requestForm.history')->with('Status', 'Request Form Approve Successfully.');
     }

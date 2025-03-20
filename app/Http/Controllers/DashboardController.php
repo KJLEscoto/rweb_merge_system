@@ -141,6 +141,9 @@ class DashboardController extends Controller
             } elseif ($user_role == 7) {
                 $job_drafts = [];
                 return view('admin.smm.dashboard-nonadmin', compact('job_drafts')); // Include both variables
+            } elseif ($user_role == 12) {
+                $job_drafts = [];
+                return view('admin.smm.dashboard-nonadmin', compact('job_drafts')); // Include both variables
             }
         } else if ($type === 'web') {
         }
