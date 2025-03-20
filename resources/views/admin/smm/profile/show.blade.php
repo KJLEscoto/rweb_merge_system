@@ -6,12 +6,13 @@
     @php
         $roles = [
             1 => 'Client',
-            2 => 'Operations Manager',
+            2 => 'Assistant Supervisor',
             3 => 'Content Writer',
             4 => 'Graphic Designer',
             5 => 'Top Manager',
-            6 => 'Supervisor',
+            6 => 'Operation Manager',
             7 => 'Accounting',
+            12 => 'Sales Assistant',
         ];
     @endphp
 </head>

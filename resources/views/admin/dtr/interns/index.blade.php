@@ -9,7 +9,7 @@
             'graphic_designer',
             'client',
             'supervisor',
-            'operations',
+            'assistant_supervisor',
             'top_manager',
             'accounting',
             'admin',

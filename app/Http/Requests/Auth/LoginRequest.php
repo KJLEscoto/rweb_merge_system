@@ -40,7 +40,7 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $admin_roles = [
-            'operations',
+            'assistant_supervisor',
             'supervisor',
             'top_manager',
         ];

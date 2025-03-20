@@ -62,8 +62,7 @@
                 </div>
             </a>
         </div>
-        <form method="POST" class="relative" action="{{ route('admin.web.users.store') }}"
-            enctype="multipart/form-data">
+        <form method="POST" class="relative" action="{{ route('admin.web.users.store') }}" enctype="multipart/form-data">
             @csrf
             <h1 class="mt-10 text-xl font-bold">Register User</h1>
             <div class="image-upload-container absolute -top-14 cursor-pointer right-0 size-24">
@@ -104,8 +103,11 @@
 
                         @php
                             $clientRoleId = \App\Models\Role::where('position', 'like', '%client%')->first()->id;
-                            $operationsRoleId = \App\Models\Role::where('position', 'like', '%operations%')->first()
-                                ->id;
+                            $operationsRoleId = \App\Models\Role::where(
+                                'position',
+                                'like',
+                                '%assistant_supervisor%',
+                            )->first()->id;
                             $uiUxRoleId = \App\Models\Role::where('position', 'like', '%ui_ux%')->first()->id;
                             $frontEndRoleId = \App\Models\Role::where('position', 'like', '%front_end%')->first()->id;
                             $backEndRoleId = \App\Models\Role::where('position', 'like', '%back_end%')->first()->id;
@@ -117,15 +119,19 @@
 
                         <option value="{{ $clientRoleId }}" {{ old('role_id') == $clientRoleId ? 'selected' : '' }}>
                             Client</option>
-                        <option value="{{ $operationsRoleId }}" {{ old('role_id') == $operationsRoleId ? 'selected' : '' }}>Operation</option>
+                        <option value="{{ $operationsRoleId }}"
+                            {{ old('role_id') == $operationsRoleId ? 'selected' : '' }}>Operation</option>
                         <option value="{{ $uiUxRoleId }}" {{ old('role_id') == $uiUxRoleId ? 'selected' : '' }}>Web
                             Designer</option>
-                        <option value="{{ $frontEndRoleId }}" {{ old('role_id') == $frontEndRoleId ? 'selected' : '' }}>
+                        <option value="{{ $frontEndRoleId }}"
+                            {{ old('role_id') == $frontEndRoleId ? 'selected' : '' }}>
                             Front-End Developer</option>
                         <option value="{{ $backEndRoleId }}" {{ old('role_id') == $backEndRoleId ? 'selected' : '' }}>
                             Back-End Developer</option>
-                        <option value="{{ $topManagerRoleId }}" {{ old('role_id') == $topManagerRoleId ? 'selected' : '' }}>Top Manager</option>
-                        <option value="{{ $supervisorRoleId }}" {{ old('role_id') == $supervisorRoleId ? 'selected' : '' }}>Supervisor</option>
+                        <option value="{{ $topManagerRoleId }}"
+                            {{ old('role_id') == $topManagerRoleId ? 'selected' : '' }}>Top Manager</option>
+                        <option value="{{ $supervisorRoleId }}"
+                            {{ old('role_id') == $supervisorRoleId ? 'selected' : '' }}>Supervisor</option>
                     </select>
 
                     @error('role_id')
@@ -189,7 +195,8 @@
                                                 <div class="grid grid-cols-2 px-4 py-1">
                                                     @foreach ($privileges as $privilege)
                                                         <div class="flex items-center space-x-2">
-                                                            <input id="priv{{ $page->id }}_{{ $privilege->id }}" type="checkbox"
+                                                            <input id="priv{{ $page->id }}_{{ $privilege->id }}"
+                                                                type="checkbox"
                                                                 name="privileges[{{ $page->description }}][]"
                                                                 value="{{ $privilege->description }}"
                                                                 class="h-6 privilege-checkbox">
@@ -268,7 +275,7 @@
 <script>
     function previewImage(event) {
         const reader = new FileReader();
-        reader.onload = function () {
+        reader.onload = function() {
             const output = document.getElementById('image-preview');
             output.src = reader.result;
         }
@@ -276,11 +283,11 @@
     }
 </script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const pageCheckboxes = document.querySelectorAll('input[name="pages[]"]');
 
         pageCheckboxes.forEach(pageCheckbox => {
-            pageCheckbox.addEventListener("change", function () {
+            pageCheckbox.addEventListener("change", function() {
                 const pageId = this.value; // Get the page description (unique value)
                 const privilegeCheckboxes = document.querySelectorAll(
                     `input[name="privileges[${pageId}][]"]`);
@@ -309,7 +316,7 @@
             // Add event listener for each privilege checkbox
             document.querySelectorAll(`input[name="privileges[${pageCheckbox.value}][]"]`).forEach(
                 privilegeCheckbox => {
-                    privilegeCheckbox.addEventListener("change", function () {
+                    privilegeCheckbox.addEventListener("change", function() {
                         const privilegeList = Array.from(document.querySelectorAll(
                             `input[name="privileges[${pageCheckbox.value}][]"]:checked`
                         ));
@@ -332,7 +339,7 @@
     });
 </script>
 <script>
-    document.getElementById('toggleSelection').addEventListener('click', function (event) {
+    document.getElementById('toggleSelection').addEventListener('click', function(event) {
         event.preventDefault(); // Prevent form submission if inside a form
 
         let checkboxes = document.querySelectorAll('.page-checkbox, .privilege-checkbox');

@@ -39,7 +39,7 @@ class WebApprovalController extends Controller
             case "client":
                 $web_project_channels = WebProjectChannel::with('web_project')->where('status', 'Submitted to Client')->get();
                 break;
-            case "operations":
+            case "assistant_supervisor":
                 $web_project_channels = WebProjectChannel::with('web_project')->where('status', 'Submitted to Operation')->get();
                 break;
             default:
@@ -88,7 +88,7 @@ class WebApprovalController extends Controller
             case "client":
                 $web_project_channel = WebProjectChannel::with('web_project')->where('status', 'Submitted to Client')->find($id);
                 break;
-            case "operations":
+            case "assistant_supervisor":
                 $web_project_channel = WebProjectChannel::with('web_project')->where('status', 'Submitted to Operation')->find($id);
                 break;
             default:
@@ -507,7 +507,7 @@ class WebApprovalController extends Controller
                         }
                     }
                     break;
-                case "operations":
+                case "assistant_supervisor":
                     $web_project_channel->status = "Submitted to Supervisor";
                     $web_project_channel->web_job_orders->update([
                         'operation_signed_draft_id' => Auth::user()->id,

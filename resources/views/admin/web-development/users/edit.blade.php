@@ -78,7 +78,7 @@
                                     <option value="1" {{ old('role_id', $user->role_id) == 1 ? 'selected' : '' }}>
                                         Client</option>
                                     <option value="2" {{ old('role_id', $user->role_id) == 2 ? 'selected' : '' }}>
-                                        Operations Manager</option>
+                                        Assistant Supervisor</option>
                                     <option value="3" {{ old('role_id', $user->role_id) == 3 ? 'selected' : '' }}>
                                         Content Writer</option>
                                     <option value="4" {{ old('role_id', $user->role_id) == 4 ? 'selected' : '' }}>
@@ -86,7 +86,7 @@
                                     <option value="5" {{ old('role_id', $user->role_id) == 5 ? 'selected' : '' }}>
                                         Top Manager</option>
                                     <option value="6" {{ old('role_id', $user->role_id) == 6 ? 'selected' : '' }}>
-                                        Supervisor</option>
+                                        Operation Supervisor</option>
                                     <option value="6" {{ old('role_id', $user->role_id) == 6 ? 'selected' : '' }}>
                                         Accounting</option>
                                 </select>

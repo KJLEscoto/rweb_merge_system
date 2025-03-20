@@ -22,132 +22,138 @@
         <div class="grid grid-cols-1 md:grid md:grid-cols-3 md:px-2 mx-auto">
             <div class="col-span-1 md:col-span-2">
                 <img class="" src="{{ asset('/Assets/Banner.png') }}" alt="" draggable="false">
-                <h1 class="mx-6 border-b-2 border-[#fa7011] w-fit">Approvals</h1>
-                <div class="px-6 mt-2">
-                    <div class="w-full p-4 bg-white rounded-lg shadow-md">
-                        <table class="table-auto gap-8 text-left border-collapse w-full">
-                            <thead class="text-gray-700">
-                                <tr>
-                                    <th class="px-4 py-2 text-sm font-semibold">Project Development</th>
-                                    <th class="px-4 py-2 text-sm font-semibold">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($job_drafts as $job_draft)
+                @if (Auth::user()->role_id != 12)
+                    <h1 class="mx-6 border-b-2 border-[#fa7011] w-fit">Approvals</h1>
+                    <div class="px-6 mt-2">
+                        <div class="w-full p-4 bg-white rounded-lg shadow-md">
+                            <table class="table-auto gap-8 text-left border-collapse w-full">
+                                <thead class="text-gray-700">
                                     <tr>
-                                        <td class="px-4 py-2 text-sm">{{ $job_draft->jobOrder->title }} -
-                                            {{ Str::title(str_replace('_', ' ', $job_draft->type)) }}</td>
-                                        <td class="px-4 py-2 text-sm flex items-center gap-8">
-                                            @if (auth()->user()->role_id == '1' and $job_draft->status == 'completed')
-                                                Approved
-                                            @elseif (
-                                                (auth()->user()->role_id == '2' &&
-                                                    ($job_draft->status == 'completed' ||
-                                                        $job_draft->status == 'Submitted to Top Manager' ||
-                                                        $job_draft->status == 'Submitted to Client' ||
-                                                        $job_draft->status == 'Submitted to Supervisor')) ||
-                                                    (auth()->user()->role_id == '5' &&
-                                                        ($job_draft->status == 'Submitted to Client' || $job_draft->status == 'completed')) ||
-                                                    (auth()->user()->role_id == '6' &&
-                                                        ($job_draft->status == 'Submitted to Client' ||
-                                                            $job_draft->status == 'completed' ||
-                                                            $job_draft->status == 'Submitted to Top Manager')))
-                                                Signed
-                                            @elseif (
-                                                (auth()->user()->role_id == '3' &&
-                                                    ($job_draft->status == 'Submitted to Operations' ||
-                                                        $job_draft->status == 'completed' ||
-                                                        $job_draft->status == 'Submitted to Top Manager' ||
-                                                        $job_draft->status == 'Submitted to Client')) ||
-                                                    (auth()->user()->role_id == '4' &&
+                                        <th class="px-4 py-2 text-sm font-semibold">Project Development</th>
+                                        <th class="px-4 py-2 text-sm font-semibold">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($job_drafts as $job_draft)
+                                        <tr>
+                                            <td class="px-4 py-2 text-sm">{{ $job_draft->jobOrder->title }} -
+                                                {{ Str::title(str_replace('_', ' ', $job_draft->type)) }}</td>
+                                            <td class="px-4 py-2 text-sm flex items-center gap-8">
+                                                @if (auth()->user()->role_id == '1' and $job_draft->status == 'completed')
+                                                    Approved
+                                                @elseif (
+                                                    (auth()->user()->role_id == '2' &&
+                                                        ($job_draft->status == 'completed' ||
+                                                            $job_draft->status == 'Submitted to Top Manager' ||
+                                                            $job_draft->status == 'Submitted to Client' ||
+                                                            $job_draft->status == 'Submitted to Supervisor')) ||
+                                                        (auth()->user()->role_id == '5' &&
+                                                            ($job_draft->status == 'Submitted to Client' || $job_draft->status == 'completed')) ||
+                                                        (auth()->user()->role_id == '6' &&
+                                                            ($job_draft->status == 'Submitted to Client' ||
+                                                                $job_draft->status == 'completed' ||
+                                                                $job_draft->status == 'Submitted to Top Manager')))
+                                                    Signed
+                                                @elseif (
+                                                    (auth()->user()->role_id == '3' &&
                                                         ($job_draft->status == 'Submitted to Operations' ||
                                                             $job_draft->status == 'completed' ||
                                                             $job_draft->status == 'Submitted to Top Manager' ||
-                                                            $job_draft->status == 'Submitted to Client')))
-                                                Created
-                                            @elseif (auth()->user()->role_id == '1' and $job_draft->status == 'Submitted to Client')
-                                                <a href="{{ url('smm/client/show/' . $job_draft->id) }}">
-                                                    <p class="text-[#fa7011]">Approve</p>
-                                                </a>
-                                            @elseif (auth()->user()->role_id == '2' and $job_draft->status == 'Submitted to Operations')
-                                                <a href="{{ url('admin/smm/operation/show/' . $job_draft->id) }}">
-                                                    <p class="text-[#fa7011]">Sign</p>
-                                                </a>
-                                            @elseif (auth()->user()->role_id == '3' and
-                                                    $job_draft->status == 'Waiting for Content Writer Approval' ||
-                                                        $job_draft->status == 'Waiting for Graphic Designer Approval')
-                                                <form action="{{ url('admin/smm/content/accept/' . $job_draft->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <button type="submit"
-                                                        class="text-[#fa7011] bg-transparent border-none cursor-pointer">
-                                                        Accept
-                                                    </button>
-                                                </form>
-                                            @elseif (auth()->user()->role_id == '3' and $job_draft->status == 'pending')
-                                                <a href="{{ url('admin/smm/content/edit/' . $job_draft->id) }}">
-                                                    <p class="text-[#fa7011]">Create</p>
-                                                </a>
-                                            @elseif (auth()->user()->role_id == '4' and
-                                                    $job_draft->status == 'Waiting for Content Writer Approval' ||
-                                                        $job_draft->status == 'Waiting for Graphic Designer Approval')
-                                                <form action="{{ url('admin/smm/graphic/accept/' . $job_draft->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <button type="submit"
-                                                        class="text-[#fa7011] bg-transparent border-none cursor-pointer">
-                                                        Accept
-                                                    </button>
-                                                </form>
-                                            @elseif (auth()->user()->role_id == '4' and $job_draft->status == 'pending')
-                                                <a href="{{ url('admin/smm/graphic/edit/' . $job_draft->id) }}">
-                                                    <p class="text-[#fa7011]">Create</p>
-                                                </a>
-                                            @elseif (auth()->user()->role_id == '5' and $job_draft->status == 'Submitted to Top Manager')
-                                                <a href="{{ url('admin/smm/topmanager/show/' . $job_draft->id) }}">
-                                                    <p class="text-[#fa7011]">Sign</p>
-                                                </a>
-                                            @elseif (auth()->user()->role_id == '6' and $job_draft->status == 'Submitted to Supervisor')
-                                                <a
-                                                    href="{{ url('admin/smm/supervisor/approve/show/' . $job_draft->id) }}">
-                                                    <p class="text-[#fa7011]">Sign</p>
-                                                </a>
-                                            @endif
-                                            @if (
-                                                ($job_draft->status == 'completed' && auth()->user()->role_id == '1') ||
-                                                    (($job_draft->status == 'Submitted to Operations' ||
-                                                        $job_draft->status == 'Submitted to Top Manager' ||
-                                                        $job_draft->status == 'Submitted to Client' ||
-                                                        $job_draft->status == 'completed') &&
-                                                        (auth()->user()->role_id == '3' || auth()->user()->role_id == '4')) ||
-                                                    (auth()->user()->role_id == '2' &&
-                                                        ($job_draft->status == 'Submitted to Top Manager' ||
+                                                            $job_draft->status == 'Submitted to Client')) ||
+                                                        (auth()->user()->role_id == '4' &&
+                                                            ($job_draft->status == 'Submitted to Operations' ||
+                                                                $job_draft->status == 'completed' ||
+                                                                $job_draft->status == 'Submitted to Top Manager' ||
+                                                                $job_draft->status == 'Submitted to Client')))
+                                                    Created
+                                                @elseif (auth()->user()->role_id == '1' and $job_draft->status == 'Submitted to Client')
+                                                    <a href="{{ url('smm/client/show/' . $job_draft->id) }}">
+                                                        <p class="text-[#fa7011]">Approve</p>
+                                                    </a>
+                                                @elseif (auth()->user()->role_id == '2' and $job_draft->status == 'Submitted to Operations')
+                                                    <a href="{{ url('admin/smm/operation/show/' . $job_draft->id) }}">
+                                                        <p class="text-[#fa7011]">Sign</p>
+                                                    </a>
+                                                @elseif (auth()->user()->role_id == '3' and
+                                                        $job_draft->status == 'Waiting for Content Writer Approval' ||
+                                                            $job_draft->status == 'Waiting for Graphic Designer Approval')
+                                                    <form
+                                                        action="{{ url('admin/smm/content/accept/' . $job_draft->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="submit"
+                                                            class="text-[#fa7011] bg-transparent border-none cursor-pointer">
+                                                            Accept
+                                                        </button>
+                                                    </form>
+                                                @elseif (auth()->user()->role_id == '3' and $job_draft->status == 'pending')
+                                                    <a href="{{ url('admin/smm/content/edit/' . $job_draft->id) }}">
+                                                        <p class="text-[#fa7011]">Create</p>
+                                                    </a>
+                                                @elseif (auth()->user()->role_id == '4' and
+                                                        $job_draft->status == 'Waiting for Content Writer Approval' ||
+                                                            $job_draft->status == 'Waiting for Graphic Designer Approval')
+                                                    <form
+                                                        action="{{ url('admin/smm/graphic/accept/' . $job_draft->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="submit"
+                                                            class="text-[#fa7011] bg-transparent border-none cursor-pointer">
+                                                            Accept
+                                                        </button>
+                                                    </form>
+                                                @elseif (auth()->user()->role_id == '4' and $job_draft->status == 'pending')
+                                                    <a href="{{ url('admin/smm/graphic/edit/' . $job_draft->id) }}">
+                                                        <p class="text-[#fa7011]">Create</p>
+                                                    </a>
+                                                @elseif (auth()->user()->role_id == '5' and $job_draft->status == 'Submitted to Top Manager')
+                                                    <a href="{{ url('admin/smm/topmanager/show/' . $job_draft->id) }}">
+                                                        <p class="text-[#fa7011]">Sign</p>
+                                                    </a>
+                                                @elseif (auth()->user()->role_id == '6' and $job_draft->status == 'Submitted to Supervisor')
+                                                    <a
+                                                        href="{{ url('admin/smm/supervisor/approve/show/' . $job_draft->id) }}">
+                                                        <p class="text-[#fa7011]">Sign</p>
+                                                    </a>
+                                                @endif
+                                                @if (
+                                                    ($job_draft->status == 'completed' && auth()->user()->role_id == '1') ||
+                                                        (($job_draft->status == 'Submitted to Operations' ||
+                                                            $job_draft->status == 'Submitted to Top Manager' ||
                                                             $job_draft->status == 'Submitted to Client' ||
-                                                            $job_draft->status == 'Submitted to Supervisor' ||
-                                                            $job_draft->status == 'completed')) ||
-                                                    (auth()->user()->role_id == '5' &&
-                                                        ($job_draft->status == 'Submitted to Client' || $job_draft->status == 'completed')) ||
-                                                    (auth()->user()->role_id == '6' &&
-                                                        ($job_draft->status == 'Submitted to Client' ||
-                                                            $job_draft->status == 'completed' ||
-                                                            $job_draft->status == 'Submitted to Top Manager')))
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500"
-                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                                    stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M5 13l4 4L19 7" />
-                                                </svg>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                                            $job_draft->status == 'completed') &&
+                                                            (auth()->user()->role_id == '3' || auth()->user()->role_id == '4')) ||
+                                                        (auth()->user()->role_id == '2' &&
+                                                            ($job_draft->status == 'Submitted to Top Manager' ||
+                                                                $job_draft->status == 'Submitted to Client' ||
+                                                                $job_draft->status == 'Submitted to Supervisor' ||
+                                                                $job_draft->status == 'completed')) ||
+                                                        (auth()->user()->role_id == '5' &&
+                                                            ($job_draft->status == 'Submitted to Client' || $job_draft->status == 'completed')) ||
+                                                        (auth()->user()->role_id == '6' &&
+                                                            ($job_draft->status == 'Submitted to Client' ||
+                                                                $job_draft->status == 'completed' ||
+                                                                $job_draft->status == 'Submitted to Top Manager')))
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-5 w-5 text-green-500" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
 
-                </div>
+                @endif
+
 
                 <div class="grid grid-cols-2 mt-4">
                     <div class="col-span-2 mb-4 lg:mb-0 lg:cols-span-1">

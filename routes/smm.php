@@ -151,7 +151,7 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
 
 
 
-  Route::middleware(['auth', 'role:operations'])->group(function () {
+  Route::middleware(['auth', 'role:assistant_supervisor'])->group(function () {
     Route::get('/operation', [OperationApprovalController::class, 'index'])->name('admin.smm.operation.approve');
     Route::get('/operation/show/{id}', [OperationApprovalController::class, 'show'])->name('admin.smm.operation.show');
     Route::get('/operation/edit/{id}', [OperationApprovalController::class, 'edit'])->name('operation.edit');

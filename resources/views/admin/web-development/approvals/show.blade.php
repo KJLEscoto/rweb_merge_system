@@ -81,7 +81,7 @@
                             case 'client':
                                 $isDisabled = $web_project_channel->status != 'Submitted to Client';
                                 break;
-                            case 'operations':
+                            case 'assistant_supervisor':
                                 $isDisabled = $web_project_channel->status != 'Submitted to Operation';
                                 break;
                             default:

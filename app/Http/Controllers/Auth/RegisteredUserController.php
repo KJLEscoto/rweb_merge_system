@@ -115,7 +115,7 @@ class RegisteredUserController extends Controller
             $top_management_role = [
                 'top_manager',
                 'supervisor',
-                'operations',
+                'assistant_supervisor',
             ];
 
             $employee_role = [
@@ -129,7 +129,7 @@ class RegisteredUserController extends Controller
             $role_pages = [
                 'top_manager' => Page::all(),
                 'supervisor' => Page::all(),
-                'operations' => [
+                'assistant_supervisor' => [
                     'dashboard',
                     'task',
                     'revision',
