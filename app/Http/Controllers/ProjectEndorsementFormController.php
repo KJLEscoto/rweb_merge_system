@@ -26,8 +26,9 @@ class ProjectEndorsementFormController extends Controller
      */
     public function create()
     {
+        $clients = User::where('role_id', 1)->get();
         $users = User::all();
-        return view('admin.smm.endorsement.create', compact('users'));
+        return view('admin.smm.endorsement.create', compact('users', 'clients'));
     }
 
     /**
