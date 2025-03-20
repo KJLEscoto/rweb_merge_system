@@ -16,7 +16,7 @@ class RoleSeeder extends Seeder
     {
         $roles = [
             ['position' => 'client'],
-            ['position' => 'operations'],
+            ['position' => 'assistant_supervisor'],
             ['position' => 'content_writer'],
             ['position' => 'graphic_designer'],
             ['position' => 'top_manager'],
@@ -26,7 +26,7 @@ class RoleSeeder extends Seeder
             ['position' => 'ui_ux'],
             ['position' => 'front_end'],
             ['position' => 'back_end'],
-            ['position' => 'sales'],
+            ['position' => 'sales_assistant'],
         ];
 
         foreach ($roles as &$role) {

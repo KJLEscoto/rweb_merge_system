@@ -60,15 +60,15 @@
                     <label class="block text-sm font-medium text-gray-700">Select Intern</label>
 
                     @php
-$not_intern_roles = [
-    'admin',
-    'operations',
-    'top_manager',
-    'supervisor',
-    'content_writer',
-    'accounting',
-    'graphic_designer',
-];
+                        $not_intern_roles = [
+                            'admin',
+                            'assistant_supervisor',
+                            'top_manager',
+                            'supervisor',
+                            'content_writer',
+                            'accounting',
+                            'graphic_designer',
+                        ];
                     @endphp
 
                     <select id="userSelect" name="user_fullname[]"
@@ -76,18 +76,18 @@ $not_intern_roles = [
                         required>
                         <option value="" disabled selected>Select a user</option>
                         @foreach ($users as $user)
-                                            @if (!in_array($user->roles->position, $not_intern_roles))
-                                                                @php
-        $userImg =
-            optional(\App\Models\File::find($user->profiles->file_id))->path .
-            '?t=' .
-            time() ??
-            '';
-                                                                @endphp
-                                                                <option value="{{ $user->id }}" data-img="{{ $userImg }}">
-                                                                    {{ $user->firstname }} {{ $user->lastname }}
-                                                                </option>
-                                            @endif
+                            @if (!in_array($user->roles->position, $not_intern_roles))
+                                @php
+                                    $userImg =
+                                        optional(\App\Models\File::find($user->profiles->file_id))->path .
+                                            '?t=' .
+                                            time() ??
+                                        '';
+                                @endphp
+                                <option value="{{ $user->id }}" data-img="{{ $userImg }}">
+                                    {{ $user->firstname }} {{ $user->lastname }}
+                                </option>
+                            @endif
                         @endforeach
                     </select>
                 </div>
@@ -104,18 +104,18 @@ $not_intern_roles = [
                                 class="user-select w-full p-4 border rounded-lg focus:ring-[#F57D11] focus:border-[#F57D11]">
                                 <option value="" disabled selected>Select a user</option>
                                 @foreach ($users as $user)
-                                                            @if ($user->role != 'admin')
-                                                                                        @php
-        $userImg =
-            optional(\App\Models\File::find($user->profiles->file_id))->path .
-            '?t=' .
-            time() ??
-            '';
-                                                                                        @endphp
-                                                                                        <option value="{{ $user->id }}" data-img="{{ $userImg }}">
-                                                                                            {{ $user->firstname }} {{ $user->lastname }}
-                                                                                        </option>
-                                                            @endif
+                                    @if ($user->role != 'admin')
+                                        @php
+                                            $userImg =
+                                                optional(\App\Models\File::find($user->profiles->file_id))->path .
+                                                    '?t=' .
+                                                    time() ??
+                                                '';
+                                        @endphp
+                                        <option value="{{ $user->id }}" data-img="{{ $userImg }}">
+                                            {{ $user->firstname }} {{ $user->lastname }}
+                                        </option>
+                                    @endif
                                 @endforeach
                             </select>
 
@@ -127,10 +127,10 @@ $not_intern_roles = [
     </form>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const userHistoriesContainer = document.getElementById("userHistoriesContainer");
 
-            document.addEventListener("change", function (event) {
+            document.addEventListener("change", function(event) {
                 if (event.target.classList.contains("user-select")) {
                     let userId = event.target.value;
                     let selectedOption = event.target.options[event.target.selectedIndex];
@@ -165,7 +165,7 @@ $not_intern_roles = [
                 }
             });
 
-            document.addEventListener("click", function (event) {
+            document.addEventListener("click", function(event) {
                 if (event.target.classList.contains("add-card")) {
                     let userContainer = event.target.closest("[data-user-id]");
                     let userId = userContainer.getAttribute("data-user-id");
@@ -202,7 +202,7 @@ $not_intern_roles = [
 
             // Ensure jQuery is loaded before using Select2
             if (typeof jQuery !== "undefined" && $.fn.select2) {
-                $(document).ready(function () {
+                $(document).ready(function() {
                     function formatUser(user) {
                         if (!user.id) return user.text;
                         let img = $(user.element).data("img") || "https://via.placeholder.com/40";

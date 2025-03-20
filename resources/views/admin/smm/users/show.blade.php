@@ -6,7 +6,7 @@
     @php
         $roles = [
             1 => 'Client',
-            2 => 'Operations Manager',
+            2 => 'Assistant Supervisor',
             3 => 'Content Writer',
             4 => 'Graphic Designer',
             5 => 'Top Manager',

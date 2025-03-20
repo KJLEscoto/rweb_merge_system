@@ -398,7 +398,7 @@
                     <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.dtr.profile" />
 
                     {{-- admin smm navbar --}}
-                @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'operations')
+                @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'assistant_supervisor')
                     <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
                         routeName="admin.smm.dashboard" />
                     <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="My Tasks"
@@ -487,7 +487,7 @@
                     <x-admin.sidebar-menu icon="mdi--file-cog" label="Request Form"
                         routeName="admin.smm.requestForm" />
                     <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
-                @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'sales')
+                @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'sales_assistant')
                     <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
                         routeName="admin.smm.dashboard" />
                     <x-admin.sidebar-menu icon="mdi--file-cog" label="Endorsement Form"
@@ -546,7 +546,7 @@
                             <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.dtr.profile" />
 
                             {{-- admin smm navbar --}}
-                        @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'operations')
+                        @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'assistant_supervisor')
                             <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
                                 routeName="admin.smm.dashboard" />
                             <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="My Tasks"

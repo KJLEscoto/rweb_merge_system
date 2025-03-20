@@ -213,7 +213,7 @@ class AuthController extends Controller
     private function adminLogin(Request $request, $user, UserController $userController)
     {
         if (
-            $user->roles->position != "operations" && $user->roles->position != "supervisor" &&
+            $user->roles->position != "assistant_supervisor" && $user->roles->position != "supervisor" &&
             $user->roles->position != "top_manager"
         ) {
             Auth::logout();

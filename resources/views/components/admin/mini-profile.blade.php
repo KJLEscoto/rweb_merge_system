@@ -17,7 +17,7 @@
     {{-- <h1 class="absolute top-0 z-10 px-3 py-1 rounded bg-[#f56d11] text-white text-sm -left-12">DTR</h1> --}}
     <!-- Profile Dropdown -->
     @php
-        $admin_roles = ['admin', 'top_manager', 'supervisor', 'operations'];
+        $admin_roles = ['admin', 'top_manager', 'supervisor', 'assistant_supervisor'];
     @endphp
     @if (in_array(Auth::user()->roles->position, $admin_roles))
         <div class="dropdown relative inline-flex hover:scale-105 transition">
