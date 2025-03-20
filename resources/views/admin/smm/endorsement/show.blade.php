@@ -4,8 +4,7 @@
 @section('header', 'Endorsement Letter')
 
 {{-- @section('content') --}}
-<script src="https://cdn.tailwindcss.com">
-</script>
+<script src="https://cdn.tailwindcss.com"></script>
 
 <head>
     <title>{{ env('APP_NAME') }} | SMM | Endorsement Letter</title>
@@ -100,7 +99,7 @@
 
     <div id="container-pdf">
         <div class="bg-[#fa7011] text-white rounded-md px-3 py-1 w-fit mb-4">
-            <a href="{{ url('/admin/smm/supervisor/directjob') }}">Back</a>
+            <a href="{{ route('admin.smm.endorsement') }}">Back</a>
         </div>
         <div class="header">
             <img src="{{ asset('/Assets/doc_header.png') }}" alt="Header">
@@ -123,7 +122,7 @@
                     </td>
 
                     <td><strong>Person In Charge:</strong><br>
-                        {{ $endorsement->person_in_charge }}
+                        {{ $endorsement->personInCharge->name }}
                     </td>
 
                 </tr>
@@ -158,17 +157,35 @@
                         <img src="{{ asset(Auth::user()->signature) }}" alt="Supervisor Signature">
                     </td>
                     <td class="signature">
-                        <strong>Noted By: <br />{{ $endorsement->noted_by->name }}</strong><br>
-                        <img src="{{ asset($endorsement->supervisor->signature) }}" alt="Supervisor Signature">
+
+                        <strong>Noted By: <br />
+                            @if ($endorsement->notedBy)
+                                {{ $endorsement->notedBy->name }}
+                            @endif
+                        </strong><br>
+                        @if (isset($endorsement->notedBy) && isset($endorsement->notedBy->signature))
+                            <img src="{{ asset($endorsement->notedBy->signature) }}" alt="Supervisor Signature">
+                        @endif
+
                     </td>
+
                 </tr>
             </table>
             <table>
                 <tr>
                     <td class="signature">
-                        <strong>Approved By: <br />{{ $endorsement->top_manager->name }}</strong><br>
-                        <img src="{{ asset($endorsement->top_manager->signature) }}" alt="Supervisor Signature">
+
+                        <strong>Approved By: <br />
+                            @if (isset($endorsement->approvedBy))
+                                {{ $endorsement->approvedBy->name }}
+                            @endif
+                        </strong><br>
+                        @if (isset($endorsement->approvedBy->signature))
+                            <img src="{{ asset($endorsement->approvedBy->signature) }}" alt="Top Manager Signature">
+                        @endif
+
                     </td>
+
                     <td class="signature">
 
                     </td>

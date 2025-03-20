@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('timeline')->nullable();
             $table->text('deliverables');
             $table->foreignId('prepared_by')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('noted_by')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('noted_by')->nullable()->constrained('users')->cascadeOnDelete();
             $table->foreignId('approved_by')->nullable()->constrained('users')->cascadeOnDelete();
             $table->string('status');
             $table->timestamps();
