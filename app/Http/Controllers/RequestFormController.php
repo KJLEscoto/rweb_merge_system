@@ -16,11 +16,17 @@ class RequestFormController extends Controller
 
         if ($authuser->role_id == '5') {
             $request_forms = RequestForm::with('requestedBy', 'manager', 'receiver', 'particulars')
-                ->whereIn('manager_id', [$authuser->id, null])
+                ->where(function ($query) use ($authuser) {
+                    $query->where('manager_id', $authuser->id)
+                        ->orWhereNull('manager_id');
+                })
                 ->get();
         } elseif ($authuser->role_id == '7') {
             $request_forms = RequestForm::with('requestedBy', 'manager', 'receiver', 'particulars')
-                ->whereIn('receiver_id', [$authuser->id, null])
+                ->where(function ($query) use ($authuser) {
+                    $query->where('receiver_id', $authuser->id)
+                        ->orWhereNull('receiver_id');
+                })
                 ->get();
         } elseif ($authuser->role_id == '6') {
             $request_forms = RequestForm::with('requestedBy', 'manager', 'receiver', 'particulars')
