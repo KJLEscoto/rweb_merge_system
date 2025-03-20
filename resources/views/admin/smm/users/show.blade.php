@@ -12,6 +12,7 @@
             5 => 'Top Manager',
             6 => 'Supervisor',
             7 => 'Accounting',
+            12 => 'Sales Assistant',
         ];
     @endphp
 </head>
