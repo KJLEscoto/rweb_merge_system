@@ -113,7 +113,7 @@
                 let jobOrderId = this.getAttribute('data-id');
                 let newStatus = this.checked ? 1 : 0;
 
-                fetch(`/admin/smm/supervisor/update/${jobOrderId}`, {
+                fetch(`/rwebsystem/public/admin/smm/supervisor/update/${jobOrderId}`, {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
