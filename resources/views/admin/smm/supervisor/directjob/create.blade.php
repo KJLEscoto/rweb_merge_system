@@ -80,35 +80,35 @@
                     </div>
                     <!-- Content Writer -->
                     {{-- <div class="col-span-2 lg:col-span-1 w-full">
-                            <p class="text-sm text-gray-600">Content Writer</p>
-                            <div class="relative">
-                                <input type="text" id="selected-content-writer-name"
-                                    value="{{ old('content_writer_id') ? ($contentworkers->firstWhere('id', old('content_writer_id'))->name ?? 'Select a Content Writer') : 'Select a Content Writer' }}"
-                                    class="w-full border px-3 py-2  border-gray-200 rounded-lg cursor-pointer" readonly
-                                    onclick="openContentWriterModal()">
-                                <input type="hidden" name="content_writer_id" id="selected-content-writer-id"
-                                    value="{{ old('content_writer_id') }}">
-                            </div>
-                            @error('content_writer_id')
-                                <p class="text-red-600 text-sm">{{ $message }}</p>
-                            @enderror
-                        </div> --}}
+                        <p class="text-sm text-gray-600">Content Writer</p>
+                        <div class="relative">
+                            <input type="text" id="selected-content-writer-name"
+                                value="{{ old('content_writer_id') ? ($contentworkers->firstWhere('id', old('content_writer_id'))->name ?? 'Select a Content Writer') : 'Select a Content Writer' }}"
+                                class="w-full border px-3 py-2  border-gray-200 rounded-lg cursor-pointer" readonly
+                                onclick="openContentWriterModal()">
+                            <input type="hidden" name="content_writer_id" id="selected-content-writer-id"
+                                value="{{ old('content_writer_id') }}">
+                        </div>
+                        @error('content_writer_id')
+                        <p class="text-red-600 text-sm">{{ $message }}</p>
+                        @enderror
+                    </div> --}}
 
                     <!-- Graphics Designer -->
                     {{-- <div class="col-span-2 lg:col-span-1 w-full">
-                            <p class="text-sm text-gray-600">Graphics Designer</p>
-                            <div class="relative">
-                                <input type="text" id="selected-graphic-designer-name"
-                                    value="{{ old('graphic_designer_id') ? ($graphicworkers->firstWhere('id', old('graphic_designer_id'))->name ?? 'Select a Graphics Designer') : 'Select a Graphics Designer' }}"
-                                    class="w-full border px-3 py-2  border-gray-200 rounded-lg cursor-pointer" readonly
-                                    onclick="openGraphicDesignerModal()">
-                                <input type="hidden" name="graphic_designer_id" id="selected-graphic-designer-id"
-                                    value="{{ old('graphic_designer_id') }}">
-                            </div>
-                            @error('graphic_designer_id')
-                                <p class="text-red-600 text-sm">{{ $message }}</p>
-                            @enderror
-                        </div> --}}
+                        <p class="text-sm text-gray-600">Graphics Designer</p>
+                        <div class="relative">
+                            <input type="text" id="selected-graphic-designer-name"
+                                value="{{ old('graphic_designer_id') ? ($graphicworkers->firstWhere('id', old('graphic_designer_id'))->name ?? 'Select a Graphics Designer') : 'Select a Graphics Designer' }}"
+                                class="w-full border px-3 py-2  border-gray-200 rounded-lg cursor-pointer" readonly
+                                onclick="openGraphicDesignerModal()">
+                            <input type="hidden" name="graphic_designer_id" id="selected-graphic-designer-id"
+                                value="{{ old('graphic_designer_id') }}">
+                        </div>
+                        @error('graphic_designer_id')
+                        <p class="text-red-600 text-sm">{{ $message }}</p>
+                        @enderror
+                    </div> --}}
 
                     <div class="col-span-2 grid grid-cols-2 w-full gap-4 rounded-lg">
                         <div>
@@ -179,7 +179,8 @@
                     <div class="col-span-2 h-fit w-full">
                         <p class="text-sm text-gray-600">Instructions</p>
                         <!-- CKEditor Textarea -->
-                        <textarea name="description" id="editor" class="w-full border-gray-200 rounded-lg">{{ old('description') }}</textarea>
+                        <textarea name="description" id="editor"
+                            class="w-full border-gray-200 rounded-lg">{{ old('description') }}</textarea>
                         @error('description')
                             <p class="text-red-600 text-sm">{{ $message }}</p>
                         @enderror
@@ -289,7 +290,8 @@
                             <tr class="border-b">
                                 <td class="px-4 md:px-6 py-3">{{ $content_writer->name }}</td>
                                 <td class="px-4 md:px-6 py-3">
-                                    {{ Str::title(str_replace('_', ' ', $content_writer->roles->position)) }}</td>
+                                    {{ Str::title(str_replace('_', ' ', $content_writer->roles->position)) }}
+                                </td>
                                 <td class="px-4 md:px-6 py-3 text-center">
                                     <button
                                         onclick="selectContentWriter('{{ $content_writer->id }}', '{{ $content_writer->name }}')"
@@ -351,7 +353,8 @@
                             <tr class="border-b">
                                 <td class="px-4 md:px-6 py-3">{{ $graphic_designer->name }}</td>
                                 <td class="px-4 md:px-6 py-3">
-                                    {{ Str::title(str_replace('_', ' ', $graphic_designer->roles->position)) }}</td>
+                                    {{ Str::title(str_replace('_', ' ', $graphic_designer->roles->position)) }}
+                                </td>
 
                                 <td class="px-4 md:px-6 py-3 text-center">
                                     <button
@@ -495,7 +498,7 @@
 </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const contentCheckbox = document.getElementById("content-checkbox");
         const contentInput = document.getElementById("selected-content-writer-name");
 
@@ -514,11 +517,11 @@
             }
         }
 
-        contentCheckbox.addEventListener("change", function() {
+        contentCheckbox.addEventListener("change", function () {
             toggleInput(contentCheckbox, contentInput, "openContentWriterModal");
         });
 
-        graphicCheckbox.addEventListener("change", function() {
+        graphicCheckbox.addEventListener("change", function () {
             toggleInput(graphicCheckbox, graphicInput, "openGraphicDesignerModal");
         });
 

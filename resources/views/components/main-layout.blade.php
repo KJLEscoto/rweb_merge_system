@@ -75,20 +75,19 @@
             audio.play();
 
             if (/declined/i.test(data.message)) {
-                toastr.error(data.message);
+                toastr.error(data.message); // Show error if "declined" is found in the message
             } else if (/approved/i.test(data.message)) {
-                toastr.success(data.message);
+                toastr.success(data.message); // Show success if "approved" is found in the message
+            } else if (/rejected/i.test(data.message)) {
+                toastr.error(data.message); // Show error (color red) if "rejected" is found in the message
             } else {
-
-                toastr.success(data.message);
+                toastr.success(data.message); // Default to success if no match is found
             }
         });
 
         alert(user_id)
     </script>
 </head>
-
-
 
 <body class="text-[#1f2835] tracking-wide bg-gray-100">
 
@@ -112,10 +111,12 @@
         </div>
 
         {{-- intern layout --}}
-    @elseif (Request::routeIs('users.dashboard*') ||
-            Request::routeIs('users.settings*') ||
-            Request::routeIs('users.dtr*') ||
-            Request::routeIs('users.request*'))
+    @elseif (
+    Request::routeIs('users.dashboard*') ||
+    Request::routeIs('users.settings*') ||
+    Request::routeIs('users.dtr*') ||
+    Request::routeIs('users.request*')
+)
         <div class="h-full w-full lg:grid lg:grid-cols-12">
             <section class="sticky h-auto lg:hidden top-0 w-full bg-white shadow-lg py-4 z-50">
                 <div class="flex items-center justify-between w-full lg:px-10 px-5 gap-5">
@@ -133,8 +134,8 @@
             </section>
 
             @php
-                $profile = \App\Models\Profile::where('id', Auth::user()->profile_id)->first();
-                $file = \App\Models\File::where('id', $profile->file_id)->first();
+    $profile = \App\Models\Profile::where('id', Auth::user()->profile_id)->first();
+    $file = \App\Models\File::where('id', $profile->file_id)->first();
             @endphp
 
             <!-- Sidebar Menu (Hidden on Large Screens) -->
@@ -333,15 +334,21 @@
                         <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
                             routeName="admin.web.dashboard" />
                     @endif
-                    @if (Auth::user()->role_channels->where(
-                                'page_id',
-                                \App\Models\Page::where('description', 'like', '%direct_job_order%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
+                    @if (
+            Auth::user()->role_channels->where(
+                'page_id',
+                \App\Models\Page::where('description', 'like', '%direct_job_order%')->first()->id
+            )->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first()
+        )
                         <x-admin.sidebar-menu icon="carbon--direction-loop-right-filled" label="Direct Job Order"
                             routeName="admin.web.direct-job-order" />
                     @endif
-                    @if (Auth::user()->role_channels->where(
-                                'page_id',
-                                \App\Models\Page::where('description', 'like', '%operation_job_order%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
+                    @if (
+            Auth::user()->role_channels->where(
+                'page_id',
+                \App\Models\Page::where('description', 'like', '%operation_job_order%')->first()->id
+            )->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first()
+        )
                         <x-admin.sidebar-menu icon="clarity--directory-solid-badged" label="Operation Job Order"
                             routeName="admin.web.operation-job-order" />
                     @endif
@@ -363,21 +370,30 @@
                         <x-admin.sidebar-menu icon="ic--round-date-range" label="Track"
                             routeName="admin.web.track" />
                     @endif
-                    @if (Auth::user()->role_channels->where(
-                                'page_id',
-                                \App\Models\Page::where('description', 'like', '%downloadables%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
+                    @if (
+            Auth::user()->role_channels->where(
+                'page_id',
+                \App\Models\Page::where('description', 'like', '%downloadables%')->first()->id
+            )->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first()
+        )
                         <x-admin.sidebar-menu icon="tdesign--file-download-filled" label="Downloadables"
                             routeName="admin.web.downloadables" />
                     @endif
-                    @if (Auth::user()->role_channels->where(
-                                'page_id',
-                                \App\Models\Page::where('description', 'like', '%instructions_manual%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
+                    @if (
+            Auth::user()->role_channels->where(
+                'page_id',
+                \App\Models\Page::where('description', 'like', '%instructions_manual%')->first()->id
+            )->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first()
+        )
                         <x-admin.sidebar-menu icon="streamline--manual-book-solid" label="Instructions Manual"
                             routeName="admin.web.instructions-manual" />
                     @endif
-                    @if (Auth::user()->role_channels->where(
-                                'page_id',
-                                \App\Models\Page::where('description', 'like', '%incoming_requests%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
+                    @if (
+            Auth::user()->role_channels->where(
+                'page_id',
+                \App\Models\Page::where('description', 'like', '%incoming_requests%')->first()->id
+            )->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first()
+        )
                         <x-admin.sidebar-menu icon="fa--user" label="Incoming Requests"
                             routeName="admin.web.incoming-requests" />
                     @endif
@@ -513,9 +529,12 @@
                         @if (Request::routeIs('admin.web*'))
                             <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
                                 routeName="admin.web.dashboard" />
-                            @if (Auth::user()->role_channels->where(
-                                        'page_id',
-                                        \App\Models\Page::where('description', 'like', '%direct_job_order%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
+                            @if (
+            Auth::user()->role_channels->where(
+                'page_id',
+                \App\Models\Page::where('description', 'like', '%direct_job_order%')->first()->id
+            )->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first()
+        )
                                 <x-admin.sidebar-menu icon="carbon--direction-loop-right-filled"
                                     label="Direct Job Order" routeName="admin.web.direct-job-order" />
                             @endif
@@ -775,203 +794,3 @@
 </body>
 
 </html>
-<script>
-    let notification_id = 0;
-
-    function openAllNotificationModal(notificationId, message, isRead, tab) {
-
-        const modal = document.getElementById("AllNotificationModal");
-        const messageElement = document.getElementById("allNotificationMessage");
-        const dateElement = document.getElementById("DateNotificationMessage");
-
-        if (!modal || !messageElement || !dateElement) {
-            console.error("Modal elements not found!");
-            return;
-        }
-
-        let text = message;
-
-        let msgText;
-        let dateText;
-
-        // Find the last occurrence of "DTR." and extract the message
-        let lastIndex = text.lastIndexOf("DTR.");
-
-        if (lastIndex !== -1) {
-            msgText = text.substring(0, lastIndex + 4); // Extracts from first word to "DTR."
-            dateText = text.substring(lastIndex + 5).trim(); // Extracts everything after "DTR."
-        }
-
-        messageElement.innerText = msgText;
-        dateElement.innerText = dateText;
-
-
-        // Show modal
-        modal.classList.remove("hidden");
-
-        if (!isRead) {
-            markAsRead(notificationId);
-        }
-    }
-
-    function openUnreadNotificationModal(notificationId, message, isRead, tab) {
-
-        const modal = document.getElementById("UnreadNotificationModal");
-        const messageElement = document.getElementById("unreadNotificationMessage");
-        const dateElement = document.getElementById("UnreadDateNotificationMessage");
-
-        if (!modal || !messageElement || !dateElement) {
-            console.error("Modal elements not found!");
-            return;
-        }
-
-        let text = message;
-
-        let msgText;
-        let dateText;
-
-        // Find the last occurrence of "DTR." and extract the message
-        let lastIndex = text.lastIndexOf("DTR.");
-
-
-        if (lastIndex !== -1) {
-            msgText = text.substring(0, lastIndex + 4); // Extracts from first word to "DTR."
-            dateText = text.substring(lastIndex + 5).trim(); // Extracts everything after "DTR."
-        }
-
-        messageElement.innerText = msgText;
-        dateElement.innerText = dateText;
-
-        // Show modal
-        modal.classList.remove("hidden");
-
-        if (!isRead) {
-            markAsRead(notificationId);
-        }
-
-    }
-
-    function openArchiveNotificationModal(notificationId, message, isRead, tab) {
-
-        const modal = document.getElementById("ArchiveNotificationModal");
-        const messageElement = document.getElementById("archiveNotificationMessage");
-        const dateElement = document.getElementById("ArchiveDateNotificationMessage");
-
-        if (!modal || !messageElement || !dateElement) {
-            console.error("Modal elements not found!");
-            return;
-        }
-
-        let text = message;
-
-        let msgText;
-        let dateText;
-
-        // Find the last occurrence of "DTR." and extract the message
-        let lastIndex = text.lastIndexOf("DTR.");
-
-        if (lastIndex !== -1) {
-            msgText = text.substring(0, lastIndex + 4); // Extracts from first word to "DTR."
-            dateText = text.substring(lastIndex + 5).trim(); // Extracts everything after "DTR."
-        }
-
-        messageElement.innerText = msgText;
-        dateElement.innerText = dateText;
-
-        // Show modal
-        modal.classList.remove("hidden");
-
-        if (!isRead) {
-            markAsRead(notificationId);
-        }
-
-    }
-
-    function closeAllNotificationModal() {
-        const modal = document.getElementById("AllNotificationModal");
-        if (modal) {
-            modal.classList.add("hidden");
-        }
-    }
-
-    function closeUnreadNotificationModal() {
-        const modal = document.getElementById("UnreadNotificationModal");
-        if (modal) {
-            modal.classList.add("hidden");
-        }
-    }
-
-    function closeArchiveNotificationModal() {
-        const modal = document.getElementById("ArchiveNotificationModal");
-        if (modal) {
-            modal.classList.add("hidden");
-        }
-    }
-
-
-
-    function showNotificationModal() {
-        window.location.href = '/admin/approvals';
-    }
-
-
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-
-    function markAsRead(notificationId) {
-        app_url = `{{ url('/notifications/${notificationId}/mark-as-read') }}`;
-        fetch(app_url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                },
-                body: JSON.stringify({})
-            })
-            .then(response => {
-
-                if (response.status === 200) {
-                    const notificationCount = document.getElementById('notification-count');
-                    if (notificationCount) {
-                        notificationCount.innerText = Math.max(0, parseInt(notificationCount.innerText) - 1);
-                    }
-                }
-            }).catch(error => console.error('Error:', error));
-    }
-
-    let app_url = '';
-
-    function archiveNotification(notificationId) {
-
-        app_url = `{{ url('/notifications/${notificationId}/archive') }}`;
-
-        fetch(app_url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                },
-                body: JSON.stringify({})
-            })
-            .then(response => {
-
-                if (response.status === 200) {
-                    location.reload();
-                }
-            }).catch(error => console.error('Error:', error));
-    }
-
-    // Ensure modals work in each tab
-    function attachClickHandlers() {
-        document.querySelectorAll(".notification-item").forEach(item => {
-            item.addEventListener("click", function() {
-                const id = this.getAttribute("data-id");
-                const message = this.getAttribute("data-message");
-                const isRead = this.getAttribute("data-is-read") === "true";
-                const tab = this.getAttribute("data-tab");
-                openNotificationModal(id, message, isRead, tab);
-            });
-        });
-    }
-
-    document.addEventListener("DOMContentLoaded", attachClickHandlers);
-</script>

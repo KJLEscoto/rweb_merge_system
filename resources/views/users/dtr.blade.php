@@ -205,8 +205,6 @@
 
         function requestPDF() {
 
-            debugger;
-
             console.log(month, year);
 
             var user_id = "{{ auth()->id() }}"; // Get logged-in user's ID
@@ -225,9 +223,11 @@
                         "X-CSRF-TOKEN": "{{ csrf_token() }}" // CSRF protection
                     },
                     body: JSON.stringify({
-                        to_user_role: 'admin',
+                        to_user_role: ['admin', 'top_manager', 'supervisor', 'operations'],
                         month: month,
                         year: year,
+                        title: 'Download Request',
+                        type: 'user.dtr.download.request',
                     })
                 })
                     .then(response => response.status)

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JobDraft;
 use App\Models\JobOrder;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SupervisorDirectJobOrderController extends Controller
@@ -78,7 +79,7 @@ class SupervisorDirectJobOrderController extends Controller
         ]);
 
         // Create job draft
-        JobDraft::create([
+        $job_draft = JobDraft::create([
             'job_order_id' => $job_order->id,
             'type' => $work_type,
             'date_started' => $request->date_started,
@@ -91,6 +92,22 @@ class SupervisorDirectJobOrderController extends Controller
             'supervisor_signed' => auth()->user()->id,
             'works' => $work
         ]);
+
+        $notificationController = new NotificationController();
+
+        //formulate the data in the notification
+        $request = new Request([
+            'job_order_id' => $job_draft->job_order_id,
+            'from_user_id' => auth()->user()->id,
+            'to_user_id' => ['content' => $content_writer_id, 'graphic' => $graphic_designer_id], // for multiple users
+            'title' => $job_order->title,
+            'type' => 'admin.smm.create.job-order',
+            'month' => Carbon::now()->format('m'), // 'm' gives zero-padded month (e.g., 03 for March)
+            'year' => Carbon::now()->format('Y'), // 'Y' gives full 4-digit year (e.g., 2025)
+            'message' => $job_order->description,
+        ]);
+
+        $notify = $notificationController->sendAdminNotification($request);
 
         return redirect()->route('admin.smm.supervisor.directjob')
             ->with('Status', 'Job Order Created Successfully');

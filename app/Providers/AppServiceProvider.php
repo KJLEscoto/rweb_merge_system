@@ -31,7 +31,9 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             $user = Auth::user(); // Get the logged-in user
 
-            if ($user && $user->id == 1) {
+            $higher_up_roles = ['admin', 'top_manager', 'operations', 'supervisor'];
+
+            if ($user && in_array($user->role, $higher_up_roles)) {
                 // Admin (ID = 1) sees all notifications
                 $notifications = Notification::with('users')->where('user_id', $user->id ?? 0)->get()->sortByDesc('created_at');
             } else {
@@ -157,7 +159,6 @@ class AppServiceProvider extends ServiceProvider
 
                 $view->with(compact('clientDraftCount', 'supervisorDraftCount', 'supervisorTaskCountContent', 'supervisorTaskCountGraphic', 'operationTaskCountGraphic', 'supervisorApprovalCount', 'operationTaskCountContent', 'operationIncomingRequestCount', 'operationApprovalCount', 'operationRevisionCount', 'contentDraftCount', 'contentRevisionCount', 'graphicDraftCount', 'graphicRevisionCount', 'topmanagerApprovalCount', 'revisionCount'))->with('notifications', $notifications);
             }
-
         });
     }
 }

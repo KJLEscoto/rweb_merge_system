@@ -115,6 +115,22 @@ class SupervisorApprovalController extends Controller
             ]);
         }
 
+        $notificationController = new NotificationController();
+
+        //formulate the data in the notification
+        $request = new Request([
+            'job_order_id' => $job_draft->job_order_id,
+            'from_user_id' => auth()->user()->id,
+            'to_user_id' => ['content' => auth()->user()->id], // for multiple users
+            'title' => $job_draft->jobOrder->title,
+            'type' => 'admin.smm.approved.job-order',
+            'month' => Carbon::now()->format('m'), // 'm' gives zero-padded month (e.g., 03 for March)
+            'year' => Carbon::now()->format('Y'), // 'Y' gives full 4-digit year (e.g., 2025)
+            'message' => $job_draft->draft,
+        ]);
+
+        $notify = $notificationController->sendAdminNotification($request);
+
         return redirect()->route('admin.smm.supervisor.approve')->with('Status', 'Job Order Approved Successfully');
     }
 
@@ -126,7 +142,6 @@ class SupervisorApprovalController extends Controller
 
     public function decline(Request $request, $id)
     {
-
         $request->validate([
             'summary' => 'required',
         ]);
@@ -147,6 +162,23 @@ class SupervisorApprovalController extends Controller
             'draft_op_sign' => null,
             'op_signed_draft' => null,
         ]);
+
+        $notificationController = new NotificationController();
+
+        //formulate the data in the notification
+        $request = new Request([
+            'job_order_id' => $job_draft->job_order_id,
+            'from_user_id' => auth()->user()->id,
+            'to_user_id' => ['content' => auth()->user()->id], // for multiple users
+            'title' => $job_draft->jobOrder->title,
+            'type' => 'admin.smm.rejected.job-order',
+            'month' => Carbon::now()->format('m'), // 'm' gives zero-padded month (e.g., 03 for March)
+            'year' => Carbon::now()->format('Y'), // 'Y' gives full 4-digit year (e.g., 2025)
+            'message' => $request->summary,
+        ]);
+
+        $notify = $notificationController->sendAdminNotification($request);
+
         return redirect()->route('admin.smm.supervisor.approve')->with('Status', 'Job Order Declined Successfully');
     }
 }

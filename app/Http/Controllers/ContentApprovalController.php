@@ -46,6 +46,22 @@ class ContentApprovalController extends Controller
             'status' => 'Submitted to Operations',
         ]);
 
+        $notificationController = new NotificationController();
+
+        //formulate the data in the notification
+        $request = new Request([
+            'job_order_id' => $job_draft->job_order_id,
+            'from_user_id' => auth()->user()->id,
+            'to_user_id' => ['content' => auth()->user()->id], // for multiple users
+            'title' => $job_draft->jobOrder->title,
+            'type' => 'admin.smm.task.job-order',
+            'month' => Carbon::now()->format('m'), // 'm' gives zero-padded month (e.g., 03 for March)
+            'year' => Carbon::now()->format('Y'), // 'Y' gives full 4-digit year (e.g., 2025)
+            'message' => $request->draft,
+        ]);
+
+        $notify = $notificationController->sendAdminNotification($request);
+
         return redirect()->route('admin.smm.content.approve')->with('Status', 'Draft Created Successfully');
     }
 
@@ -84,6 +100,22 @@ class ContentApprovalController extends Controller
             'signature_worker' => auth()->user()->signature,
             'worker_signed' => auth()->user()->id
         ]);
+
+        $notificationController = new NotificationController();
+
+        //formulate the data in the notification
+        $request = new Request([
+            'job_order_id' => $job_draft->job_order_id,
+            'from_user_id' => auth()->user()->id,
+            'to_user_id' => ['content' => auth()->user()->id], // for multiple users
+            'title' => $job_draft->jobOrder->title,
+            'type' => 'admin.smm.accept.job-order',
+            'month' => Carbon::now()->format('m'), // 'm' gives zero-padded month (e.g., 03 for March)
+            'year' => Carbon::now()->format('Y'), // 'Y' gives full 4-digit year (e.g., 2025)
+            'message' => $job_draft->jobOrder->description,
+        ]);
+
+        $notify = $notificationController->sendAdminNotification($request);
 
         return redirect()->route('admin.smm.content.approve')->with('Status', 'Job Order Accepted Successfully');
     }
