@@ -115,18 +115,15 @@
                             <div class="flex gap-4">
                                 <p class="text-sm text-gray-600">Person In Charge</p>
                             </div>
-                            @error('content_checkbox')
-                                <p class="text-red-600 text-sm">{{ $message }}</p>
-                            @enderror
                             <div class="relative">
                                 <input type="text" id="selected-content-writer-name"
-                                    value="{{ old('content_writer_id') ? $contentworkers->firstWhere('id', old('content_writer_id'))->name ?? 'Select a Content Writer' : 'Select a Content Writer' }}"
+                                    value="{{ old('person_in_charge') ? $contentworkers->firstWhere('id', old('person_in_charge'))->name ?? 'Select a Content Writer' : 'Select Person in charge' }}"
                                     class="w-full border px-3 py-2  border-gray-200 rounded-lg cursor-pointer" readonly
                                     onclick="openContentWriterModal()">
-                                <input type="hidden" name="content_writer_id" id="selected-content-writer-id"
-                                    value="{{ old('content_writer_id') }}">
+                                <input type="hidden" name="person_in_charge" id="selected-content-writer-id"
+                                    value="{{ old('person_in_charge') }}">
                             </div>
-                            @error('content_writer_id')
+                            @error('person_in_charge')
                                 <p class="text-red-600 text-sm">{{ $message }}</p>
                             @enderror
                         </div>
@@ -305,67 +302,7 @@
     </div>
 
 
-    <!-- Graphics Designer Modal -->
-    <div id="graphic-designer-modal"
-        class="fixed inset-0 bg-gray-900 px-4 md:px-20 z-50 bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white w-full max-w-sm md:max-w-lg lg:max-w-2xl px-5 pb-10 pt-5 rounded-lg">
-            <!-- Search & Close button -->
-            <div class="w-full flex md:flex-row justify-between items-center flex-col-reverse lg:flex-row gap-4 mb-4">
-                <div class="flex items-center w-full md:w-auto relative">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-500"></i>
-                    <input type="text" id="searchGraphicDesignerInput"
-                        class="w-full md:w-80 px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                        placeholder="Search..." onkeyup="filterGraphicDesignerTable()">
-                    <button class="absolute right-2 px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">
-                        <i class="fa-solid fa-filter"></i>
-                    </button>
-                </div>
-                <div class="w-full flex justify-end md:w-auto">
-                    <button onclick="closeGraphicDesignerModal()"
-                        class="bg-[#fa7011] text-white px-4 py-2 rounded w-fit">Close</button>
-                </div>
-            </div>
 
-            <!-- Table Container -->
-            <div class="overflow-x-auto w-full bg-white shadow-md rounded-lg max-h-[500px]">
-                <table class="w-full text-left border-collapse min-w-[300px] md:min-w-[500px]">
-                    <thead class="sticky top-0 bg-[#fa7011] text-white">
-                        <tr>
-                            <th class="px-4 md:px-6 py-3 w-24 md:w-32">Name</th>
-                            <th class="px-4 md:px-6 py-3 w-24 md:w-32">Role</th>
-                            <th class="px-4 md:px-6 py-3 w-24 md:w-32 text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="graphicDesignerTableBody">
-                        @forelse ($users as $graphic_designer)
-                            <tr class="border-b">
-                                <td class="px-4 md:px-6 py-3">{{ $graphic_designer->name }}</td>
-                                <td class="px-4 md:px-6 py-3">
-                                    {{ Str::title(str_replace('_', ' ', $graphic_designer->roles->position)) }}</td>
-
-                                <td class="px-4 md:px-6 py-3 text-center">
-                                    <button
-                                        onclick="selectGraphicDesigner('{{ $graphic_designer->id }}', '{{ $graphic_designer->name }}')"
-                                        class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
-                                        Select
-                                    </button>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr class="h-[400px]">
-                                <td colspan="3" class="px-6 py-3">
-                                    <div class="flex h-full items-center justify-center">
-                                        <i class="far fa-grin-beam-sweat"></i>
-                                        No Data Found
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
 
 
 </x-main-layout>
