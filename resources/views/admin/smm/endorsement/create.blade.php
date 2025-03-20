@@ -156,7 +156,7 @@
                     <div class="col-span-2 h-fit w-full">
                         <p class="text-sm text-gray-600">Project Scope</p>
                         <!-- CKEditor Textarea -->
-                        <textarea name="project-scope" id="project-scope" class="w-full border-gray-200 rounded-lg">{{ old('project-scope') }}</textarea>
+                        <textarea name="project_scope" id="project-scope" class="w-full border-gray-200 rounded-lg">{{ old('project-scope') }}</textarea>
                         @error('project-scope')
                             <p class="text-red-600 text-sm">{{ $message }}</p>
                         @enderror
