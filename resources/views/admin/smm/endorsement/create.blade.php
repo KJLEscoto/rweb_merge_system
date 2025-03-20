@@ -117,7 +117,7 @@
                             </div>
                             <div class="relative">
                                 <input type="text" id="selected-content-writer-name"
-                                    value="{{ old('person_in_charge') ? $contentworkers->firstWhere('id', old('person_in_charge'))->name ?? 'Select a Content Writer' : 'Select Person in charge' }}"
+                                    value="{{ old('person_in_charge') ? $users->firstWhere('id', old('person_in_charge'))->name ?? 'Select a Content Writer' : 'Select Person in charge' }}"
                                     class="w-full border px-3 py-2  border-gray-200 rounded-lg cursor-pointer" readonly
                                     onclick="openContentWriterModal()">
                                 <input type="hidden" name="person_in_charge" id="selected-content-writer-id"
@@ -156,8 +156,8 @@
                     <div class="col-span-2 h-fit w-full">
                         <p class="text-sm text-gray-600">Project Scope</p>
                         <!-- CKEditor Textarea -->
-                        <textarea name="project_scope" id="project-scope" class="w-full border-gray-200 rounded-lg">{{ old('project-scope') }}</textarea>
-                        @error('project-scope')
+                        <textarea name="project_scope" id="project-scope" class="w-full border-gray-200 rounded-lg">{{ old('project_scope') }}</textarea>
+                        @error('project_scope')
                             <p class="text-red-600 text-sm">{{ $message }}</p>
                         @enderror
                     </div>
