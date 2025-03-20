@@ -86,9 +86,12 @@ class ProjectEndorsementFormController extends Controller
      * @param  \App\Models\ProjectEndorsementForm  $projectEndorsementForm
      * @return \Illuminate\Http\Response
      */
-    public function edit(ProjectEndorsementForm $projectEndorsementForm)
+    public function edit($id)
     {
-        //
+        $endorsement = ProjectEndorsementForm::with('client', 'notedBy', 'personInCharge', 'approvedBy')->find($id);
+        $clients = User::where('role_id', 1)->get();
+        $users = User::all();
+        return view('admin.smm.endorsement.edit', compact('endorsement', 'clients', 'users'));
     }
 
     /**
@@ -98,10 +101,34 @@ class ProjectEndorsementFormController extends Controller
      * @param  \App\Models\ProjectEndorsementForm  $projectEndorsementForm
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ProjectEndorsementForm $projectEndorsementForm)
+    public function update(Request $request, $id)
     {
-        //
+        // Validate request before proceeding
+        $request->validate([
+            'title' => 'required',
+            'client_id' => 'required',
+            'person_in_charge' => 'required',
+            'project_scope' => 'required',
+            'timeline' => 'required',
+            'deliverables' => 'required',
+        ]);
+
+        // Find the existing Project Endorsement Form
+        $endorsementForm = ProjectEndorsementForm::findOrFail($id);
+
+        // Update the fields
+        $endorsementForm->update([
+            'title' => $request->title,
+            'client_id' => $request->client_id,
+            'person_in_charge' => $request->person_in_charge,
+            'project_scope' => $request->project_scope,
+            'timeline' => $request->timeline,
+            'deliverables' => $request->deliverables
+        ]);
+
+        return redirect()->route('admin.smm.endorsement')->with('success', 'Project Endorsement Form Updated Successfully!');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -109,9 +136,10 @@ class ProjectEndorsementFormController extends Controller
      * @param  \App\Models\ProjectEndorsementForm  $projectEndorsementForm
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProjectEndorsementForm $projectEndorsementForm)
+    public function destroy($id)
     {
-        //
+        ProjectEndorsementForm::findOrFail($id)->delete();
+        return redirect()->back()->with('Success', 'Endorsement Deleted Successfully');
     }
 
     public function approve($id)

@@ -133,6 +133,9 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
     Route::get('endorsement/create', [ProjectEndorsementFormController::class, 'create'])->name('admin.smm.endorsement.create');
     Route::post('endorsement/store', [ProjectEndorsementFormController::class, 'store'])->name('admin.smm.endorsement.store');
     Route::get('endorsement/{id}/show', [ProjectEndorsementFormController::class, 'show'])->name('admin.smm.endorsement.show');
+    Route::get('endorsement/{id}/edit', [ProjectEndorsementFormController::class, 'edit'])->name('admin.smm.endorsement.edit');
+    Route::put('endorsement/{id}/update', [ProjectEndorsementFormController::class, 'update'])->name('admin.smm.endorsement.update');
+    Route::delete('endorsement/{id}/destroy', [ProjectEndorsementFormController::class, 'destroy'])->name('admin.smm.endorsement.destroy');
 
     Route::put('endorsement/{id}/approve', [ProjectEndorsementFormController::class, 'approve'])->name('admin.smm.endorsement.approve');
   });

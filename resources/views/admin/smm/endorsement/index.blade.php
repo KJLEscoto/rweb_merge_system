@@ -71,7 +71,7 @@
                             @endif
 
                             @if (Auth::user()->role_id == 12)
-                                <a href="{{ url('admin/smm/supervisor/directjob/edit/' . $endorsement->id) }}">
+                                <a href="{{ route('admin.smm.endorsement.edit', $endorsement->id) }}">
                                     <button
                                         class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white {{ $endorsement->status === 'pending' || $endorsement->status === 'Waiting for Content Writer Approval' || $endorsement->status === 'Waiting for Graphic Designer Approval' ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-400 cursor-not-allowed' }} rounded "
                                         {{ $endorsement->status === 'pending' || $endorsement->status === 'Waiting for Content Writer Approval' || $endorsement->status === 'Waiting for Graphic Designer Approval' ? '' : 'disabled' }}>
@@ -86,12 +86,16 @@
                                 </button>
                             </a>
                             @if (Auth::user()->role_id == 12)
-                                <a href="{{ url('admin/smm/supervisor/directjob/show/' . $endorsement->id) }}">
-                                    <button
+                                <form action="{{ route('admin.smm.endorsement.destroy', $endorsement->id) }}"
+                                    method="POST"
+                                    onsubmit="return confirm('Are you sure you want to delete this endorsement?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
                                         class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-red-700 rounded hover:bg-red-800">
                                         Delete
                                     </button>
-                                </a>
+                                </form>
                             @endif
                         </td>
                     </tr>
