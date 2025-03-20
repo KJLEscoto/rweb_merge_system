@@ -77,7 +77,7 @@
                 <section id="tab-content-all" class="divide-y divide-gray-100 w-full h-60 overflow-auto">
                     @forelse ($notifications->where('is_archive', 0) as $notification)
                         <div class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
                             onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-all')">
 
                             <div class="flex items-center gap-3 w-2/3">
@@ -127,7 +127,8 @@
                         <div
                             class="lg:!w-1/3 md:w-1/2 w-full flex flex-col p-10 gap-5 bg-white rounded-2xl transition ease-in duration-500">
                             <div class="flex w-full flex-col items-start gap-3 text-wrap">
-                                <x-page-title name="title" title="{{$notification->title}}" titleClass="text-xl" />
+                                <x-page-title name="title" title="{{$notification->title ?? 'No Title'}}"
+                                    titleClass="text-xl" />
                                 <p id="allNotificationMessage" class="text-gray-800 w-full text-wrap">
                                 <p class="text-sm font-semibold text-gray-600">Requested DTR:
                                     <span id="DateNotificationMessage"
@@ -152,7 +153,7 @@
                 <section id="tab-content-unread" class="hidden divide-y divide-gray-100 w-full h-60 overflow-auto">
                     @forelse ($notifications->where('is_read', 0)->where('is_archive', 0) as $notification)
                         <div class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
                             onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-unread')">
                             <div class="flex items-center gap-3 w-2/3">
                                 <div class="w-auto h-auto">
@@ -201,7 +202,7 @@
                         <div
                             class="lg:!w-1/3 md:w-1/2 w-full flex flex-col p-10 gap-5 bg-white rounded-2xl transition ease-in duration-500">
                             <div class="flex w-full flex-col items-start gap-3 text-wrap">
-                                <x-page-title title="{{$notification->title}}" titleClass="text-xl" />
+                                <x-page-title title="{{$notification->title ?? 'No Title'}}" titleClass="text-xl" />
                                 <p id="unreadNotificationMessage" class="text-gray-800 w-full text-wrap">
                                 <p class="text-sm font-semibold text-gray-600">Requested DTR:
                                     <span id="UnreadDateNotificationMessage"
@@ -226,7 +227,7 @@
                 <section id="tab-content-archived" class="hidden divide-y divide-gray-100 w-full h-60 overflow-auto">
                     @forelse ($notifications->where('is_archive', 1) as $notification)
                         <div class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
                             onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-archive')">
                             <div class="flex items-center gap-3 w-2/3">
                                 <div class="h-auto w-auto">
@@ -264,7 +265,7 @@
                     <div
                         class="lg:!w-1/3 md:w-1/2 w-full flex flex-col p-10 gap-5 bg-white rounded-2xl transition ease-in duration-500">
                         <div class="flex w-full flex-col items-start gap-3 text-wrap">
-                            <x-page-title title="{{$notification->title}}" titleClass="text-xl" />
+                            <x-page-title title="{{$notification->title ?? 'No Title'}}" titleClass="text-xl" />
                             <p id="archiveNotificationMessage" class="text-gray-800 w-full text-wrap">
                             <p class="text-sm font-semibold text-gray-600">Requested DTR: <span
                                     id="ArchiveDateNotificationMessage"
