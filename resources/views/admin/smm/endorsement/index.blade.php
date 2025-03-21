@@ -46,8 +46,8 @@
                 <tr>
                     <th class="px-4 py-3">Title</th>
                     <th class="px-4 py-3">Client</th>
-                    <th class="px-4 py-3 text-center">Status</th>
-                    <th class="px-4 py-3 text-center">Actions</th>
+                    <th class="px-4 py-3">Status</th>
+                    <th class="px-4 py-3">Actions</th>
                 </tr>
             </thead>
             <tbody id="tableBody" class="overflow-y-auto">
@@ -56,7 +56,7 @@
                         <td class="px-4 py-3">{{ $endorsement->title }}</td>
                         <td class="px-4 py-3">{{ $endorsement->client->name }}</td>
                         <td class="px-4 py-3">{{ $endorsement->status }}</td>
-                        <td class="px-4 py-3 text-center">
+                        <td class="px-4 py-3 flex gap-2">
                             @if (Auth::user()->role_id != 12)
                                 <form action="{{ route('admin.smm.endorsement.approve', $endorsement->id) }}"
                                     method="POST" class="inline-block">

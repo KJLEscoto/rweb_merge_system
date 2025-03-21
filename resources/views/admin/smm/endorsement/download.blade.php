@@ -1,35 +1,6 @@
-{{-- @extends('layouts.application') --}}
-
-@section('title', 'Endorsement')
-@section('header', 'Endorsement Letter')
-
-{{-- @section('content') --}}
-<script src="https://cdn.tailwindcss.com"></script>
 
 <head>
-    <title>{{ env('APP_NAME') }} | SMM | Endorsement Letter</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <style>
-        .custom-shadow {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .3);
-        }
-
-        .custom-hover-shadow:hover {
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0), 0 4px 6px rgba(0, 0, 0, 0);
-            transition: box-shadow 0.3s ease;
-        }
-
-        .custom-focus-ring:focus {
-            outline: none;
-            box-shadow: 0 0 0 1px #fa7011;
-            transition: box-shadow 0.3s ease;
-        }
-    </style>
-
-    <!-- CKEditor 5 Classic -->
-    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
     <style>
         .header,
         .footer {
@@ -68,6 +39,12 @@
             text-align: center;
         }
 
+        .black-line {
+            background-color: #000000;
+            height: 2px;
+            text-align: center;
+        }
+
         .section {
             border: 1px solid black;
         }
@@ -94,22 +71,12 @@
     </style>
 </head>
 
-<x-main-layout breadcumb="SMM / Direct Job Order" page="Show Direct Job Order">
 
 
     <div id="container-pdf">
-
-        <div class="w-full flex justify-between">
-            <div class="bg-[#fa7011] text-white rounded-md px-3 py-1 w-fit mb-4">
-                <a href="{{ route('admin.smm.endorsement') }}">Back</a>
-            </div>
-            <div class="bg-green-600 text-white rounded-md px-3 py-1 w-fit mb-4">
-                <a href="{{ route('endorsement.download', $endorsement->id) }}"><span><i class="fas fa-download"></i></span> Download</a>
-            </div>
-        </div>
         <div class="header">
-            <img src="{{ asset('/Assets/doc_header.png') }}" alt="Header">
-            <h2>Operation Job Order Form</h2>
+            <img src="{{ public_path('/Assets/doc_header.png') }}" alt="Header">
+            <h2>Endorsement Form</h2>
         </div>
 
         <div class="section">
@@ -149,6 +116,7 @@
                     {!! $endorsement->timeline !!}
                 </div>
             </div>
+            <div class="black-line"></div>
             <div class="section-remarks">
                 <strong>Deliverables:</strong>
                 <div
@@ -160,7 +128,7 @@
                 <tr>
                     <td class="signature">
                         <strong>Prepared By: <br />{{ Auth::user()->name }}</strong><br>
-                        <img src="{{ asset(Auth::user()->signature) }}" alt="Supervisor Signature">
+                        <img src="{{ public_path(Auth::user()->signature) }}" alt="Supervisor Signature">
                     </td>
                     <td class="signature">
 
@@ -170,7 +138,7 @@
                             @endif
                         </strong><br>
                         @if (isset($endorsement->notedBy) && isset($endorsement->notedBy->signature))
-                            <img src="{{ asset($endorsement->notedBy->signature) }}" alt="Supervisor Signature">
+                            <img src="{{ public_path($endorsement->notedBy->signature) }}" alt="Supervisor Signature">
                         @endif
 
                     </td>
@@ -187,7 +155,7 @@
                             @endif
                         </strong><br>
                         @if (isset($endorsement->approvedBy->signature))
-                            <img src="{{ asset($endorsement->approvedBy->signature) }}" alt="Top Manager Signature">
+                            <img src="{{ public_path($endorsement->approvedBy->signature) }}" alt="Top Manager Signature">
                         @endif
 
                     </td>
@@ -200,10 +168,9 @@
         </div>
 
         <div class="footer">
-            <img src="{{ asset('/Assets/doc_footer.png') }}" alt="Footer">
+            <img src="{{ public_path('/Assets/doc_footer.png') }}" alt="Footer">
         </div>
     </div>
 
 
-</x-main-layout>
-{{-- @endsection --}}
+
