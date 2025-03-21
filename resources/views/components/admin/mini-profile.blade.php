@@ -81,7 +81,7 @@
                 <section id="tab-content-all" class="divide-y divide-gray-100 w-full h-60 overflow-auto">
                     @forelse ($notifications->where('is_archive', 0) as $notification)
                         <div class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
                             onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-all', '{{ addslashes($notification->type) }}', '{{ addslashes($notification->title) }}')">
 
                             <div class="flex items-center gap-3 w-2/3">
@@ -131,8 +131,13 @@
                         <div
                             class="lg:!w-1/3 md:w-1/2 w-full flex flex-col p-10 gap-5 bg-white rounded-2xl transition ease-in duration-500">
                             <div class="flex w-full flex-col items-start gap-3 text-wrap">
-                                <x-page-title name="title" id="pageTitle"
-                                    title="{{ $notification->title ?? 'No Title' }}" titleClass="text-xl" />
+                                <div class="flex items-center gap-2 select-none">
+                                    <x-image path="resources/img/vector_icon.png" className="w-auto h-5" />
+                                    <h1 id="pageTitle"
+                                        class="lg:!text-xl sm:!text-base text-sm font-semibold text-[#F53C11] uppercase">
+                                        No Title
+                                    </h1>
+                                </div>
                                 <p id="allNotificationMessage" class="text-gray-800 w-full text-wrap">
                                 <p id="ContainerDateNotificationMessage" class="text-sm font-semibold text-gray-600">
                                     Requested DTR:
@@ -159,7 +164,7 @@
                 <section id="tab-content-unread" class="hidden divide-y divide-gray-100 w-full h-60 overflow-auto">
                     @forelse ($notifications->where('is_read', 0)->where('is_archive', 0) as $notification)
                         <div class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
                             onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-unread', '{{ addslashes($notification->type) }}', '{{ addslashes($notification->title) }}')">
                             <div class="flex items-center gap-3 w-2/3">
                                 <div class="w-auto h-auto">
@@ -208,10 +213,17 @@
                         <div
                             class="lg:!w-1/3 md:w-1/2 w-full flex flex-col p-10 gap-5 bg-white rounded-2xl transition ease-in duration-500">
                             <div class="flex w-full flex-col items-start gap-3 text-wrap">
-                                <x-page-title id="pageTitle" title="{{ $notification->title ?? 'No Title' }}"
-                                    titleClass="text-xl" />
+                                <div class="flex items-center gap-2 select-none">
+                                    <x-image path="resources/img/vector_icon.png" className="w-auto h-5" />
+                                    <h1 id="unReadPageTitle"
+                                        class="lg:!text-xl sm:!text-base text-sm font-semibold text-[#F53C11] uppercase">
+                                        No Title
+                                    </h1>
+                                </div>
                                 <p id="unreadNotificationMessage" class="text-gray-800 w-full text-wrap">
-                                <p class="text-sm font-semibold text-gray-600">Requested DTR:
+                                <p id="UnreadContainerDateNotificationMessage"
+                                    class="text-sm font-semibold text-gray-600">
+                                    Requested DTR:
                                     <span id="UnreadDateNotificationMessage"
                                         class="text-[#F57D11] font-semibold text-base">date
                                         here</span>
@@ -234,7 +246,7 @@
                 <section id="tab-content-archived" class="hidden divide-y divide-gray-100 w-full h-60 overflow-auto">
                     @forelse ($notifications->where('is_archive', 1) as $notification)
                         <div class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
                             onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-archive', '{{ addslashes($notification->type) }}', '{{ addslashes($notification->title) }}')">
                             <div class="flex items-center gap-3 w-2/3">
                                 <div class="h-auto w-auto">
@@ -272,13 +284,20 @@
                     <div
                         class="lg:!w-1/3 md:w-1/2 w-full flex flex-col p-10 gap-5 bg-white rounded-2xl transition ease-in duration-500">
                         <div class="flex w-full flex-col items-start gap-3 text-wrap">
-                            <x-page-title id="pageTitle" title="{{ $notification->title ?? 'No Title' }}"
-                                titleClass="text-xl" />
+                            <div class="flex items-center gap-2 select-none">
+                                <x-image path="resources/img/vector_icon.png" className="w-auto h-5" />
+                                <h1 id="archivePageTitle"
+                                    class="lg:!text-xl sm:!text-base text-sm font-semibold text-[#F53C11] uppercase">
+                                    No Title
+                                </h1>
+                            </div>
                             <p id="archiveNotificationMessage" class="text-gray-800 w-full text-wrap">
-                            <p class="text-sm font-semibold text-gray-600">Requested DTR: <span
-                                    id="ArchiveDateNotificationMessage"
+                            <p id="ArchiveContainerDateNotificationMessage" class="text-sm font-semibold text-gray-600">
+                                Requested DTR:
+                                <span id="ArchiveDateNotificationMessage"
                                     class="text-[#F57D11] font-semibold text-base">date
-                                    here</span></p>
+                                    here</span>
+                            </p>
                             {{-- <p id="dateMessage" class="mt-2 text-gray-600 w-full text-wrap">
                                 date here
                             </p> --}}
@@ -670,28 +689,31 @@
 
             let modal, messageElement, dateElement, pageTitleElement, titleAttribute;
 
+            debugger
 
             if (tab === 'tab-all') {
                 modal = document.getElementById('AllNotificationModal');
                 messageElement = document.getElementById('allNotificationMessage');
                 dateElement = document.getElementById('DateNotificationMessage');
+                pageTitleElement = document.getElementById('pageTitle');
                 containerDateElement = document.getElementById('ContainerDateNotificationMessage');
                 console.log("Tab is 'tab-all'. Modal:", modal, "Message Element:", messageElement, "Date Element:", dateElement);
             } else if (tab === 'tab-unread') {
                 modal = document.getElementById('UnreadNotificationModal');
                 messageElement = document.getElementById('unreadNotificationMessage');
                 dateElement = document.getElementById('UnreadDateNotificationMessage');
-                containerDateElement = document.getElementById('ContainerDateNotificationMessage');
+                pageTitleElement = document.getElementById('unReadPageTitle');
+                containerDateElement = document.getElementById('UnreadContainerDateNotificationMessage');
                 console.log("Tab is 'tab-unread'. Modal:", modal, "Message Element:", messageElement, "Date Element:", dateElement);
             } else if (tab === 'tab-archive') {
                 modal = document.getElementById('ArchiveNotificationModal');
                 messageElement = document.getElementById('archiveNotificationMessage');
                 dateElement = document.getElementById('ArchiveDateNotificationMessage');
-                containerDateElement = document.getElementById('ContainerDateNotificationMessage');
+                pageTitleElement = document.getElementById('archivePageTitle');
+                containerDateElement = document.getElementById('ArchiveContainerDateNotificationMessage');
                 console.log("Tab is 'tab-archive'. Modal:", modal, "Message Element:", messageElement, "Date Element:", dateElement);
             }
-
-            if (modal && messageElement && dateElement) {
+            if (modal && messageElement) {
                 console.log("Modal and elements found.");
                 console.log("Notifications array:", notifications);
 
@@ -699,6 +721,7 @@
                 console.log("Found notification:", notification);
 
                 if (notification) {
+                    pageTitleElement.innerHTML = notification.title;
                     messageElement.textContent = notification.message;
                     console.log("Notification message:", notification.message);
 
