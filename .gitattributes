@@ -1,0 +1,11 @@
+* text=auto
+*.blade.php diff=html
+*.css diff=css
+*.html diff=html
+*.md diff=markdown
+*.php diff=php
+/.github export-ignore
+CHANGELOG.md export-ignore
+.styleci.yml export-ignore
+database.zip filter=lfs diff=lfs merge=lfs -text
+.git123 filter=lfs diff=lfs merge=lfs -text
