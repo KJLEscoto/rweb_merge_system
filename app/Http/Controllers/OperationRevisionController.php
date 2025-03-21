@@ -41,7 +41,7 @@ class OperationRevisionController extends Controller
         ]);
         $job_draft = JobDraft::find($id);
         $job_draft->update([
-            'status' => 'Submitted to Operations',
+            'status' => 'Submitted to Assistant Supervisor',
             'draft' => $request->draft
         ]);
 

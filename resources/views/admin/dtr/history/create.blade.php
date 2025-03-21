@@ -63,8 +63,8 @@
                         $not_intern_roles = [
                             'admin',
                             'assistant_supervisor',
-                            'top_manager',
-                            'supervisor',
+                            'top_management',
+                            'operations_supervisor',
                             'content_writer',
                             'accounting',
                             'graphic_designer',

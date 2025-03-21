@@ -45,7 +45,7 @@
         <div class="flex justify-between items-center gap-4 px-10">
             <a class="cursor-pointer" id="pendingBtn" onclick="filterByStatus('pending')">Pending</a>
             <a class="cursor-pointer" id="submittedBtn"
-                onclick="filterByStatus('submitted to operations')">Submitted</a>
+                onclick="filterByStatus('Submitted to Assistant Supervisor')">Submitted</a>
             <a class="cursor-pointer" id="allBtn" onclick="filterByStatus('all')">All</a>
         </div>
     </div>
@@ -87,10 +87,13 @@
                                         : 'bg-[#fa6e117e]') }} ">
                                 {{ ucfirst($job_draft->status) }}
                                 <br />
-                                @if ($job_draft->date_target < now()) <!-- Check if deadline has passed -->
-                                    <span class="text-sm font-bold text-red-500">{{ $job_draft->date_target }} LATE</span>
+                                @if ($job_draft->date_target < now())
+                                    <!-- Check if deadline has passed -->
+                                    <span class="text-sm font-bold text-red-500">{{ $job_draft->date_target }}
+                                        LATE</span>
                                 @else
-                                    <span class="text-sm font-bold text-green-500">{{ $job_draft->date_target }} ONGOING</span>
+                                    <span class="text-sm font-bold text-green-500">{{ $job_draft->date_target }}
+                                        ONGOING</span>
                                 @endif
                             </p>
                         </td>
@@ -125,7 +128,7 @@
                                         Show
                                     </button>
                                 </a>
-                            @elseif ($job_draft->status == 'Submitted to Operations')
+                            @elseif ($job_draft->status == 'Submitted to Assistant Supervisor')
                                 <a href="{{ url('admin/smm/supervisor/task/edit/' . $job_draft->id) }}">
                                     <button
                                         class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-blue-500 rounded hover:bg-blue-600">
@@ -221,7 +224,7 @@
         // Add active class to the clicked button
         if (status === 'pending') {
             document.getElementById('pendingBtn').classList.add('border-b', 'border-[#fa7011]');
-        } else if (status === 'submitted to operations') {
+        } else if (status === 'Submitted to Assistant Supervisor') {
             document.getElementById('submittedBtn').classList.add('border-b', 'border-[#fa7011]');
         } else if (status === 'all') {
             document.getElementById('allBtn').classList.add('border-b', 'border-[#fa7011]');

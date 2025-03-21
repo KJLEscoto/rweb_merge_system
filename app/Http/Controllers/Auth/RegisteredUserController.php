@@ -113,8 +113,8 @@ class RegisteredUserController extends Controller
 
             // Define role groups
             $top_management_role = [
-                'top_manager',
-                'supervisor',
+                'top_management',
+                'operations_supervisor',
                 'assistant_supervisor',
             ];
 
@@ -127,8 +127,8 @@ class RegisteredUserController extends Controller
 
             // Define accessible pages per role
             $role_pages = [
-                'top_manager' => Page::all(),
-                'supervisor' => Page::all(),
+                'top_management' => Page::all(),
+                'operations_supervisor' => Page::all(),
                 'assistant_supervisor' => [
                     'dashboard',
                     'task',
@@ -163,7 +163,7 @@ class RegisteredUserController extends Controller
                     $pages = Page::whereIn('description', $role_pages[$user->role])->get();
                     $privileges = Privilege::all();
                 } else {
-                    // If the role gets all pages (top managers & supervisors)
+                    // If the role gets all pages (Top Managements & supervisors)
                     $pages = Page::all();
                     $privileges = Privilege::all();
                 }

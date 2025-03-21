@@ -29,7 +29,7 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 </head>
 
-<x-main-layout breadcumb="SMM / List Top Manager" page="Decline">
+<x-main-layout breadcumb="SMM / List Top Management" page="Decline">
 
     <div class="h-full mx-auto max-w-screen-xl">
         {{-- Middle Part --}}

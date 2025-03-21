@@ -451,8 +451,8 @@
                 </button>
             </form>
         </div>
-    @elseif ($link === 'top_manager')
-        {{-- Top Manager Sidebar Menu --}}
+    @elseif ($link === 'top_management')
+        {{-- Top Management Sidebar Menu --}}
         <div class="block px-6">
             <a href="{{ url('/admin/smm/dashboard') }}"
                 class="p-2 flex items-center w-full gap-2 rounded-md {{ request()->is('dashboard', 'dashboard/*') ? 'bg-[#f68e12] text-white font-bold' : 'hover:bg-gray-200 transition-all' }}"
@@ -540,7 +540,7 @@
                 </button>
             </form>
         </div>
-    @elseif ($link == 'supervisor')
+    @elseif ($link == 'operations_supervisor')
         {{-- Supervisor Sidebar Menu --}}
         <div class="block px-6">
             <a href="{{ url('/admin/smm/dashboard') }}"

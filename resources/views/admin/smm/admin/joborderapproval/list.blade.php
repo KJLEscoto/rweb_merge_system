@@ -62,8 +62,7 @@
             </thead>
             <tbody id="tableBody">
                 @forelse ($job_drafts as $job_draft)
-                    <tr class="project-row border-b "
-                        data-status="{{ strtolower($job_draft->status) }}"
+                    <tr class="project-row border-b " data-status="{{ strtolower($job_draft->status) }}"
                         data-title="{{ strtolower($job_draft->jobOrder->title) }}"
                         data-designated="{{ strtolower($job_draft->type == 'content_writer' ? 'content writer - ' . $job_draft->contentWriter->name : 'graphic designer - ' . $job_draft->graphicDesigner->name) }}">
                         <td class="w-[25%] px-2 sm:px-4 py-2 sm:py-3 truncate">{{ $job_draft->jobOrder->title }}
@@ -76,11 +75,14 @@
                             @endif
                         </td>
                         <td class="w-[20%] px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">
-                            @if ($job_draft->date_target < now()) <!-- Check if deadline has passed -->
+                            @if ($job_draft->date_target < now())
+                                <!-- Check if deadline has passed -->
                                 <span class="text-sm font-bold text-red-500">{{ $job_draft->date_target }} LATE</span>
                             @else
-                                <span class="text-sm font-bold text-green-500">{{ $job_draft->date_target }} ONGOING</span>
-                            @endif</td>
+                                <span class="text-sm font-bold text-green-500">{{ $job_draft->date_target }}
+                                    ONGOING</span>
+                            @endif
+                        </td>
                         <td class="w-[15%] px-2 sm:px-4 py-2 sm:py-3 text-center text-white">
                             <p
                                 class="w-full px-2 py-1 rounded-lg text-wrap
@@ -95,8 +97,8 @@
                         <td class="w-[15%] px-2 sm:px-4 py-2 sm:py-3 text-center border-b">
                             <a href="{{ url('admin/smm/operation/show/' . $job_draft->id) }}">
                                 <button
-                                    class="px-2 sm:px-3 py-1 sm:py-2  text-white  rounded whitespace-nowrap {{ $job_draft->status !== 'Submitted to Operations' ? 'cursor-not-allowed bg-gray-400' : 'bg-green-500 hover:bg-green-600' }}"
-                                    {{ $job_draft->status !== 'Submitted to Operations' ? 'disabled' : '' }}>
+                                    class="px-2 sm:px-3 py-1 sm:py-2  text-white  rounded whitespace-nowrap {{ $job_draft->status !== 'Submitted to Assistant Supervisor' ? 'cursor-not-allowed bg-gray-400' : 'bg-green-500 hover:bg-green-600' }}"
+                                    {{ $job_draft->status !== 'Submitted to Assistant Supervisor' ? 'disabled' : '' }}>
                                     View Form
                                 </button>
                             </a>
@@ -149,13 +151,14 @@
         rows.forEach(row => {
             let rowStatus = row.getAttribute("data-status");
 
-            // Pending: Only "Submitted to Operations"
+            // Pending: Only "Submitted to Assistant Supervisor"
             if (status === 'pending') {
-                row.style.display = (rowStatus === 'submitted to operations') ? "" : "none";
+                row.style.display = (rowStatus === 'Submitted to Assistant Supervisor') ? "" : "none";
             }
-            // Submitted: All except "Revision" and "Submitted to Operations"
+            // Submitted: All except "Revision" and "Submitted to Assistant Supervisor"
             else if (status === 'submitted') {
-                row.style.display = (rowStatus !== 'revision' && rowStatus !== 'submitted to operations') ? "" :
+                row.style.display = (rowStatus !== 'revision' && rowStatus !==
+                        'Submitted to Assistant Supervisor') ? "" :
                     "none";
             }
             // All: All except "Revision"

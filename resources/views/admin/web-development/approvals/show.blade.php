@@ -72,11 +72,11 @@
                 <div class="lg:col-span-4">
                     @php
                         switch (Auth::user()->roles->position) {
-                            case 'supervisor':
-                                $isDisabled = $web_project_channel->status != 'Submitted to Supervisor';
+                            case 'operations_supervisor':
+                                $isDisabled = $web_project_channel->status != 'Submitted to Operations Supervisor';
                                 break;
-                            case 'top_manager':
-                                $isDisabled = $web_project_channel->status != 'Submitted to Top Manager';
+                            case 'top_management':
+                                $isDisabled = $web_project_channel->status != 'Submitted to Top Management';
                                 break;
                             case 'client':
                                 $isDisabled = $web_project_channel->status != 'Submitted to Client';

@@ -181,7 +181,7 @@
 
                     </td>
                     <td class="signature">
-                        <strong>Supervisor Signature: {{ $job_draft->jobOrder->issuer->name }}</strong><br>
+                        <strong>Operations Supervisor Signature: {{ $job_draft->jobOrder->issuer->name }}</strong><br>
                         <img src="{{ asset($job_draft->signature_supervisor) }}" alt="Supervisor Signature">
                     </td>
                 </tr>

@@ -30,7 +30,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
-<x-main-layout breadcumb="SMM / List Top Manager" page="Show Approval">
+<x-main-layout breadcumb="SMM / List Top Management" page="Show Approval">
     <div class="mx-auto max-w-screen-2xl">
         <div class="h-full mx-auto max-w-screen-xl">
             {{-- Middle Part --}}
@@ -74,7 +74,7 @@
                             <!-- Signature Approval Section -->
                             <div class="hidden lg:block lg:col-span-4"></div>
                             <div class="col-span-1 lg:col-span-1">
-                                @if (!$job_draft->signature_top_manager)
+                                @if (!$job_draft->signature_top_management)
                                     <div class="mt-6  rounded-md w-fit">
                                         <form action="{{ url('/admin/smm/topmanager/update/' . $job_draft->id) }}"
                                             method="POST" enctype="multipart/form-data" id="approvalForm">
@@ -82,7 +82,7 @@
                                             @method('PUT')
 
                                             @php
-                                                $isDisabled = $job_draft->status != 'Submitted to Top Manager';
+                                                $isDisabled = $job_draft->status != 'Submitted to Top Management';
                                             @endphp
 
                                             <!--

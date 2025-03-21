@@ -80,7 +80,7 @@ class OperationApprovalController extends Controller
         $job_draft->update([
             'draft_op_sign' => $imagePath,
             'op_signed_draft' => auth()->user()->id,
-            'status' => 'Submitted to Supervisor',
+            'status' => 'Submitted to Operations Supervisor',
         ]);
 
         $notificationController = new NotificationController();

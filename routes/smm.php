@@ -203,7 +203,7 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
     Route::view('/operation/letter', 'admin.smm.letter.index')->name('admin.smm.letter.index');
   });
 
-  Route::middleware(['auth', 'role:top_manager'])->group(function () {
+  Route::middleware(['auth', 'role:top_management'])->group(function () {
     Route::get('/topmanager', [TopApprovalController::class, 'index'])->name('admin.smm.topmanager.approve');
     Route::get('/topmanager/show/{id}', [TopApprovalController::class, 'show'])->name('admin.smm.topmanager.show');
     Route::get('/topmanager/edit/{id}', [TopApprovalController::class, 'edit'])->name('topmanager.edit');
