@@ -223,7 +223,7 @@
                         "X-CSRF-TOKEN": "{{ csrf_token() }}" // CSRF protection
                     },
                     body: JSON.stringify({
-                        to_user_role: ['admin', 'top_manager', 'supervisor', 'operations'],
+                        to_user_role: ['admin', 'top_manager', 'supervisor', 'operations', 'assistant_supervisor'],
                         month: month,
                         year: year,
                         title: 'Download Request',

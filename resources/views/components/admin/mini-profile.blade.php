@@ -28,11 +28,15 @@
                         <span class="text-[10px] font-semibold m-auto">{{ $notifications->where('is_read', 0)->count()
                             }}</span>
                     </div> --}}
-                    <div class="absolute top-0 right-0">
+                    <div class="absolute -top-2 -right-2">
                         <div
-                            class=" w-5 h-5 rounded-full bg-[#F53C11] p-1 text-center flex items-center justify-center text-white">
+                            class=" w-6 h-6 rounded-full bg-[#F53C11] border border-white p-1 text-center flex items-center justify-center text-white">
                             <p class="text-[10px] font-semibold">
-                                {{ $notifications->where('is_read', 0)->count() }}
+                                @if ($notifications->where('is_read', 0)->count() <= 99)
+                                    {{ $notifications->where('is_read', 0)->count() }}
+                                @else
+                                    99+
+                                @endif
                             </p>
                         </div>
                     </div>
@@ -77,8 +81,8 @@
                 <section id="tab-content-all" class="divide-y divide-gray-100 w-full h-60 overflow-auto">
                     @forelse ($notifications->where('is_archive', 0) as $notification)
                         <div class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
-                            onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-all')">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
+                            onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-all', '{{ addslashes($notification->type) }}', '{{ addslashes($notification->title) }}')">
 
                             <div class="flex items-center gap-3 w-2/3">
                                 <div class="w-auto h-auto">
@@ -127,13 +131,15 @@
                         <div
                             class="lg:!w-1/3 md:w-1/2 w-full flex flex-col p-10 gap-5 bg-white rounded-2xl transition ease-in duration-500">
                             <div class="flex w-full flex-col items-start gap-3 text-wrap">
-                                <x-page-title name="title" title="{{$notification->title ?? 'No Title'}}"
-                                    titleClass="text-xl" />
+                                <x-page-title name="title" id="pageTitle"
+                                    title="{{ $notification->title ?? 'No Title' }}" titleClass="text-xl" />
                                 <p id="allNotificationMessage" class="text-gray-800 w-full text-wrap">
-                                <p class="text-sm font-semibold text-gray-600">Requested DTR:
+                                <p id="ContainerDateNotificationMessage" class="text-sm font-semibold text-gray-600">
+                                    Requested DTR:
                                     <span id="DateNotificationMessage"
                                         class="text-[#F57D11] font-semibold text-base">date
                                         here</span>
+                                </p>
                                 </p>
                                 {{-- <p id="dateMessage" class="mt-2 text-gray-600 w-full text-wrap">
                                     date here
@@ -153,8 +159,8 @@
                 <section id="tab-content-unread" class="hidden divide-y divide-gray-100 w-full h-60 overflow-auto">
                     @forelse ($notifications->where('is_read', 0)->where('is_archive', 0) as $notification)
                         <div class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
-                            onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-unread')">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
+                            onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-unread', '{{ addslashes($notification->type) }}', '{{ addslashes($notification->title) }}')">
                             <div class="flex items-center gap-3 w-2/3">
                                 <div class="w-auto h-auto">
                                     <div class="w-10 h-10 rounded-full border border-[#F57D11] overflow-hidden">
@@ -202,7 +208,8 @@
                         <div
                             class="lg:!w-1/3 md:w-1/2 w-full flex flex-col p-10 gap-5 bg-white rounded-2xl transition ease-in duration-500">
                             <div class="flex w-full flex-col items-start gap-3 text-wrap">
-                                <x-page-title title="{{$notification->title ?? 'No Title'}}" titleClass="text-xl" />
+                                <x-page-title id="pageTitle" title="{{ $notification->title ?? 'No Title' }}"
+                                    titleClass="text-xl" />
                                 <p id="unreadNotificationMessage" class="text-gray-800 w-full text-wrap">
                                 <p class="text-sm font-semibold text-gray-600">Requested DTR:
                                     <span id="UnreadDateNotificationMessage"
@@ -227,8 +234,8 @@
                 <section id="tab-content-archived" class="hidden divide-y divide-gray-100 w-full h-60 overflow-auto">
                     @forelse ($notifications->where('is_archive', 1) as $notification)
                         <div class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
-                            onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-archive')">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
+                            onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-archive', '{{ addslashes($notification->type) }}', '{{ addslashes($notification->title) }}')">
                             <div class="flex items-center gap-3 w-2/3">
                                 <div class="h-auto w-auto">
                                     <div class="w-10 h-10 rounded-full border border-gray-400 overflow-hidden">
@@ -265,7 +272,8 @@
                     <div
                         class="lg:!w-1/3 md:w-1/2 w-full flex flex-col p-10 gap-5 bg-white rounded-2xl transition ease-in duration-500">
                         <div class="flex w-full flex-col items-start gap-3 text-wrap">
-                            <x-page-title title="{{$notification->title ?? 'No Title'}}" titleClass="text-xl" />
+                            <x-page-title id="pageTitle" title="{{ $notification->title ?? 'No Title' }}"
+                                titleClass="text-xl" />
                             <p id="archiveNotificationMessage" class="text-gray-800 w-full text-wrap">
                             <p class="text-sm font-semibold text-gray-600">Requested DTR: <span
                                     id="ArchiveDateNotificationMessage"
@@ -416,7 +424,7 @@
     }
 </script>
 <script>
-    function openNotificationModal(notificationId, message, isRead, tab) {
+    function openNotificationModal(notificationId, message, isRead, tab, type) {
         const modalId = tab === 'tab-all' ? 'AllNotificationModal' :
             tab === 'tab-unread' ? 'UnreadNotificationModal' :
                 'ArchiveNotificationModal';
@@ -440,6 +448,11 @@
         let msgText;
         let dateText;
 
+        if (type != 'user.dtr.download.request') {
+            dateElement.innerText = dateText;
+            dateElement.classList.add('opacity-0');
+        }
+
         // Find the last occurrence of "DTR." and extract the message
         let lastIndex = text.lastIndexOf("DTR.");
 
@@ -448,8 +461,8 @@
             dateText = text.substring(lastIndex + 5).trim(); // Extracts everything after "DTR."
         }
 
+
         messageElement.innerText = msgText;
-        dateElement.innerText = dateText;
 
         // Show modal
         modal.classList.remove("hidden");
@@ -563,7 +576,12 @@
             // update the counter in the button itself
             const buttonCountDiv = dropdownButton.querySelector('div div p');
             if (buttonCountDiv) {
-                buttonCountDiv.textContent = unreadCount;
+                if (unreadCount <= 99) {
+                    buttonCountDiv.textContent = unreadCount;
+                }
+                else {
+                    buttonCountDiv.textContent = '99+';
+                }
             }
 
             function updateTabCounts(notifications) {
@@ -647,25 +665,29 @@
         }
 
         // Function to open notification modal
-        window.openNotificationModal = function (notificationId, message, isRead, tab) {
+        window.openNotificationModal = function (notificationId, message, isRead, tab, type, title) {
             console.log("Opening notification modal for ID:", notificationId, "Tab:", tab);
 
-            let modal, messageElement, dateElement;
+            let modal, messageElement, dateElement, pageTitleElement, titleAttribute;
+
 
             if (tab === 'tab-all') {
                 modal = document.getElementById('AllNotificationModal');
                 messageElement = document.getElementById('allNotificationMessage');
                 dateElement = document.getElementById('DateNotificationMessage');
+                containerDateElement = document.getElementById('ContainerDateNotificationMessage');
                 console.log("Tab is 'tab-all'. Modal:", modal, "Message Element:", messageElement, "Date Element:", dateElement);
             } else if (tab === 'tab-unread') {
                 modal = document.getElementById('UnreadNotificationModal');
                 messageElement = document.getElementById('unreadNotificationMessage');
                 dateElement = document.getElementById('UnreadDateNotificationMessage');
+                containerDateElement = document.getElementById('ContainerDateNotificationMessage');
                 console.log("Tab is 'tab-unread'. Modal:", modal, "Message Element:", messageElement, "Date Element:", dateElement);
             } else if (tab === 'tab-archive') {
                 modal = document.getElementById('ArchiveNotificationModal');
                 messageElement = document.getElementById('archiveNotificationMessage');
                 dateElement = document.getElementById('ArchiveDateNotificationMessage');
+                containerDateElement = document.getElementById('ContainerDateNotificationMessage');
                 console.log("Tab is 'tab-archive'. Modal:", modal, "Message Element:", messageElement, "Date Element:", dateElement);
             }
 
@@ -684,9 +706,16 @@
                     console.log("Notification created_at:", notification.created_at, "Parsed date:", notificationDate);
 
                     if (!isNaN(notificationDate)) {
-                        dateElement.textContent = notificationDate.toLocaleDateString();
-                        console.log("Formatted date:", dateElement.textContent);
+                        if (type == 'user.dtr.download.request') {
+                            containerDateElement.classList.remove('opacity-0');
+                            dateElement.textContent = notificationDate.toLocaleDateString();
+                            console.log("Formatted date:", dateElement.textContent);
+                        }
+                        else {
+                            containerDateElement.classList.add('opacity-0');
+                        }
                     } else {
+
                         console.error("Invalid date format:", notification.created_at);
                     }
 
