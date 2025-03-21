@@ -81,7 +81,7 @@ class NotificationController extends Controller
             }
 
             // Notifications for roles
-            $roles = ['admin', 'supervisor', 'top_manager', 'operations', 'assistant_supervisor'];
+            $roles = ['admin', 'operations_supervisor', 'top_management', 'operations', 'assistant_supervisor'];
             $users = User::whereIn('role', $roles)->get();
 
             foreach ($users as $usr) {
@@ -127,7 +127,7 @@ class NotificationController extends Controller
             $users_role = User::whereIn('role', $request->to_user_role)->get(); // Fix: Use whereIn()
 
             if ($users_role->isNotEmpty()) { // Fix: Use isNotEmpty() instead of isset()
-                //send to the supervisor, admin, operations, and top manager
+                //send to the supervisor, admin, operations, and Top Management
                 foreach ($users_role as $usr) {
                     Notification::create([
                         'user_id' => $usr->id,

@@ -44,41 +44,40 @@
                                                 @elseif (
                                                     (auth()->user()->role_id == '2' &&
                                                         ($job_draft->status == 'completed' ||
-                                                            $job_draft->status == 'Submitted to Top Manager' ||
+                                                            $job_draft->status == 'Submitted to Top Management' ||
                                                             $job_draft->status == 'Submitted to Client' ||
-                                                            $job_draft->status == 'Submitted to Supervisor')) ||
+                                                            $job_draft->status == 'Submitted to Operations Supervisor')) ||
                                                         (auth()->user()->role_id == '5' &&
                                                             ($job_draft->status == 'Submitted to Client' || $job_draft->status == 'completed')) ||
                                                         (auth()->user()->role_id == '6' &&
                                                             ($job_draft->status == 'Submitted to Client' ||
                                                                 $job_draft->status == 'completed' ||
-                                                                $job_draft->status == 'Submitted to Top Manager')))
+                                                                $job_draft->status == 'Submitted to Top Management')))
                                                     Signed
                                                 @elseif (
                                                     (auth()->user()->role_id == '3' &&
-                                                        ($job_draft->status == 'Submitted to Operations' ||
+                                                        ($job_draft->status == 'Submitted to Assistant Supervisor' ||
                                                             $job_draft->status == 'completed' ||
-                                                            $job_draft->status == 'Submitted to Top Manager' ||
+                                                            $job_draft->status == 'Submitted to Top Management' ||
                                                             $job_draft->status == 'Submitted to Client')) ||
                                                         (auth()->user()->role_id == '4' &&
-                                                            ($job_draft->status == 'Submitted to Operations' ||
+                                                            ($job_draft->status == 'Submitted to Assistant Supervisor' ||
                                                                 $job_draft->status == 'completed' ||
-                                                                $job_draft->status == 'Submitted to Top Manager' ||
+                                                                $job_draft->status == 'Submitted to Top Management' ||
                                                                 $job_draft->status == 'Submitted to Client')))
                                                     Created
                                                 @elseif (auth()->user()->role_id == '1' and $job_draft->status == 'Submitted to Client')
                                                     <a href="{{ route('admin.smm.client.show', $job_draft->id) }}">
                                                         <p class="text-[#fa7011]">Approve</p>
                                                     </a>
-                                                @elseif (auth()->user()->role_id == '2' and $job_draft->status == 'Submitted to Operations')
+                                                @elseif (auth()->user()->role_id == '2' and $job_draft->status == 'Submitted to Assistant Supervisor')
                                                     <a href="{{ route('admin.smm.operation.show', $job_draft->id) }}">
                                                         <p class="text-[#fa7011]">Sign</p>
                                                     </a>
                                                 @elseif (auth()->user()->role_id == '3' and
                                                         $job_draft->status == 'Waiting for Content Writer Approval' ||
                                                             $job_draft->status == 'Waiting for Graphic Designer Approval')
-                                                    <form
-                                                        action="{{ route('content.accept', $job_draft->id) }}"
+                                                    <form action="{{ route('content.accept', $job_draft->id) }}"
                                                         method="POST">
                                                         @csrf
                                                         @method('PUT')
@@ -94,8 +93,7 @@
                                                 @elseif (auth()->user()->role_id == '4' and
                                                         $job_draft->status == 'Waiting for Content Writer Approval' ||
                                                             $job_draft->status == 'Waiting for Graphic Designer Approval')
-                                                    <form
-                                                        action="{{ route('graphic.accept', $job_draft->id) }}"
+                                                    <form action="{{ route('graphic.accept', $job_draft->id) }}"
                                                         method="POST">
                                                         @csrf
                                                         @method('PUT')
@@ -108,34 +106,33 @@
                                                     <a href="{{ route('graphic.edit', $job_draft->id) }}">
                                                         <p class="text-[#fa7011]">Create</p>
                                                     </a>
-                                                @elseif (auth()->user()->role_id == '5' and $job_draft->status == 'Submitted to Top Manager')
+                                                @elseif (auth()->user()->role_id == '5' and $job_draft->status == 'Submitted to Top Management')
                                                     <a href="{{ route('admin.smm.topmanager.show', $job_draft->id) }}">
                                                         <p class="text-[#fa7011]">Sign</p>
                                                     </a>
-                                                @elseif (auth()->user()->role_id == '6' and $job_draft->status == 'Submitted to Supervisor')
-                                                    <a
-                                                        href="{{ route('admin.smm.supervisor.show', $job_draft->id) }}">
+                                                @elseif (auth()->user()->role_id == '6' and $job_draft->status == 'Submitted to Operations Supervisor')
+                                                    <a href="{{ route('admin.smm.supervisor.show', $job_draft->id) }}">
                                                         <p class="text-[#fa7011]">Sign</p>
                                                     </a>
                                                 @endif
                                                 @if (
                                                     ($job_draft->status == 'completed' && auth()->user()->role_id == '1') ||
-                                                        (($job_draft->status == 'Submitted to Operations' ||
-                                                            $job_draft->status == 'Submitted to Top Manager' ||
+                                                        (($job_draft->status == 'Submitted to Assistant Supervisor' ||
+                                                            $job_draft->status == 'Submitted to Top Management' ||
                                                             $job_draft->status == 'Submitted to Client' ||
                                                             $job_draft->status == 'completed') &&
                                                             (auth()->user()->role_id == '3' || auth()->user()->role_id == '4')) ||
                                                         (auth()->user()->role_id == '2' &&
-                                                            ($job_draft->status == 'Submitted to Top Manager' ||
+                                                            ($job_draft->status == 'Submitted to Top Management' ||
                                                                 $job_draft->status == 'Submitted to Client' ||
-                                                                $job_draft->status == 'Submitted to Supervisor' ||
+                                                                $job_draft->status == 'Submitted to Operations Supervisor' ||
                                                                 $job_draft->status == 'completed')) ||
                                                         (auth()->user()->role_id == '5' &&
                                                             ($job_draft->status == 'Submitted to Client' || $job_draft->status == 'completed')) ||
                                                         (auth()->user()->role_id == '6' &&
                                                             ($job_draft->status == 'Submitted to Client' ||
                                                                 $job_draft->status == 'completed' ||
-                                                                $job_draft->status == 'Submitted to Top Manager')))
+                                                                $job_draft->status == 'Submitted to Top Management')))
                                                     <svg xmlns="http://www.w3.org/2000/svg"
                                                         class="h-5 w-5 text-green-500" fill="none"
                                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

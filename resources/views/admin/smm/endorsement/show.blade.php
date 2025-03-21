@@ -105,11 +105,13 @@
             </div>
             <div class="flex gap-4">
                 <div class="bg-green-600 text-white rounded-md px-3 py-1 w-fit mb-4">
-                    <a href="{{ route('endorsement.download', $endorsement->id) }}"><span><i class="fas fa-download"></i></span> Download</a>
+                    <a href="{{ route('endorsement.download', $endorsement->id) }}"><span><i
+                                class="fas fa-download"></i></span> Download</a>
                 </div>
-                @if ($endorsement->status == 'Approved by Operations Supervisor')
+                @if ($endorsement->status == 'Approved by Supervisor')
                     <div class="bg-[#fa7011] text-white rounded-md px-3 py-1 w-fit mb-4">
-                        <a href="{{ route('admin.smm.supervisor.joborder') }}"><span><i class="fas fa-download"></i></span> Create Draft</a>
+                        <a href="{{ route('admin.smm.supervisor.joborder') }}"><span><i
+                                    class="fas fa-download"></i></span> Create Draft</a>
                     </div>
                 @endif
             </div>
@@ -194,7 +196,7 @@
                             @endif
                         </strong><br>
                         @if (isset($endorsement->approvedBy->signature))
-                            <img src="{{ asset($endorsement->approvedBy->signature) }}" alt="Top Manager Signature">
+                            <img src="{{ asset($endorsement->approvedBy->signature) }}" alt="Top Management Signature">
                         @endif
 
                     </td>

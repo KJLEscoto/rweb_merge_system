@@ -31,10 +31,10 @@ class WebApprovalController extends Controller
 
         switch ($user->roles->position) {
             case "supervisor":
-                $web_project_channels = WebProjectChannel::with('web_project')->where('status', 'Submitted to Supervisor')->get();
+                $web_project_channels = WebProjectChannel::with('web_project')->where('status', 'Submitted to Operations Supervisor')->get();
                 break;
-            case "top_manager":
-                $web_project_channels = WebProjectChannel::with('web_project')->where('status', 'Submitted to Top Manager')->get();
+            case "top_management":
+                $web_project_channels = WebProjectChannel::with('web_project')->where('status', 'Submitted to Top Management')->get();
                 break;
             case "client":
                 $web_project_channels = WebProjectChannel::with('web_project')->where('status', 'Submitted to Client')->get();
@@ -80,10 +80,10 @@ class WebApprovalController extends Controller
 
         switch ($user->roles->position) {
             case "supervisor":
-                $web_project_channel = WebProjectChannel::with('web_project')->where('status', 'Submitted to Supervisor')->find($id);
+                $web_project_channel = WebProjectChannel::with('web_project')->where('status', 'Submitted to Operations Supervisor')->find($id);
                 break;
-            case "top_manager":
-                $web_project_channel = WebProjectChannel::with('web_project')->where('status', 'Submitted to Top Manager')->find($id);
+            case "top_management":
+                $web_project_channel = WebProjectChannel::with('web_project')->where('status', 'Submitted to Top Management')->find($id);
                 break;
             case "client":
                 $web_project_channel = WebProjectChannel::with('web_project')->where('status', 'Submitted to Client')->find($id);
@@ -199,12 +199,12 @@ class WebApprovalController extends Controller
 
             switch ($user->roles->position) {
                 case "supervisor":
-                    $web_project_channel->status = "Submitted to Top Manager";
+                    $web_project_channel->status = "Submitted to Top Management";
                     $web_project_channel->web_job_orders->update([
                         'supervisor_signed_draft_id' => Auth::user()->id,
                     ]);
                     break;
-                case "top_manager":
+                case "top_management":
                     $web_project_channel->status = 'Submitted to Client';
                     break;
                 case "client":
@@ -508,7 +508,7 @@ class WebApprovalController extends Controller
                     }
                     break;
                 case "assistant_supervisor":
-                    $web_project_channel->status = "Submitted to Supervisor";
+                    $web_project_channel->status = "Submitted to Operations Supervisor";
                     $web_project_channel->web_job_orders->update([
                         'operation_signed_draft_id' => Auth::user()->id,
                     ]);

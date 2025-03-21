@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             $user = Auth::user(); // Get the logged-in user
 
-            $higher_up_roles = ['admin', 'top_manager', 'operations', 'assistant_supervisor', 'supervisor'];
+            $higher_up_roles = ['admin', 'top_management', 'operations', 'assistant_supervisor', 'operations_supervisor'];
 
             if ($user && in_array($user->role, $higher_up_roles)) {
                 // Admin (ID = 1) sees all notifications
@@ -91,7 +91,7 @@ class AppServiceProvider extends ServiceProvider
                 // Count total items if needed
                 $revisionCount = $revisionCollection->count();
 
-                $supervisorApprovalCount = JobDraft::where('status', 'Submitted to Supervisor')
+                $supervisorApprovalCount = JobDraft::where('status', 'Submitted to Operations Supervisor')
                     ->with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
                     ->count();
 
@@ -113,7 +113,7 @@ class AppServiceProvider extends ServiceProvider
                     ->whereDoesntHave('jobOrders') // Exclude requests already assigned to JobOrders
                     ->count();
 
-                $operationApprovalCount = JobDraft::where('status', 'Submitted to Operations')
+                $operationApprovalCount = JobDraft::where('status', 'Submitted to Assistant Supervisor')
                     ->with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
                     ->count();
 
@@ -153,7 +153,7 @@ class AppServiceProvider extends ServiceProvider
                     ->where('graphic_designer_id', $authuser->id)
                     ->count();
 
-                $topmanagerApprovalCount = JobDraft::where('status', 'Submitted to Top Manager')
+                $topmanagerApprovalCount = JobDraft::where('status', 'Submitted to Top Management')
                     ->with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
                     ->count();
 

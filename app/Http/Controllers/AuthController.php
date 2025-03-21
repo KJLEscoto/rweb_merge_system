@@ -214,7 +214,7 @@ class AuthController extends Controller
     {
         if (
             $user->roles->position != "assistant_supervisor" && $user->roles->position != "supervisor" &&
-            $user->roles->position != "top_manager"
+            $user->roles->position != "top_management"
         ) {
             Auth::logout();
             return back()->with('invalid', 'This user does not exist.');

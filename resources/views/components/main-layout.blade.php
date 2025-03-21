@@ -417,7 +417,7 @@
                     <x-admin.sidebar-menu icon="ic--round-date-range" label="Client Downloadables"
                         routeName="admin.smm.client_documents" />
                     <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
-                @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'supervisor')
+                @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'operations_supervisor')
                     <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
                         routeName="admin.smm.dashboard" />
                     <x-admin.sidebar-menu icon="clarity--directory-solid-badged" label="Operation Job Order"
@@ -443,7 +443,7 @@
                     <x-admin.sidebar-menu icon="ic--round-date-range" label="Client Downloadables"
                         routeName="admin.smm.client_documents" />
                     <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
-                @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'top_manager')
+                @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'top_management')
                     <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
                         routeName="admin.smm.dashboard" />
                     <x-admin.sidebar-menu icon="mdi--clipboard-text-history" label="Approval"
@@ -574,7 +574,7 @@
                             <x-admin.sidebar-menu icon="streamline--manual-book-solid" label="Downloadables"
                                 routeName="admin.smm.operation.history" />
                             <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
-                        @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'supervisor')
+                        @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'operations_supervisor')
                             <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
                                 routeName="admin.smm.dashboard" />
                             <x-admin.sidebar-menu icon="clarity--directory-solid-badged" label="Operation Job Order"
@@ -597,7 +597,7 @@
                             <x-admin.sidebar-menu icon="streamline--manual-book-solid" label="Downloadables"
                                 routeName="admin.smm.supervisor.history" />
                             <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
-                        @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'top_manager')
+                        @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'top_management')
                             <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
                                 routeName="admin.smm.dashboard" />
                             <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="Approval"

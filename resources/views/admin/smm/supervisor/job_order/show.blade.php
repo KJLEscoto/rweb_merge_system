@@ -146,7 +146,7 @@
                         @endif
                     </td>
                     <td class="signature">
-                        <strong>Supervisor Signature: {{ $supervisor_request->issuer->name }}</strong><br>
+                        <strong>Operations Supervisor Signature: {{ $supervisor_request->issuer->name }}</strong><br>
                         <img src="{{ asset($supervisor_request->issuer->signature) }}" alt="Supervisor Signature">
                     </td>
                 </tr>

@@ -9,8 +9,8 @@
             2 => 'Assistant Supervisor',
             3 => 'Content Writer',
             4 => 'Graphic Designer',
-            5 => 'Top Manager',
-            6 => 'Supervisor',
+            5 => 'Top Management',
+            6 => 'Operations Supervisor',
             7 => 'Accounting',
             12 => 'Sales Assistant',
         ];

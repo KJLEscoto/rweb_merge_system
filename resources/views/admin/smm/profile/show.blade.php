@@ -9,7 +9,7 @@
             2 => 'Assistant Supervisor',
             3 => 'Content Writer',
             4 => 'Graphic Designer',
-            5 => 'Top Manager',
+            5 => 'Top Management',
             6 => 'Operation Manager',
             7 => 'Accounting',
             12 => 'Sales Assistant',

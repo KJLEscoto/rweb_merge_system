@@ -70,7 +70,7 @@
             <div class="hidden lg:block lg:col-span-1"></div>
             <div class="lg:col-span-4">
                 @php
-                    $isDisabled = $job_draft->status != 'Submitted to Supervisor';
+                    $isDisabled = $job_draft->status != 'Submitted to Operations Supervisor';
                 @endphp
                 <div class="mt-6 bg-white p-4 rounded-md shadow-md w-fit">
                     <div class="flex justify-between">

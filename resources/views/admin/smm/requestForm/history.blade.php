@@ -74,9 +74,9 @@
                                     method="POST" class="inline">
                                     @csrf
                                     <button
-                                        {{ Auth::user()->role_id === 6 || (Auth::user()->role_id === 5 && $request_form->status === 'Approved by Top Manager') || ((Auth::user()->role_id === 7 && $request_form->status === 'Approved by Accounting') || (Auth::user()->role_id === 7 && $request_form->status === 'Approved by Operation')) ? 'disabled' : '' }}
+                                        {{ Auth::user()->role_id === 6 || (Auth::user()->role_id === 5 && $request_form->status === 'Approved by Top Management') || ((Auth::user()->role_id === 7 && $request_form->status === 'Approved by Accounting') || (Auth::user()->role_id === 7 && $request_form->status === 'Approved by Operation')) ? 'disabled' : '' }}
                                         type="submit"
-                                        class="px-3 py-1 rounded text-white {{ Auth::user()->role_id === 6 || (Auth::user()->role_id === 5 && $request_form->status === 'Approved by Top Manager') || ((Auth::user()->role_id === 7 && $request_form->status === 'Approved by Accounting') || (Auth::user()->role_id === 7 && $request_form->status === 'Approved by Operation')) ? 'bg-gray-300' : 'bg-green-500' }}">
+                                        class="px-3 py-1 rounded text-white {{ Auth::user()->role_id === 6 || (Auth::user()->role_id === 5 && $request_form->status === 'Approved by Top Management') || ((Auth::user()->role_id === 7 && $request_form->status === 'Approved by Accounting') || (Auth::user()->role_id === 7 && $request_form->status === 'Approved by Operation')) ? 'bg-gray-300' : 'bg-green-500' }}">
                                         Approve
                                     </button>
                                 </form>
@@ -158,10 +158,11 @@
         buttons.forEach(button => button.classList.remove('active-tab'));
         rows.forEach(row => {
             let rowStatus = row.getAttribute("data-status");
-            if (status === 'pending') row.style.display = (rowStatus === 'submitted to operations') ? "" :
+            if (status === 'pending') row.style.display = (rowStatus === 'Submitted to Assistant Supervisor') ?
+                "" :
                 "none";
             else if (status === 'submitted') row.style.display = (rowStatus !== 'revision' && rowStatus !==
-                'submitted to operations') ? "" : "none";
+                'Submitted to Assistant Supervisor') ? "" : "none";
             else row.style.display = (rowStatus !== 'revision') ? "" : "none";
         });
         document.getElementById(status + 'Btn').classList.add('active-tab');

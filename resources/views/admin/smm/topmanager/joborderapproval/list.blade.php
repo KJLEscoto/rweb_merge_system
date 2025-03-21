@@ -1,5 +1,5 @@
 <head>
-    <title>{{ env('APP_NAME') }} | SMM | List Top Manager</title>
+    <title>{{ env('APP_NAME') }} | SMM | List Top Management</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -21,7 +21,7 @@
     </style>
 </head>
 
-<x-main-layout breadcumb="SMM" page="List Top Manager">
+<x-main-layout breadcumb="SMM" page="List Top Management">
 
     <div class="overflow-x-auto overflow-y-auto bg-white shadow-md rounded-lg h-[500px]" style="max-height: 500px;">
         {{-- Success Message Component --}}
@@ -51,10 +51,12 @@
                             @endif
                         </td>
                         <td class="w-[15%] px-4 py-3 text-center whitespace-nowrap">
-                            @if ($job_draft->date_target < now()) <!-- Check if deadline has passed -->
+                            @if ($job_draft->date_target < now())
+                                <!-- Check if deadline has passed -->
                                 <span class="text-sm font-bold text-red-500">{{ $job_draft->date_target }} LATE</span>
                             @else
-                                <span class="text-sm font-bold text-green-500">{{ $job_draft->date_target }} ONGOING</span>
+                                <span class="text-sm font-bold text-green-500">{{ $job_draft->date_target }}
+                                    ONGOING</span>
                             @endif
                         </td>
                         <td class="w-[15%] px-4 py-3 text-center text-white">

@@ -158,7 +158,7 @@
 
                             </td>
                             <td class="signature">
-                                <strong>Supervisor Signature: {{ $web_request->assigned_by }}</strong><br>
+                                <strong>Operations Supervisor Signature: {{ $web_request->assigned_by }}</strong><br>
                                 <img src="{{ asset($web_request->issued_by->signature) }}" alt="Supervisor Signature">
                             </td>
                         </tr>
