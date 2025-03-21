@@ -47,7 +47,7 @@
         <div class="flex justify-between items-center gap-4 px-10">
             <a class="cursor-pointer" id="pendingBtn" onclick="filterByStatus('pending')">Pending</a>
             <a class="cursor-pointer" id="submittedBtn"
-                onclick="filterByStatus('Submitted to Assistant Supervisor')">Submitted</a>
+                onclick="filterByStatus('submitted to assistant supervisor')">Submitted</a>
             <a class="cursor-pointer" id="allBtn" onclick="filterByStatus('all')">All</a>
         </div>
 
@@ -229,7 +229,7 @@
         // Add active class to the clicked button
         if (status === 'pending') {
             document.getElementById('pendingBtn').classList.add('border-b', 'border-[#fa7011]');
-        } else if (status === 'Submitted to Assistant Supervisor') {
+        } else if (status === 'submitted to assistant supervisor') {
             document.getElementById('submittedBtn').classList.add('border-b', 'border-[#fa7011]');
         } else if (status === 'all') {
             document.getElementById('allBtn').classList.add('border-b', 'border-[#fa7011]');

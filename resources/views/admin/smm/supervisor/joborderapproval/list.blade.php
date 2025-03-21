@@ -152,12 +152,12 @@
 
             // Pending: Only "Submitted to Assistant Supervisor"
             if (status === 'pending') {
-                row.style.display = (rowStatus === 'Submitted to Operations Supervisor') ? "" : "none";
+                row.style.display = (rowStatus === 'submitted to operations supervisor') ? "" : "none";
             }
             // Submitted: All except "Revision" and "Submitted to Assistant Supervisor"
             else if (status === 'submitted') {
                 row.style.display = (rowStatus !== 'revision' && rowStatus !==
-                        'Submitted to Operations Supervisor') ? "" :
+                        'submitted to operations supervisor') ? "" :
                     "none";
             }
             // All: All except "Revision"

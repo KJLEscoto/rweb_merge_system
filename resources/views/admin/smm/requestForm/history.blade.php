@@ -158,11 +158,11 @@
         buttons.forEach(button => button.classList.remove('active-tab'));
         rows.forEach(row => {
             let rowStatus = row.getAttribute("data-status");
-            if (status === 'pending') row.style.display = (rowStatus === 'Submitted to Assistant Supervisor') ?
+            if (status === 'pending') row.style.display = (rowStatus === 'submitted to assistant supervisor') ?
                 "" :
                 "none";
             else if (status === 'submitted') row.style.display = (rowStatus !== 'revision' && rowStatus !==
-                'Submitted to Assistant Supervisor') ? "" : "none";
+                'submitted to assistant supervisor') ? "" : "none";
             else row.style.display = (rowStatus !== 'revision') ? "" : "none";
         });
         document.getElementById(status + 'Btn').classList.add('active-tab');
