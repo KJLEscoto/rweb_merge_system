@@ -6,6 +6,7 @@ use App\Models\JobOrder;
 use App\Models\Request as ModelsRequest; // Alias to avoid conflict
 use App\Models\User;
 use App\Models\WebRequest;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SupervisorJobOrderController extends Controller
@@ -33,7 +34,7 @@ class SupervisorJobOrderController extends Controller
             'deadline' => 'required|date'
         ]);
 
-        ModelsRequest::create([ // Use ModelsRequest instead of Request
+        $modelsrequest = ModelsRequest::create([ // Use ModelsRequest instead of Request
             'title' => $request->title,
             'description' => $request->description,
             'assigned_to' => $request->assigned_to,
@@ -41,6 +42,22 @@ class SupervisorJobOrderController extends Controller
             'status' => 'Waiting for Operation Approval',
             'deadline' => $request->deadline
         ]);
+
+        $notificationController = new NotificationController();
+
+        //formulate the data in the notification
+        $request = new Request([
+            'job_order_id' => $modelsrequest->id,
+            'from_user_id' => auth()->user()->id,
+            'to_user_id' => ['content' => auth()->user()->id], // for multiple users
+            'title' => $modelsrequest->title,
+            'type' => 'admin.smm.request.job-order',
+            'month' => Carbon::now()->format('m'), // 'm' gives zero-padded month (e.g., 03 for March)
+            'year' => Carbon::now()->format('Y'), // 'Y' gives full 4-digit year (e.g., 2025)
+            'message' => $request->summary,
+        ]);
+
+        $notify = $notificationController->sendAdminNotification($request);
 
         return redirect()->route('admin.smm.supervisor.joborder')->with('Status', 'Job Order Created Successfully');
     }
@@ -75,6 +92,7 @@ class SupervisorJobOrderController extends Controller
             'assigned_to' => $request->assigned_to,
             'deadline' => $request->deadline
         ]);
+
         return redirect()->route('admin.smm.supervisor.joborder')->with('Status', 'Job Order Updated Successfully');
     }
 

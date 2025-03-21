@@ -201,8 +201,8 @@ class NotificationController extends Controller
             case 'admin.smm.revise.job-order':
                 $customTitle = 'The job order titled "' . $request->title . '" has been revised and submitted by ' . $fullNameFormatted . '. Reason for revision: ' . $request->reason . '.';
                 break;
-            case 'admin.smm.request.job-order':
-                $customTitle = $fullNameFormatted . '. has requested to you to create a job order';
+            case 'admin.smm.request.job-order': //all for the higher ups
+                $customTitle = $fullNameFormatted . '. has requested to create a job order';
                 break;
             default:
                 Log::warning("Unknown notification type: " . $request->type);

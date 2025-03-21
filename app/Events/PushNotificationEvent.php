@@ -4,6 +4,7 @@ namespace App\Events;
 
 use App\Models\JobDraft;
 use App\Models\Notification;
+use App\Models\Request as ModelsRequest;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Broadcasting\Channel;
@@ -232,6 +233,41 @@ class PushNotificationEvent
                         'success' => true,
                     ]);
                 }
+            }
+
+            $request = ModelsRequest::where('id', $this->request->job_order_id);
+
+            if (isset($request)) {
+                $request = $request->first();
+
+                $fullNameFormatted = User::where('id', $request->issued_by)->first()->name;
+
+                $notification = Notification::create([
+                    'user_id' => $request->assigned_to,
+                    'from_user_id' => $request->issed_by,
+                    'title' => $request->title,
+                    'message' => $fullNameFormatted . '. has requested you to create a job order',
+                    'is_read' => false,
+                    'is_archive' => false,
+                    'type' => 'admin.smm.request.job-order',
+                ]);
+
+                $this->pusher->trigger("public-notifications", "user-notification-{$notification->user_id}", [
+                    'message' => 'A Project Request has been requested to you!',
+                    'success' => true,
+                ]);
+
+                $fullNameFormatted = User::where('id', $request->assigned_to)->first()->name;
+
+                $notification = Notification::create([
+                    'user_id' => $request->issued_by,
+                    'from_user_id' => $request->assigned_to,
+                    'title' => $request->title,
+                    'message' => 'You requested ' . $fullNameFormatted  . ' to create a job order',
+                    'is_read' => false,
+                    'is_archive' => false,
+                    'type' => 'admin.smm.request.job-order',
+                ]);
             }
         } else {
             echo "No users to notify <br>";
