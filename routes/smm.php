@@ -212,7 +212,7 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
     Route::post('/topmanager/decline/{id}', [TopApprovalController::class, 'decline']);
   });
 
-  Route::middleware(['auth', 'role:supervisor'])->group(function () {
+  Route::middleware(['auth', 'role:operations_supervisor'])->group(function () {
     Route::get('/supervisor/approve', [SupervisorApprovalController::class, 'index'])->name('admin.smm.supervisor.approve');
     Route::get('/supervisor/approve/show/{id}', [SupervisorApprovalController::class, 'show'])->name('admin.smm.supervisor.show');
     Route::get('/supervisor/approve/edit/{id}', [SupervisorApprovalController::class, 'edit'])->name('supervisor.edit');
