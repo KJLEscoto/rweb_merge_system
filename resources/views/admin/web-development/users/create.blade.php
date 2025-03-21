@@ -111,7 +111,7 @@
                             $uiUxRoleId = \App\Models\Role::where('position', 'like', '%ui_ux%')->first()->id;
                             $frontEndRoleId = \App\Models\Role::where('position', 'like', '%front_end%')->first()->id;
                             $backEndRoleId = \App\Models\Role::where('position', 'like', '%back_end%')->first()->id;
-                            $topManagerRoleId = \App\Models\Role::where('position', 'like', '%top_manager%')->first()
+                            $topManagerRoleId = \App\Models\Role::where('position', 'like', '%top_management%')->first()
                                 ->id;
                             $supervisorRoleId = \App\Models\Role::where('position', 'like', '%supervisor%')->first()
                                 ->id;
@@ -129,9 +129,9 @@
                         <option value="{{ $backEndRoleId }}" {{ old('role_id') == $backEndRoleId ? 'selected' : '' }}>
                             Back-End Developer</option>
                         <option value="{{ $topManagerRoleId }}"
-                            {{ old('role_id') == $topManagerRoleId ? 'selected' : '' }}>Top Manager</option>
+                            {{ old('role_id') == $topManagerRoleId ? 'selected' : '' }}>Top Management</option>
                         <option value="{{ $supervisorRoleId }}"
-                            {{ old('role_id') == $supervisorRoleId ? 'selected' : '' }}>Supervisor</option>
+                            {{ old('role_id') == $supervisorRoleId ? 'selected' : '' }}>Operations Supervisor</option>
                     </select>
 
                     @error('role_id')

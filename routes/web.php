@@ -52,7 +52,7 @@ Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('show.adm
 Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login');
 
 //register post method
-$admin_roles = ['admin', 'assistant_supervisor', 'supervisor', 'top_manager'];
+$admin_roles = ['admin', 'assistant_supervisor', 'operations_supervisor', 'top_management'];
 Route::middleware(['auth', 'user_role:' . implode(',', $admin_roles)])->group(function () {
 
     //Route::resource('admin.dtr.schools', SchoolController::class);

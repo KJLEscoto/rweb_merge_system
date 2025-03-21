@@ -1,11 +1,10 @@
 {{-- @extends('layouts.application') --}}
 
-@section('title', 'Supervisor')
+@section('title', 'Operations Supervisor')
 @section('header', 'Direct Job Order')
 
 {{-- @section('content') --}}
-<script src="https://cdn.tailwindcss.com">
-</script>
+<script src="https://cdn.tailwindcss.com"></script>
 
 <head>
     <title>{{ env('APP_NAME') }} | SMM | Show Direct Job Order</title>
@@ -190,7 +189,8 @@
                         @endif
                     </td>
                     <td class="signature">
-                        <strong>Supervisor Signature: <br />{{ $job_draft->jobOrder->issuer->name }}</strong><br>
+                        <strong>Operations Supervisor Signature:
+                            <br />{{ $job_draft->jobOrder->issuer->name }}</strong><br>
                         <img src="{{ asset($job_draft->signature_supervisor) }}" alt="Supervisor Signature">
                     </td>
                 </tr>

@@ -153,7 +153,7 @@ class ProjectEndorsementFormController extends Controller
         } elseif (auth()->user()->role_id == 6) {
             ProjectEndorsementForm::find($id)->update([
                 'noted_by' => auth()->user()->id,
-                'status' => 'Approved by Operations Supervisor'
+                'status' => 'Approved by Supervisor'
             ]);
         }
 

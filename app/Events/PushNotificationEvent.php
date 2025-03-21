@@ -335,7 +335,7 @@ class PushNotificationEvent
                 }
             }
 
-            if ($user->role == 'top_manager') {
+            if ($user->role == 'top_management') {
                 // Send to client notification
                 // ✅ Send event to a PUBLIC CHANNEL
                 $client_id = JobDraft::where('job_order_id', $this->request->job_order_id)->first()->client_id;
@@ -402,7 +402,7 @@ class PushNotificationEvent
                 }
             }
 
-            if ($user->role == 'supervisor') {
+            if ($user->role == 'operations_supervisor') {
                 // Send to client notification
                 // ✅ Send event to a PUBLIC CHANNEL
                 $jobDraft = JobDraft::where('job_order_id', $this->request->job_order_id)->first();

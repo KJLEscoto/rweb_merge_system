@@ -84,9 +84,9 @@
                                     <option value="4" {{ old('role_id', $user->role_id) == 4 ? 'selected' : '' }}>
                                         Graphic Designer</option>
                                     <option value="5" {{ old('role_id', $user->role_id) == 5 ? 'selected' : '' }}>
-                                        Top Manager</option>
+                                        Top Management</option>
                                     <option value="6" {{ old('role_id', $user->role_id) == 6 ? 'selected' : '' }}>
-                                        Operation Supervisor</option>
+                                        Operations Supervisor</option>
                                     <option value="6" {{ old('role_id', $user->role_id) == 6 ? 'selected' : '' }}>
                                         Accounting</option>
                                 </select>

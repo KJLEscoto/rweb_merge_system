@@ -95,7 +95,7 @@ class DashboardController extends Controller
                 return view('admin.smm.dashboard-nonadmin', compact('job_drafts', 'job_drafts_revisions'));
             } elseif ($user_role == 5) {
                 $job_drafts = JobDraft::with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
-                    ->whereIn('status', ['Submitted to Client', 'completed', 'Submitted to Top Manager'])
+                    ->whereIn('status', ['Submitted to Client', 'completed', 'Submitted to Top Management'])
                     ->orderBy('id', 'desc') // Sort by id descending
                     ->take(5) // Get the latest 5 data
                     ->get();
@@ -103,7 +103,7 @@ class DashboardController extends Controller
                 return view('admin.smm.dashboard', compact('job_drafts'));
             } elseif ($user_role == 6) {
                 $job_drafts = JobDraft::with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
-                    ->whereNotIn('status', ['pending', 'Submitted to Operations', 'Revision', 'Waiting for Content Writer Approval', 'Waiting for Graphic Designer Approval'])
+                    ->whereNotIn('status', ['pending', 'Submitted to Assistant Supervisor', 'Revision', 'Waiting for Content Writer Approval', 'Waiting for Graphic Designer Approval'])
                     ->orderBy('id', 'desc') // Sort by id descending
                     ->limit(5) // Use limit for consistency
                     ->get();

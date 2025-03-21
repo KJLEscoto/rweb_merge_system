@@ -139,7 +139,7 @@ class RequestFormController extends Controller
         if ($authuser->role_id == 5) {
             $request_form->update([
                 'manager_id' => $authuser->id,
-                'status' => 'Approved by Top Manager',
+                'status' => 'Approved by Top Management',
             ]);
         } elseif ($authuser->role_id == 7) {
             $request_form->update([

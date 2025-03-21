@@ -8,9 +8,9 @@
             'content_writer',
             'graphic_designer',
             'client',
-            'supervisor',
+            'operations_supervisor',
             'assistant_supervisor',
-            'top_manager',
+            'top_management',
             'accounting',
             'admin',
         ];

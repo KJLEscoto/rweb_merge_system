@@ -11,7 +11,7 @@ class SupervisorApprovalController extends Controller
 {
     public function index()
     {
-        $job_drafts = JobDraft::whereNotIn('status', ['pending', 'Submitted to Operations', 'Waiting for Content Writer Approval', 'Waiting for Graphic Designer Approval'])
+        $job_drafts = JobDraft::whereNotIn('status', ['pending', 'Submitted to Assistant Supervisor', 'Waiting for Content Writer Approval', 'Waiting for Graphic Designer Approval'])
             ->with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
             ->get();
 
@@ -86,7 +86,7 @@ class SupervisorApprovalController extends Controller
         if ($job_draft->type == "content_writer") {
             if ($job_draft->works == "Content Only") {
                 $job_draft->update([
-                    'status' => 'Submitted to Top Manager',
+                    'status' => 'Submitted to Top Management',
                 ]);
             } elseif ($job_draft->works == "Both") {
 
@@ -111,7 +111,7 @@ class SupervisorApprovalController extends Controller
         } elseif ($job_draft->type == "graphic_designer") {
             // Update Database with Signature Path
             $job_draft->update([
-                'status' => 'Submitted to Top Manager',
+                'status' => 'Submitted to Top Management',
             ]);
         }
 

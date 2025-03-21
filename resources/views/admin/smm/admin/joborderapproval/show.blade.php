@@ -71,7 +71,7 @@
                 <div class="hidden lg:block lg:col-span-1"></div>
                 <div class="lg:col-span-4">
                     @php
-                        $isDisabled = $job_draft->status != 'Submitted to Operations';
+                        $isDisabled = $job_draft->status != 'Submitted to Assistant Supervisor';
                         $isSigned = !empty($job_draft->signature_admin);
                     @endphp
 

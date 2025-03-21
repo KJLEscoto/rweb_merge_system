@@ -75,7 +75,7 @@ class RevisionController extends Controller
             'status' => 'complete'
         ]);
         $job_draft->update([
-            'status' => 'Submitted to Operations',
+            'status' => 'Submitted to Assistant Supervisor',
             'draft' => $request->draft
         ]);
 

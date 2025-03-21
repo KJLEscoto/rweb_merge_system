@@ -41,8 +41,8 @@ class LoginRequest extends FormRequest
     {
         $admin_roles = [
             'assistant_supervisor',
-            'supervisor',
-            'top_manager',
+            'operations_supervisor',
+            'top_management',
         ];
 
         $this->ensureIsNotRateLimited();

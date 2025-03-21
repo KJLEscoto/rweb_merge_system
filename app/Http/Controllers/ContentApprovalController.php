@@ -43,7 +43,7 @@ class ContentApprovalController extends Controller
 
         $job_draft->update([
             'draft' => $request->draft,
-            'status' => 'Submitted to Operations',
+            'status' => 'Submitted to Assistant Supervisor',
         ]);
 
         $notificationController = new NotificationController();
@@ -81,7 +81,7 @@ class ContentApprovalController extends Controller
 
         $job_draft->update([
             'draft' => $request->draft,
-            'status' => 'Submitted to Operations',
+            'status' => 'Submitted to Assistant Supervisor',
         ]);
 
         return redirect()->route('admin.smm.content.approve')->with('Status', 'Draft Updated Successfully');

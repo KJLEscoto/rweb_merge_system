@@ -143,32 +143,39 @@
                                 @if (isset($records) && count($records) > 0)
                                     @foreach ($records as $date => $data)
                                         <tr class="text-center">
-                                            <td class="border border-gray-300 px-4 py-2 lg:text-base sm:text-sm text-[10px]">
+                                            <td
+                                                class="border border-gray-300 px-4 py-2 lg:text-base sm:text-sm text-[10px]">
                                                 {{ \Carbon\Carbon::parse($data['date'])->format(' j') }}
                                             </td>
-                                            <td class="border border-gray-300 px-4 py-2 lg:text-base sm:text-sm text-[10px]">
+                                            <td
+                                                class="border border-gray-300 px-4 py-2 lg:text-base sm:text-sm text-[10px]">
                                                 {{ $data['time_in'] }}
                                             </td>
-                                            <td class="border border-gray-300 px-4 py-2 lg:text-base sm:text-sm text-[10px]">
+                                            <td
+                                                class="border border-gray-300 px-4 py-2 lg:text-base sm:text-sm text-[10px]">
                                                 {{ $data['time_out'] }}
                                             </td>
                                             @if ($data['hours_worked'] == '—')
-                                                <td class="border border-gray-300 px-4 py-2 lg:text-base sm:text-sm text-[10px]">
+                                                <td
+                                                    class="border border-gray-300 px-4 py-2 lg:text-base sm:text-sm text-[10px]">
                                                     —
                                                 </td>
                                             @else
                                                 @if ((int) filter_var($data['hours_worked'], FILTER_SANITIZE_NUMBER_INT) / 60 < 1)
-                                                    <td class="border border-gray-300 px-4 py-2 lg:text-base sm:text-sm text-[10px]">
+                                                    <td
+                                                        class="border border-gray-300 px-4 py-2 lg:text-base sm:text-sm text-[10px]">
                                                         {{ (int) filter_var($data['hours_worked'], FILTER_SANITIZE_NUMBER_INT) }}
                                                         minutes
                                                     </td>
                                                 @elseif((int) filter_var($data['hours_worked'], FILTER_SANITIZE_NUMBER_INT) / 60 == 1)
-                                                    <td class="border border-gray-300 px-4 py-2 lg:text-base sm:text-sm text-[10px]">
+                                                    <td
+                                                        class="border border-gray-300 px-4 py-2 lg:text-base sm:text-sm text-[10px]">
                                                         {{ (int) filter_var($data['hours_worked'], FILTER_SANITIZE_NUMBER_INT) / 60 }}
                                                         hour
                                                     </td>
                                                 @elseif((int) filter_var($data['hours_worked'], FILTER_SANITIZE_NUMBER_INT) / 60 > 1)
-                                                    <td class="border border-gray-300 px-4 py-2 lg:text-base sm:text-sm text-[10px]">
+                                                    <td
+                                                        class="border border-gray-300 px-4 py-2 lg:text-base sm:text-sm text-[10px]">
                                                         {{ floor((int) filter_var($data['hours_worked'], FILTER_SANITIZE_NUMBER_INT) / 60) }}
                                                         hours
                                                         {{ round((int) filter_var($data['hours_worked'], FILTER_SANITIZE_NUMBER_INT) % 60) }}
@@ -212,24 +219,26 @@
             if (count >= 1) {
                 toastr.error(`Please wait for 30 seconds to send request again!`);
                 console.log(count);
-                setTimeout(function () {
+                setTimeout(function() {
                     count = 0;
                 }, 30000);
             } else {
                 fetch("{{ route('user.send.request.download.notification') }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}" // CSRF protection
-                    },
-                    body: JSON.stringify({
-                        to_user_role: ['admin', 'top_manager', 'supervisor', 'operations', 'assistant_supervisor'],
-                        month: month,
-                        year: year,
-                        title: 'Download Request',
-                        type: 'user.dtr.download.request',
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}" // CSRF protection
+                        },
+                        body: JSON.stringify({
+                            to_user_role: ['admin', 'top_management', 'operations_supervisor', 'operations',
+                                'assistant_supervisor'
+                            ],
+                            month: month,
+                            year: year,
+                            title: 'Download Request',
+                            type: 'user.dtr.download.request',
+                        })
                     })
-                })
                     .then(response => response.status)
                     .then(data => {
 

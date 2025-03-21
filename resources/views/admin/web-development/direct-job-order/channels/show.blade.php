@@ -194,7 +194,7 @@
                         </strong><br>
                     </td>
                     <td class="signature">
-                        <strong>Supervisor Signature:
+                        <strong>Operations Supervisor Signature:
                             {{ $web_project_channel->web_project->issuer->name }}</strong><br>
                         <img src="{{ asset($web_project_channel->web_project->supervisor->signature) }}"
                             alt="Supervisor Signature">

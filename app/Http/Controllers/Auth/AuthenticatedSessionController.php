@@ -40,8 +40,8 @@ class AuthenticatedSessionController extends Controller
 
         $admin_roles = [
             'assistant_supervisor',
-            'supervisor',
-            'top_manager',
+            'operations_supervisor',
+            'top_management',
         ];
 
         $user_roles = [
