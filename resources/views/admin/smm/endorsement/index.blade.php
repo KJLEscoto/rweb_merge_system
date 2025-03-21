@@ -63,8 +63,10 @@
                                     @csrf
                                     @method('PUT')
                                     <button type="submit"
+                                        
                                         class="px-4 py-2 text-white  rounded-lg shadow-md transition duration-300 {{ ($endorsement->status != 'pending' && Auth::user()->role_id == 5) || ($endorsement->status != 'Approved by Top Management' && Auth::user()->role_id == 6) ? 'bg-gray-600 ' : 'bg-green-600 hover:bg-green-700' }}"
-                                        {{ $endorsement->status != 'pending' && Auth::user()->role_id == 5 ? 'disabled ' : '' }}>
+                                        {{ $endorsement->status != 'pending' && Auth::user()->role_id == 5 ? 'disabled ' : '' }}
+                                        {{$endorsement->status == 'pending' && Auth::user()->role_id == 6 ? "disabled" : ""}}>
                                         Approve
                                     </button>
                                 </form>
