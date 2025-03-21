@@ -4,6 +4,7 @@
 //for smm routes package
 use App\Http\Controllers\AdminSupervisorRequestController;
 use App\Http\Controllers\ClientApprovalController;
+use App\Http\Controllers\ClientDownloadablesController;
 use App\Http\Controllers\ClientHistoryController;
 use App\Http\Controllers\ClientRenewalController;
 use App\Http\Controllers\ContentApprovalController;
@@ -139,6 +140,10 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
     Route::get('/endorsement/download/{id}', [ProjectEndorsementFormController::class, 'downloadPDF'])->name('endorsement.download');
 
     Route::put('endorsement/{id}/approve', [ProjectEndorsementFormController::class, 'approve'])->name('admin.smm.endorsement.approve');
+
+    Route::get('client_documents', [ClientDownloadablesController::class, 'index'])->name('admin.smm.client_documents');
+    Route::get('client_documents/download/{id}', [ClientDownloadablesController::class, 'downloadPDF'])->name('admin.smm.client_documents.download');
+    Route::get('/client_documents/show/{id}', [ClientHistoryController::class, 'show'])->name('admin.smm.client_documents.show');
   });
 
   Route::middleware('auth')->group(function () {
