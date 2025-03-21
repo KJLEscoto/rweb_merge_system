@@ -197,7 +197,6 @@ class AuthController extends Controller
             $request->session()->regenerate();
             $user = Auth::user();
 
-
             if ($data['type'] === 'admin') {
                 return $this->adminLogin($request, $user, $userController);
             } else {
@@ -212,9 +211,10 @@ class AuthController extends Controller
 
     private function adminLogin(Request $request, $user, UserController $userController)
     {
+
+        $admin_roles = ['assistant_supervisor', 'operations_supervisor', 'top_management', 'admin'];
         if (
-            $user->roles->position != "assistant_supervisor" && $user->roles->position != "supervisor" &&
-            $user->roles->position != "top_management"
+            !in_array($user->roles->position, $admin_roles)
         ) {
             Auth::logout();
             return back()->with('invalid', 'This user does not exist.');
