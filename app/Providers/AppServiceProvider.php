@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             $user = Auth::user(); // Get the logged-in user
 
-            $higher_up_roles = ['admin', 'top_manager', 'operations', 'supervisor'];
+            $higher_up_roles = ['admin', 'top_manager', 'operations', 'assistant_supervisor', 'supervisor'];
 
             if ($user && in_array($user->role, $higher_up_roles)) {
                 // Admin (ID = 1) sees all notifications

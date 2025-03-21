@@ -81,7 +81,7 @@ class NotificationController extends Controller
             }
 
             // Notifications for roles
-            $roles = ['admin', 'supervisor', 'top_manager', 'operations'];
+            $roles = ['admin', 'supervisor', 'top_manager', 'operations', 'assistant_supervisor'];
             $users = User::whereIn('role', $roles)->get();
 
             foreach ($users as $usr) {
