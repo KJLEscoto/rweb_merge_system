@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProjectEndorsementForm;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -157,5 +158,19 @@ class ProjectEndorsementFormController extends Controller
         }
 
         return redirect()->back()->with('Success', 'Endorsement Approved Successfully');
+    }
+
+    public function downloadPDF($id)
+    {
+        //Subject to remove
+        $endorsement = ProjectEndorsementForm::with('client', 'notedBy', 'personInCharge', 'approvedBy')->find($id);
+        // return view('admin.smm.endorsement.show', compact('endorsement'));
+
+        $pdf = Pdf::loadView('admin.smm.endorsement.download', compact('endorsement'));
+
+
+        return $pdf->download(
+            str_replace(' ', '', 'endorsementletter') . '.pdf'
+        );
     }
 }

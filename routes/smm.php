@@ -136,6 +136,7 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
     Route::get('endorsement/{id}/edit', [ProjectEndorsementFormController::class, 'edit'])->name('admin.smm.endorsement.edit');
     Route::put('endorsement/{id}/update', [ProjectEndorsementFormController::class, 'update'])->name('admin.smm.endorsement.update');
     Route::delete('endorsement/{id}/destroy', [ProjectEndorsementFormController::class, 'destroy'])->name('admin.smm.endorsement.destroy');
+    Route::get('/endorsement/download/{id}', [ProjectEndorsementFormController::class, 'downloadPDF'])->name('endorsement.download');
 
     Route::put('endorsement/{id}/approve', [ProjectEndorsementFormController::class, 'approve'])->name('admin.smm.endorsement.approve');
   });

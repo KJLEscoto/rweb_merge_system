@@ -42,17 +42,18 @@
                 <tr>
                     <th class="w-[30%] px-4 py-3">Title</th>
                     <th class="w-[20%] px-4 py-3">Issued To</th>
-                    <th class="w-[20%] px-4 py-3 text-center">Status</th>
-                    <th class="w-[20%] px-4 py-3 text-center">Actions</th>
+                    <th class="w-[20%] px-4 py-3">Status</th>
+                    <th class="w-[20%] px-4 py-3">Actions</th>
                 </tr>
             </thead>
             <tbody id="tableBody" class="overflow-y-auto">
                 @forelse ($supervisor_requests as $supervisor_request)
                     <tr class="border-b">
-                        <td class="w-[30%] px-4 py-3 truncate">{{ $supervisor_request->title }}</td>
-                        <td class="w-[20%] px-4 py-3 truncate">{{ $supervisor_request->assignee->name }}</td>
-                        <td class="w-[20%] px-4 py-3 text-wrap text-center">
+                        <td class="w-[30%] px-4 py-3">{{ $supervisor_request->title }}</td>
+                        <td class="w-[20%] px-4 py-3">{{ $supervisor_request->assignee->name }}</td>
+                        <td class="px-4 py-3 text-wrap">
                             {{ $supervisor_request->status }}
+                            <br />
                             @if ($supervisor_request->deadline < now())
                                 <!-- Check if deadline has passed -->
                                 <span class="text-sm font-bold text-red-500">{{ $supervisor_request->deadline }}
@@ -62,7 +63,7 @@
                                     ONGOING</span>
                             @endif
                         </td>
-                        <td class="w-[20%] px-4 py-3 text-center">
+                        <td class="px-4 py-3 flex gap-2">
                             <a href="{{ url('/admin/smm/supervisor/joborder/edit/' . $supervisor_request->id) }}">
                                 @if ($supervisor_request->status == 'pending' || $supervisor_request->status == 'Waiting for Operation Approval')
                                     <button
