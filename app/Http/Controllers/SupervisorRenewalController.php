@@ -11,7 +11,7 @@ class SupervisorRenewalController extends Controller
 {
     public function index()
     {
-        $job_orders = JobOrder::with('jobDrafts')->get();
+        $job_orders = JobOrder::with('jobDrafts', 'JobDrafts.client')->get();
         return view('admin.smm.supervisor.renewal.index', compact('job_orders'));
     }
 
