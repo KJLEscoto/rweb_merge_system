@@ -81,7 +81,7 @@
                 <section id="tab-content-all" class="divide-y divide-gray-100 w-full h-60 overflow-auto">
                     @forelse ($notifications->where('is_archive', 0) as $notification)
                         <div class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
                             onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-all', '{{ addslashes($notification->type) }}', '{{ addslashes($notification->title) }}')">
 
                             <div class="flex items-center gap-3 w-2/3">
@@ -164,7 +164,7 @@
                 <section id="tab-content-unread" class="hidden divide-y divide-gray-100 w-full h-60 overflow-auto">
                     @forelse ($notifications->where('is_read', 0)->where('is_archive', 0) as $notification)
                         <div class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
                             onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-unread', '{{ addslashes($notification->type) }}', '{{ addslashes($notification->title) }}')">
                             <div class="flex items-center gap-3 w-2/3">
                                 <div class="w-auto h-auto">
@@ -246,7 +246,7 @@
                 <section id="tab-content-archived" class="hidden divide-y divide-gray-100 w-full h-60 overflow-auto">
                     @forelse ($notifications->where('is_archive', 1) as $notification)
                         <div class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
                             onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-archive', '{{ addslashes($notification->type) }}', '{{ addslashes($notification->title) }}')">
                             <div class="flex items-center gap-3 w-2/3">
                                 <div class="h-auto w-auto">
@@ -570,7 +570,6 @@
                 console.log(`Checking notification at index ${i}:`,
                     notification); // Trace: Show the notification being checked
 
-
                 if (parseInt(notification.is_read) === 0) {
                     unreadCount++;
                     console.log(`Notification at index ${i} is unread. Unread count: ${unreadCount}`); // Trace: Show when a notification is unread
@@ -650,10 +649,26 @@
 
         }
 
-        // Function to toggle dropdown
-        function toggleDropdown() {
-            dropdownMenu.classList.toggle('hidden');
-        }
+        // // Function to toggle dropdown
+        // function toggleDropdown() {
+        //     dropdownMenu.classList.add("hidden");
+        //     dropdownMenu.classList.toggle('hidden');
+        // }
+
+        window.addEventListener("click", function (event) {
+
+            debugger
+            if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.classList.add('hidden');
+            }
+            else if (!dropdownMenu.contains(event.target)) {
+                dropdownMenu.classList.toggle('hidden');
+            }
+
+            console.log("Dropdown is now", isHidden ? "visible" : "hidden");
+        });
+
+
 
         // Function to show a specific tab
         function showTab(tabId) {
@@ -840,7 +855,7 @@
         };
 
         // Event listeners
-        dropdownButton.addEventListener('click', toggleDropdown);
+        //dropdownButton.addEventListener('click', toggleDropdown);
         tabAllButton.addEventListener('click', () => showTab('tab-all'));
         tabUnreadButton.addEventListener('click', () => showTab('tab-unread'));
         tabArchivedButton.addEventListener('click', () => showTab('tab-archived'));

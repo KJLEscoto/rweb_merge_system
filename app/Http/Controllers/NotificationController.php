@@ -28,6 +28,12 @@ class NotificationController extends Controller
     //     return response()->json(['message' => 'Notification sent to user ' . $userId]);
     // }
 
+    public function index()
+    {
+        $notifications = Notification::get()->count();
+        return $notifications;
+    }
+
     public function sendAdminNotification(Request $request)
     {
 

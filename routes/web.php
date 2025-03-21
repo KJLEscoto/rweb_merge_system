@@ -165,6 +165,7 @@ Route::get('/notification-page', [NotificationController::class, 'readUserNotifi
 
 
 Route::post('/notifications/{id}/archive', [NotificationController::class, 'archiveAdminNotification'])->name('user.recieve.notification.archive');
+Route::post('/notifications', [NotificationController::class, 'index'])->name('user.recieve.notification.index');
 
 //test routes
 

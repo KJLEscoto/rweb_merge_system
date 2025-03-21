@@ -30,7 +30,7 @@ class WebApprovalController extends Controller
         $web_project_channels = null;
 
         switch ($user->roles->position) {
-            case "supervisor":
+            case "operations_supervisor":
                 $web_project_channels = WebProjectChannel::with('web_project')->where('status', 'Submitted to Operations Supervisor')->get();
                 break;
             case "top_management":
@@ -79,7 +79,7 @@ class WebApprovalController extends Controller
         $web_project_channel = null;
 
         switch ($user->roles->position) {
-            case "supervisor":
+            case "operations_supervisor":
                 $web_project_channel = WebProjectChannel::with('web_project')->where('status', 'Submitted to Operations Supervisor')->find($id);
                 break;
             case "top_management":
@@ -198,7 +198,7 @@ class WebApprovalController extends Controller
             $web_project_channel = WebProjectChannel::find($id);
 
             switch ($user->roles->position) {
-                case "supervisor":
+                case "operations_supervisor":
                     $web_project_channel->status = "Submitted to Top Management";
                     $web_project_channel->web_job_orders->update([
                         'supervisor_signed_draft_id' => Auth::user()->id,
