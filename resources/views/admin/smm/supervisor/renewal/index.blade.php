@@ -74,6 +74,7 @@
             <thead class="sticky top-0 z-5 bg-[#fa7011] text-white">
                 <tr>
                     <th class="px-6 py-3">Title</th>
+                    <th class="px-6 py-3">Client</th>
                     <th class="px-6 py-3">Renewable</th>
                 </tr>
             </thead>
@@ -81,6 +82,7 @@
                 @forelse ($job_orders as $job_order)
                     <tr class="project-row border-b">
                         <td class="px-6 py-3">{{ $job_order->title }}</td>
+                        <td class="px-6 py-3">{{ $job_order->jobDrafts[0]->client->name }}</td>
 
                         <td class="px-6 py-3 border-b">
                             <label class="switch">
