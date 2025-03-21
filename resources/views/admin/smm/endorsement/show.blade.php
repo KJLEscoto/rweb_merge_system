@@ -94,7 +94,7 @@
     </style>
 </head>
 
-<x-main-layout breadcumb="SMM / Direct Job Order" page="Show Direct Job Order">
+<x-main-layout breadcumb="SMM / Endorsement" page="Endorsement Form">
 
 
     <div id="container-pdf">
@@ -103,13 +103,20 @@
             <div class="bg-[#fa7011] text-white rounded-md px-3 py-1 w-fit mb-4">
                 <a href="{{ route('admin.smm.endorsement') }}">Back</a>
             </div>
-            <div class="bg-green-600 text-white rounded-md px-3 py-1 w-fit mb-4">
-                <a href="{{ route('endorsement.download', $endorsement->id) }}"><span><i class="fas fa-download"></i></span> Download</a>
+            <div class="flex gap-4">
+                <div class="bg-green-600 text-white rounded-md px-3 py-1 w-fit mb-4">
+                    <a href="{{ route('endorsement.download', $endorsement->id) }}"><span><i class="fas fa-download"></i></span> Download</a>
+                </div>
+                @if ($endorsement->status == 'Approved by Operations Supervisor')
+                    <div class="bg-[#fa7011] text-white rounded-md px-3 py-1 w-fit mb-4">
+                        <a href="{{ route('admin.smm.supervisor.joborder') }}"><span><i class="fas fa-download"></i></span> Create Draft</a>
+                    </div>
+                @endif
             </div>
         </div>
         <div class="header">
             <img src="{{ asset('/Assets/doc_header.png') }}" alt="Header">
-            <h2>Operation Job Order Form</h2>
+            <h2>Endorsement Form</h2>
         </div>
 
         <div class="section">
@@ -159,8 +166,8 @@
             <table>
                 <tr>
                     <td class="signature">
-                        <strong>Prepared By: <br />{{ Auth::user()->name }}</strong><br>
-                        <img src="{{ asset(Auth::user()->signature) }}" alt="Supervisor Signature">
+                        <strong>Prepared By: <br />{{ $endorsement->preparedBy->name }}</strong><br>
+                        <img src="{{ asset($endorsement->preparedBy->signature) }}" alt="Supervisor Signature">
                     </td>
                     <td class="signature">
 
