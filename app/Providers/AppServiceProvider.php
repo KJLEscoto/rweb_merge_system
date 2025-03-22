@@ -29,16 +29,24 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         View::composer('*', function ($view) {
+            $notifications = null;
             $user = Auth::user(); // Get the logged-in user
+            $userId = $user->id ?? 0;
 
             $higher_up_roles = ['admin', 'top_management', 'operations', 'assistant_supervisor', 'operations_supervisor'];
 
             if ($user && in_array($user->role, $higher_up_roles)) {
                 // Admin (ID = 1) sees all notifications
-                $notifications = Notification::with('users')->where('user_id', $user->id ?? 0)->get()->sortByDesc('created_at');
+                $notifications = Notification::with('users')
+                    ->where('user_id', $user->id ?? 0)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
             } else {
                 // Regular users see only their notifications
-                $notifications = Notification::with('users')->where('user_id', $user->id ?? 0)->get()->sortByDesc('created_at');
+                $notifications = Notification::with('users')
+                    ->where('user_id', $user->id ?? 0)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
             }
 
             //$view->with('notifications', $notifications);
@@ -157,7 +165,7 @@ class AppServiceProvider extends ServiceProvider
                     ->with(['jobOrder', 'contentWriter', 'graphicDesigner', 'client'])
                     ->count();
 
-                $view->with(compact('clientDraftCount', 'supervisorDraftCount', 'supervisorTaskCountContent', 'supervisorTaskCountGraphic', 'operationTaskCountGraphic', 'supervisorApprovalCount', 'operationTaskCountContent', 'operationIncomingRequestCount', 'operationApprovalCount', 'operationRevisionCount', 'contentDraftCount', 'contentRevisionCount', 'graphicDraftCount', 'graphicRevisionCount', 'topmanagerApprovalCount', 'revisionCount'))->with('notifications', $notifications);
+                $view->with(compact('clientDraftCount', 'supervisorDraftCount', 'supervisorTaskCountContent', 'supervisorTaskCountGraphic', 'operationTaskCountGraphic', 'supervisorApprovalCount', 'operationTaskCountContent', 'operationIncomingRequestCount', 'operationApprovalCount', 'operationRevisionCount', 'contentDraftCount', 'contentRevisionCount', 'graphicDraftCount', 'graphicRevisionCount', 'topmanagerApprovalCount', 'revisionCount', 'notifications', 'userId'));
             }
         });
     }

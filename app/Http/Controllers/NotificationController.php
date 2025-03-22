@@ -28,10 +28,123 @@ class NotificationController extends Controller
     //     return response()->json(['message' => 'Notification sent to user ' . $userId]);
     // }
 
-    public function index()
+    public function index(Request $request)
     {
-        $notifications = Notification::get()->count();
-        return $notifications;
+        $user_id = Auth::user()->id;
+        $notifications = Notification::with('users')
+            ->orderBy('created_at', 'desc')
+            ->where('user_id', $user_id)
+            ->select([
+                'notifications.*',
+                DB::raw("(SELECT files.path 
+                  FROM files 
+                  WHERE files.id = 
+                        (SELECT profiles.file_id 
+                         FROM profiles 
+                         WHERE profiles.id = 
+                               (SELECT users.profile_id 
+                                FROM users 
+                                WHERE users.id = notifications.from_user_id
+                                LIMIT 1)
+                         LIMIT 1)
+                  LIMIT 1) AS file_path")
+            ])
+            ->where('is_archive', 0)
+            ->paginate(10);
+
+        return compact('notifications');
+    }
+
+    public function show($id)
+    {
+        $user_id = Auth::user()->id;
+        $notification = Notification::with('users')->where('user_id', $user_id)->where('id', $id)
+            ->select([
+                'notifications.*',
+                DB::raw("(SELECT files.path 
+                  FROM files 
+                  WHERE files.id = 
+                        (SELECT profiles.file_id 
+                         FROM profiles 
+                         WHERE profiles.id = 
+                               (SELECT users.profile_id 
+                                FROM users 
+                                WHERE users.id = notifications.from_user_id
+                                LIMIT 1)
+                         LIMIT 1)
+                  LIMIT 1) AS file_path")
+            ])
+            ->first();
+        return $notification;
+    }
+
+    public function allCount()
+    {
+        $user_id = Auth::user()->id;
+        $notificationAllCount = Notification::with('users')->where('user_id', $user_id)->where('is_archive', 0)->get()->count();
+        return $notificationAllCount;
+    }
+
+    public function unreadCount()
+    {
+        $user_id = Auth::user()->id;
+        $notificationUnreadCount = Notification::with('users')->where('user_id', $user_id)->where('is_read', 0)->where('is_archive', 0)->get()->count();
+        return $notificationUnreadCount;
+    }
+
+    public function archivedCount()
+    {
+        $user_id = Auth::user()->id;
+        $notificationArchiveCount = Notification::with('users')->where('user_id', $user_id)->where('is_archive', 1)->get()->count();
+        return $notificationArchiveCount;
+    }
+
+    public function unread(Request $request)
+    {
+        $user_id = Auth::user()->id;
+        $notificationUnread = Notification::with('users')->where('user_id', $user_id)
+            ->select([
+                'notifications.*',
+                DB::raw("(SELECT files.path 
+                  FROM files 
+                  WHERE files.id = 
+                        (SELECT profiles.file_id 
+                         FROM profiles 
+                         WHERE profiles.id = 
+                               (SELECT users.profile_id 
+                                FROM users 
+                                WHERE users.id = notifications.from_user_id
+                                LIMIT 1)
+                         LIMIT 1)
+                  LIMIT 1) AS file_path")
+            ])
+            ->where('is_read', 0)->where('is_archive', 0)
+            ->paginate(10);
+        return $notificationUnread;
+    }
+
+    public function archived(Request $request)
+    {
+        $user_id = Auth::user()->id;
+        $notificationArchive = Notification::with('users')
+            ->select([
+                'notifications.*',
+                DB::raw("(SELECT files.path 
+                  FROM files 
+                  WHERE files.id = 
+                        (SELECT profiles.file_id 
+                         FROM profiles 
+                         WHERE profiles.id = 
+                               (SELECT users.profile_id 
+                                FROM users 
+                                WHERE users.id = notifications.from_user_id
+                                LIMIT 1)
+                         LIMIT 1)
+                  LIMIT 1) AS file_path")
+            ])
+            ->where('user_id', $user_id)->where('is_archive', 1)
+            ->paginate(10);
+        return $notificationArchive;
     }
 
     public function sendAdminNotification(Request $request)
