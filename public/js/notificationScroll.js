@@ -88,10 +88,13 @@ function appendNotification(notificationData, containerId, tabId) {
         "text-black absolute -top-4 opacity-0 group-hover:opacity-100 animate-transition text-[11px] font-semibold";
     archiveTooltip.textContent = "Archive";
 
-    archiveButton.appendChild(archiveIcon);
-    archiveButton.appendChild(archiveTooltip);
-    archiveButtonDiv.appendChild(archiveButton);
-    actionDiv.appendChild(archiveButtonDiv);
+    // Check if the container does not matched with the "tab-content-archived"
+    if (containerId != "tab-content-archived") {
+        archiveButton.appendChild(archiveIcon);
+        archiveButton.appendChild(archiveTooltip);
+        archiveButtonDiv.appendChild(archiveButton);
+        actionDiv.appendChild(archiveButtonDiv);
+    }
 
     debugger;
     if (parseInt(notificationData.is_read) == 0) {
@@ -150,32 +153,10 @@ async function loadMoreNotifications(containerId, apiUrl) {
 
         // console.log("THE PAGE IS LOADING!");
 
-        // let loadingDiv = document.createElement("div");
-        // loadingDiv.id = "custom-loading-notification";
-        // loadingDiv.style.textAlign = "center";
-        // loadingDiv.textContent = "Loading...";
-        // container.appendChild(loadingDiv);
-
         let loadingDiv = document.createElement("div");
         loadingDiv.id = "custom-loading-notification";
-        loadingDiv.style.display = "flex";
-        loadingDiv.style.alignItems = "center";
-        loadingDiv.style.justifyContent = "center";
-        loadingDiv.style.padding = "10px";
-        loadingDiv.style.fontWeight = "semibold";
-        loadingDiv.style.color = "#F57D11"; // Highlight loading text
-        loadingDiv.style.fontSize = "0.875rem";
-
-        // Create the loading icon
-        let loadingIcon = document.createElement("span");
-        loadingIcon.classList.add("line-md--loading-loop", "animate-spin");
-        loadingIcon.style.fontSize = "20px";
-        loadingIcon.style.marginRight = "3px"; // Space between icon and text
-
-        // Append icon and text
-        loadingDiv.appendChild(loadingIcon);
-        loadingDiv.appendChild(document.createTextNode("Loading..."));
-
+        loadingDiv.style.textAlign = "center";
+        loadingDiv.textContent = "Loading...";
         container.appendChild(loadingDiv);
 
         requestAnimationFrame(async () => {
@@ -242,20 +223,6 @@ async function loadMoreNotifications(containerId, apiUrl) {
 
                 console.log("response", response);
 
-                // setTimeout(() => {
-                //     let customLoading = document.getElementById(
-                //         "custom-loading-notification"
-                //     );
-                //     if (customLoading) {
-                //         container.removeChild(customLoading);
-                //     }
-
-                //     response.forEach((notification) => {
-                //         appendNotification(notification, containerId, "");
-                //     });
-                //     isLoading = false;
-                // }, 1000);
-
                 setTimeout(() => {
                     let customLoading = document.getElementById(
                         "custom-loading-notification"
@@ -264,30 +231,10 @@ async function loadMoreNotifications(containerId, apiUrl) {
                         container.removeChild(customLoading);
                     }
 
-                    if (response.length > 0) {
-                        response.forEach((notification) => {
-                            appendNotification(notification, containerId, "");
-                        });
-                        isLoading = false; // Allow further scrolling only if new data is loaded
-                    } else {
-                        // If no more notifications, display a message
-                        let noMoreDiv = document.getElementById(
-                            "no-more-notifications"
-                        );
-                        if (!noMoreDiv) {
-                            noMoreDiv = document.createElement("div");
-                            noMoreDiv.id = "no-more-notifications";
-                            noMoreDiv.style.textAlign = "center";
-                            noMoreDiv.style.padding = "10px";
-                            noMoreDiv.style.fontWeight = "semibold";
-                            noMoreDiv.style.color = "gray";
-                            noMoreDiv.style.fontSize = "0.875rem";
-                            noMoreDiv.textContent =
-                                "No more notifications to load";
-                            container.appendChild(noMoreDiv);
-                        }
-                        isLoading = true; // Prevent further requests
-                    }
+                    response.forEach((notification) => {
+                        appendNotification(notification, containerId, "");
+                    });
+                    isLoading = false;
                 }, 1000);
             } catch (error) {
                 let customLoading = document.getElementById(

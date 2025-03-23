@@ -34,9 +34,12 @@ function setupNotifications() {
 
     async function countUnreadNotifications() {
         try {
-            const response = await axios.get("/notifications/unreadCount", {
-                params: { user_id: userId },
-            });
+            const response = await axios.get(
+                "/notifications/totalUnreadCount",
+                {
+                    params: { user_id: userId },
+                }
+            );
             console.log("Notifications:", response.data);
             return response.data; // Correctly return the count
         } catch (error) {
@@ -46,8 +49,8 @@ function setupNotifications() {
     }
 
     // Function to update notification count
-    function updateNotificationCount() {
-        const unreadCount = countUnreadNotifications();
+    async function updateNotificationCount() {
+        const unreadCount = await countUnreadNotifications();
 
         if (unreadCount > 0) {
             notificationCountSpan.textContent = `(${unreadCount})`;
@@ -58,6 +61,8 @@ function setupNotifications() {
         // update the counter in the button itself
         const buttonCountDiv = dropdownButton.querySelector("div div p");
         if (buttonCountDiv) {
+            console.log("UnRead Count:", unreadCount);
+            debugger;
             if (unreadCount <= 99) {
                 buttonCountDiv.textContent = unreadCount;
             } else {

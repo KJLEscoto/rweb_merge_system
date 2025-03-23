@@ -82,7 +82,7 @@ class NotificationController extends Controller
     public function allCount()
     {
         $user_id = Auth::user()->id;
-        $notificationAllCount = Notification::with('users')->where('user_id', $user_id)->where('is_archive', 0)->get()->count();
+        $notificationAllCount = Notification::with('users')->where('user_id', $user_id)->where('is_read', 0)->get()->count();
         return $notificationAllCount;
     }
 
@@ -90,6 +90,13 @@ class NotificationController extends Controller
     {
         $user_id = Auth::user()->id;
         $notificationUnreadCount = Notification::with('users')->where('user_id', $user_id)->where('is_read', 0)->where('is_archive', 0)->get()->count();
+        return $notificationUnreadCount;
+    }
+
+    public function totalUnreadCount()
+    {
+        $user_id = Auth::user()->id;
+        $notificationUnreadCount = Notification::with('users')->where('user_id', $user_id)->where('is_read', 0)->get()->count();
         return $notificationUnreadCount;
     }
 
