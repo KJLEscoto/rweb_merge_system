@@ -53,7 +53,7 @@ class ProjectEndorsementFormController extends Controller
 
 
 
-        ProjectEndorsementForm::create([
+        $projectEndorsementForm = ProjectEndorsementForm::create([
             'title' => $request->title,
             'client_id' => $request->client_id,
             'date_issued' => Carbon::today(), // Ensures only the date is stored
@@ -65,6 +65,22 @@ class ProjectEndorsementFormController extends Controller
             'prepared_by' => auth()->user()->id,
             'status' => 'pending'
         ]);
+
+        $notificationController = new NotificationController();
+
+        //formulate the data in the notification
+        $request = new Request([
+            'job_order_id' => $projectEndorsementForm->id,
+            'from_user_id' => auth()->user()->id,
+            'to_user_id' => ['content' => $projectEndorsementForm->person_in_charge], // for multiple users
+            'title' => $projectEndorsementForm->title,
+            'type' => 'admin.smm.create.endorsement.form',
+            'month' => Carbon::now()->format('m'), // 'm' gives zero-padded month (e.g., 03 for March)
+            'year' => Carbon::now()->format('Y'), // 'Y' gives full 4-digit year (e.g., 2025)
+            'message' => $projectEndorsementForm->title,
+        ]);
+
+        $notify = $notificationController->sendAdminNotification($request);
 
         return redirect()->route('admin.smm.endorsement')->with('success', 'Project Endorsement Form Created Successfully!');
     }

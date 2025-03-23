@@ -110,7 +110,7 @@ class AdminSupervisorRequestController extends Controller
         $request = new Request([
             'job_order_id' => $job_draft->job_order_id,
             'from_user_id' => auth()->user()->id,
-            'to_user_id' => ['content' => auth()->user()->id], // for multiple users
+            'to_user_id' => ['content' => $job_draft->jobOrder->issed_by], // for multiple users
             'title' => $job_draft->jobOrder->title,
             'type' => 'admin.smm.request.job-order',
             'month' => Carbon::now()->format('m'), // 'm' gives zero-padded month (e.g., 03 for March)
@@ -130,6 +130,22 @@ class AdminSupervisorRequestController extends Controller
         $model_request->update([ // Use ModelsRequest instead of Request
             'status' => 'Approved by Operation'
         ]);
+
+        $notificationController = new NotificationController();
+
+        //formulate the data in the notification
+        $request = new Request([
+            'job_order_id' => $model_request->id,
+            'from_user_id' => $model_request->assigned_to,
+            'to_user_id' => ['content' => $model_request->issued_by], // for multiple users
+            'title' => $model_request->title,
+            'type' => 'admin.smm.accept.job-order',
+            'month' => Carbon::now()->format('m'), // 'm' gives zero-padded month (e.g., 03 for March)
+            'year' => Carbon::now()->format('Y'), // 'Y' gives full 4-digit year (e.g., 2025)
+            'message' => $model_request->description,
+        ]);
+
+        $notify = $notificationController->sendAdminNotification($request);
 
         return redirect()->route('admin.smm.operation.request')->with('Status', 'Job Order Accepted Successfully');
     }

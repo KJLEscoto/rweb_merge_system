@@ -127,6 +127,13 @@ class PushNotificationEvent
 
                 $this->sendRequestJobOrderPushNotification();
                 break;
+            case 'send-endorsement-create-form-notification':
+                $this->from_user_id = $request->from_user_id;
+                $this->to_user_id = $request->to_user_id;
+                $this->message = $request->message;
+
+                $this->sendCreateEndorsementFormPushNotification();
+                break;
         }
     }
 
@@ -159,6 +166,45 @@ class PushNotificationEvent
 
         // // Send only to a private channel for user 1
         // $pusher->trigger('private-notifications.' . $this->user_id, 'form-submitted', $data);
+    }
+
+    public function sendCreateEndorsementFormPushNotification()
+    {
+        // Check if the 'to_user_id' is set and not empty
+        if (isset($this->request->to_user_id) && !empty($this->request->to_user_id)) {
+            // Loop through each user ID in 'to_user_id'
+            foreach ($this->request->to_user_id as $userId) {
+                // Find the user based on the provided user ID
+                $user = User::find($userId);
+
+                // Ensure the user exists before sending the notification
+                if ($user) {
+                    // ✅ Send event to a PUBLIC CHANNEL
+                    $this->pusher->trigger("public-notifications", "user-notification-{$user->id}", [
+                        'message' => 'An endorsement form has been assigned to you for review.',
+                        'success' => true,
+                    ]);
+                    echo "Notification successfully sent to user ID: {$user->id} <br>";
+                } else {
+                    echo "User not found for ID: {$userId} <br>";
+                }
+            }
+
+            // If the user has the role of admin and there is more than one, use a loop
+            $users = User::whereIn('role', $this->request->to_user_role)->get();
+
+            if (isset($user) || $users->isNotEmpty()) {
+                foreach ($users as $user) {
+                    // ✅ Send event to a PUBLIC CHANNEL
+                    $this->pusher->trigger("public-notifications", "user-notification-{$user->id}", [
+                        'message' => 'A new endorsement form has been created and requires your attention.',
+                        'success' => true,
+                    ]);
+                }
+            }
+        } else {
+            echo "No users to notify <br>";
+        }
     }
 
     public function sendCreateJobOrderPushNotification()
@@ -287,7 +333,7 @@ class PushNotificationEvent
                 if ($user) {
                     // ✅ Send event to a PUBLIC CHANNEL
                     $this->pusher->trigger("public-notifications", "user-notification-{$user->id}", [
-                        'message' => 'A job order has been accepted by you.',
+                        'message' => "{$user->name} " . 'accepted the job order that you requested.',
                         'success' => true,
                     ]);
                     echo "Notification successfully sent to user ID: {$user->id} <br>";

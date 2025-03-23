@@ -74,6 +74,7 @@ class NotificationController extends Controller
                          LIMIT 1)
                   LIMIT 1) AS file_path")
             ])
+            ->orderByDesc('created_at')
             ->first();
         return $notification;
     }
@@ -119,6 +120,7 @@ class NotificationController extends Controller
                   LIMIT 1) AS file_path")
             ])
             ->where('is_read', 0)->where('is_archive', 0)
+            ->orderByDesc('created_at')
             ->paginate(10);
         return $notificationUnread;
     }
@@ -143,6 +145,7 @@ class NotificationController extends Controller
                   LIMIT 1) AS file_path")
             ])
             ->where('user_id', $user_id)->where('is_archive', 1)
+            ->orderByDesc('created_at')
             ->paginate(10);
         return $notificationArchive;
     }
@@ -167,6 +170,7 @@ class NotificationController extends Controller
         if (!empty($request->to_user_id)) {
             $userTypes = ['content', 'graphic'];
 
+            //The use of this function is to send to_user_id who is/are assigned to handle the task
             foreach ($userTypes as $userType) {
                 if (isset($request->to_user_id[$userType])) {
                     $userIds = is_array($request->to_user_id[$userType]) ? $request->to_user_id[$userType] : [$request->to_user_id[$userType]];
@@ -239,6 +243,7 @@ class NotificationController extends Controller
             'admin.smm.approved.job-order' => 'send-job-order-approved-notification',
             'admin.smm.revise.job-order' => 'send-job-order-revise-notification',
             'admin.smm.request.job-order' => 'send-job-order-request-notification',
+            'admin.smm.create.endorsement.form' => 'send-endorsement-create-form-notification',
             // Add more request types and corresponding events as needed
         ];
 
@@ -322,6 +327,9 @@ class NotificationController extends Controller
                 break;
             case 'admin.smm.request.job-order': //all for the higher ups
                 $customTitle = $fullNameFormatted . '. has requested to create a job order';
+                break;
+            case 'admin.smm.create.endorsement.form': // all for the higher-ups
+                $customTitle = $fullNameFormatted . ' has created an endorsement form for review.';
                 break;
             default:
                 Log::warning("Unknown notification type: " . $request->type);

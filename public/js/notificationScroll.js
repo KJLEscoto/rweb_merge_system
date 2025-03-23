@@ -38,7 +38,7 @@ function appendNotification(notificationData, containerId, tabId) {
         "w-10 h-10 rounded-full border border-[#F57D11] overflow-hidden";
 
     let image = document.createElement("img");
-    image.src = notificationData.file_path;
+    image.src = notificationData.file_path + "?t=" + Date.now() + "?s=100";
     image.className = "w-full h-full";
 
     imageContainer.appendChild(image);

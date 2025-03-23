@@ -18,7 +18,6 @@ class OperationApprovalController extends Controller
         return view('admin.smm.admin.joborderapproval.list', compact('job_drafts'));
     }
 
-
     public function show($id)
     {
         $job_draft = JobDraft::with('jobOrder', 'contentWriter', 'graphicDesigner', 'client')->find($id);
@@ -89,7 +88,7 @@ class OperationApprovalController extends Controller
         $request = new Request([
             'job_order_id' => $job_draft->job_order_id,
             'from_user_id' => auth()->user()->id,
-            'to_user_id' => ['content' => auth()->user()->id], // for multiple users
+            'to_user_id' => ['content' => $job_draft->jobOrder->issued_by], // for multiple users
             'title' => $job_draft->jobOrder->title,
             'type' => 'admin.smm.approved.job-order',
             'month' => Carbon::now()->format('m'), // 'm' gives zero-padded month (e.g., 03 for March)
@@ -137,7 +136,7 @@ class OperationApprovalController extends Controller
         $request = new Request([
             'job_order_id' => $job_draft->job_order_id,
             'from_user_id' => auth()->user()->id,
-            'to_user_id' => ['content' => auth()->user()->id], // for multiple users
+            'to_user_id' => ['content' => $job_draft->jobOrder->issued_by], // for multiple users
             'title' => $job_draft->jobOrder->title,
             'type' => 'admin.smm.rejected.job-order',
             'month' => Carbon::now()->format('m'), // 'm' gives zero-padded month (e.g., 03 for March)
