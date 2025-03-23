@@ -1,5 +1,6 @@
 // Shared Variables
 let isLoading = false;
+let loadingCount = 0;
 
 // Shared Functions
 function appendNotification(notificationData, containerId, tabId) {
@@ -138,11 +139,11 @@ function timeSince(dateString) {
 
 async function loadMoreNotifications(containerId, apiUrl) {
     let container = document.getElementById(containerId);
-    // console.log(
-    //     container.scrollHeight,
-    //     container.scrollTop,
-    //     container.clientHeight
-    // );
+    console.log(
+        container.scrollHeight,
+        container.scrollTop,
+        container.clientHeight
+    );
     if (
         !isLoading &&
         container.scrollHeight - container.scrollTop <=
@@ -307,8 +308,21 @@ async function loadMoreNotifications(containerId, apiUrl) {
                     container.removeChild(customLoading);
                 }
                 isLoading = false;
+
+                debugger;
             }
         });
+    } else {
+        // Prevent further requests if loading is already in progress
+        if (loadingCount === 0) {
+            isLoading = false;
+            loadingCount = 1;
+        } else {
+            setTimeout(() => {
+                isLoading = false;
+                isLoading = 0;
+            }, 1000);
+        }
     }
 }
 
