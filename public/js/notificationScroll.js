@@ -313,14 +313,12 @@ async function loadMoreNotifications(containerId, apiUrl) {
             }
         });
     } else {
-        // Prevent further requests if loading is already in progress
         if (loadingCount === 0) {
             isLoading = false;
             loadingCount = 1;
         } else {
             setTimeout(() => {
                 isLoading = false;
-                isLoading = 0;
             }, 1000);
         }
     }
