@@ -3,11 +3,16 @@ document.addEventListener("DOMContentLoaded", function () {
     async function fetchAndDisplayUnreadNotifications() {
         try {
             page = 1;
+            loadingCount = 0;
             const response = await axios.get("/notifications/unread");
             const unreadNotifications = response.data.data;
             const unreadContainer =
                 document.getElementById("tab-content-unread");
             unreadContainer.innerHTML = "";
+
+            // Scroll to the top
+            unreadContainer.scrollTop = 0; // For scrolling a specific container
+            window.scrollTo({ top: 0, behavior: "instant" }); // For scrolling the whole page
 
             console.log("Modal inside all container:", modal);
 
@@ -81,12 +86,17 @@ document.addEventListener("DOMContentLoaded", function () {
     async function fetchAndDisplayArchivedNotifications() {
         try {
             page = 1;
+            loadingCount = 0;
             const response = await axios.get("/notifications/archived");
             const archivedNotifications = response.data.data;
             const archivedContainer = document.getElementById(
                 "tab-content-archived"
             );
             archivedContainer.innerHTML = "";
+
+            // Scroll to the top
+            archivedContainer.scrollTop = 0; // For scrolling a specific container
+            window.scrollTo({ top: 0, behavior: "instant" }); // For scrolling the whole page
 
             if (archivedNotifications.length > 0) {
                 archivedNotifications.forEach((notification) => {
@@ -154,10 +164,15 @@ document.addEventListener("DOMContentLoaded", function () {
     async function fetchAndDisplayAllNotifications() {
         try {
             page = 1;
+            loadingCount = 0;
             const response = await axios.get("/notifications");
             const allNotifications = response.data.notifications.data;
             const allContainer = document.getElementById("tab-content-all");
             allContainer.innerHTML = "";
+
+            // Scroll to the top
+            allContainer.scrollTop = 0; // For scrolling a specific container
+            window.scrollTo({ top: 0, behavior: "instant" }); // For scrolling the whole page
 
             if (allNotifications.length > 0) {
                 allNotifications.forEach((notification) => {
