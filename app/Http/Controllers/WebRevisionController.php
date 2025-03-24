@@ -70,7 +70,7 @@ class WebRevisionController extends Controller
         ]);
 
         WebProjectChannel::find($web_revision->web_project_channel->id)->update([
-            'status' => 'Submitted to Operation',
+            'status' => 'Submitted to Assistant Supervisor',
             'draft' => $request->draft
         ]);
 

@@ -68,6 +68,7 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
   Route::get('/direct-job-order/{id}/show', [WebDirectJobOrderController::class, 'show'])->name('admin.web.direct-job-order.show');
   Route::get('/direct-job-order/{id}/showProjectChannels', [WebDirectJobOrderController::class, 'showProjectChannels'])->name('admin.web.direct-job-order.showProjectChannels');
   Route::get('/direct-job-order/{id}/edit', [WebDirectJobOrderController::class, 'edit'])->name('admin.web.direct-job-order.edit');
+  Route::put('/direct-job-order/{id}/edit', [WebDirectJobOrderController::class, 'editProjectChannels'])->name('admin.web.direct-job-order.edit.post');
   // Route::view('/direct-job-order/{id}/edit', 'admin.web-development.direct-job-order.edit')->name('admin.web.direct-job-order.edit');
 
   // operation job order pages

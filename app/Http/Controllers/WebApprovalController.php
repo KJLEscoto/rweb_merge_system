@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\Page;
+use App\Models\Privilege;
 use App\Models\JobOrder;
 use App\Models\Signature;
 use App\Models\User;
@@ -15,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class WebApprovalController extends Controller
@@ -27,26 +30,100 @@ class WebApprovalController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $web_project_channels = null;
 
-        switch ($user->roles->position) {
-            case "operations_supervisor":
-                $web_project_channels = WebProjectChannel::with('web_project')->where('status', 'Submitted to Operations Supervisor')->get();
-                break;
-            case "top_management":
-                $web_project_channels = WebProjectChannel::with('web_project')->where('status', 'Submitted to Top Management')->get();
-                break;
-            case "client":
-                $web_project_channels = WebProjectChannel::with('web_project')->where('status', 'Submitted to Client')->get();
-                break;
-            case "assistant_supervisor":
-                $web_project_channels = WebProjectChannel::with('web_project')->where('status', 'Submitted to Operation')->get();
-                break;
-            default:
-                return back()->with('Status', 'Invalid role!');
+        // Check for role first
+        if ($user->roles && $user->roles->position) {
+            $web_project_channels = $this->getWebProjectChannelsByUserRole($user);
+            if ($web_project_channels !== null) {
+                return view('admin.web-development.approvals.index', compact('web_project_channels'));
+            }
         }
 
-        return view('admin.web-development.approvals.index', compact('web_project_channels'));
+        // If no role or invalid role, check for approval privileges
+        if ($this->userHasApprovalPrivilege($user)) {
+            // User has approval privilege, get all web projects by roles.
+            $web_project_channels = $this->getAllWebProjectChannelsByRoles();
+            if ($web_project_channels !== null) {
+                return view('admin.web-development.approvals.index', compact('web_project_channels'));
+            }
+        }
+
+        // If no role and no approval privileges, return error
+        return back()->with('status', 'Invalid role or insufficient privileges.');
+    }
+
+    /**
+     * Retrieve web project channels based on the user's role.
+     *
+     * @param \App\Models\User $user
+     * @return \Illuminate\Database\Eloquent\Collection|null
+     */
+    private function getWebProjectChannelsByUserRole($user)
+    {
+        $rolePosition = $user->roles->position ?? null;
+
+        if (!$rolePosition) {
+            return null; // Invalid or missing role
+        }
+
+        $statusMappings = [
+            'operations_supervisor' => 'Submitted to Operations Supervisor',
+            'top_management' => 'Submitted to Top Management',
+            'client' => 'Submitted to Client',
+            'assistant_supervisor' => 'Submitted to Assistant Supervisor',
+        ];
+
+        if (array_key_exists($rolePosition, $statusMappings)) {
+            return WebProjectChannel::with('web_project')
+                ->where('status', $statusMappings[$rolePosition])
+                ->get();
+        }
+
+        return null; // Role not found in mappings
+    }
+
+    /**
+     * Retrieve all web project channels based on defined roles.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|null
+     */
+    private function getAllWebProjectChannelsByRoles()
+    {
+        $statusMappings = [
+            'operations_supervisor' => 'Submitted to Operations Supervisor',
+            'top_management' => 'Submitted to Top Management',
+            'client' => 'Submitted to Client',
+            'assistant_supervisor' => 'Submitted to Assistant Supervisor',
+        ];
+
+        $web_project_channels = WebProjectChannel::with('web_project')
+            ->whereIn('status', array_values($statusMappings))
+            ->get();
+
+        return $web_project_channels->isNotEmpty() ? $web_project_channels : null;
+    }
+
+    /**
+     * Check if the user has approval privileges using eager loading.
+     *
+     * @param \App\Models\User $user
+     * @return bool
+     */
+    private function userHasApprovalPrivilege($user): bool
+    {
+        $approvalPage = Page::where('description', 'like', '%approvals%')->first();
+        $approvalPrivilege = Privilege::where('description', 'like', '%can_approve%')->first();
+
+        if (!$approvalPage || !$approvalPrivilege) {
+            return false;
+        }
+
+        $roleChannel = $user->role_channels()
+            ->where('page_id', $approvalPage->id)
+            ->where('privilege_id', $approvalPrivilege->id)
+            ->first();
+
+        return $roleChannel !== null;
     }
 
     /**
@@ -89,7 +166,7 @@ class WebApprovalController extends Controller
                 $web_project_channel = WebProjectChannel::with('web_project')->where('status', 'Submitted to Client')->find($id);
                 break;
             case "assistant_supervisor":
-                $web_project_channel = WebProjectChannel::with('web_project')->where('status', 'Submitted to Operation')->find($id);
+                $web_project_channel = WebProjectChannel::with('web_project')->where('status', 'Submitted to Assistant Supervisor')->find($id);
                 break;
             default:
                 return back()->with('Status', 'Invalid role!');
@@ -151,384 +228,190 @@ class WebApprovalController extends Controller
     {
         try {
             DB::beginTransaction();
-            $user = Auth::user();
 
+            $user = Auth::user();
             $data = $request->validate([
                 'new_signature_pad' => 'nullable',
                 'signature_pad' => 'nullable',
                 'signature_admin' => 'nullable',
             ]);
 
-            if ($request->signature_pad != null) {
-                // Extract base64 string
-                $base64String = $data['signature_pad']; // Full base64 string
+            $this->handleSignatures($request, $data, $user, $fileController);
 
-                // Decode base64
-                $fileData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64String));
-
-                // Define a temporary path
-                $tempPath = storage_path('app/temp_signature.png');
-
-                // Save the file temporarily
-                file_put_contents($tempPath, $fileData);
-
-                // Convert to UploadedFile
-                $file = new UploadedFile(
-                    $tempPath,
-                    'signature.png', // File name
-                    'image/png', // MIME Type
-                    null, // Error (null means no error)
-                    true // Test mode (prevents actual file validation issues)
-                );
-
-                $signature_file_id = $user->signatures->file_id;
-                $file_id = File::where('id', $signature_file_id)->first()->description;
-                $fileController->edit(new Request(['file' => $file]), $file_id);
+            $webProjectChannel = WebProjectChannel::find($id);
+            if (!$webProjectChannel) {
+                return back()->with('error', 'Web Project Channel not found.');
             }
 
+            $this->processApproval($user, $webProjectChannel);
 
-            if ($request->signature_admin != null) {
-                $signature_file_id = $user->signatures->file_id;
-                $file_id = File::where('id', $signature_file_id)->first()->description;
-                $file_object = $fileController->edit(new Request(['file' => $data['signature_admin']]), $file_id);
-            }
-
-
-            $web_project_channel = null;
-            $web_project_channel = WebProjectChannel::find($id);
-
-            switch ($user->roles->position) {
-                case "operations_supervisor":
-                    $web_project_channel->status = "Submitted to Top Management";
-                    $web_project_channel->web_job_orders->update([
-                        'supervisor_signed_draft_id' => Auth::user()->id,
-                    ]);
-                    break;
-                case "top_management":
-                    $web_project_channel->status = 'Submitted to Client';
-                    break;
-                case "client":
-                    // Check if web designers have completed their tasks
-                    if ($web_project_channel->where('type', 'web_designer')->where('status', 'Submitted to Client')->exists()) {
-                        if ($web_project_channel->status == 'Submitted to Client' && $web_project_channel->sub_status == 'Site Map') {
-
-                            $web_project_channel->status = "Completed";
-                            $web_project_channel->date_completed = Carbon::now();
-                            $web_project_channel->web_job_orders->update([
-                                'client_signed_id' => Auth::user()->id,
-                            ]);
-
-                            $job_order = WebJobOrder::create([
-                                'operation_signed_draft_id' => null,
-                                'supervisor_signed_draft_id' => null,
-                                'client_signed_id' => null,
-                                'status' => 'Job order for ' . User::where('id', $web_project_channel->user_id)->first()->name,
-                            ]);
-
-                            $project_channel = WebProjectChannel::create([
-                                'user_id' => $web_project_channel->user_id,
-                                'web_job_order_id' => $job_order->id,
-                                'feedback_id' => null,
-                                'project_id' => $web_project_channel->project_id,
-                                'status' => 'pending',
-                                'sub_status' => 'Draft Homepage Approval',
-                                'type' => $web_project_channel->type,
-                                'draft' => null,
-                                'date_started' => Carbon::now(),
-                                'date_targeted' => Carbon::now()->addDays(3),
-                                'date_completed' => null,
-                            ]);
-
-                            $web_designers = $web_project_channel->where('type', 'web_designer')
-                                ->where('sub_status', 'like', '%Site Map%')
-                                ->whereNotIn('status', ['declined', 'pending', 'completed'])
-                                ->get();
-
-                            foreach ($web_designers as $web_designer) {
-                                if ($web_project_channel->user_id == $web_designer->user_id) {
-                                    continue;
-                                }
-                                $web_designer->update([
-                                    'status' => 'Completed',
-                                    'date_completed' => Carbon::now(),
-                                ]);
-
-                                $web_designer->web_job_orders->update([
-                                    'client_signed_id' => Auth::user()->id,
-                                ]);
-
-                                $job_order = WebJobOrder::create([
-                                    'operation_signed_draft_id' => null,
-                                    'supervisor_signed_draft_id' => null,
-                                    'client_signed_id' => null,
-                                    'status' => 'Job order for ' . User::where('id', $web_designer->user_id)->first()->name,
-                                ]);
-
-                                $project_channel = WebProjectChannel::create([
-                                    'user_id' => $web_designer->user_id,
-                                    'web_job_order_id' => $job_order->id,
-                                    'feedback_id' => null,
-                                    'project_id' => $web_designer->project_id,
-                                    'status' => 'pending',
-                                    'sub_status' => 'Draft Homepage Approval',
-                                    'type' => $web_designer->type,
-                                    'draft' => null,
-                                    'date_started' => Carbon::now(),
-                                    'date_targeted' => Carbon::now()->addDays(3),
-                                    'date_completed' => null,
-                                ]);
-                            }
-                        } else if ($web_project_channel->status == 'Submitted to Client' && $web_project_channel->sub_status == 'Draft Homepage Approval') {
-
-                            $web_project_channel->status = "Completed";
-                            $web_project_channel->date_completed = Carbon::now();
-                            $web_project_channel->web_job_orders->update([
-                                'client_signed_id' => Auth::user()->id,
-                            ]);
-
-                            $job_order = WebJobOrder::create([
-                                'operation_signed_draft_id' => null,
-                                'supervisor_signed_draft_id' => null,
-                                'client_signed_id' => null,
-                                'status' => 'Job order for ' . User::where('id', $web_project_channel->user_id)->first()->name,
-                            ]);
-
-                            $project_channel = WebProjectChannel::create([
-                                'user_id' => $web_project_channel->user_id,
-                                'web_job_order_id' => $job_order->id,
-                                'feedback_id' => null,
-                                'project_id' => $web_project_channel->project_id,
-                                'status' => 'pending',
-                                'sub_status' => 'Final Homepage Approval',
-                                'type' => $web_project_channel->type,
-                                'draft' => null,
-                                'date_started' => Carbon::now(),
-                                'date_targeted' => Carbon::now()->addDays(3),
-                                'date_completed' => null,
-                            ]);
-
-                            $web_designers = $web_project_channel->where('type', 'web_designer')
-                                ->where('sub_status', 'like', '%Draft Homepage Approval%')
-                                ->whereNotIn('status', ['declined', 'pending', 'completed'])
-                                ->get();
-
-                            foreach ($web_designers as $web_designer) {
-                                if ($web_project_channel->user_id == $web_designer->user_id) {
-                                    continue;
-                                }
-                                $web_designer->update([
-                                    'status' => 'Completed',
-                                    'date_completed' => Carbon::now(),
-                                ]);
-
-                                $web_designer->web_job_orders->update([
-                                    'client_signed_id' => Auth::user()->id,
-                                ]);
-
-                                $job_order = WebJobOrder::create([
-                                    'operation_signed_draft_id' => null,
-                                    'supervisor_signed_draft_id' => null,
-                                    'client_signed_id' => null,
-                                    'status' => 'Job order for ' . User::where('id', $web_designer->user_id)->first()->name,
-                                ]);
-
-                                $project_channel = WebProjectChannel::create([
-                                    'user_id' => $web_designer->user_id,
-                                    'web_job_order_id' => $job_order->id,
-                                    'feedback_id' => null,
-                                    'project_id' => $web_designer->project_id,
-                                    'status' => 'pending',
-                                    'sub_status' => 'Final Homepage Approval',
-                                    'type' => $web_designer->type,
-                                    'draft' => null,
-                                    'date_started' => Carbon::now(),
-                                    'date_targeted' => Carbon::now()->addDays(3),
-                                    'date_completed' => null,
-                                ]);
-                            }
-                        } else if ($web_project_channel->status == 'Submitted to Client' && $web_project_channel->sub_status == 'Final Homepage Approval') {
-
-                            $web_project_channel->status = "Completed";
-                            $web_project_channel->date_completed = Carbon::now();
-                            $web_project_channel->web_job_orders->update([
-                                'client_signed_id' => Auth::user()->id,
-                            ]);
-
-                            $job_order = WebJobOrder::create([
-                                'operation_signed_draft_id' => null,
-                                'supervisor_signed_draft_id' => null,
-                                'client_signed_id' => null,
-                                'status' => 'Job order for ' . User::where('id', $web_project_channel->user_id)->first()->name,
-                            ]);
-
-                            $project_channel = WebProjectChannel::create([
-                                'user_id' => $web_project_channel->user_id,
-                                'web_job_order_id' => $job_order->id,
-                                'feedback_id' => null,
-                                'project_id' => $web_project_channel->project_id,
-                                'status' => 'pending',
-                                'sub_status' => 'All Pages Approval',
-                                'type' => $web_project_channel->type,
-                                'draft' => null,
-                                'date_started' => Carbon::now(),
-                                'date_targeted' => Carbon::now()->addDays(3),
-                                'date_completed' => null,
-                            ]);
-
-                            $web_designers = $web_project_channel->where('type', 'web_designer')
-                                ->where('sub_status', 'like', '%Final Homepage Approval%')
-                                ->whereNotIn('status', ['declined', 'pending', 'completed'])
-                                ->get();
-
-                            foreach ($web_designers as $web_designer) {
-                                if ($web_project_channel->user_id == $web_designer->user_id) {
-                                    continue;
-                                }
-                                $web_designer->update([
-                                    'status' => 'Completed',
-                                    'date_completed' => Carbon::now(),
-                                ]);
-
-                                $web_designer->web_job_orders->update([
-                                    'client_signed_id' => Auth::user()->id,
-                                ]);
-
-                                $job_order = WebJobOrder::create([
-                                    'operation_signed_draft_id' => null,
-                                    'supervisor_signed_draft_id' => null,
-                                    'client_signed_id' => null,
-                                    'status' => 'Job order for ' . User::where('id', $web_designer->user_id)->first()->name,
-                                ]);
-
-                                $project_channel = WebProjectChannel::create([
-                                    'user_id' => $web_designer->user_id,
-                                    'web_job_order_id' => $job_order->id,
-                                    'feedback_id' => null,
-                                    'project_id' => $web_designer->project_id,
-                                    'status' => 'pending',
-                                    'sub_status' => 'All Pages Approval',
-                                    'type' => $web_designer->type,
-                                    'draft' => null,
-                                    'date_started' => Carbon::now(),
-                                    'date_targeted' => Carbon::now()->addDays(3),
-                                    'date_completed' => null,
-                                ]);
-                            }
-                        } else if ($web_project_channel->status == 'Submitted to Client' && $web_project_channel->sub_status == 'All Pages Approval') {
-
-                            $web_project_channel->status = "Completed";
-                            $web_project_channel->date_completed = Carbon::now();
-                            $web_project_channel->web_job_orders->update([
-                                'client_signed_id' => Auth::user()->id,
-                            ]);
-
-                            $web_designers = $web_project_channel->where('type', 'web_designer')
-                                ->where('sub_status', 'like', '%All Pages Approval%')
-                                ->whereNotIn('status', ['declined', 'pending', 'completed'])
-                                ->get();
-
-                            foreach ($web_designers as $web_designer) {
-                                if ($web_project_channel->user_id == $web_designer->user_id) {
-                                    continue;
-                                }
-                                $web_designer->update([
-                                    'status' => 'Completed',
-                                    'date_completed' => Carbon::now(),
-                                ]);
-
-                                $web_designer->web_job_orders->update([
-                                    'client_signed_id' => Auth::user()->id,
-                                ]);
-                            }
-
-                            $front_ends = $web_project_channel->where('type', 'front_end')
-                                ->where('status', 'pending')
-                                ->get();
-
-
-                            foreach ($front_ends as $front_end) {
-                                $front_end->update([
-                                    'date_started' => Carbon::now(),
-                                    'date_targeted' => Carbon::now()->addDays(3),
-                                ]);
-                            }
-                        }
-                    } elseif ($web_project_channel->where('type', 'front_end')->where('status', 'Submitted to Client')->exists()) {
-                        $web_project_channel->status = "Completed";
-                        $web_project_channel->date_completed = Carbon::now();
-                        $web_project_channel->web_job_orders->update([
-                            'client_signed_id' => Auth::user()->id,
-                        ]);
-
-                        $front_ends = $web_project_channel->where('type', 'front_end')
-                            ->whereNotIn('status', ['declined', 'pending'])
-                            ->get();
-
-                        foreach ($front_ends as $front_end) {
-                            $front_end->update([
-                                'status' => 'Completed',
-                                'date_completed' => Carbon::now(),
-                            ]);
-
-                            $front_end->web_job_orders->update([
-                                'client_signed_id' => Auth::user()->id,
-                            ]);
-                        }
-
-                        $back_ends = $web_project_channel->where('type', 'back_end')
-                            ->where('status', 'pending')
-                            ->get();
-
-                        foreach ($back_ends as $backend_end) {
-                            $backend_end->update([
-                                'date_started' => Carbon::now(),
-                                'date_targeted' => Carbon::now()->addDays(3),
-                            ]);
-                        }
-                    } elseif ($web_project_channel->where('type', 'back_end')->where('status', 'Submitted to Client')->exists()) {
-                        $web_project_channel->status = "Completed";
-                        $web_project_channel->date_completed = Carbon::now();
-                        $web_project_channel->web_job_orders->update([
-                            'client_signed_id' => Auth::user()->id,
-                        ]);
-
-                        $back_ends = $web_project_channel->where('type', 'back_end')
-                            ->whereNotIn('status', ['declined', 'pending'])
-                            ->get();
-
-                        foreach ($back_ends as $back_end) {
-                            $back_end->update([
-                                'status' => 'Completed',
-                                'date_completed' => Carbon::now(),
-                            ]);
-                            $back_end->web_job_orders->update([
-                                'client_signed_id' => Auth::user()->id,
-                            ]);
-                        }
-                    }
-                    break;
-                case "assistant_supervisor":
-                    $web_project_channel->status = "Submitted to Operations Supervisor";
-                    $web_project_channel->web_job_orders->update([
-                        'operation_signed_draft_id' => Auth::user()->id,
-                    ]);
-
-                    break;
-                default:
-                    return back()->with('Status', 'Invalid roles!');
-            }
-
-            $web_project_channel->save();
-            $web_project_channel->fresh();
-
-            //@dd('stop last', WebProjectChannel::all());
+            $webProjectChannel->save();
+            $webProjectChannel->fresh();
 
             DB::commit();
 
-            return redirect()->route('admin.web.approvals')->with('success', 'Congrats');
-        } catch (\Exception $ex) {
-            @dd($ex->getMessage());
+            return redirect()->route('admin.web.approvals')->with('success', 'Approval successful.');
+        } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Approval error: ' . $e->getMessage());
+            return back()->with('error', 'An error occurred during approval.');
+        }
+    }
+
+    private function handleSignatures(Request $request, array $data, User $user, FileController $fileController): void
+    {
+        if ($request->signature_pad) {
+            $file = $this->convertBase64ToUploadedFile($data['signature_pad']);
+            if ($user->signatures && $user->signatures->file_id) {
+                $fileId = File::where('id', $user->signatures->file_id)->value('description');
+                $fileController->edit(new Request(['file' => $file]), $fileId);
+            }
+        }
+
+        if ($request->signature_admin && $user->signatures && $user->signatures->file_id) {
+            $fileId = File::where('id', $user->signatures->file_id)->value('description');
+            $fileController->edit(new Request(['file' => $data['signature_admin']]), $fileId);
+        }
+    }
+
+    private function convertBase64ToUploadedFile(string $base64String): UploadedFile
+    {
+        $fileData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64String));
+        $tempPath = storage_path('app/temp_signature.png');
+        file_put_contents($tempPath, $fileData);
+
+        return new UploadedFile(
+            $tempPath,
+            'signature.png',
+            'image/png',
+            null,
+            true
+        );
+    }
+
+    private function processApproval(User $user, WebProjectChannel $webProjectChannel): void
+    {
+        $rolePosition = $user->roles->position ?? null;
+
+        switch ($rolePosition) {
+            case 'operations_supervisor':
+                $webProjectChannel->status = 'Submitted to Top Management';
+                $webProjectChannel->web_job_orders->update(['supervisor_signed_draft_id' => $user->id]);
+                break;
+
+            case 'top_management':
+                $webProjectChannel->status = 'Submitted to Client';
+                break;
+
+            case 'client':
+                $this->handleClientApproval($webProjectChannel, $user);
+                break;
+
+            case 'assistant_supervisor':
+                $webProjectChannel->status = 'Submitted to Operations Supervisor';
+                $webProjectChannel->web_job_orders->update(['operation_signed_draft_id' => $user->id]);
+                break;
+
+            default:
+                throw new \Exception('Invalid role for approval.');
+        }
+    }
+
+    private function handleClientApproval(WebProjectChannel $webProjectChannel, User $user): void
+    {
+        $subStatus = $webProjectChannel->sub_status;
+        $type = $webProjectChannel->type;
+
+        if ($type === 'web_designer' && $webProjectChannel->where('type', 'web_designer')->where('status', 'Submitted to Client')->exists()) {
+            if ($subStatus === 'Site Map') {
+                $this->completeAndCreateNext($webProjectChannel, $user, 'Draft Homepage Approval');
+            } elseif ($subStatus === 'Draft Homepage Approval') {
+                $this->completeAndCreateNext($webProjectChannel, $user, 'Final Homepage Approval');
+            } elseif ($subStatus === 'Final Homepage Approval') {
+                $this->completeAndCreateNext($webProjectChannel, $user, 'All Pages Approval');
+            } elseif ($subStatus === 'All Pages Approval') {
+                $this->completeAndFinish($webProjectChannel, $user);
+                $this->startFrontEnd($webProjectChannel);
+            }
+        } elseif ($type === 'front_end' && $webProjectChannel->where('type', 'front_end')->where('status', 'Submitted to Client')->exists()) {
+            $this->completeAndFinish($webProjectChannel, $user);
+            $this->startBackEnd($webProjectChannel);
+        } elseif ($type === 'back_end' && $webProjectChannel->where('type', 'back_end')->where('status', 'Submitted to Client')->exists()) {
+            $this->completeAndFinish($webProjectChannel, $user);
+        }
+    }
+
+    private function completeAndCreateNext(WebProjectChannel $webProjectChannel, User $user, string $nextSubStatus): void
+    {
+        $this->completeAndFinish($webProjectChannel, $user);
+
+        $newJobOrder = WebJobOrder::create(['status' => 'Job order for ' . User::find($webProjectChannel->user_id)->name]);
+
+        WebProjectChannel::create([
+            'user_id' => $webProjectChannel->user_id,
+            'web_job_order_id' => $newJobOrder->id,
+            'project_id' => $webProjectChannel->project_id,
+            'status' => 'pending',
+            'sub_status' => $nextSubStatus,
+            'type' => $webProjectChannel->type,
+            'date_started' => Carbon::now(),
+            'date_targeted' => Carbon::now()->addDays(3),
+        ]);
+
+        $this->completeWebDesigners($webProjectChannel, $user, $nextSubStatus);
+    }
+
+    private function completeAndFinish(WebProjectChannel $webProjectChannel, User $user): void
+    {
+        $webProjectChannel->update(['status' => 'Completed', 'date_completed' => Carbon::now()]);
+        $webProjectChannel->web_job_orders->update(['client_signed_id' => $user->id]);
+    }
+
+    private function completeWebDesigners(WebProjectChannel $webProjectChannel, User $user, string $subStatus): void
+    {
+        $webDesigners = $webProjectChannel->where('type', 'web_designer')
+            ->where('sub_status', 'like', "%{$subStatus}%")
+            ->whereNotIn('status', ['declined', 'pending', 'completed'])
+            ->get();
+
+        foreach ($webDesigners as $designer) {
+            if ($webProjectChannel->user_id !== $designer->user_id) {
+                $designer->update(['status' => 'Completed', 'date_completed' => Carbon::now()]);
+                $designer->web_job_orders->update(['client_signed_id' => $user->id]);
+                $newJobOrder = WebJobOrder::create(['status' => 'Job order for ' . User::find($designer->user_id)->name]);
+                WebProjectChannel::create([
+                    'user_id' => $designer->user_id,
+                    'web_job_order_id' => $newJobOrder->id,
+                    'project_id' => $designer->project_id,
+                    'status' => 'pending',
+                    'sub_status' => $subStatus,
+                    'type' => $designer->type,
+                    'date_started' => Carbon::now(),
+                    'date_targeted' => Carbon::now()->addDays(3),
+                ]);
+            }
+        }
+    }
+
+    private function startFrontEnd(WebProjectChannel $webProjectChannel): void
+    {
+        $frontEnds = $webProjectChannel->where('type', 'front_end')->where('status', 'pending')->get();
+        foreach ($frontEnds as $frontEnd) {
+            $frontEnd->update([
+                'date_started' => Carbon::now(),
+                'date_targeted' => Carbon::now()->addDays(3),
+            ]);
+        }
+    }
+
+    private function startBackEnd(WebProjectChannel $webProjectChannel): void
+    {
+        $backEnds = $webProjectChannel->where('type', 'back_end')->where('status', 'pending')->get();
+        foreach ($backEnds as $backEnd) {
+            $backEnd->update([
+                'date_started' => Carbon::now(),
+                'date_targeted' => Carbon::now()->addDays(3),
+            ]);
         }
     }
 }

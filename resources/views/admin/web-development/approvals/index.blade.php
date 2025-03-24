@@ -75,46 +75,46 @@
                         </thead>
                         <tbody>
                             @foreach ($web_project_channels as $direct)
-                                <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
-                                    <td class="flex items-center gap-2">
-                                        {{-- <div class="p-2 rounded bg-[#F57D11] text-white">
-                                            <span class="mingcute--file-fill w-6 h-6"></span>
-                                        </div> --}}
-                                        {{ $direct->web_project->title }}
-                                    </td>
-                                    <td>{{ $direct->users->name . ' - ' . $direct->type }}</td>
-                                    <td>{{ $direct->date_targeted }}</td>
-                                    <td class="flex justify-center items-center">
-                                        @php
-                                            $statusClasses = [
-                                                'approved' => 'text-green-700 bg-green-300',
-                                                'pending' => 'text-yellow-700 bg-yellow-300',
-                                                'review' => 'text-blue-700 bg-blue-300',
-                                                'delayed' => 'text-red-700 bg-red-300',
-                                            ];
-                                        @endphp
+                                                <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
+                                                    <td class="flex items-center gap-2">
+                                                        {{-- <div class="p-2 rounded bg-[#F57D11] text-white">
+                                                            <span class="mingcute--file-fill w-6 h-6"></span>
+                                                        </div> --}}
+                                                        {{ $direct->web_project->title }}
+                                                    </td>
+                                                    <td>{{ $direct->users->name . ' - ' . $direct->type }}</td>
+                                                    <td>{{ $direct->date_targeted }}</td>
+                                                    <td class="flex justify-center items-center">
+                                                        @php
+                                                            $statusClasses = [
+                                                                'approved' => 'text-green-700 bg-green-300',
+                                                                'pending' => 'text-yellow-700 bg-yellow-300',
+                                                                'review' => 'text-blue-700 bg-blue-300',
+                                                                'delayed' => 'text-red-700 bg-red-300',
+                                                            ];
+                                                        @endphp
 
-                                        <span
-                                            class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $statusClasses[$direct->status] ?? 'text-gray-700 bg-gray-300' }}">
-                                            {{ $direct->status }}
-                                        </span>
-                                    </td>
+                                                        <span
+                                                            class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $statusClasses[$direct->status] ?? 'text-gray-700 bg-gray-300' }}">
+                                                            {{ $direct->status }}
+                                                        </span>
+                                                    </td>
 
-                                    <td>
-                                        <div class="flex items-center justify-center gap-2">
-                                            <a href="{{ route('admin.web.approvals.show', $direct->id) }}"
-                                                class="approve-btn px-2 py-1 font-medium bg-green-500 text-white rounded flex items-center justify-center gap-1">
-                                                <span class="basil--eye-solid !w-4 !h-4"></span>
-                                                <p>View</p>
-                                            </a>
-                                            <a href="#"
-                                                class="approve-btn px-2 py-1 font-medium bg-blue-500 text-white rounded flex items-center justify-center gap-1">
-                                                <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
-                                                <p>Edit</p>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
+                                                    <td>
+                                                        <div class="flex items-center justify-center gap-2">
+                                                            <a href="{{ route('admin.web.approvals.show', $direct->id) }}"
+                                                                class="approve-btn px-2 py-1 font-medium bg-green-500 text-white rounded flex items-center justify-center gap-1">
+                                                                <span class="basil--eye-solid !w-4 !h-4"></span>
+                                                                <p>View</p>
+                                                            </a>
+                                                            <a href="#"
+                                                                class="approve-btn px-2 py-1 font-medium bg-blue-500 text-white rounded flex items-center justify-center gap-1">
+                                                                <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
+                                                                <p>Edit</p>
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                             @endforeach
                         </tbody>
                     </table>

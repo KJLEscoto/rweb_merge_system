@@ -46,7 +46,7 @@ class WebTaskController extends Controller
 
         $web_project_channel->update([
             'draft' => $data['draft'],
-            'status' => 'Submitted to Operation'
+            'status' => 'Submitted to Operations Supervisor'
         ]);
 
         if ($web_project_channel->type == 'web_designer') {

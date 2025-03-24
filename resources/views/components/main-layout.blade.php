@@ -328,63 +328,43 @@
 
                 {{-- admin web-development navbar --}}
                 @if (Request::routeIs('admin.web*'))
-                    @if (Auth::user()->role_channels->where('page_id', \App\Models\Page::where('description', 'like', '%dashboard%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
-                        <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
-                            routeName="admin.web.dashboard" />
-                    @endif
-                    @if (Auth::user()->role_channels->where(
-                                'page_id',
-                                \App\Models\Page::where('description', 'like', '%direct_job_order%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
-                        <x-admin.sidebar-menu icon="carbon--direction-loop-right-filled" label="Direct Job Order"
-                            routeName="admin.web.direct-job-order" />
-                    @endif
-                    @if (Auth::user()->role_channels->where(
-                                'page_id',
-                                \App\Models\Page::where('description', 'like', '%operation_job_order%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
-                        <x-admin.sidebar-menu icon="clarity--directory-solid-badged" label="Operation Job Order"
-                            routeName="admin.web.operation-job-order" />
-                    @endif
-                    @if (Auth::user()->role_channels->where('page_id', \App\Models\Page::where('description', 'like', '%task%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
-                        <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="Task"
-                            routeName="admin.web.task" />
-                    @endif
-                    @if (Auth::user()->role_channels->where('page_id', \App\Models\Page::where('description', 'like', '%revision%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
-                        <x-admin.sidebar-menu icon="mdi--file-cog" label="Revision" routeName="admin.web.revision" />
-                    @endif
-                    @if (Auth::user()->role_channels->where('page_id', \App\Models\Page::where('description', 'like', '%approvals%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
-                        <x-admin.sidebar-menu icon="mdi--clipboard-text-history" label="Approvals"
-                            routeName="admin.web.approvals" />
-                    @endif
-                    @if (Auth::user()->role_channels->where('page_id', \App\Models\Page::where('description', 'like', '%users%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
-                        <x-admin.sidebar-menu icon="fa--users" label="Users" routeName="admin.web.users" />
-                    @endif
-                    @if (Auth::user()->role_channels->where('page_id', \App\Models\Page::where('description', 'like', '%track%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
-                        <x-admin.sidebar-menu icon="ic--round-date-range" label="Track"
-                            routeName="admin.web.track" />
-                    @endif
-                    @if (Auth::user()->role_channels->where(
-                                'page_id',
-                                \App\Models\Page::where('description', 'like', '%downloadables%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
-                        <x-admin.sidebar-menu icon="tdesign--file-download-filled" label="Downloadables"
-                            routeName="admin.web.downloadables" />
-                    @endif
-                    @if (Auth::user()->role_channels->where(
-                                'page_id',
-                                \App\Models\Page::where('description', 'like', '%instructions_manual%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
-                        <x-admin.sidebar-menu icon="streamline--manual-book-solid" label="Instructions Manual"
-                            routeName="admin.web.instructions-manual" />
-                    @endif
-                    @if (Auth::user()->role_channels->where(
-                                'page_id',
-                                \App\Models\Page::where('description', 'like', '%incoming_requests%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
-                        <x-admin.sidebar-menu icon="fa--user" label="Incoming Requests"
-                            routeName="admin.web.incoming-requests" />
-                    @endif
-                    @if (Auth::user()->role_channels->where('page_id', \App\Models\Page::where('description', 'like', '%profile%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
-                        <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.web.profile" />
-                    @endif
+                    @php
+                        $userId = Auth::id();
+                        $canReadPrivilegeId = \App\Models\Privilege::where('description', 'like', '%can_read%')->value('id');
+                    @endphp
 
-                    {{-- admin dtr navbar --}}
+                    @if ($canReadPrivilegeId)
+                        @php
+                            $pages = [
+                                'dashboard' => ['icon' => 'ic--baseline-space-dashboard', 'label' => 'Dashboard', 'route' => 'admin.web.dashboard'],
+                                'direct_job_order' => ['icon' => 'carbon--direction-loop-right-filled', 'label' => 'Direct Job Order', 'route' => 'admin.web.direct-job-order'],
+                                'operation_job_order' => ['icon' => 'clarity--directory-solid-badged', 'label' => 'Operation Job Order', 'route' => 'admin.web.operation-job-order'],
+                                'task' => ['icon' => 'fluent--clipboard-text-edit-48-filled', 'label' => 'Task', 'route' => 'admin.web.task'],
+                                'revision' => ['icon' => 'mdi--file-cog', 'label' => 'Revision', 'route' => 'admin.web.revision'],
+                                'approvals' => ['icon' => 'mdi--clipboard-text-history', 'label' => 'Approvals', 'route' => 'admin.web.approvals'],
+                                'users' => ['icon' => 'fa--users', 'label' => 'Users', 'route' => 'admin.web.users'],
+                                'track' => ['icon' => 'ic--round-date-range', 'label' => 'Track', 'route' => 'admin.web.track'],
+                                'downloadables' => ['icon' => 'tdesign--file-download-filled', 'label' => 'Downloadables', 'route' => 'admin.web.downloadables'],
+                                'instructions_manual' => ['icon' => 'streamline--manual-book-solid', 'label' => 'Instructions Manual', 'route' => 'admin.web.instructions-manual'],
+                                'incoming_requests' => ['icon' => 'fa--user', 'label' => 'Incoming Requests', 'route' => 'admin.web.incoming-requests'],
+                                'profile' => ['icon' => 'fa--user', 'label' => 'Profile', 'route' => 'admin.web.profile'],
+                            ];
+                        @endphp
+
+                        @foreach ($pages as $pageDescription => $pageData)
+                            @php
+                                $pageId = \App\Models\Page::where('description', 'like', '%' . $pageDescription . '%')->value('id');
+                            @endphp
+
+                            @if ($pageId && Auth::user()->role_channels->where('page_id', $pageId)->where('privilege_id', $canReadPrivilegeId)->isNotEmpty())
+                                <x-admin.sidebar-menu
+                                    :icon="$pageData['icon']"
+                                    :label="$pageData['label']"
+                                    :routeName="$pageData['route']"
+                                />
+                            @endif
+                        @endforeach
+                    @endif
                 @elseif (Request::routeIs('admin.dtr*'))
                     <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
                         routeName="admin.dtr.dashboard" />

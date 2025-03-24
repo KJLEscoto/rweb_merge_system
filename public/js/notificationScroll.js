@@ -152,43 +152,45 @@ async function loadMoreNotifications(containerId, apiUrl) {
         isLoading = true;
         page++;
 
-        // console.log("THE PAGE IS LOADING!");
+        console.log("loading count: ", loadingCount);
+        console.log("isLoading: ", isLoading);
 
-        let loadingDiv = document.createElement("div");
+        if (loadingCount === 1 && isLoading === true) {
+            // console.log("THE PAGE IS LOADING!");
 
-        loadingDiv.id = "custom-loading-notification";
+            let loadingDiv = document.createElement("div");
 
-        loadingDiv.style.display = "flex";
+            loadingDiv.id = "custom-loading-notification";
 
-        loadingDiv.style.alignItems = "center";
+            loadingDiv.style.display = "flex";
+            loadingDiv.style.alignItems = "center";
+            loadingDiv.style.justifyContent = "center";
+            loadingDiv.style.padding = "10px";
+            loadingDiv.style.fontWeight = "semibold";
+            loadingDiv.style.color = "#F57D11"; // Highlight loading text
+            loadingDiv.style.fontSize = "0.875rem";
 
-        loadingDiv.style.justifyContent = "center";
+            // Create the loading icon
+            let loadingIcon = document.createElement("span");
+            loadingIcon.classList.add("line-md--loading-loop", "animate-spin");
+            loadingIcon.style.fontSize = "20px";
+            loadingIcon.style.marginRight = "3px"; // Space between icon and text
 
-        loadingDiv.style.padding = "10px";
+            // Append icon and text
+            loadingDiv.appendChild(loadingIcon);
+            loadingDiv.appendChild(document.createTextNode("Loading..."));
 
-        loadingDiv.style.fontWeight = "semibold";
+            container.appendChild(loadingDiv);
+        } else if (loadingCount !== 1 && !isLoading) {
+            // Check if loadingDiv exists, if so remove it.
+            let existingLoadingDiv = document.getElementById(
+                "custom-loading-notification"
+            );
 
-        loadingDiv.style.color = "#F57D11"; // Highlight loading text
-
-        loadingDiv.style.fontSize = "0.875rem";
-
-        // Create the loading icon
-
-        let loadingIcon = document.createElement("span");
-
-        loadingIcon.classList.add("line-md--loading-loop", "animate-spin");
-
-        loadingIcon.style.fontSize = "20px";
-
-        loadingIcon.style.marginRight = "3px"; // Space between icon and text
-
-        // Append icon and text
-
-        loadingDiv.appendChild(loadingIcon);
-
-        loadingDiv.appendChild(document.createTextNode("Loading..."));
-
-        container.appendChild(loadingDiv);
+            if (existingLoadingDiv) {
+                container.removeChild(existingLoadingDiv); // Use removeChild instead of remove()
+            }
+        }
 
         requestAnimationFrame(async () => {
             try {
@@ -264,6 +266,7 @@ async function loadMoreNotifications(containerId, apiUrl) {
                     }
 
                     if (response.length > 0) {
+                        debugger;
                         response.forEach((notification) => {
                             appendNotification(notification, containerId, "");
                         });
@@ -275,6 +278,8 @@ async function loadMoreNotifications(containerId, apiUrl) {
                         let noMoreDiv = document.getElementById(
                             "no-more-notifications"
                         );
+
+                        console.log(noMoreDiv);
 
                         if (!noMoreDiv) {
                             noMoreDiv = document.createElement("div");
@@ -319,7 +324,7 @@ async function loadMoreNotifications(containerId, apiUrl) {
         } else {
             setTimeout(() => {
                 isLoading = false;
-            }, 1000);
+            }, 10000);
         }
     }
 }

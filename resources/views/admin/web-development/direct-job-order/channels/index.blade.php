@@ -1,7 +1,8 @@
 <head>
     <title>{{ env('APP_NAME') }} | Web Development | View Track</title>
 
-    {{-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script> --}}
+    {{--
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script> --}}
 </head>
 
 @php
@@ -79,75 +80,75 @@
             </section>
             <div class="space-y-1 w-full">
                 <h1 class="font-bold text-xs">Description</h1>
-                <p class="p-3 border rounded">{!! $web_project->instructions !!}</p>
+                <p class="p-3 border rounded">{{ $web_project->instructions }}</p>
             </div>
             <hr class="border border-[#f56d11]">
             <div class="space-y-1 w-full">
                 <h1 class="font-bold text-xs">Drafts</h1>
                 @if ($web_project_channels)
-                    <div class="overflow-x-auto">
-                        <table class="w-full border-collapse border border-gray-300">
-                            <thead>
-                                <tr
-                                    class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
-                                    <th>Type</th>
-                                    <th>Deadline</th>
-                                    <th>Employee</th>
-                                    <th class="!text-center">Status</th>
-                                    <th class="!text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($web_project_channels as $web_project_channel)
-                                    <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
-                                        <td class="flex items-center gap-2">
-                                            {{-- <div class="p-2 rounded bg-[#F57D11] text-white">
-                                            <span class="mingcute--file-fill w-6 h-6"></span>
-                                        </div> --}}
-                                            {{ $web_project_channel->type }}
-                                        </td>
-                                        <td>{{ $web_project_channel->date_targeted ? $web_project_channel->date_targeted : 'null' }}
-                                        </td>
-                                        <td>{{ $web_project_channel->users->name }}</td>
-                                        <td class="flex justify-center items-center">
-                                            @php
-                                                $statusClasses = [
-                                                    'approved' => 'text-green-700 bg-green-300',
-                                                    'pending' => 'text-yellow-700 bg-yellow-300',
-                                                    'review' => 'text-blue-700 bg-blue-300',
-                                                    'delayed' => 'text-red-700 bg-red-300',
-                                                ];
-                                            @endphp
+                            <div class="overflow-x-auto">
+                                <table class="w-full border-collapse border border-gray-300">
+                                    <thead>
+                                        <tr
+                                            class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
+                                            <th>Type</th>
+                                            <th>Deadline</th>
+                                            <th>Employee</th>
+                                            <th class="!text-center">Status</th>
+                                            <th class="!text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($web_project_channels as $web_project_channel)
+                                                                <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
+                                                                    <td class="flex items-center gap-2">
+                                                                        {{-- <div class="p-2 rounded bg-[#F57D11] text-white">
+                                                                            <span class="mingcute--file-fill w-6 h-6"></span>
+                                                                        </div> --}}
+                                                                        {{ $web_project_channel->type }}
+                                                                    </td>
+                                                                    <td>{{ $web_project_channel->date_targeted ? $web_project_channel->date_targeted : 'null' }}
+                                                                    </td>
+                                                                    <td>{{ $web_project_channel->users->name }}</td>
+                                                                    <td class="flex justify-center items-center">
+                                                                        @php
+                                                                            $statusClasses = [
+                                                                                'approved' => 'text-green-700 bg-green-300',
+                                                                                'pending' => 'text-yellow-700 bg-yellow-300',
+                                                                                'review' => 'text-blue-700 bg-blue-300',
+                                                                                'delayed' => 'text-red-700 bg-red-300',
+                                                                            ];
+                                                                        @endphp
 
-                                            <span
-                                                class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $web_project_channel->status ?? 'text-gray-700 bg-gray-300' }}">
-                                                {{ $web_project_channel->status }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div class="flex items-center justify-center gap-2">
-                                                <a href="{{ route('admin.web.direct-job-order.show', $web_project_channel['id']) }}"
-                                                    class="hover:scale-105 transition px-2 py-1 font-medium bg-green-500 text-white rounded flex items-center justify-center gap-1">
-                                                    <span class="basil--eye-solid !w-4 !h-4"></span>
-                                                    <p>View</p>
-                                                </a>
-                                                {{-- <a href="{{ route('admin.web.track.draft.edit', [1, $direct['id']]) }}"
-                                                    class="hover:scale-105 transition px-2 py-1 font-medium bg-blue-500 text-white rounded flex items-center justify-center gap-1">
-                                                    <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
-                                                    <p>Edit</p>
-                                                </a>
-                                                <a href="#"
-                                                    class="hover:scale-105 transition px-2 py-1 font-medium bg-red-500 text-white rounded flex items-center justify-center gap-1">
-                                                    <span class="material-symbols-light--delete w-4 h-4"></span>
-                                                    <p>Delete</p>
-                                                </a> --}}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                                                                        <span
+                                                                            class="select-none rounded-full px-5 text-xs py-1 font-semibold w-fit {{ $web_project_channel->status ?? 'text-gray-700 bg-gray-300' }}">
+                                                                            {{ $web_project_channel->status }}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="flex items-center justify-center gap-2">
+                                                                            <a href="{{ route('admin.web.direct-job-order.show', $web_project_channel['id']) }}"
+                                                                                class="hover:scale-105 transition px-2 py-1 font-medium bg-green-500 text-white rounded flex items-center justify-center gap-1">
+                                                                                <span class="basil--eye-solid !w-4 !h-4"></span>
+                                                                                <p>View</p>
+                                                                            </a>
+                                                                            {{-- <a href="{{ route('admin.web.track.draft.edit', [1, $direct['id']]) }}"
+                                                                                class="hover:scale-105 transition px-2 py-1 font-medium bg-blue-500 text-white rounded flex items-center justify-center gap-1">
+                                                                                <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
+                                                                                <p>Edit</p>
+                                                                            </a>
+                                                                            <a href="#"
+                                                                                class="hover:scale-105 transition px-2 py-1 font-medium bg-red-500 text-white rounded flex items-center justify-center gap-1">
+                                                                                <span class="material-symbols-light--delete w-4 h-4"></span>
+                                                                                <p>Delete</p>
+                                                                            </a> --}}
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                 @else
                     <div class="w-full h-auto flex flex-col gap-10 items-center justify-center select-none">
                         <h1 class="text-4xl font-semibold italic">No Updates Yet</h1>

@@ -62,47 +62,46 @@
             </thead>
             <tbody id="tableBody">
                 @forelse ($job_drafts as $job_draft)
-                    <tr class="project-row border-b " data-status="{{ strtolower($job_draft->status) }}"
-                        data-title="{{ strtolower($job_draft->jobOrder->title) }}"
-                        data-designated="{{ strtolower($job_draft->type == 'content_writer' ? 'content writer - ' . $job_draft->contentWriter->name : 'graphic designer - ' . $job_draft->graphicDesigner->name) }}">
-                        <td class="w-[25%] px-2 sm:px-4 py-2 sm:py-3 truncate">{{ $job_draft->jobOrder->title }}</td>
-                        <td class="w-[25%] px-2 sm:px-4 py-2 sm:py-3 truncate">
-                            @if ($job_draft->type == 'content_writer')
-                                Content Writer - {{ $job_draft->contentWriter->name }}
-                            @else
-                                Graphic Designer - {{ $job_draft->graphicDesigner->name }}
-                            @endif
-                        </td>
-                        <td class="w-[20%] px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">
-                            @if ($job_draft->date_target < now())
-                                <!-- Check if deadline has passed -->
-                                <span class="text-sm font-bold text-red-500">{{ $job_draft->date_target }} LATE</span>
-                            @else
-                                <span class="text-sm font-bold text-green-500">{{ $job_draft->date_target }}
-                                    ONGOING</span>
-                            @endif
-                        </td>
-                        <td class="w-[15%] px-2 sm:px-4 py-2 sm:py-3 text-center text-white">
-                            <p
-                                class="w-full px-2 py-1 rounded-lg text-wrap
-                                {{ $job_draft->status == 'completed'
-                                    ? 'bg-green-400'
-                                    : ($job_draft->status == 'Revision'
-                                        ? 'bg-red-600'
-                                        : 'bg-[#fa6e117e]') }} ">
-                                {{ ucfirst($job_draft->status) }}
-                            </p>
-                        </td>
-                        <td class="w-[15%] px-2 sm:px-4 py-2 sm:py-3 text-center border-b">
-                            <a href="{{ url('admin/smm/supervisor/approve/show/' . $job_draft->id) }}">
-                                <button
-                                    class="px-2 sm:px-3 py-1 sm:py-2  text-white  rounded whitespace-nowrap {{ $job_draft->status !== 'Submitted to Operations Supervisor' ? 'cursor-not-allowed bg-gray-400' : 'bg-green-500 hover:bg-green-600' }}"
-                                    {{ $job_draft->status !== 'Submitted to Operations Supervisor' ? 'disabled' : '' }}>
-                                    View Form
-                                </button>
-                            </a>
-                        </td>
-                    </tr>
+                            <tr class="project-row border-b " data-status="{{ strtolower($job_draft->status) }}"
+                                data-title="{{ strtolower($job_draft->jobOrder->title) }}"
+                                data-designated="{{ strtolower($job_draft->type == 'content_writer' ? 'content writer - ' . $job_draft->contentWriter->name : 'graphic designer - ' . $job_draft->graphicDesigner->name) }}">
+                                <td class="w-[25%] px-2 sm:px-4 py-2 sm:py-3 truncate">{{ $job_draft->jobOrder->title }}</td>
+                                <td class="w-[25%] px-2 sm:px-4 py-2 sm:py-3 truncate">
+                                    @if ($job_draft->type == 'content_writer')
+                                        Content Writer - {{ $job_draft->contentWriter->name }}
+                                    @else
+                                        Graphic Designer - {{ $job_draft->graphicDesigner->name }}
+                                    @endif
+                                </td>
+                                <td class="w-[20%] px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">
+                                    @if ($job_draft->date_target < now())
+                                        <!-- Check if deadline has passed -->
+                                        <span class="text-sm font-bold text-red-500">{{ $job_draft->date_target }} LATE</span>
+                                    @else
+                                        <span class="text-sm font-bold text-green-500">{{ $job_draft->date_target }}
+                                            ONGOING</span>
+                                    @endif
+                                </td>
+                                <td class="w-[15%] px-2 sm:px-4 py-2 sm:py-3 text-center text-white">
+                                    <p class="w-full px-2 py-1 rounded-lg text-wrap
+                                                        {{ $job_draft->status == 'completed'
+                    ? 'bg-green-400'
+                    : ($job_draft->status == 'Revision'
+                        ? 'bg-red-600'
+                        : 'bg-[#fa6e117e]') }} ">
+                                        {{ ucfirst($job_draft->status) }}
+                                    </p>
+                                </td>
+                                <td class="w-[15%] px-2 sm:px-4 py-2 sm:py-3 text-center border-b">
+                                    <a href="{{ url('admin/smm/supervisor/approve/show/' . $job_draft->id) }}">
+                                        <button
+                                            class="px-2 sm:px-3 py-1 sm:py-2  text-white  rounded whitespace-nowrap {{ $job_draft->status !== 'Submitted to Operations Supervisor' ? 'cursor-not-allowed bg-gray-400' : 'bg-green-500 hover:bg-green-600' }}"
+                                            {{ $job_draft->status !== 'Submitted to Operations Supervisor' ? 'disabled' : '' }}>
+                                            View Form
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
                 @empty
                     <tr class="h-[400px]">
                         <td colspan="5" class="px-6 py-3">
@@ -157,7 +156,7 @@
             // Submitted: All except "Revision" and "Submitted to Assistant Supervisor"
             else if (status === 'submitted') {
                 row.style.display = (rowStatus !== 'revision' && rowStatus !==
-                        'submitted to operations supervisor') ? "" :
+                    'submitted to operations supervisor') ? "" :
                     "none";
             }
             // All: All except "Revision"

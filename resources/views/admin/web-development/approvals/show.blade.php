@@ -70,22 +70,47 @@
                 <!-- Signature Upload Section (Full Width) -->
                 <div class="hidden lg:block lg:col-span-1"></div>
                 <div class="lg:col-span-4">
+                    Blade
+                    
                     @php
-                        switch (Auth::user()->roles->position) {
-                            case 'operations_supervisor':
-                                $isDisabled = $web_project_channel->status != 'Submitted to Operations Supervisor';
-                                break;
-                            case 'top_management':
-                                $isDisabled = $web_project_channel->status != 'Submitted to Top Management';
-                                break;
-                            case 'client':
-                                $isDisabled = $web_project_channel->status != 'Submitted to Client';
-                                break;
-                            case 'assistant_supervisor':
-                                $isDisabled = $web_project_channel->status != 'Submitted to Operation';
-                                break;
-                            default:
-                                $isDisabled = true;
+                        $user = Auth::user();
+                        $rolePosition = $user->roles->position ?? null;
+                        $isDisabled = true; // Default to disabled
+
+                        if ($rolePosition) {
+                            switch ($rolePosition) {
+                                case 'operations_supervisor':
+                                    $isDisabled = $web_project_channel->status != 'Submitted to Operations Supervisor';
+                                    break;
+                                case 'top_management':
+                                    $isDisabled = $web_project_channel->status != 'Submitted to Top Management';
+                                    break;
+                                case 'client':
+                                    $isDisabled = $web_project_channel->status != 'Submitted to Client';
+                                    break;
+                                case 'assistant_supervisor':
+                                    $isDisabled = $web_project_channel->status != 'Submitted to Assistant Supervisor';
+                                    break;
+                                default:
+                                    // Check for privilege and page in the default case
+                                    $approvalPage = \App\Models\Page::where('description', 'like', '%approvals%')->first();
+                                    $approvalPrivilege = \App\Models\Privilege::where('description', 'like', '%can_approve%')->first();
+
+                                    if ($approvalPage && $approvalPrivilege) {
+                                        $hasPrivilege = $user->role_channels()
+                                            ->where('page_id', $approvalPage->id)
+                                            ->where('privilege_id', $approvalPrivilege->id)
+                                            ->exists(); // Check if the record exists
+
+                                        if ($hasPrivilege) {
+                                            $isDisabled = false; // Enable if user has privilege and page
+                                        }
+                                    }
+                                    else
+                                    {
+                                        $isDisabled = true; // Disable if approval page or privilege not found
+                                    }
+                            }
                         }
                     @endphp
 

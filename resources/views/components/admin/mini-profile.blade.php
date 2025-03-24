@@ -98,7 +98,8 @@
                                     <p class="text-sm text-red-500 font-semibold truncate">{{ $notification->title }}
                                     </p>
                                     <p class="text-sm text-gray-500 font-semibold truncate">
-                                        {{ $notification->message }}</p>
+                                        {{ $notification->message }}
+                                    </p>
                                     <p class="text-xs text-gray-500 truncate">
                                         {{ \Carbon\Carbon::parse($notification->created_at)->diffForHumans() }}
                                     </p>
@@ -132,7 +133,7 @@
                     onscroll="unreadTabLoadMoreNotifications()">
                     @forelse ($notifications->where('is_read', 0)->where('is_archive', 0) as $notification)
                         <div class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
                             onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-unread', '{{ addslashes($notification->type) }}', '{{ addslashes($notification->title) }}')">
                             <div class="flex items-center gap-3 w-2/3">
                                 <div class="w-auto h-auto">
@@ -183,7 +184,7 @@
                     onscroll="archivedTabLoadMoreNotifications()">
                     @forelse ($notifications->where('is_archive', 1) as $notification)
                         <div class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:bg-gray-50 {{ $notification->is_read ? 'bg-white' : 'bg-gray-100' }}"
                             onclick="openNotificationModal({{ $notification->id }}, '{{ addslashes($notification->message) }}', {{ $notification->is_read ? 'true' : 'false' }}, 'tab-archive', '{{ addslashes($notification->type) }}', '{{ addslashes($notification->title) }}')">
                             <div class="flex items-center gap-3 w-2/3">
                                 <div class="h-auto w-auto">
@@ -223,21 +224,19 @@
     {{-- <h1 class="absolute top-0 z-10 px-3 py-1 rounded bg-[#f56d11] text-white text-sm -left-12">DTR</h1> --}}
     <!-- Profile Dropdown -->
     @php
-        $admin_roles = ['admin', 'top_manager', 'supervisor', 'assistant_supervisor'];
+        $admin_roles = ['admin', 'top_management', 'operations_supervisor', 'assistant_supervisor'];
     @endphp
     <div class="dropdown relative inline-flex hover:scale-105 transition">
         <span class="group">
             <button type="button" id="dropdown-profile" data-target="dropdown-show-profile"
                 class="dropdown-profile inline-flex w-16 h-16 overflow-hidden rounded-full border-4 border-transparent group-hover:border-[#fdb783]/50"
                 onclick="toggleDropdown()">
-                <img draggable="false"
-                    src="{{ \App\Models\File::where(
-                        'id',
-                        \App\Models\Profile::where('id', Auth::user()->profile_id)->first()->file_id,
-                    )->first()->path .
-                        '?=s100?t=' .
-                        time() }}"
-                    alt="user profile" class="w-full h-full border-2 border-white object-cover bg-white rounded-full">
+                <img draggable="false" src="{{ \App\Models\File::where(
+    'id',
+    \App\Models\Profile::where('id', Auth::user()->profile_id)->first()->file_id,
+)->first()->path .
+    '?=s100?t=' .
+    time() }}" alt="user profile" class="w-full h-full border-2 border-white object-cover bg-white rounded-full">
             </button>
         </span>
 
@@ -254,19 +253,19 @@
 
 
             @if (in_array(Auth::user()->roles->position, $admin_roles))
-                <ul class="py-2">
-                    @foreach ($menuItems as $route => $item)
-                        <li>
-                            <a href="{{ route($item['route']) }}" @class([
-                                'block px-6 py-2 font-semibold cursor-pointer lg:text-base text-sm',
-                                'bg-[#f56d11] text-white' => Request::routeIs($route),
-                                'hover:bg-gray-100 text-gray-900' => !Request::routeIs($route),
-                            ])>
-                                {{ $item['label'] }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
+                    <ul class="py-2">
+                        @foreach ($menuItems as $route => $item)
+                                    <li>
+                                        <a href="{{ route($item['route']) }}" @class([
+                                            'block px-6 py-2 font-semibold cursor-pointer lg:text-base text-sm',
+                                            'bg-[#f56d11] text-white' => Request::routeIs($route),
+                                            'hover:bg-gray-100 text-gray-900' => !Request::routeIs($route),
+                                        ])>
+                                            {{ $item['label'] }}
+                                        </a>
+                                    </li>
+                        @endforeach
+                    </ul>
 
             @endif
 
@@ -326,8 +325,7 @@
             <div class="flex w-full flex-col items-start gap-3 text-wrap">
                 <div class="flex items-center gap-2 select-none">
                     <x-image path="resources/img/vector_icon.png" className="w-auto h-5" />
-                    <h1 id="pageTitle"
-                        class="lg:!text-xl sm:!text-base text-sm font-semibold text-[#F53C11] uppercase">
+                    <h1 id="pageTitle" class="lg:!text-xl sm:!text-base text-sm font-semibold text-[#F53C11] uppercase">
                         No Title
                     </h1>
                 </div>
@@ -343,8 +341,8 @@
                 </p> --}}
                 <div class="flex gap-3 items-center justify-end w-full mt-2">
                     <x-button onClick="showNotificationModal()" label="View" className="!px-8" tertiary button />
-                    <x-button onClick="closeNotificationModal('AllNotificationModals')" label="Close"
-                        className="!px-8" primary button />
+                    <x-button onClick="closeNotificationModal('AllNotificationModals')" label="Close" className="!px-8"
+                        primary button />
                 </div>
             </div>
         </div>

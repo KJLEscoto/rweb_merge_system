@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\WebJobOrder;
 use App\Models\WebProject;
 use App\Models\WebProjectChannel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -137,6 +138,84 @@ class WebDirectJobOrderController extends Controller
         $employee = User::all();
         $web_project = WebProject::with('web_project_channels', 'client')->find($id);
         return view('admin.web-development.direct-job-order.channels.edit', compact('web_project', 'employee'));
+    }
+
+    public function editProjectChannels(Request $request, $id)
+    {
+        // @dd('stop', $request->all(), $id); // Remove or comment out after debugging
+        $users = $request->input('users');
+        $newUsers = $request->input('newUsers'); // Get the new users array
+
+        DB::beginTransaction(); // Start a database transaction
+
+        try {
+
+            // Handle deleted users
+            $existingChannelIds = WebProjectChannel::where('project_id', $id)->pluck('id')->toArray();
+            $updatedChannelIds = $users ? array_keys($users) : [];
+            $deletedChannelIds = array_diff($existingChannelIds, $updatedChannelIds);
+
+            if (!empty($deletedChannelIds)) {
+                WebProjectChannel::whereIn('id', $deletedChannelIds)->delete();
+            }
+
+            // Update WebProject table
+            WebProject::where('id', $id)->update([
+                'title' => $request->input('title'),
+                'client_id' => $request->input('client_id'),
+                'instructions' => $request->input('instructions'),
+            ]);
+
+            // Update WebProjectChannel table for existing users
+            if ($users) {
+                foreach ($users as $channelId => $types) {
+                    foreach ($types as $type => $userId) {
+                        // @dd($types, $users, $channelId); // Remove or comment out after debugging
+                        WebProjectChannel::where('id', $channelId)
+                            ->update(['user_id' => $userId]);
+                    }
+                }
+            }
+
+            // Create new WebProjectChannel records for new users
+            if ($newUsers) {
+                foreach ($newUsers as $newUser) {
+                    if (isset($newUser['type']) && isset($newUser['user'])) {
+
+                        $web_job_order = WebJobOrder::create([
+                            'status' => 'Job order for ' . User::where('id', $newUser['user'])->first()->name,
+                        ]);
+
+                        $web_project_channel = WebProjectChannel::create([
+                            'project_id' => $id,
+                            'web_job_order_id' => $web_job_order->id,
+                            'type' => $newUser['type'],
+                            'user_id' => $newUser['user'],
+                            'date_started' => $newUser['type'] == 'web_designer' ? $request->input('date_started') : null,
+                            'date_targeted' => $newUser['type'] == 'web_designer' ? $request->input('date_target') : null,
+                            'status' => 'pending',
+                            'sub_status' => $newUser['type'] == 'web_designer' ? 'Site Map' : null,
+                        ]);
+                    }
+                }
+            }
+
+            //Update web_project_channels table with the dates.
+            WebProjectChannel::where('project_id', $id)
+                ->update([
+                    'date_started' => $request->input('date_started'),
+                    'date_targeted' => $request->input('date_target')
+                ]);
+
+            DB::commit(); // Commit the transaction if all updates succeed
+        } catch (\Exception $e) {
+            @dd($e->getMessage());
+            DB::rollback(); // Rollback the transaction if an error occurs
+            // Handle the exception (e.g., log the error, display an error message)
+            return back()->withErrors(['error' => 'An error occurred while updating the project. Please try again.']);
+        }
+
+        return redirect()->route('admin.web.direct-job-order.showProjectChannels', $id)->with('success', 'Project updated successfully.');
     }
 
     /**
