@@ -484,6 +484,7 @@
                         routeName="admin.smm.client_documents" />
                     <x-admin.sidebar-menu icon="mdi--file-cog" label="Request Form"
                         routeName="admin.smm.requestForm.history" />
+                    <x-admin.sidebar-menu icon="mdi--file-cog" label="SOA Approval" routeName="admin.smm.soa" />
                     <x-admin.sidebar-menu icon="fa--users" label="Users" routeName="admin.smm.users" />
                     <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
                 @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'client')

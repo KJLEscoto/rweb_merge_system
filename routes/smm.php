@@ -52,6 +52,8 @@ Route::prefix('/smm')->middleware('auth.redirect')->group(function () {
 
     Route::get('/soa/create_particulars/{id}', [SoaController::class, 'create_particulars'])->name('admin.smm.soa.create_particulars');
     Route::put('/soa/store_particulars/{id}', [SoaController::class, 'store_particulars'])->name('admin.smm.soa.store_particulars');
+
+    Route::put('/soa/approve/{id}', [SoaController::class, 'approve'])->name('admin.smm.soa.approve');
   });
 
   Route::middleware(['auth', 'role:client'])->group(function () {
