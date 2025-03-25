@@ -59,12 +59,15 @@
                     <div class="col-span-2 lg:col-span-1 w-full">
                         <p class="text-sm text-gray-600">Job Order ID</p>
                         <div class="relative">
-                            <input type="text" id="selected-job_draft_id"
-                                value="{{ old('job_draft_id') ? $job_drafts->firstWhere('id', old('job_draft_id'))->name ?? 'Select a Job Order' : 'Select a Job Order' }}"
-                                class="w-full border px-3 py-2 border-gray-200 rounded-lg cursor-pointer" readonly
-                                onclick="openModal()">
-                            <input type="hidden" name="job_draft_id" id="selected-job_draft_id"
-                                value="{{ old('job_draft_id') }}">
+                            <!-- Visible input for showing Job Order name -->
+                            <input type="text" id="selected-job_draft-name"
+                                value="{{ old('job_draft_id') ? optional($job_drafts->firstWhere('id', old('job_draft_id')))->name ?? 'Select a Job Order' : 'Select a Job Order' }}"
+                                class="w-full border px-3 py-2 border-gray-200 rounded-lg cursor-pointer" readonly onclick="openModal()">
+
+                            <!-- Hidden input for passing Job Order ID in the form -->
+                            <input type="hidden" name="job_draft_id" id="selected-job_draft_id" value="{{ old('job_draft_id') }}">
+
+                        
                         </div>
                         @error('job_draft_id')
                             <p class="text-red-600 text-sm">{{ $message }}</p>
@@ -228,10 +231,12 @@
     }
 
     function selectClient(clientId, clientName) {
-        document.getElementById('selected-job_draft_id').value = clientName;
-        document.getElementById('selected-job_draft_id').value = clientId;
+        document.getElementById('selected-job_draft_id').value = clientId; // Hidden input (stores ID)
+        document.getElementById('selected-job_draft-name').value = clientId; // Text input (displays name)
         closeModal();
     }
+
+
 
     // Open Graphics Designer Modal
     function openGraphicDesignerModal() {
