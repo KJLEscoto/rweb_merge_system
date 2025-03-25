@@ -55,6 +55,8 @@ class SoaController extends Controller
 
     public function store_particulars(Request $request, $id)
     {
+
+        dd($request->all());
         // Validate request data
         $validatedData = $request->validate([
             'billing_date' => 'required|date',
