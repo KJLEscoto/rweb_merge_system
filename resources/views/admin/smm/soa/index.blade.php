@@ -13,14 +13,14 @@
     @endif
 
     {{-- Search Bar --}}
-    <a href="{{ url('smm/soa/create') }}">
+    <a href="{{ route('admin.smm.soa.create') }}">
         <div
             class="bg-[#fa7011] w-fit block text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center lg:hidden">
             <i class="fa-solid fa-plus"></i>
         </div>
     </a>
     <div class="w-full h-fit flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-        <a href="{{ url('smm/soa/create') }}">
+        <a href="{{ route('admin.smm.soa.create') }}">
             <div
                 class="bg-[#fa7011] hidden text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center w-full md:w-auto lg:block">
                 Create SOA
@@ -49,9 +49,9 @@
                 </tr>
             </thead>
             <tbody id="tableBody" class="overflow-y-auto">
-                {{-- @forelse ($job_drafts as $job_draft) --}}
+                @forelse ($soas as $soa)
                     <tr class="border-b">
-                        <td class="px-4 py-3">Airpro Soa</td>
+                        <td class="px-4 py-3">{{$soa->joborder->title}}</td>
                         <td class="px-4 py-3">123</td>
                         <td class="px-6 py-3">Airpro Solutions Inc.</td>
                         <td class="px-4 py-3 text-center">
@@ -69,7 +69,7 @@
                             </a>
                         </td>
                     </tr>
-                {{-- @empty --}}
+                @empty
                     <tr class="h-[400px]">
                         <td colspan="4" class="px-6 py-3">
                             <div class="flex h-full items-center flex-col justify-center space-y-4">
@@ -78,7 +78,7 @@
                             </div>
                         </td>
                     </tr>
-                {{-- @endforelse --}}
+                @endforelse
             </tbody>
         </table>
     </div>

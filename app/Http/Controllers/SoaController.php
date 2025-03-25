@@ -11,13 +11,13 @@ class SoaController extends Controller
 {
     public function index()
     {
-        $soas = Soa::all();
-        return view('admin.smm.soa.index', compact('soa'));
+        $soas = Soa::with('jobDraft')->get();
+        return view('admin.smm.soa.index', compact('soas'));
     }
 
     public function create()
     {
-        $job_drafts = JobDraft::all();
+        $job_drafts = JobDraft::with("jobOrder")->get();
         return view('admin.smm.soa.create', compact('job_drafts'));
     }
 
