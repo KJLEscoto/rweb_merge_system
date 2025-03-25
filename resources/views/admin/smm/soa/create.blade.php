@@ -42,14 +42,14 @@
     @endif
 
     <div class="w-full px-6 py-10 mx-auto rounded-lg custom-shadow bg-white">
-        <div>
-            <a href="{{ url('/admin/smm/supervisor/directjob') }}">
+        <div class="w-fit">
+            <a href="{{ route('admin.smm.soa') }}">
                 <div class="w-fit px-4 py-1 bg-gray-400 rounded-md text-white custom-shadow custom-hover-shadow">
                     Back
                 </div>
             </a>
         </div>
-        <form action="{{ url('/admin/smm/supervisor/directjob/store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.smm.soa.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
     
             <h1 class="text-xl font-bold mt-4">Create SOA</h1>
@@ -104,7 +104,7 @@
     </div>
 
     <!-- Client Selection Modal -->
-    {{-- <div id="client-modal"
+    <div id="client-modal"
         class="fixed inset-0 bg-gray-900 px-4 md:px-20 z-50 bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white w-full max-w-sm md:max-w-lg lg:max-w-2xl px-5 pb-10 pt-5 rounded-lg">
             <!-- Search & Close button -->
@@ -130,19 +130,19 @@
                     <thead class="sticky top-0 bg-[#fa7011] text-white">
                         <tr>
                             <th class="px-4 md:px-6 py-3 w-24 md:w-32">Title</th>
-                            <th class="px-4 md:px-6 py-3 w-24 md:w-32">Role</th>
+                            <th class="px-4 md:px-6 py-3 w-24 md:w-32">Job Order ID</th>
                             <th class="px-4 md:px-6 py-3 w-24 md:w-32 text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
-                        @forelse ($joborders as $client)
+                        @forelse ($job_drafts as $job_draft)
                             <tr class="border-b">
-                                <td class="px-4 md:px-6 py-3">{{ $client->name }}</td>
-                                <td class="px-4 md:px-6 py-3">{{ ucfirst($client->roles->position) }}</td>
+                                <td class="px-4 md:px-6 py-3">{{ $job_draft->jobOrder->title }}</td>
+                                <td class="px-4 md:px-6 py-3">{{ ucfirst($job_draft->id) }}</td>
                                 <td class="px-4 md:px-6 py-3 text-center">
-                                    <button onclick="selectClient('{{ $client->id }}', '{{ $client->name }}')"
+                                    <button onclick="selectClient('{{ $job_draft->id }}', '{{ $job_draft->title }}')"
                                         class="px-2 py-1 md:px-4 md:py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 w-full md:w-auto">
-                                        Select Client
+                                        Select Job Order
                                     </button>
                                 </td>
                             </tr>
@@ -160,7 +160,7 @@
                 </table>
             </div>
         </div>
-    </div> --}}
+    </div>
 
 </x-main-layout>
 
