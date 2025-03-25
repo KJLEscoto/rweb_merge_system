@@ -11,10 +11,11 @@ class SoaParticular extends Model
 
     protected $fillable = [
         'soa_id',
+        'date',
+        'reference',
         'quantity',
         'particulars',
         'charges',
-        'credits'
     ];
 
     public function soa()

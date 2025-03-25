@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('address');
             $table->date('billing_date')->nullable();
             $table->date('due_date')->nullable();
-            $table->date('date')->nullable();
+
             $table->unsignedBigInteger('job_draft_id'); //
             $table->unsignedBigInteger('prepared_by')->nullable();
             $table->unsignedBigInteger('approved_by')->nullable();

@@ -51,7 +51,7 @@ Route::prefix('/smm')->middleware('auth.redirect')->group(function () {
     Route::delete('/soa/{id}/destroy', [SoaController::class, 'destroy'])->name('admin.smm.soa.destroy');
 
     Route::get('/soa/create_particulars/{id}', [SoaController::class, 'create_particulars'])->name('admin.smm.soa.create_particulars');
-    Route::put('/soa/store_particulars', [SoaController::class, 'store_particulars'])->name('admin.smm.soa.store_particulars');
+    Route::put('/soa/store_particulars/{id}', [SoaController::class, 'store_particulars'])->name('admin.smm.soa.store_particulars');
   });
 
   Route::middleware(['auth', 'role:client'])->group(function () {
