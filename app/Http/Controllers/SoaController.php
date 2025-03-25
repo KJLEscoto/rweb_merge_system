@@ -23,18 +23,20 @@ class SoaController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
         $request->validate([
             'job_draft_id' => 'required',
-            'image_path' => 'required',
+            'image_path' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate as an image
             'company' => 'required'
         ]);
+
+        // Store the file in public/soa_images and get the file path
+        $imagePath = $request->file('image_path')->store('soa_images', 'public');
 
         Soa::create([
             'bill_from' => RwebDetail::first()->address,
             'telephone' => RwebDetail::first()->telephone,
             'job_draft_id' => $request->job_draft_id,
-            'image_path' => $request->image_path,
+            'image_path' => $imagePath, // Save the stored path in DB
             'company' => $request->company,
             'client_name' => JobDraft::find($request->job_draft_id)->client->name,
             'address' => JobDraft::find($request->job_draft_id)->client->address,
@@ -46,8 +48,8 @@ class SoaController extends Controller
 
     public function create_particulars($id)
     {
-        $soa = Soa::find($id);
-        return view('admin.smm.soa.create_particulars', compact('soa'));
+        $soa = Soa::with('jobDraft', 'preparedBy', 'approvedBy', 'particulars')->find($id);
+        return view('admin.smm.soa.particulars.create', compact('soa'));
     }
 
     public function store_particulars(Request $request, $id)
@@ -64,5 +66,18 @@ class SoaController extends Controller
         ]);
 
         return redirect()->route('admin.smm.soa')->with('Success', 'SOA Created Successfully');
+    }
+
+    public function show($id)
+    {
+        $soa = Soa::with('jobDraft', 'preparedBy', 'approvedBy', 'particulars')->find($id);
+        return view('admin.smm.soa.show', compact('soa'));
+    }
+
+    public function destroy($id)
+    {
+        $soa = Soa::find($id);
+        $soa->delete();
+        return redirect()->route('admin.smm.soa')->with('Success', 'SOA Deleted Successfully');
     }
 }
