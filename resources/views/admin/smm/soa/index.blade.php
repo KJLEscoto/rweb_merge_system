@@ -59,7 +59,7 @@
 
                         <td class="px-4 py-3 text-center">
                             @if (Auth::user()->role == 'accounting')
-                            <a href="{{ route('admin.smm.soa.create_particulars', $soa->id) }}">
+                                <a href="{{ route('admin.smm.soa.create_particulars', $soa->id) }}">
 
                                     <button
                                         class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-700 rounded hover:bg-green-800">
@@ -67,6 +67,18 @@
                                     </button>
                                 </a>
                             @endif
+                            @if (Auth::user()->role == 'top_management')
+                                <form action="{{ route('admin.smm.soa.approve', $soa->id) }}" method="POST"
+                                    class="inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit"
+                                        class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-700 rounded hover:bg-green-800">
+                                        Approve
+                                    </button>
+                                </form>
+                            @endif
+
                             <a href="#">
                                 <button
                                     class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-blue-700 rounded hover:bg-blue-800">
@@ -79,12 +91,16 @@
                                     Show
                                 </button>
                             </a>
-                            <a href="#">
-                                <button
+                            <form action="{{ route('admin.smm.soa.destroy', $soa->id) }}" method="POST" class="inline"
+                                onsubmit="return confirm('Are you sure you want to delete this SOA?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
                                     class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-red-700 rounded hover:bg-red-800">
                                     Delete
                                 </button>
-                            </a>
+                            </form>
+
                         </td>
                     </tr>
                 @empty

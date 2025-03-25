@@ -73,6 +73,7 @@ class SoaController extends Controller
         $soa->update([
             'billing_date' => $validatedData['billing_date'],
             'due_date' => $validatedData['due_date'],
+            'prepared_by' => auth()->user()->id
         ]);
 
         // Store multiple SOA Particulars
@@ -80,7 +81,7 @@ class SoaController extends Controller
             SoaParticular::create([
                 'soa_id' => $soa->id,
                 'date' => $particular['date'],
-                'reference' => $particular['reference'],
+                'reference' => $soa->job_draft_id,
                 'quantity' => $particular['quantity'],
                 'particulars' => $particular['particulars'], // Use correct key
                 'charges' => $particular['charges'],
@@ -95,8 +96,9 @@ class SoaController extends Controller
 
     public function show($id)
     {
+        $rweb_details = RwebDetail::with('paymentMethods')->first();
         $soa = Soa::with('jobDraft', 'preparedBy', 'approvedBy', 'particulars')->find($id);
-        return view('admin.smm.soa.show', compact('soa'));
+        return view('admin.smm.soa.show', compact('soa', 'rweb_details'));
     }
 
     public function destroy($id)
@@ -104,5 +106,15 @@ class SoaController extends Controller
         $soa = Soa::find($id);
         $soa->delete();
         return redirect()->route('admin.smm.soa')->with('Success', 'SOA Deleted Successfully');
+    }
+
+    public function approve($id)
+    {
+        Soa::find($id)->update([
+            'status' => 'Approved by Top Management',
+            'approved_by' => auth()->user()->id
+        ]);
+
+        return redirect()->route('admin.smm.soa')->with('Success', 'SOA Approved Successfully');
     }
 }
