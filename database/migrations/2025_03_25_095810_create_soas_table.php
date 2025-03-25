@@ -15,7 +15,25 @@ return new class extends Migration
     {
         Schema::create('soas', function (Blueprint $table) {
             $table->id();
+            $table->text('bill_from');
+            $table->string('telephone');
+            $table->string('company'); //
+            $table->string('client_name');
+            $table->text('address');
+            $table->date('billing_date')->nullable();
+            $table->date('due_date')->nullable();
+            $table->date('date')->nullable();
+            $table->unsignedBigInteger('job_draft_id'); //
+            $table->unsignedBigInteger('prepared_by')->nullable();
+            $table->unsignedBigInteger('approved_by')->nullable();
+            $table->string('image_path'); //
+            $table->string('status'); //
             $table->timestamps();
+
+            // Foreign key constraint
+            $table->foreign('job_draft_id')->references('id')->on('job_drafts')->onDelete('cascade');
+            $table->foreign('prepared_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('approved_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
