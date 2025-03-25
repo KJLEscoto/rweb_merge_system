@@ -21,7 +21,8 @@ class Soa extends Model
         'job_draft_id',
         'prepared_by',
         'approved_by',
-        'image_path'
+        'image_path',
+        'status'
     ];
 
     public function jobDraft()
