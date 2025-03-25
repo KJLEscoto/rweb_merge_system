@@ -51,7 +51,7 @@
         </div>
         <form action="{{ route('admin.smm.soa.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-    
+
             <h1 class="text-xl font-bold mt-4">Create SOA</h1>
             <div class="grid grid-cols-4 space-y-4">
                 <div class="col-span-4 grid grid-cols-2 gap-4 mt-4">
@@ -59,14 +59,14 @@
                     <div class="col-span-2 lg:col-span-1 w-full">
                         <p class="text-sm text-gray-600">Job Order ID</p>
                         <div class="relative">
-                            <input type="text" id="selected-joborder-id"
-                                value="{{ old('joborder-id') ? $joborders->firstWhere('id', old('joborder-id'))->name ?? 'Select a Job Order' : 'Select a Job Order' }}"
+                            <input type="text" id="selected-job_draft_id"
+                                value="{{ old('job_draft_id') ? $job_drafts->firstWhere('id', old('job_draft_id'))->name ?? 'Select a Job Order' : 'Select a Job Order' }}"
                                 class="w-full border px-3 py-2 border-gray-200 rounded-lg cursor-pointer" readonly
                                 onclick="openModal()">
-                            <input type="hidden" name="joborder-id" id="selected-joborder-id"
-                                value="{{ old('joborder-id') }}">
+                            <input type="hidden" name="job_draft_id" id="selected-job_draft_id"
+                                value="{{ old('job_draft_id') }}">
                         </div>
-                        @error('joborder-id')
+                        @error('job_draft_id')
                             <p class="text-red-600 text-sm">{{ $message }}</p>
                         @enderror
                     </div>
@@ -74,27 +74,29 @@
                     <!-- Image Upload -->
                     <div class="col-span-2 lg:col-span-1 w-full">
                         <p class="text-sm text-gray-600">Company Name</p>
-                        <input type="text" name="company_name" class="w-full border px-3 py-2 border-gray-200 rounded-lg">
-                        @error('company_name')
+                        <input type="text" name="company" class="w-full border px-3 py-2 border-gray-200 rounded-lg">
+                        @error('company')
                             <p class="text-red-600 text-sm">{{ $message }}</p>
                         @enderror
-                        
+
                     </div>
-                    
+
                     <!-- Image Upload -->
                     <div class="col-span-2 lg:col-span-1 w-full">
                         <p class="text-sm text-gray-600">Upload Image</p>
-                        <input type="file" name="image" id="imageUpload" accept="image/*" class="w-full border px-3 py-2 border-gray-200 rounded-lg">
-                        @error('image')
+                        <input type="file" name="image_path" id="imageUpload" accept="image_path/*"
+                            class="w-full border px-3 py-2 border-gray-200 rounded-lg">
+                        @error('image_path')
                             <p class="text-red-600 text-sm">{{ $message }}</p>
                         @enderror
                         <!-- Image Preview -->
                         <div class="mt-4">
-                            <img id="imagePreview" src="#" alt="Uploaded Image" class="hidden w-32 h-32 object-cover rounded-md border">
+                            <img id="imagePreview" src="#" alt="Uploaded Image"
+                                class="hidden w-32 h-32 object-cover rounded-md border">
                         </div>
                     </div>
                 </div>
-    
+
                 <button type="submit"
                     class="col-span-1 text-center py-2 lg:py-4 w-full bg-[#fa7011] mt-10 rounded-lg custom-shadow custom-hover-shadow text-white font-bold">
                     Submit
@@ -226,8 +228,8 @@
     }
 
     function selectClient(clientId, clientName) {
-        document.getElementById('selected-joborder-id').value = clientName;
-        document.getElementById('selected-joborder-id').value = clientId;
+        document.getElementById('selected-job_draft_id').value = clientName;
+        document.getElementById('selected-job_draft_id').value = clientId;
         closeModal();
     }
 
@@ -279,7 +281,7 @@
 </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const contentCheckbox = document.getElementById("content-checkbox");
         const contentInput = document.getElementById("selected-content-writer-name");
 
@@ -298,11 +300,11 @@
             }
         }
 
-        contentCheckbox.addEventListener("change", function () {
+        contentCheckbox.addEventListener("change", function() {
             toggleInput(contentCheckbox, contentInput, "openContentWriterModal");
         });
 
-        graphicCheckbox.addEventListener("change", function () {
+        graphicCheckbox.addEventListener("change", function() {
             toggleInput(graphicCheckbox, graphicInput, "openGraphicDesignerModal");
         });
 

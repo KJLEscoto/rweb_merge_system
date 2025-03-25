@@ -23,6 +23,7 @@ class SoaController extends Controller
 
     public function store(Request $request)
     {
+        dd($request->all());
         $request->validate([
             'job_draft_id' => 'required',
             'image_path' => 'required',
