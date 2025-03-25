@@ -26,6 +26,7 @@ use App\Http\Controllers\ProjectEndorsementFormController;
 use App\Http\Controllers\RequestFormController;
 use App\Http\Controllers\RevisionController;
 use App\Http\Controllers\SignatureController;
+use App\Http\Controllers\SoaController;
 use App\Http\Controllers\SupervisorApprovalController;
 use App\Http\Controllers\SupervisorDirectJobOrderController;
 use App\Http\Controllers\SupervisorHistoryController;
@@ -42,6 +43,10 @@ Route::prefix('/smm')->middleware('auth.redirect')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.smm.dashboard');
   });
 
+  Route::middleware(['auth'])->group(function () {
+    Route::get('/soa', [SoaController::class, 'index'])->name('admin.smm.soa');
+    Route::get('/soa/create', [SoaController::class, 'create'])->name('admin.smm.soa.create');
+  });
 
   Route::middleware(['auth', 'role:client'])->group(function () {
     Route::get('/client', [ClientApprovalController::class, 'index'])->name('admin.smm.client.approve');
