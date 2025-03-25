@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PageSeeder::class,
             PrivilegeSeeder::class,
+            RWebSeeder::class,
         ]);
 
         // Fetch the admin role ID
