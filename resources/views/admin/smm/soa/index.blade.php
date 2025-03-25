@@ -59,7 +59,8 @@
 
                         <td class="px-4 py-3 text-center">
                             @if (Auth::user()->role == 'accounting')
-                                <a href="#">
+                            <a href="{{ route('admin.smm.soa.create_particulars', $soa->id) }}">
+
                                     <button
                                         class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-700 rounded hover:bg-green-800">
                                         Create
