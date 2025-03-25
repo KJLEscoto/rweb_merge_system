@@ -330,38 +330,86 @@
                 @if (Request::routeIs('admin.web*'))
                     @php
                         $userId = Auth::id();
-                        $canReadPrivilegeId = \App\Models\Privilege::where('description', 'like', '%can_read%')->value('id');
+                        $canReadPrivilegeId = \App\Models\Privilege::where('description', 'like', '%can_read%')->value(
+                            'id',
+                        );
                     @endphp
 
                     @if ($canReadPrivilegeId)
                         @php
                             $pages = [
-                                'dashboard' => ['icon' => 'ic--baseline-space-dashboard', 'label' => 'Dashboard', 'route' => 'admin.web.dashboard'],
-                                'direct_job_order' => ['icon' => 'carbon--direction-loop-right-filled', 'label' => 'Direct Job Order', 'route' => 'admin.web.direct-job-order'],
-                                'operation_job_order' => ['icon' => 'clarity--directory-solid-badged', 'label' => 'Operation Job Order', 'route' => 'admin.web.operation-job-order'],
-                                'task' => ['icon' => 'fluent--clipboard-text-edit-48-filled', 'label' => 'Task', 'route' => 'admin.web.task'],
-                                'revision' => ['icon' => 'mdi--file-cog', 'label' => 'Revision', 'route' => 'admin.web.revision'],
-                                'approvals' => ['icon' => 'mdi--clipboard-text-history', 'label' => 'Approvals', 'route' => 'admin.web.approvals'],
+                                'dashboard' => [
+                                    'icon' => 'ic--baseline-space-dashboard',
+                                    'label' => 'Dashboard',
+                                    'route' => 'admin.web.dashboard',
+                                ],
+                                'direct_job_order' => [
+                                    'icon' => 'carbon--direction-loop-right-filled',
+                                    'label' => 'Direct Job Order',
+                                    'route' => 'admin.web.direct-job-order',
+                                ],
+                                'operation_job_order' => [
+                                    'icon' => 'clarity--directory-solid-badged',
+                                    'label' => 'Operation Job Order',
+                                    'route' => 'admin.web.operation-job-order',
+                                ],
+                                'task' => [
+                                    'icon' => 'fluent--clipboard-text-edit-48-filled',
+                                    'label' => 'Task',
+                                    'route' => 'admin.web.task',
+                                ],
+                                'revision' => [
+                                    'icon' => 'mdi--file-cog',
+                                    'label' => 'Revision',
+                                    'route' => 'admin.web.revision',
+                                ],
+                                'approvals' => [
+                                    'icon' => 'mdi--clipboard-text-history',
+                                    'label' => 'Approvals',
+                                    'route' => 'admin.web.approvals',
+                                ],
                                 'users' => ['icon' => 'fa--users', 'label' => 'Users', 'route' => 'admin.web.users'],
-                                'track' => ['icon' => 'ic--round-date-range', 'label' => 'Track', 'route' => 'admin.web.track'],
-                                'downloadables' => ['icon' => 'tdesign--file-download-filled', 'label' => 'Downloadables', 'route' => 'admin.web.downloadables'],
-                                'instructions_manual' => ['icon' => 'streamline--manual-book-solid', 'label' => 'Instructions Manual', 'route' => 'admin.web.instructions-manual'],
-                                'incoming_requests' => ['icon' => 'fa--user', 'label' => 'Incoming Requests', 'route' => 'admin.web.incoming-requests'],
-                                'profile' => ['icon' => 'fa--user', 'label' => 'Profile', 'route' => 'admin.web.profile'],
+                                'track' => [
+                                    'icon' => 'ic--round-date-range',
+                                    'label' => 'Track',
+                                    'route' => 'admin.web.track',
+                                ],
+                                'downloadables' => [
+                                    'icon' => 'tdesign--file-download-filled',
+                                    'label' => 'Downloadables',
+                                    'route' => 'admin.web.downloadables',
+                                ],
+                                'instructions_manual' => [
+                                    'icon' => 'streamline--manual-book-solid',
+                                    'label' => 'Instructions Manual',
+                                    'route' => 'admin.web.instructions-manual',
+                                ],
+                                'incoming_requests' => [
+                                    'icon' => 'fa--user',
+                                    'label' => 'Incoming Requests',
+                                    'route' => 'admin.web.incoming-requests',
+                                ],
+                                'profile' => [
+                                    'icon' => 'fa--user',
+                                    'label' => 'Profile',
+                                    'route' => 'admin.web.profile',
+                                ],
                             ];
                         @endphp
 
                         @foreach ($pages as $pageDescription => $pageData)
                             @php
-                                $pageId = \App\Models\Page::where('description', 'like', '%' . $pageDescription . '%')->value('id');
+                                $pageId = \App\Models\Page::where(
+                                    'description',
+                                    'like',
+                                    '%' . $pageDescription . '%',
+                                )->value('id');
                             @endphp
 
-                            @if ($pageId && Auth::user()->role_channels->where('page_id', $pageId)->where('privilege_id', $canReadPrivilegeId)->isNotEmpty())
-                                <x-admin.sidebar-menu
-                                    :icon="$pageData['icon']"
-                                    :label="$pageData['label']"
-                                    :routeName="$pageData['route']"
-                                />
+                            @if (
+                                $pageId &&
+                                    Auth::user()->role_channels->where('page_id', $pageId)->where('privilege_id', $canReadPrivilegeId)->isNotEmpty())
+                                <x-admin.sidebar-menu :icon="$pageData['icon']" :label="$pageData['label']" :routeName="$pageData['route']" />
                             @endif
                         @endforeach
                     @endif
@@ -481,6 +529,7 @@
                         routeName="admin.smm.dashboard" />
                     <x-admin.sidebar-menu icon="mdi--file-cog" label="Endorsement Form"
                         routeName="admin.smm.endorsement" />
+                    <x-admin.sidebar-menu icon="mdi--file-cog" label="SOA" routeName="admin.smm.soa" />
                     <x-admin.sidebar-menu icon="fa--users" label="Users" routeName="admin.smm.users" />
                     <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
                 @endif
