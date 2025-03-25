@@ -51,13 +51,12 @@
             <tbody id="tableBody" class="overflow-y-auto">
                 @forelse ($soas as $soa)
                     <tr class="border-b">
-                        <td class="px-4 py-3">{{$soa->joborder->title}}</td>
-                        <td class="px-4 py-3">123</td>
-                        <td class="px-6 py-3">Airpro Solutions Inc.</td>
+                        <td class="px-4 py-3">{{ $soa->jobDraft->jobOrder->title }}</td>
+                        <td class="px-4 py-3">{{ $soa->jobDraft->id }}</td>
+                        <td class="px-6 py-3">{{ $soa->company }}</td>
                         <td class="px-4 py-3 text-center">
                             <a href="#">
-                                <button
-                                    class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white">
+                                <button class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white">
                                     Edit
                                 </button>
                             </a>
