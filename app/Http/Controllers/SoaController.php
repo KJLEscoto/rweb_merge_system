@@ -24,6 +24,7 @@ class SoaController extends Controller
 
     public function store(Request $request)
     {
+
         $request->validate([
             'job_draft_id' => 'required',
             'image_path' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate as an image
@@ -55,18 +56,16 @@ class SoaController extends Controller
 
     public function store_particulars(Request $request, $id)
     {
-
-        dd($request->all());
         // Validate request data
         $validatedData = $request->validate([
             'billing_date' => 'required|date',
             'due_date' => 'required|date|after_or_equal:billing_date',
-            'date' => 'required|date',
             'particulars' => 'required|array',
+            'particulars.*.date' => 'required|date',
+            'particulars.*.reference' => 'required|string',
             'particulars.*.quantity' => 'required|integer|min:1',
-            'particulars.*.particulars' => 'required|string',
+            'particulars.*.particulars' => 'required|string', // Fixing the name to match request
             'particulars.*.charges' => 'required|numeric|min:0',
-            'particulars.*.credits' => 'required|string',
         ]);
 
         // Update SOA record
@@ -74,22 +73,24 @@ class SoaController extends Controller
         $soa->update([
             'billing_date' => $validatedData['billing_date'],
             'due_date' => $validatedData['due_date'],
-            'date' => $validatedData['date'],
         ]);
 
         // Store multiple SOA Particulars
         foreach ($validatedData['particulars'] as $particular) {
             SoaParticular::create([
                 'soa_id' => $soa->id,
+                'date' => $particular['date'],
+                'reference' => $particular['reference'],
                 'quantity' => $particular['quantity'],
-                'particulars' => $particular['particulars'],
+                'particulars' => $particular['particulars'], // Use correct key
                 'charges' => $particular['charges'],
-                'credits' => $particular['credits'],
             ]);
         }
 
         return redirect()->route('admin.smm.soa')->with('Success', 'SOA Created Successfully');
     }
+
+
 
 
     public function show($id)
