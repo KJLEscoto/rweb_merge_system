@@ -523,6 +523,7 @@
                         routeName="admin.smm.dashboard" />
                     <x-admin.sidebar-menu icon="mdi--file-cog" label="Request Form"
                         routeName="admin.smm.requestForm" />
+                    <x-admin.sidebar-menu icon="mdi--file-cog" label="SOA" routeName="admin.smm.soa" />
                     <x-admin.sidebar-menu icon="fa--user" label="Profile" routeName="admin.smm.profile" />
                 @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'sales_assistant')
                     <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"

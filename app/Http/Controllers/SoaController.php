@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JobDraft;
 use App\Models\RwebDetail;
 use App\Models\Soa;
+use App\Models\SoaParticular;
 use Illuminate\Http\Request;
 
 class SoaController extends Controller
@@ -54,19 +55,40 @@ class SoaController extends Controller
 
     public function store_particulars(Request $request, $id)
     {
-        $request->validate([
-            'job_draft_id' => 'required',
-            'image_path' => 'required',
-            'company' => 'required'
+        // Validate request data
+        $validatedData = $request->validate([
+            'billing_date' => 'required|date',
+            'due_date' => 'required|date|after_or_equal:billing_date',
+            'date' => 'required|date',
+            'particulars' => 'required|array',
+            'particulars.*.quantity' => 'required|integer|min:1',
+            'particulars.*.particulars' => 'required|string',
+            'particulars.*.charges' => 'required|numeric|min:0',
+            'particulars.*.credits' => 'required|string',
         ]);
 
-        Soa::update([
-            'date' => $request->date,
-
+        // Update SOA record
+        $soa = Soa::findOrFail($id);
+        $soa->update([
+            'billing_date' => $validatedData['billing_date'],
+            'due_date' => $validatedData['due_date'],
+            'date' => $validatedData['date'],
         ]);
+
+        // Store multiple SOA Particulars
+        foreach ($validatedData['particulars'] as $particular) {
+            SoaParticular::create([
+                'soa_id' => $soa->id,
+                'quantity' => $particular['quantity'],
+                'particulars' => $particular['particulars'],
+                'charges' => $particular['charges'],
+                'credits' => $particular['credits'],
+            ]);
+        }
 
         return redirect()->route('admin.smm.soa')->with('Success', 'SOA Created Successfully');
     }
+
 
     public function show($id)
     {
