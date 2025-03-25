@@ -20,12 +20,14 @@
         </div>
     </a>
     <div class="w-full h-fit flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-        <a href="{{ route('admin.smm.soa.create') }}">
-            <div
-                class="bg-[#fa7011] hidden text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center w-full md:w-auto lg:block">
-                Create SOA
-            </div>
-        </a>
+        @if (Auth::user()->role != 'accounting')
+            <a href="{{ route('admin.smm.soa.create') }}">
+                <div
+                    class="bg-[#fa7011] hidden text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center w-full md:w-auto lg:block">
+                    Create SOA
+                </div>
+            </a>
+        @endif
 
 
         <div class="flex items-center w-full md:w-auto relative">
@@ -54,9 +56,19 @@
                         <td class="px-4 py-3">{{ $soa->jobDraft->jobOrder->title }}</td>
                         <td class="px-4 py-3">{{ $soa->jobDraft->id }}</td>
                         <td class="px-6 py-3">{{ $soa->company }}</td>
+
                         <td class="px-4 py-3 text-center">
+                            @if (Auth::user()->role == 'accounting')
+                                <a href="#">
+                                    <button
+                                        class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-700 rounded hover:bg-green-800">
+                                        Create
+                                    </button>
+                                </a>
+                            @endif
                             <a href="#">
-                                <button class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white">
+                                <button
+                                    class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-blue-700 rounded hover:bg-blue-800">
                                     Edit
                                 </button>
                             </a>
@@ -64,6 +76,12 @@
                                 <button
                                     class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
                                     Show
+                                </button>
+                            </a>
+                            <a href="#">
+                                <button
+                                    class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-red-700 rounded hover:bg-red-800">
+                                    Delete
                                 </button>
                             </a>
                         </td>
