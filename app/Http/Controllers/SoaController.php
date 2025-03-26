@@ -25,29 +25,43 @@ class SoaController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
-            'job_draft_id' => 'required',
-            'image_path' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate as an image
+            'job_draft_id' => 'required|exists:job_drafts,id',
+            'image_path' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'company' => 'required'
         ]);
-
-        // Store the file in public/soa_images and get the file path
-        $imagePath = $request->file('image_path')->store('soa_images', 'public');
-
+        
+        // Get the uploaded file
+        $file = $request->file('image_path');
+        
+        // Generate a unique file name
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        
+        // Define the target path within the public directory
+        $targetPath = public_path('soa_images/' . $fileName);
+        
+        // Move the file to the desired path
+        $file->move(public_path('soa_images'), $fileName);
+        
+        // Fetch required details
+        $rwebDetail = RwebDetail::first();
+        $jobDraft = JobDraft::find($request->job_draft_id);
+        
+        // Save SOA
         Soa::create([
-            'bill_from' => RwebDetail::first()->address,
-            'telephone' => RwebDetail::first()->telephone,
+            'bill_from' => $rwebDetail->address,
+            'telephone' => $rwebDetail->telephone,
             'job_draft_id' => $request->job_draft_id,
-            'image_path' => $imagePath, // Save the stored path in DB
+            'image_path' => 'soa_images/' . $fileName, // Save relative path in DB
             'company' => $request->company,
-            'client_name' => JobDraft::find($request->job_draft_id)->client->name,
-            'address' => JobDraft::find($request->job_draft_id)->client->address,
+            'client_name' => $jobDraft->client->name,
+            'address' => $jobDraft->client->address,
             'status' => 'pending'
         ]);
-
-        return redirect()->route('admin.smm.soa')->with('Success', 'SOA Created Successfully');
+        
+        return redirect()->route('admin.smm.soa')->with('success', 'SOA Created Successfully');
     }
+    
 
     public function create_particulars($id)
     {

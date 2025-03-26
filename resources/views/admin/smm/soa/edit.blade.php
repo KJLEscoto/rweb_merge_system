@@ -53,7 +53,6 @@
             @csrf
 
             <h1 class="text-xl font-bold mt-4">Create SOA</h1>
-            {{$soa}}
             <div class="grid grid-cols-4 space-y-4">
                 <div class="col-span-4 grid grid-cols-2 gap-4 mt-4">
                     <!-- Job Orders -->
