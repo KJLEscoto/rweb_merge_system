@@ -41,13 +41,13 @@
 
     {{-- Table Wrapper --}}
     <div class="overflow-x-auto overflow-y-auto bg-white shadow-md rounded-lg h-[500px]" style="max-height: 500px;">
-        <table class="w-full table-fixed text-left border-collapse min-w-[500px]">
+        <table class="w-full table-fixed text-left border-collapse min-w-[800px]">
             <thead class="sticky top-0 bg-[#fa7011] text-white">
                 <tr>
                     <th class="px-4 py-3">Title</th>
                     <th class="px-4 py-3">Joborder ID</th>
                     <th class="px-4 py-3">Company Name</th>
-                    <th class="px-4 py-3 text-center">Actions</th>
+                    <th class="px-4 py-3 text-center w-[300px]">Actions</th>
                 </tr>
             </thead>
             <tbody id="tableBody" class="overflow-y-auto">
@@ -57,7 +57,7 @@
                         <td class="px-4 py-3">{{ $soa->jobDraft->id }}</td>
                         <td class="px-6 py-3">{{ $soa->company }}</td>
 
-                        <td class="px-4 py-3 text-center">
+                        <td class="px-4 py-3 text-center flex gap-1">
                             @if (Auth::user()->role == 'accounting')
                                 <a href="{{ route('admin.smm.soa.create_particulars', $soa->id) }}">
 
