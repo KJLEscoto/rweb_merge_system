@@ -41,7 +41,7 @@
                 </div>
             </a>
         </div>
-        <form action="{{ route('admin.smm.soa.update', $soa->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.smm.soa.update_particulars', $soa->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <h1 class="text-xl font-bold mt-4">Edit SOA {{$soa->job_draft_id}}</h1>

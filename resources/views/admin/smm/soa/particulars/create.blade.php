@@ -76,13 +76,13 @@
         </form>
     </div>
 
-    <div id="particulars-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+    <div id="particulars-modal" class="hidden z-50 fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
         <div class="bg-white p-6 rounded-lg w-1/3">
             <h2 class="text-lg font-bold mb-4">Add Particular</h2>
             <label>Date:</label>
             <input type="date" id="particular-date" class="w-full border p-2 rounded-lg mb-2">
             <label>Reference:</label>
-            <input type="text" id="particular-reference" class="w-full border p-2 rounded-lg mb-2">
+            <input type="text" id="particular-reference" value="{{$soa->job_draft_id}}" class="w-full border p-2 rounded-lg mb-2" readonly>
             <label>Quantity:</label>
             <input type="number" id="particular-quantity" class="w-full border p-2 rounded-lg mb-2">
             <label>Particulars:</label>
@@ -99,48 +99,129 @@
 </x-main-layout>
 
 <script>
-    function openParticularsModal() {
-        document.getElementById('particulars-modal').classList.remove('hidden');
+function openParticularsModal(isEdit = false, index = null) {
+    // Reset the modal button and fields for adding
+    const addButton = document.querySelector('#particulars-modal button:nth-child(2)');
+    addButton.innerText = "Add";  // Set button text to "Add"
+    addButton.setAttribute('onclick', `addParticular()`);  // Set the correct function call for adding
+    
+    if (isEdit) {
+        const particular = particularsData[index];
+        document.getElementById('particular-date').value = particular.date;
+        document.getElementById('particular-reference').value = particular.reference;
+        document.getElementById('particular-quantity').value = particular.quantity;
+        document.getElementById('particular-particulars').value = particular.particulars;
+        document.getElementById('particular-charges').value = particular.charges;
+
+        // Update the button to "Update" for editing
+        addButton.innerText = "Update";
+        addButton.setAttribute('onclick', `updateParticular(${index})`);
+    } else {
+        // Clear input fields for adding a new particular
+        document.getElementById('particular-date').value = '';
+        document.getElementById('particular-quantity').value = '';
+        document.getElementById('particular-particulars').value = '';
+        document.getElementById('particular-charges').value = '';
     }
 
-    function closeParticularsModal() {
-        document.getElementById('particulars-modal').classList.add('hidden');
-    }
+    document.getElementById('particulars-modal').classList.remove('hidden');
+}
+function closeParticularsModal() {
+    document.getElementById('particulars-modal').classList.add('hidden');
+}
 
     let particularsIndex = 0; // Track the index for each new particular
+    let particularsData = []; // Store the particulars data for editing
+    const reference = "{{ $soa->job_draft_id }}"; // Reference should always be this
 
     function addParticular() {
-        const date = document.getElementById('particular-date').value;
-        const reference = document.getElementById('particular-reference').value;
-        const quantity = document.getElementById('particular-quantity').value;
-        const particulars = document.getElementById('particular-particulars').value;
-        const charges = document.getElementById('particular-charges').value;
+    const date = document.getElementById('particular-date').value;
+    const quantity = document.getElementById('particular-quantity').value;
+    const particulars = document.getElementById('particular-particulars').value;
+    const charges = document.getElementById('particular-charges').value;
 
-        if (date && reference && quantity && particulars && charges) {
-            const particularsList = document.getElementById('particulars-list');
+    if (date && quantity && particulars && charges) {
+        const particularsList = document.getElementById('particulars-list');
 
-            // Create a wrapper div for each particular
-            const div = document.createElement('div');
-            div.classList.add('p-2', 'border', 'rounded-md', 'mt-2');
-            div.innerHTML =
-                `<p><strong>Date:</strong> ${date} | <strong>Reference:</strong> ${reference} | 
-            <strong>quantity:</strong> ${quantity} | <strong>Particulars:</strong> ${particulars} | <strong>Charges:</strong> ${charges}</p>`;
-
-            // Add hidden inputs with an indexed structure
-            div.innerHTML += `
+        // Create a wrapper div for each particular
+        const div = document.createElement('div');
+        div.classList.add('p-2', 'border', 'rounded-md', 'mt-2');
+        div.id = `particular-${particularsIndex}`;  // Set a unique ID for each particular
+        div.innerHTML = `
+            <p><strong>Date:</strong> ${date} | <strong>Reference:</strong> ${reference} | 
+            <strong>Quantity:</strong> ${quantity} | <strong>Particulars:</strong> ${particulars} | 
+            <strong>Charges:</strong> ${charges}</p>
             <input type="hidden" name="particulars[${particularsIndex}][date]" value="${date}">
             <input type="hidden" name="particulars[${particularsIndex}][reference]" value="${reference}">
             <input type="hidden" name="particulars[${particularsIndex}][quantity]" value="${quantity}">
             <input type="hidden" name="particulars[${particularsIndex}][particulars]" value="${particulars}">
             <input type="hidden" name="particulars[${particularsIndex}][charges]" value="${charges}">
+            <button type="button" onclick="editParticular(${particularsIndex})" class="bg-yellow-500 text-white px-4 py-2 rounded-md mt-2 mr-2">Edit</button>
+            <button type="button" onclick="deleteParticular(${particularsIndex})" class="bg-red-500 text-white px-4 py-2 rounded-md mt-2">Delete</button>
         `;
 
-            particularsList.appendChild(div);
-            particularsIndex++; // Increment index for next item
+        particularsList.appendChild(div);
 
-            closeParticularsModal();
-        } else {
-            alert('Please fill in all fields');
-        }
+        // Store the particular's data for future editing
+        particularsData.push({
+            date,
+            reference,
+            quantity,
+            particulars,
+            charges
+        });
+
+        particularsIndex++; // Increment index for next item
+
+        closeParticularsModal();
+    } else {
+        alert('Please fill in all fields');
     }
+}
+
+function editParticular(index) {
+    // Open the modal for editing and pass the `true` flag for editing
+    openParticularsModal(true, index);
+}
+
+    function updateParticular(index) {
+    const date = document.getElementById('particular-date').value;
+    const quantity = document.getElementById('particular-quantity').value;
+    const particulars = document.getElementById('particular-particulars').value;
+    const charges = document.getElementById('particular-charges').value;
+
+    if (date && quantity && particulars && charges) {
+        // Update the particulars data
+        particularsData[index] = { date, reference, quantity, particulars, charges };
+
+        // Find the particular's div and update it
+        const div = document.getElementById(`particular-${index}`);
+        div.innerHTML = `
+            <p><strong>Date:</strong> ${date} | <strong>Reference:</strong> ${reference} | 
+            <strong>Quantity:</strong> ${quantity} | <strong>Particulars:</strong> ${particulars} | 
+            <strong>Charges:</strong> ${charges}</p>
+            <input type="hidden" name="particulars[${index}][date]" value="${date}">
+            <input type="hidden" name="particulars[${index}][reference]" value="${reference}">
+            <input type="hidden" name="particulars[${index}][quantity]" value="${quantity}">
+            <input type="hidden" name="particulars[${index}][particulars]" value="${particulars}">
+            <input type="hidden" name="particulars[${index}][charges]" value="${charges}">
+            <button type="button" onclick="editParticular(${index})" class="bg-yellow-500 text-white px-4 py-2 rounded-md mt-2 mr-2">Edit</button>
+            <button type="button" onclick="deleteParticular(${index})" class="bg-red-500 text-white px-4 py-2 rounded-md mt-2">Delete</button>
+        `;
+
+        closeParticularsModal();
+    } else {
+        alert('Please fill in all fields');
+    }
+}
+
+
+function deleteParticular(index) {
+    const div = document.getElementById(`particular-${index}`);
+    div.remove();
+
+    particularsData.splice(index, 1);
+}
 </script>
+
+
