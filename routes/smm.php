@@ -48,6 +48,13 @@ Route::prefix('/smm')->middleware('auth.redirect')->group(function () {
     Route::get('/soa/create', [SoaController::class, 'create'])->name('admin.smm.soa.create');
     Route::post('/soa/store', [SoaController::class, 'store'])->name('admin.smm.soa.store');
     Route::get('/soa/{id}/show', [SoaController::class, 'show'])->name('admin.smm.soa.show');
+    Route::get('/soa/{id}/edit', [SoaController::class, 'edit'])->name('admin.smm.soa.edit');
+    Route::put('/soa/{id}/update', [SoaController::class, 'update'])->name('admin.smm.soa.update');
+
+    Route::get('/soa/{id}/edit_particulars', [SoaController::class, 'edit_particulars'])->name('admin.smm.soa.edit_particulars');
+    Route::put('/soa/{id}/update_particulars', [SoaController::class, 'update_particulars'])->name('admin.smm.soa.update_particulars');
+
+    Route::get('/soa/{id}/download', [SoaController::class, 'downloadPDF'])->name('admin.smm.soa.downloadPDF');
     Route::delete('/soa/{id}/destroy', [SoaController::class, 'destroy'])->name('admin.smm.soa.destroy');
 
     Route::get('/soa/create_particulars/{id}', [SoaController::class, 'create_particulars'])->name('admin.smm.soa.create_particulars');
