@@ -7,20 +7,23 @@
 
 <x-main-layout breadcumb="SMM" page="Sales SOA">
 
-    {{-- Success Message Component --}}
-    @if (session('Status'))
-        <x-success />
+    @if (session('success'))
+        <x-modal.flash-msg msg="success" />
+    @elseif (session('error'))
+        <x-modal.flash-msg msg="error" />
     @endif
 
     {{-- Search Bar --}}
-    <a href="{{ route('admin.smm.soa.create') }}">
-        <div
-            class="bg-[#fa7011] w-fit block text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center lg:hidden">
-            <i class="fa-solid fa-plus"></i>
-        </div>
-    </a>
+    @if (Auth::user()->role == 'sales_assistant')
+        <a href="{{ route('admin.smm.soa.create') }}">
+            <div
+                class="bg-[#fa7011] w-fit block text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center lg:hidden">
+                <i class="fa-solid fa-plus"></i>
+            </div>
+        </a>
+    @endif
     <div class="w-full h-fit flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-        @if (Auth::user()->role != 'accounting')
+        @if (Auth::user()->role == 'sales_assistant')
             <a href="{{ route('admin.smm.soa.create') }}">
                 <div
                     class="bg-[#fa7011] hidden text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center w-full md:w-auto lg:block">
@@ -47,7 +50,8 @@
                     <th class="px-4 py-3">Title</th>
                     <th class="px-4 py-3">Joborder ID</th>
                     <th class="px-4 py-3">Company Name</th>
-                    <th class="px-4 py-3 text-center w-[300px]">Actions</th>
+                    <th class="px-4 py-3">Status</th>
+                    <th class="px-4 py-3">Actions</th>
                 </tr>
             </thead>
             <tbody id="tableBody" class="overflow-y-auto">
@@ -56,8 +60,9 @@
                         <td class="px-4 py-3">{{ $soa->jobDraft->jobOrder->title }}</td>
                         <td class="px-4 py-3">{{ $soa->jobDraft->id }}</td>
                         <td class="px-6 py-3">{{ $soa->company }}</td>
+                        <td class="px-6 py-3">{{ $soa->status }}</td>
 
-                        <td class="px-4 py-3 text-center flex gap-1">
+                        <td class="px-4 py-3 flex gap-1">
                             @if (Auth::user()->role == 'accounting' && $soa->status == 'pending')
                                 <a href="{{ route('admin.smm.soa.create_particulars', $soa->id) }}">
 

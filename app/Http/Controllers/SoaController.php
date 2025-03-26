@@ -8,12 +8,18 @@ use App\Models\Soa;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\SoaParticular;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SoaController extends Controller
 {
     public function index()
     {
-        $soas = Soa::with('jobDraft')->get();
+
+        if(Auth::user()->role == 'sales_assistant' || Auth::user()->role == "accounting"){
+            $soas = Soa::with('jobDraft')->get();
+        }else if(Auth::user()->role == 'top_management'){
+            $soas = Soa::with('jobDraft')->whereNot('status', 'pending')->get();
+        }
         return view('admin.smm.soa.index', compact('soas'));
     }
 
@@ -104,7 +110,7 @@ class SoaController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.smm.soa')->with('Success', 'SOA Created Successfully');
+        return redirect()->route('admin.smm.soa')->with('success', 'SOA Created Successfully');
     }
 
 
@@ -164,7 +170,7 @@ class SoaController extends Controller
             'address' => JobDraft::find($request->job_draft_id)->client->address,
         ]);
 
-        return redirect()->route('admin.smm.soa')->with('Success', 'SOA Updated Successfully');
+        return redirect()->route('admin.smm.soa')->with('success', 'SOA Updated Successfully');
     }
 
 
@@ -211,14 +217,14 @@ class SoaController extends Controller
                 'charges' => $particular['charges'],
             ]);
         }
-        return redirect()->route('admin.smm.soa')->with('Success', 'SOA Updated Successfully');
+        return redirect()->route('admin.smm.soa')->with('success', 'SOA Updated Successfully');
     }
 
     public function destroy($id)
     {
         $soa = Soa::find($id);
         $soa->delete();
-        return redirect()->route('admin.smm.soa')->with('Success', 'SOA Deleted Successfully');
+        return redirect()->route('admin.smm.soa')->with('success', 'SOA Deleted Successfully');
     }
 
     public function approve($id)
@@ -228,7 +234,7 @@ class SoaController extends Controller
             'approved_by' => auth()->user()->id
         ]);
 
-        return redirect()->route('admin.smm.soa')->with('Success', 'SOA Approved Successfully');
+        return redirect()->route('admin.smm.soa')->with('success', 'SOA Approved Successfully');
     }
 
     public function downloadPDF($id)
