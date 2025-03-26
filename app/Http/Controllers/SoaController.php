@@ -103,8 +103,9 @@ class SoaController extends Controller
 
     public function edit($id)
     {
+        $job_drafts = JobDraft::with("jobOrder")->get();
         $soa = Soa::with('jobDraft', 'preparedBy', 'approvedBy', 'particulars')->find($id);
-        return view('admin.smm.soa.edit', compact('soa'));
+        return view('admin.smm.soa.edit', compact('soa','job_drafts'));
     }
 
     public function update(Request $request, $id)
