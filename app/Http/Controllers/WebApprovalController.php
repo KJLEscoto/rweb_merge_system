@@ -295,8 +295,15 @@ class WebApprovalController extends Controller
 
         switch ($rolePosition) {
             case 'operations_supervisor':
-                $webProjectChannel->status = 'Submitted to Top Management';
-                $webProjectChannel->web_job_orders->update(['supervisor_signed_draft_id' => $user->id]);
+                if ($webProjectChannel->sub_status == 'Site Map') {
+                    $webProjectChannel->update(['status' => 'Submitted to Client']);
+                    $webProjectChannel->web_job_orders->update(['supervisor_signed_draft_id' => $user->id]);
+                    $webProjectChannel->web_job_orders->update(['client_signed_id' => WebProject::where('id', $webProjectChannel->project_id)->first()->client_id]);
+                    $this->handleClientApproval($webProjectChannel, $user);
+                    $webProjectChannel->update(['status' => 'Completed']);
+                } else {
+                    $webProjectChannel->update(['status' => 'Submitted to Client']);
+                }
                 break;
 
             case 'top_management':
@@ -321,7 +328,6 @@ class WebApprovalController extends Controller
     {
         $subStatus = $webProjectChannel->sub_status;
         $type = $webProjectChannel->type;
-
         if ($type === 'web_designer' && $webProjectChannel->where('type', 'web_designer')->where('status', 'Submitted to Client')->exists()) {
             if ($subStatus === 'Site Map') {
                 $this->completeAndCreateNext($webProjectChannel, $user, 'Draft Homepage Approval');

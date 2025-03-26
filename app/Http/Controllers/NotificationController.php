@@ -175,7 +175,7 @@ class NotificationController extends Controller
         }
 
         if (!empty($request->to_user_id)) {
-            $userTypes = ['content', 'graphic'];
+            $userTypes = ['content', 'graphic', 'admin'];
 
             //The use of this function is to send to_user_id who is/are assigned to handle the task
             foreach ($userTypes as $userType) {
@@ -186,7 +186,7 @@ class NotificationController extends Controller
                         $usr = User::find($userId);
 
                         if ($usr) {
-                            $customTitle = $this->generateCustomNotificationTitle($request, $fullNameFormatted, $dateMessage, $userType);
+                            $customTitle = $this->generateCustomForAssignedUserNotificationTitle($request, $fullNameFormatted, $dateMessage, $userType);
 
                             if ($customTitle) {
                                 Notification::create([
@@ -337,6 +337,46 @@ class NotificationController extends Controller
                 break;
             case 'admin.smm.create.endorsement.form': // all for the higher-ups
                 $customTitle = $fullNameFormatted . ' has created an endorsement form for review.';
+                break;
+            default:
+                Log::warning("Unknown notification type: " . $request->type);
+                break;
+        }
+
+        return $customTitle;
+    }
+
+    private function generateCustomForAssignedUserNotificationTitle(Request $request, string $fullNameFormatted, string $dateMessage, ?string $userType = null): ?string
+    {
+        $customTitle = null;
+
+        switch ($request->type) {
+            case 'admin.smm.create.job-order':
+                $customTitle = "You have been assigned to a new job order titled: \"{$request->title}\". Context: {$request->message}.";
+                break;
+            case 'admin.smm.approved.job-order':
+                $customTitle = "Your job order titled: \"{$request->title}\" has been approved.";
+                break;
+            case 'admin.smm.decline.job-order':
+                $customTitle = "Your job order titled: \"{$request->title}\" has been declined.";
+                break;
+            case 'admin.smm.accept.job-order':
+                $customTitle = "You have accepted the job order titled: \"{$request->title}\".";
+                break;
+            case 'admin.smm.renewal.job-order':
+                $customTitle = "The job order titled: \"{$request->title}\" has been renewed.";
+                break;
+            case 'admin.smm.task.job-order':
+                $customTitle = "A task has been submitted for the job order titled: \"{$request->title}\". Reason: {$request->reason}.";
+                break;
+            case 'admin.smm.revise.job-order':
+                $customTitle = "The job order titled: \"{$request->title}\" has been revised. Reason: {$request->reason}.";
+                break;
+            case 'admin.smm.request.job-order':
+                $customTitle = "You are requested to create a job order titled: \"{$request->title}\". Reason: {$request->reason}.";
+                break;
+            case 'admin.smm.create.endorsement.form':
+                $customTitle = "An endorsement form has been created for review.";
                 break;
             default:
                 Log::warning("Unknown notification type: " . $request->type);

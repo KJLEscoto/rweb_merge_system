@@ -169,27 +169,26 @@
                             {{ $web_project_channel->users->name }}
 
                             @if (!in_array($web_project_channel->status, ['pending', 'declined']))
-                                <img src="{{ asset($web_project_channel->users->signature) }}"
-                                    alt="Supervisor Signature">
+                                <img src="{{ asset($web_project_channel->users->signature) }}" alt="Supervisor Signature">
                             @endif
 
 
                             {{-- @if ($web_project_channel->type == 'content_writer')
-                                {{ $web_project_channel->type }} <br />
-                                @if ($web_project_channel->type === 'Waiting for Content Writer Approval')
-                                    <br />
-                                    <p class="font-normal">Waiting For Content Writer Approval</p>
-                                @else
-                                    <img src="{{ asset($web_project_channel->type) }}" alt="Content Writer Signature">
-                                @endif
+                            {{ $web_project_channel->type }} <br />
+                            @if ($web_project_channel->type === 'Waiting for Content Writer Approval')
+                            <br />
+                            <p class="font-normal">Waiting For Content Writer Approval</p>
                             @else
-                                {{ $web_project_channel->type }}
-                                @if ($web_project_channel->type === 'Waiting for Graphic Designer Approval')
-                                    <br />
-                                    <p class="font-normal">Waiting For Graphic Design Approval</p>
-                                @else
-                                    <img src="{{ asset($web_project_channel->type) }}" alt="Graphic Design Signature">
-                                @endif
+                            <img src="{{ asset($web_project_channel->type) }}" alt="Content Writer Signature">
+                            @endif
+                            @else
+                            {{ $web_project_channel->type }}
+                            @if ($web_project_channel->type === 'Waiting for Graphic Designer Approval')
+                            <br />
+                            <p class="font-normal">Waiting For Graphic Design Approval</p>
+                            @else
+                            <img src="{{ asset($web_project_channel->type) }}" alt="Graphic Design Signature">
+                            @endif
                             @endif --}}
                         </strong><br>
                     </td>

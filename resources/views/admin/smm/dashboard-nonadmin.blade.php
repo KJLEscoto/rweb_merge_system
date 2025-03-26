@@ -93,7 +93,7 @@
                                                 @elseif (auth()->user()->role_id == '4' and
                                                         $job_draft->status == 'Waiting for Content Writer Approval' ||
                                                             $job_draft->status == 'Waiting for Graphic Designer Approval')
-                                                    <form action="{{ route('graphic.accept', $job_draft->id) }}"
+                                                    <form action="{{ route('admin.smm.graphic.accept', $job_draft->id) }}"
                                                         method="POST">
                                                         @csrf
                                                         @method('PUT')

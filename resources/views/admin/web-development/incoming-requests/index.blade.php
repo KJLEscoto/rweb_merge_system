@@ -2,12 +2,12 @@
 
 
 <head>
-    <title>{{ env('APP_NAME') }} | SMM | Incoming Requests</title>
+    <title>{{ env('APP_NAME') }} | Web Development | Incoming Requests</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<x-main-layout breadcumb="SMM" page="Incoming Requests">
+<x-main-layout breadcumb="Web Development" page="Incoming Requests">
 
     {{-- Success Message Component --}}
     @if (session('Status'))
@@ -15,7 +15,7 @@
     @endif
 
     {{-- Search Bar --}}
-    <a href="{{ url('admin/smm/joborder/create') }}">
+    <a href="{{ route('admin.web.incoming-requests.show', 1) }}">
         <div
             class="bg-[#fa7011] w-fit block text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center lg:hidden">
             <i class="fa-solid fa-plus"></i>
@@ -50,8 +50,8 @@
                         <td class="px-6 py-3">{{ $web_request->status }}</td>
                         <td class="px-6 py-3">
                             @if ($web_request->status == 'pending')
-                                <form action="{{ route('admin.web.incoming-requests.accept', $web_request->id) }}"
-                                    method="POST" class="inline">
+                                <form action="{{ route('admin.web.incoming-requests.accept', $web_request->id) }}" method="POST"
+                                    class="inline">
                                     @csrf
                                     @method('PUT')
                                     <button type="submit"
@@ -59,15 +59,15 @@
                                         Accept
                                     </button>
                                 </form>
-                                <a href="{{ url('admin/smm/operation/request/show/' . $web_request->id) }}">
+                                <a href="{{ route('admin.web.incoming-requests.show', $web_request->id) }}">
                                     <button
                                         class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
                                         Show
                                     </button>
                                 </a>
                             @else
-                                <form action="{{ url('admin/smm/operation/request/accept/' . $web_request->id) }}"
-                                    method="POST" class="inline">
+                                <form action="{{ route('admin.web.incoming-requests.accept', $web_request->id) }}" method="POST"
+                                    class="inline">
                                     @csrf
                                     @method('PUT')
                                     <button type="submit" disabled
@@ -75,7 +75,7 @@
                                         Accept
                                     </button>
                                 </form>
-                                <a href="{{ url('admin/smm/operation/request/show/' . $web_request->id) }}">
+                                <a href="{{ route('admin.web.incoming-requests.show', $web_request->id) }}">
                                     <button
                                         class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
                                         Show

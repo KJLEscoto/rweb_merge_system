@@ -46,10 +46,10 @@ class DatabaseSeeder extends Seeder
 
         // Simulate a request with user registration data
         $request = new Request([
-            'firstname' => 'admin',
-            'name' => 'admin admin admin',
-            'lastname' => 'admin',
-            'middlename' => 'admin',
+            'firstname' => 'Perl Ace Jayme',
+            'lastname' => 'Benigno',
+            'middlename' => 'Manansala',
+            'name' => 'Perl Ace Jayme Benigno Manansala',
             'email' => 'admin@email.com',
             'password' => 'password',
             'password_confirmation' => 'password',
@@ -66,11 +66,11 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $request = new Request([
-            'firstname' => 'admin2',
-            'name' => 'Admin A Admin',
-            'lastname' => 'admin2',
-            'middlename' => 'admin2',
-            'email' => 'admin2@email.com',
+            'firstname' => 'Perl Ace Jayme',
+            'lastname' => 'Benigno',
+            'middlename' => 'Manansala',
+            'name' => 'Perl Ace Jayme Benigno Manansala',
+            'email' => 'ace@email.com',
             'password' => 'password',
             'password_confirmation' => 'password',
             'role' => 'admin',
@@ -82,13 +82,13 @@ class DatabaseSeeder extends Seeder
             'emergency_contact_fullname' => 'Test Emergency',
             'emergency_contact_number' => '09123456789',
             'emergency_contact_address' => 'Test Emergency Address',
-            'role_id' => 2,
+            'role_id' => 6,
         ]);
 
         // Call the register method
         $authController->adminRegister($request, app(FileController::class));
 
-        $user_id = User::where('email', 'like', '%admin2@email.com%')->first()->id;
+        $user_id = User::where('email', 'like', '%ace@email.com%')->first()->id;
 
         //get all the privileges for the admin2
         foreach (Page::get() as $page) {

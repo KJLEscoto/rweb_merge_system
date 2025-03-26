@@ -259,7 +259,7 @@ class PushNotificationEvent
                 if ($user) {
                     // ✅ Send event to a PUBLIC CHANNEL
                     $this->pusher->trigger("public-notifications", "user-notification-{$user->id}", [
-                        'message' => 'Project request has been assigned by you.',
+                        'message' => 'Project request has been assigned to you.',
                         'success' => true,
                     ]);
                     echo "Notification successfully sent to user ID: {$user->id} <br>";
@@ -328,12 +328,13 @@ class PushNotificationEvent
             foreach ($this->request->to_user_id as $userId) {
                 // Find the user based on the provided user ID
                 $user = User::find($userId);
+                $from_user = User::find($this->request->from_user_id);
 
                 // Ensure the user exists before sending the notification
                 if ($user) {
                     // ✅ Send event to a PUBLIC CHANNEL
                     $this->pusher->trigger("public-notifications", "user-notification-{$user->id}", [
-                        'message' => "{$user->name} " . 'accepted the job order that you requested.',
+                        'message' => "{$from_user->name} " . 'accepted the job order that you requested.',
                         'success' => true,
                     ]);
                     echo "Notification successfully sent to user ID: {$user->id} <br>";
@@ -372,7 +373,7 @@ class PushNotificationEvent
                 if ($user) {
                     // ✅ Send event to a PUBLIC CHANNEL
                     $this->pusher->trigger("public-notifications", "user-notification-{$user->id}", [
-                        'message' => 'A job order has been approved by you.',
+                        'message' => 'Your Job order hass been approved.',
                         'success' => true,
                     ]);
                     echo "Notification successfully sent to user ID: {$user->id} <br>";
@@ -436,7 +437,9 @@ class PushNotificationEvent
                                 'message' => 'The task you submitted has been approved "' . $this->request->title . '".',
                                 'success' => true,
                             ]);
-                        } elseif ($role == 'content_writer') {
+                        }
+
+                        if ($role == 'content_writer') {
                             $this->pusher->trigger("public-notifications", "user-notification-{$recipient_id}", [
                                 'message' => 'The project been approved.',
                                 'success' => true,
@@ -525,7 +528,7 @@ class PushNotificationEvent
                 if ($user) {
                     // ✅ Send event to a PUBLIC CHANNEL
                     $this->pusher->trigger("public-notifications", "user-notification-{$user->id}", [
-                        'message' => 'A job order has been rejected by you.',
+                        'message' => 'A job order has been rejected to you.',
                         'success' => true,
                     ]);
                     echo "Notification successfully sent to user ID: {$user->id} <br>";
@@ -609,7 +612,7 @@ class PushNotificationEvent
                 if ($user) {
                     // ✅ Send event to a PUBLIC CHANNEL
                     $this->pusher->trigger("public-notifications", "user-notification-{$user->id}", [
-                        'message' => 'A job order has been submmitted by you.',
+                        'message' => 'A job order has been submmitted to you.',
                         'success' => true,
                     ]);
                     echo "Notification successfully sent to user ID: {$user->id} <br>";
@@ -648,7 +651,7 @@ class PushNotificationEvent
                 if ($user) {
                     // ✅ Send event to a PUBLIC CHANNEL
                     $this->pusher->trigger("public-notifications", "user-notification-{$user->id}", [
-                        'message' => 'A job order revision has been submmitted by you.',
+                        'message' => 'A job order revision has been submmitted to you.',
                         'success' => true,
                     ]);
                     echo "Notification successfully sent to user ID: {$user->id} <br>";

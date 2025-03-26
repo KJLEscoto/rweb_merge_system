@@ -53,6 +53,9 @@ class WebOperationJobOrder extends Controller
             'status' => 'pending',
             'deadline' => $request->deadline
         ]);
+
+        $web_requests = WebRequest::with('issued_to')->get();
+        return view('admin.web-development.operation-job-order.index', compact('web_requests'));
     }
 
     /**

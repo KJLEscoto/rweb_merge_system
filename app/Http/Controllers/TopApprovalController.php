@@ -42,11 +42,25 @@ class TopApprovalController extends Controller
 
         $notificationController = new NotificationController();
 
+        $sending_user = [];
+
+        if ($job_draft->where('status', 'like', '%completed%')->where('type', 'content_writer')->exists()) {
+            $sending_user = [
+                'content' => $job_draft->content_writer_id,
+                'client' => $job_draft->client_id,
+            ];
+        } elseif ($job_draft->where('status', 'like', '%completed%')->where('type', 'graphic_designer')->exists()) {
+            $sending_user = [
+                'graphic' => $job_draft->graphic_designer_id,
+                'client' => $job_draft->client_id,
+            ];
+        }
+
         //formulate the data in the notification
         $request = new Request([
             'job_order_id' => $job_draft->job_order_id,
             'from_user_id' => auth()->user()->id,
-            'to_user_id' => ['content' => auth()->user()->id], // for multiple users
+            'to_user_id' => $sending_user, // for multiple users
             'title' => $job_draft->jobOrder->title,
             'type' => 'admin.smm.approved.job-order',
             'month' => Carbon::now()->format('m'), // 'm' gives zero-padded month (e.g., 03 for March)

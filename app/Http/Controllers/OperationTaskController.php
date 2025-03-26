@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JobDraft;
+use App\Models\JobOrder;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -59,7 +60,7 @@ class OperationTaskController extends Controller
         $request = new Request([
             'job_order_id' => $job_draft->job_order_id,
             'from_user_id' => auth()->user()->id,
-            'to_user_id' => ['content' => auth()->user()->id], // for multiple users
+            'to_user_id' => ['content' => $job_draft->content_writer_id, 'graphic' => $job_draft->graphic_designer_id], // for multiple users
             'title' => $job_draft->jobOrder->title,
             'type' => 'admin.smm.task.job-order',
             'month' => Carbon::now()->format('m'), // 'm' gives zero-padded month (e.g., 03 for March)
@@ -118,7 +119,7 @@ class OperationTaskController extends Controller
         $request = new Request([
             'job_order_id' => $job_draft->job_order_id,
             'from_user_id' => auth()->user()->id,
-            'to_user_id' => ['content' => auth()->user()->id], // for multiple users
+            'to_user_id' => ['content' => JobOrder::where('id', $job_draft->job_order_id)->first()->issued_by], // for multiple users
             'title' => $job_draft->jobOrder->title,
             'type' => 'admin.smm.accept.job-order',
             'month' => Carbon::now()->format('m'), // 'm' gives zero-padded month (e.g., 03 for March)

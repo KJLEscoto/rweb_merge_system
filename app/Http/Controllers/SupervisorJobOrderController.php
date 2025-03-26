@@ -49,7 +49,7 @@ class SupervisorJobOrderController extends Controller
         $request = new Request([
             'job_order_id' => $modelsrequest->id,
             'from_user_id' => auth()->user()->id,
-            'to_user_id' => ['content' => auth()->user()->id], // for multiple users
+            'to_user_id' => ['content' => $modelsrequest->assigned_to], // for multiple users
             'title' => $modelsrequest->title,
             'type' => 'admin.smm.request.job-order',
             'month' => Carbon::now()->format('m'), // 'm' gives zero-padded month (e.g., 03 for March)

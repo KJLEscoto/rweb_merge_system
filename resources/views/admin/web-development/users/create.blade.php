@@ -104,7 +104,7 @@
                         @php
                             $roles = [
                                 'client' => ['id' => \App\Models\Role::where('position', 'like', '%client%')->value('id'), 'label' => 'Client'],
-                                'operations_supervisor' => ['id' => \App\Models\Role::where('position', 'like', '%opreations_supervisor%')->value('id'), 'label' => 'Operations Supervisor'],
+                                'operations_supervisor' => ['id' => \App\Models\Role::where('position', 'like', '%operations_supervisor%')->value('id'), 'label' => 'Operations Supervisor'],
                                 'ui_ux' => ['id' => \App\Models\Role::where('position', 'like', '%ui_ux%')->value('id'), 'label' => 'Web Designer'],
                                 'front_end' => ['id' => \App\Models\Role::where('position', 'like', '%front_end%')->value('id'), 'label' => 'Front-End Developer'],
                                 'back_end' => ['id' => \App\Models\Role::where('position', 'like', '%back_end%')->value('id'), 'label' => 'Back-End Developer'],

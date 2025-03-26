@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Page;
 use App\Models\Privilege;
+use App\Models\Profile;
 use App\Models\Role;
 use App\Models\RoleChannel;
 use App\Models\User;
@@ -47,7 +48,7 @@ class WebUserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, FileController $filecontroller)
     {
         try {
             DB::beginTransaction();
@@ -60,6 +61,33 @@ class WebUserController extends Controller
                 'privileges' => ['required', 'array'],
                 'address' => ['required', 'string', 'max:500'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
+                'image' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|file|max:2048',
+            ]);
+
+            $picturePath = null;
+            $file_records = null;
+            $file_id = null;
+
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $file_records = $filecontroller->store(new Request(['file' => $request['image']]));
+
+                //proceed to change the file attributes
+                $file_name = time() . '.' . $file->getClientOriginalExtension();
+                $destination = public_path('uploads');
+                $file->move($destination, $file_name);
+                $picturePath = 'uploads/' . $file_name;  // Assign to picturePath
+
+                $file_id = $file_records->original['file']->id;
+            } else {
+                $profile_image = 'https://lh3.googleusercontent.com/d/1x1vyLdfoXxUjCTmab_5fGSDXU_zVJ3RI'; // Image in the public/images folder
+                $file_records = $filecontroller->store(new Request(['image_url' => $profile_image]));
+                $file_id = $file_records->original['file']->id;
+            }
+
+            $profile = Profile::create([
+                'description' => 'User' . $request->name,
+                'file_id' => $file_id,
             ]);
 
             $user = new User();
@@ -81,6 +109,7 @@ class WebUserController extends Controller
             $user->emergency_contact_number = Str::random(6);
             $user->emergency_contact_fullname = Str::random(6);
             $user->emergency_contact_address = Str::random(6);
+            $user->profile_id = $profile->id;
 
             $user->save();
             $user->fresh();
@@ -99,7 +128,13 @@ class WebUserController extends Controller
                 }
             }
 
+            $user = User::all();
+            $pages = Page::all();
+            $privilege = Privilege::all();
+
             DB::commit();
+
+            return view('admin.web-development.users.index', compact('pages', 'privilege', 'user'));
         } catch (\Exception $ex) {
             @dd($ex->getMessage());
             DB::rollBack();

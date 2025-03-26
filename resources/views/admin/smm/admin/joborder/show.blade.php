@@ -188,9 +188,13 @@
                             </strong><br>
                         </td>
                         <td class="signature">
-                            <strong>Operations Supervisor Signature:
-                                {{ $job_draft->jobOrder->issuer->name }}</strong><br>
-                            <img src="{{ asset($job_draft->signature_supervisor) }}" alt="Supervisor Signature">
+                            <strong>
+                                {{ $job_draft->jobOrder->issuer->roles->position ? ucwords(str_replace('_', ' ', $job_draft->jobOrder->issuer->roles->position)) : 'Operations Supervisor' }}
+                                Signature: {{ $job_draft->jobOrder->issuer->name }}
+                            </strong><br>
+                            <img src="{{
+    \App\Models\Signature::mySignature($job_draft->jobOrder->issuer->id) ? asset(\App\Models\Signature::mySignature($job_draft->jobOrder->issuer->id)->path) :
+    asset($job_draft->signature_supervisor) }}" alt="Supervisor Signature">
                         </td>
                     </tr>
                 </table>

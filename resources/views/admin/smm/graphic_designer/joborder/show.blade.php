@@ -87,7 +87,6 @@
 </head>
 
 <x-main-layout breadcumb="SMM / List Job Order" page="Show Job Order">
-
     <div id="container-pdf">
         <div class="bg-[#fa7011] text-white rounded-md px-3 py-1 w-fit mb-4">
             <a href="{{ url('/smm/graphic') }}">Back</a>
@@ -187,8 +186,14 @@
                         </strong><br>
                     </td>
                     <td class="signature">
-                        <strong>Operations Supervisor Signature: {{ $job_draft->jobOrder->issuer->name }}</strong><br>
-                        <img src="{{ asset($job_draft->signature_supervisor) }}" alt="Supervisor Signature">
+                        <strong>
+                            {{ ucwords(str_replace('_', ' ', $job_draft->jobOrder->issuer->roles->position)) ?? 'Operations Supervisor: ' }}
+                            Signature:
+                        </strong><br>
+                        <img src="{{
+    \App\Models\Signature::mySignature($job_draft->jobOrder->issuer->id) ? asset(\App\Models\Signature::mySignature($job_draft->jobOrder->issuer->id)->path) :
+    asset($job_draft->signature_supervisor) }}" alt="Supervisor Signature">
+                    </td>
                     </td>
                 </tr>
             </table>
@@ -200,5 +205,3 @@
     </div>
 
 </x-main-layout>
-
-{{-- @endsection --}}
