@@ -49,8 +49,9 @@
                 </div>
             </a>
         </div>
-        <form action="{{ route('admin.smm.soa.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.smm.soa.update', $soa->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
+            @method('PUT')
 
             <h1 class="text-xl font-bold mt-4">Create SOA</h1>
             <div class="grid grid-cols-4 space-y-4">
@@ -60,12 +61,13 @@
                         <p class="text-sm text-gray-600">Job Order ID</p>
                         <div class="relative">
                             <!-- Visible input for showing Job Order name -->
-                            <input type="text" id="selected-job_draft-name"
-                                value="{{$soa->job_draft_id}}"
-                                class="w-full border px-3 py-2 border-gray-200 rounded-lg cursor-pointer" readonly onclick="openModal()">
+                            <input type="text" id="selected-job_draft-name" value="{{ $soa->job_draft_id }}"
+                                class="w-full border px-3 py-2 border-gray-200 rounded-lg cursor-pointer" readonly
+                                onclick="openModal()">
 
                             <!-- Hidden input for passing Job Order ID in the form -->
-                            <input type="hidden" name="job_draft_id" id="selected-job_draft_id" value="{{ old('job_draft_id', $soa->job_draft_id) }}">
+                            <input type="hidden" name="job_draft_id" id="selected-job_draft_id"
+                                value="{{ old('job_draft_id', $soa->job_draft_id) }}">
                         </div>
                         @error('job_draft_id')
                             <p class="text-red-600 text-sm">{{ $message }}</p>
@@ -76,30 +78,30 @@
                     <!-- Image Upload -->
                     <div class="col-span-2 lg:col-span-1 w-full">
                         <p class="text-sm text-gray-600">Company Name</p>
-                        <input type="text" name="company" value="{{$soa->company}}" class="w-full border px-3 py-2 border-gray-200 rounded-lg">
+                        <input type="text" name="company" value="{{ $soa->company }}"
+                            class="w-full border px-3 py-2 border-gray-200 rounded-lg">
                         @error('company')
                             <p class="text-red-600 text-sm">{{ $message }}</p>
                         @enderror
 
                     </div>
 
-                <!-- Image Upload -->
-                <div class="col-span-2 lg:col-span-1 w-full">
-                    <p class="text-sm text-gray-600">Upload Image</p>
-                    <input type="file" name="image_path" id="imageUpload" accept="image/*"
-                        class="w-full border px-3 py-2 border-gray-200 rounded-lg">
-                    @error('image_path')
-                        <p class="text-red-600 text-sm">{{ $message }}</p>
-                    @enderror
-                    
-                    <!-- Image Preview -->
-                    <div class="mt-4">
-                        <img id="imagePreview" 
-                            src="{{ $soa->image_path ? asset( $soa->image_path) : '#' }}" 
-                            alt="Uploaded Image"
-                            class="{{ $soa->image_path ? 'block' : 'hidden' }} w-32 h-32 object-cover rounded-md border">
+                    <!-- Image Upload -->
+                    <div class="col-span-2 lg:col-span-1 w-full">
+                        <p class="text-sm text-gray-600">Upload Image</p>
+                        <input type="file" name="image_path" id="imageUpload" accept="image/*"
+                            class="w-full border px-3 py-2 border-gray-200 rounded-lg">
+                        @error('image_path')
+                            <p class="text-red-600 text-sm">{{ $message }}</p>
+                        @enderror
+
+                        <!-- Image Preview -->
+                        <div class="mt-4">
+                            <img id="imagePreview" src="{{ $soa->image_path ? asset($soa->image_path) : '#' }}"
+                                alt="Uploaded Image"
+                                class="{{ $soa->image_path ? 'block' : 'hidden' }} w-32 h-32 object-cover rounded-md border">
+                        </div>
                     </div>
-                </div>
                 </div>
 
                 <button type="submit"
