@@ -159,151 +159,151 @@ class NotificationController extends Controller
 
     public function sendAdminNotification(Request $request)
     {
+        try {
+            DB::beginTransaction();
 
-        $from_user_id = Auth::id();
+            $fromUserId = Auth::id();
+            $fullName = User::find($fromUserId);
 
-        $Fullname = User::where('id', $from_user_id)->first();
+            if (!$fullName) {
+                Log::warning("User not found for ID: " . $fromUserId);
+                return response()->json(['message' => 'User not found', 'success' => false], 404);
+            }
 
-        $dateMessage = Carbon::createFromDate($request->year, $request->month, 1)->format('M Y');
+            $dateMessage = Carbon::createFromDate($request->year, $request->month, 1)->format('M Y');
+            $fullNameFormatted = ucwords(strtolower($fullName->firstname . ' ' . substr($fullName->middlename, 0, 1) . '. ' . $fullName->lastname));
 
-        $title = null;
+            $title = null;
+            if (Str::is('user.dtr.*', $request->type)) {
+                $title = $fullNameFormatted . ' has requested to download the DTR. ' . $dateMessage;
+            }
 
-        $fullNameFormatted = ucwords(strtolower($Fullname->firstname . ' ' . substr($Fullname->middlename, 0, 1) . '. ' . $Fullname->lastname));
+            if (!empty($request->to_user_id)) {
+                $userTypes = ['content', 'graphic', 'admin', 'client'];
 
-        if (Str::is('user.dtr.*', $request->type)) {
-            $title = $fullNameFormatted . ' has requested to download the DTR. ' . $dateMessage;
-        }
+                foreach ($userTypes as $userType) {
+                    if (isset($request->to_user_id[$userType])) {
+                        $userIds = is_array($request->to_user_id[$userType]) ? $request->to_user_id[$userType] : [$request->to_user_id[$userType]];
 
-        if (!empty($request->to_user_id)) {
-            $userTypes = ['content', 'graphic', 'admin'];
+                        foreach ($userIds as $userId) {
+                            $user = User::find($userId);
 
-            //The use of this function is to send to_user_id who is/are assigned to handle the task
-            foreach ($userTypes as $userType) {
-                if (isset($request->to_user_id[$userType])) {
-                    $userIds = is_array($request->to_user_id[$userType]) ? $request->to_user_id[$userType] : [$request->to_user_id[$userType]];
+                            if ($user) {
+                                $customTitle = $this->generateCustomForAssignedUserNotificationTitle($request, $fullNameFormatted, $dateMessage, $userType);
 
-                    foreach ($userIds as $userId) {
-                        $usr = User::find($userId);
+                                if ($customTitle) {
+                                    Notification::create([
+                                        'user_id' => $user->id,
+                                        'from_user_id' => $fromUserId,
+                                        'title' => $request->title,
+                                        'message' => $customTitle,
+                                        'is_read' => false,
+                                        'is_archive' => false,
+                                        'type' => $request->type,
+                                    ]);
 
-                        if ($usr) {
-                            $customTitle = $this->generateCustomForAssignedUserNotificationTitle($request, $fullNameFormatted, $dateMessage, $userType);
-
-                            if ($customTitle) {
-                                Notification::create([
-                                    'user_id' => $usr->id,
-                                    'from_user_id' => $from_user_id,
-                                    'title' => $request->title,
-                                    'message' => $customTitle,
-                                    'is_read' => false,
-                                    'is_archive' => false,
-                                    'type' => $request->type,
-                                ]);
-
-                                Log::info("Notification created for user ID: " . $usr->id . " (" . $userType . ")");
+                                    Log::info("Notification created for user ID: " . $user->id . " (" . $userType . ")");
+                                } else {
+                                    Log::warning("Failed to generate custom title for user ID: " . $user->id . " (" . $userType . ")");
+                                }
                             } else {
-                                Log::warning("Failed to generate custom title for user ID: " . $usr->id . " (" . $userType . ")");
+                                Log::warning("User not found for " . $userType . " with ID: " . $userId);
                             }
-                        } else {
-                            Log::warning("User not found for " . $userType . " with ID: " . $userId);
                         }
                     }
                 }
-            }
 
-            // Notifications for roles
-            $roles = ['admin', 'operations_supervisor', 'top_management', 'operations', 'assistant_supervisor'];
-            $users = User::whereIn('role', $roles)->get();
+                $roles = ['admin', 'operations_supervisor', 'top_management', 'operations', 'assistant_supervisor'];
+                $roleUsers = User::whereIn('role', $roles)->get();
 
-            foreach ($users as $usr) {
-                $customTitle = $this->generateCustomNotificationTitle($request, $fullNameFormatted, $dateMessage);
+                foreach ($roleUsers as $user) {
+                    $customTitle = $this->generateCustomNotificationTitle($request, $fullNameFormatted, $dateMessage);
 
-                if ($customTitle) {
-                    Notification::create([
-                        'user_id' => $usr->id,
-                        'from_user_id' => $from_user_id,
-                        'title' => $request->title,
-                        'message' => $customTitle,
-                        'is_read' => false,
-                        'is_archive' => false,
-                        'type' => $request->type,
-                    ]);
+                    if ($customTitle) {
+                        Notification::create([
+                            'user_id' => $user->id,
+                            'from_user_id' => $fromUserId,
+                            'title' => $request->title,
+                            'message' => $customTitle,
+                            'is_read' => false,
+                            'is_archive' => false,
+                            'type' => $request->type,
+                        ]);
 
-                    Log::info("Notification created for role based user ID: " . $usr->id);
-                } else {
-                    Log::warning("Failed to generate custom title for role based user ID: " . $usr->id);
+                        Log::info("Notification created for role based user ID: " . $user->id);
+                    } else {
+                        Log::warning("Failed to generate custom title for role based user ID: " . $user->id);
+                    }
                 }
+
+                $request->merge(['to_user_role' => $roles]);
             }
 
-            $request->merge([
-                'to_user_role' => $roles,
-            ]);
-        }
+            $eventMap = [
+                'user.dtr.download.request' => 'send-download-approval-dtr',
+                'admin.smm.create.job-order' => 'send-job-order-created-notification',
+                'admin.smm.accept.job-order' => 'send-job-order-accepted-notification',
+                'admin.smm.rejected.job-order' => 'send-job-order-rejected-notification',
+                'admin.smm.renewal.job-order' => 'send-job-order-renewal-notification',
+                'admin.smm.task.job-order' => 'send-job-order-task-notification',
+                'admin.smm.approved.job-order' => 'send-job-order-approved-notification',
+                'admin.smm.revise.job-order' => 'send-job-order-revise-notification',
+                'admin.smm.request.job-order' => 'send-job-order-request-notification',
+                'admin.smm.create.endorsement.form' => 'send-endorsement-create-form-notification',
+            ];
 
-        // Define the mapping of request types to event names
-        $eventMap = [
-            'user.dtr.download.request' => 'send-download-approval-dtr',
-            'admin.smm.create.job-order' => 'send-job-order-created-notification',
-            'admin.smm.accept.job-order' => 'send-job-order-accepted-notification',
-            'admin.smm.rejected.job-order' => 'send-job-order-rejected-notification',
-            'admin.smm.renewal.job-order' => 'send-job-order-renewal-notification',
-            'admin.smm.task.job-order' => 'send-job-order-task-notification',
-            'admin.smm.approved.job-order' => 'send-job-order-approved-notification',
-            'admin.smm.revise.job-order' => 'send-job-order-revise-notification',
-            'admin.smm.request.job-order' => 'send-job-order-request-notification',
-            'admin.smm.create.endorsement.form' => 'send-endorsement-create-form-notification',
-            // Add more request types and corresponding events as needed
-        ];
+            if (Str::is('user.dtr.download.request', $request->type)) {
+                $usersRole = User::whereIn('role', $request->to_user_role)->get();
 
-        if (Str::is('user.dtr.download.request', $request->type)) {
-            $users_role = User::whereIn('role', $request->to_user_role)->get(); // Fix: Use whereIn()
-
-            if ($users_role->isNotEmpty()) { // Fix: Use isNotEmpty() instead of isset()
-                //send to the supervisor, admin, operations, and Top Management
-                foreach ($users_role as $usr) {
-                    Notification::create([
-                        'user_id' => $usr->id,
-                        'from_user_id' => $from_user_id,
-                        'title' => $request->title,
-                        'message' => $title,
-                        'is_read' => false,
-                        'is_archive' => false,
-                        'type' => $request->type,
-                    ]);
+                if ($usersRole->isNotEmpty()) {
+                    foreach ($usersRole as $user) {
+                        Notification::create([
+                            'user_id' => $user->id,
+                            'from_user_id' => $fromUserId,
+                            'title' => $request->title,
+                            'message' => $title,
+                            'is_read' => false,
+                            'is_archive' => false,
+                            'type' => $request->type,
+                        ]);
+                    }
                 }
+
+                DtrDownloadRequest::create([
+                    'user_id' => $fromUserId,
+                    'month' => $request->month,
+                    'year' => $request->year,
+                ]);
             }
 
-            DtrDownloadRequest::create([
-                'user_id' => $from_user_id,
-                'month' => $request->month,
-                'year' => $request->year,
-            ]);
-        }
+            $data = [
+                "from_user_id" => $fromUserId,
+                "to_user_id" => $request->id,
+                "month" => $request->month,
+                "year" => $request->year,
+                "message" => $title,
+                'role' => $request->to_user_role,
+                'title' => $request->title,
+                'type' => $request->type,
+            ];
 
-        $data = [
-            "from_user_id" => $from_user_id,
-            "to_user_id" => $request->id,
-            "month" => $request->month,
-            "year" => $request->year,
-            "message" => $title,
-            'role' => $request->to_user_role,
-            'title' => $request->title,
-            'type' => $request->type,
-        ];
-
-
-        // Check if the request type exists in the map
-        if (isset($eventMap[$request->type])) {
-            // Dispatch the corresponding event
-            if (isset($eventMap[$request->type]) && $request->type == 'user.dtr.download.request') {
-                $request = new Request($data);
+            if (isset($eventMap[$request->type])) {
+                if (isset($eventMap[$request->type]) && $request->type == 'user.dtr.download.request') {
+                    $request = new Request($data);
+                }
+                event(new PushNotificationEvent($request, $eventMap[$request->type]));
+            } else {
+                event(new PushNotificationEvent($request, 'default-event'));
             }
-            event(new PushNotificationEvent($request, $eventMap[$request->type]));
-        } else {
-            // Default action if the request type is not found in the map
-            event(new PushNotificationEvent($request, 'default-event'));
-        }
 
-        return response()->json(['message' => 'success!', 'success' => true]);
+            DB::commit();
+
+            return response()->json(['message' => 'success!', 'success' => true]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Send Admin Notification Failed: ' . $e->getMessage());
+            return response()->json(['message' => 'An error occurred.', 'success' => false], 500);
+        }
     }
 
     private function generateCustomNotificationTitle(Request $request, string $fullNameFormatted, string $dateMessage, ?string $userType = null): ?string
@@ -352,10 +352,20 @@ class NotificationController extends Controller
 
         switch ($request->type) {
             case 'admin.smm.create.job-order':
-                $customTitle = "You have been assigned to a new job order titled: \"{$request->title}\". Context: {$request->message}.";
+                if ($userType == 'admin') {
+                    $customTitle = $fullNameFormatted . ' has created a new job order with the title: "' . $request->title . '". The context: ' . $request->message . '.';
+                } else {
+                    $customTitle = "You have been assigned to a new job order titled: \"{$request->title}\". Context: {$request->message}.";
+                }
                 break;
             case 'admin.smm.approved.job-order':
-                $customTitle = "Your job order titled: \"{$request->title}\" has been approved.";
+                if ($userType == 'admin') {
+                    $customTitle = 'Your job order "' . $request->title . '" has been approved by ' . $fullNameFormatted . '. Reason: ' . $request->reason;
+                } elseif ($userType == 'client') {
+                    $customTitle = "The project titled: \"{$request->title}\" has been approved by {$fullNameFormatted}. Please check the project before accepting. Reason: {$request->reason}.";
+                } else {
+                    $customTitle = "Your job order titled: \"{$request->title}\" has been approved.";
+                }
                 break;
             case 'admin.smm.decline.job-order':
                 $customTitle = "Your job order titled: \"{$request->title}\" has been declined.";
@@ -421,12 +431,6 @@ class NotificationController extends Controller
         // $dtrRequestIndex = DtrDownloadRequest::get();
 
         return response()->json(['success' => true, 'message' => 'The message has been mark as read!']);
-
-        // //return view('receive.notification', compact('notificationIndex'));
-        // return view('notifications', [
-        //     'notificationIndex' => $notifications,
-        //     'dtrRequestIndex' => $dtrRequestIndex,
-        // ]);
     }
 
     public function archiveAdminNotification($id)

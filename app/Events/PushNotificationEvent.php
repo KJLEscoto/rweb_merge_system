@@ -215,9 +215,10 @@ class PushNotificationEvent
             foreach ($this->request->to_user_id as $userId) {
                 // Find the user based on the provided user ID
                 $user = User::find($userId);
+                $worker_role = ['content_writer', 'graphic_designer'];
 
                 // Ensure the user exists before sending the notification
-                if ($user) {
+                if ($user && in_array($user->roles->position, $worker_role)) {
                     // ✅ Send event to a PUBLIC CHANNEL
                     $this->pusher->trigger("public-notifications", "user-notification-{$user->id}", [
                         'message' => 'A job order has been assigned to you.',
@@ -254,7 +255,6 @@ class PushNotificationEvent
             foreach ($this->request->to_user_id as $userId) {
                 // Find the user based on the provided user ID
                 $user = User::find($userId);
-
                 // Ensure the user exists before sending the notification
                 if ($user) {
                     // ✅ Send event to a PUBLIC CHANNEL
@@ -265,19 +265,6 @@ class PushNotificationEvent
                     echo "Notification successfully sent to user ID: {$user->id} <br>";
                 } else {
                     echo "User not found for ID: {$userId} <br>";
-                }
-            }
-
-            //if the user has role admin and is more than 1 use forloop
-            $users = User::whereIn('role', $this->request->to_user_role)->get();
-
-            if (isset($user) || $users != null) {
-                foreach ($users as $user) {
-                    // ✅ Send event to a PUBLIC CHANNEL
-                    $this->pusher->trigger("public-notifications", "user-notification-{$user->id}", [
-                        'message' => 'A Project Request has been created!',
-                        'success' => true,
-                    ]);
                 }
             }
 
@@ -296,11 +283,6 @@ class PushNotificationEvent
                     'is_read' => false,
                     'is_archive' => false,
                     'type' => 'admin.smm.request.job-order',
-                ]);
-
-                $this->pusher->trigger("public-notifications", "user-notification-{$notification->user_id}", [
-                    'message' => 'A Project Request has been requested to you!',
-                    'success' => true,
                 ]);
 
                 $fullNameFormatted = User::where('id', $request->assigned_to)->first()->name;
@@ -368,12 +350,19 @@ class PushNotificationEvent
             foreach ($this->request->to_user_id as $userId) {
                 // Find the user based on the provided user ID
                 $user = User::find($userId);
+                $worker_role = ['content_writer', 'graphic_designer'];
 
                 // Ensure the user exists before sending the notification
-                if ($user) {
+                if ($user && in_array($user->roles->position, $worker_role)) {
                     // ✅ Send event to a PUBLIC CHANNEL
                     $this->pusher->trigger("public-notifications", "user-notification-{$user->id}", [
                         'message' => 'Your Job order hass been approved.',
+                        'success' => true,
+                    ]);
+                    echo "Notification successfully sent to user ID: {$user->id} <br>";
+                } elseif ($user && $user->roles->position == 'client') {
+                    $this->pusher->trigger("public-notifications", "user-notification-{$user->id}", [
+                        'message' => 'Your project has been approved by the top management. Please review before approving the project.',
                         'success' => true,
                     ]);
                     echo "Notification successfully sent to user ID: {$user->id} <br>";
@@ -408,8 +397,8 @@ class PushNotificationEvent
                 $jobDraft = JobDraft::where('job_order_id', $this->request->job_order_id)->first();
 
                 // Extract the content_writer_id and graphic_designer_id once
-                $content_writer_id = $jobDraft->content_writer_id ?? null;
-                $graphic_designer_id = $jobDraft->graphic_designer_id ?? null;
+                $content_writer_id = $jobDraft->where('status', 'like', '%completed%')->where('type', 'like', '%content_writer%')->exists() ? $jobDraft->content_writer_id  : null;
+                $graphic_designer_id = $jobDraft->where('status', 'like', '%completed%')->where('type', 'like', '%graphic_designer%')->exists() ? $jobDraft->graphic_designer_id  : null;
 
                 // Prepare an array of roles to notify (both content writer and graphic designer)
                 $recipients = [
@@ -528,7 +517,7 @@ class PushNotificationEvent
                 if ($user) {
                     // ✅ Send event to a PUBLIC CHANNEL
                     $this->pusher->trigger("public-notifications", "user-notification-{$user->id}", [
-                        'message' => 'A job order has been rejected to you.',
+                        'message' => 'A job order has been rejected by you.',
                         'success' => true,
                     ]);
                     echo "Notification successfully sent to user ID: {$user->id} <br>";

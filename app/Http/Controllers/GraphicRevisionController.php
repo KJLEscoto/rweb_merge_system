@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JobDraft;
+use App\Models\JobOrder;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -38,17 +39,19 @@ class GraphicRevisionController extends Controller
         ]);
         $job_draft = JobDraft::find($id);
         $job_draft->update([
-            'status' => 'Submitted to Operation',
+            'status' => 'Submitted to Assistant Supervisor',
             'draft' => $request->draft
         ]);
 
         $notificationController = new NotificationController();
 
+        $issued_by = JobOrder::where('id', $job_draft->job_order_id)->first();
+
         //formulate the data in the notification
         $request = new Request([
             'job_order_id' => $job_draft->job_order_id,
             'from_user_id' => auth()->user()->id,
-            'to_user_id' => ['content' => auth()->user()->id], // for multiple users
+            'to_user_id' => ['content' => $issued_by], // for multiple users
             'title' => $job_draft->jobOrder->title,
             'type' => 'admin.smm.revise.job-order',
             'month' => Carbon::now()->format('m'), // 'm' gives zero-padded month (e.g., 03 for March)
