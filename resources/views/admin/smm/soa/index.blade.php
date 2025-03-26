@@ -79,13 +79,25 @@
                                 </form>
                             @endif
 
-                            {{Auth::user()->role}}
-                            <a href="#">
+
+                            @php
+                                $editRoute = '';
+
+                                if (Auth::user()->role == 'sales_assistant') {
+                                    $editRoute = route('admin.smm.soa.edit', $soa->id);
+                                } elseif (Auth::user()->role == 'accounting') {
+                                    $editRoute = route('admin.smm.soa.edit_particulars', $soa->id);
+                                }
+                            @endphp
+
+                            <a href="{{ $editRoute }}">
                                 <button
-                                    class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white {{Auth::user()->role == 'sales_assistant' && $soa->status == 'pending' ? "bg-yellow-600 rounded hover:bg-yellow-600" : "hidden"}}">
+                                    class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white 
+               {{ Auth::user()->role == 'sales_assistant' && $soa->status == 'pending' ? 'bg-yellow-600 rounded hover:bg-yellow-600' : 'hidden' }}">
                                     Edit
                                 </button>
                             </a>
+
                             <a href="{{ route('admin.smm.soa.show', $soa->id) }}">
                                 <button
                                     class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-blue-700 rounded hover:bg-blue-800">
