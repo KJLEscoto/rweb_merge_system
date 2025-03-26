@@ -1,11 +1,3 @@
-<head>
-    <title>{{ env('APP_NAME') }} | SMM | Sales SOA</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-
-</head>
-
-<x-main-layout breadcumb="SMM" page="Sales SOA">
 <!DOCTYPE html>
 <html lang="en">
 
@@ -69,17 +61,10 @@
 
 <body>
 
-    <div class="flex items-center justify-end">
-        <div class="w-fit px-4 py-2 bg-green-500 text-white">
-            <span><i class="fa-solid fa-download" style="color: #ffffff;"></i></span>
-            <a href="{{route('admin.smm.soa.downloadPDF', $soa->id)}}">Download PDF</a>
-        </div>
-    </div>
-
     <!-- Header -->
     <table class="no-border">
         <tr>
-            <td class="center"><img src="{{ asset('/Assets/doc_header.png') }}" width="100%"></td>
+            <td class="center"><img src="{{ public_path('/Assets/doc_header.png') }}" width="100%"></td>
         </tr>
     </table>
 
@@ -131,14 +116,14 @@
             <td>{{ $particular->reference }}</td>
             <td>{{ $particular->quantity }}</td>
             <td>{{ $particular->particulars }}</td>
-            <td>₱ {{ number_format($particular->charges, 2) }}</td>
+            <td>{{ number_format($particular->charges, 2) }}</td>
             <td></td>
         </tr>
         @endforeach
 
         <tr class="total">
             <td colspan="4" class="right">TOTAL AMOUNT DUE</td>
-            <td>₱ {{ number_format(collect($soa->particulars)->sum('charges'), 2) }}</td>
+            <td>{{ number_format(collect($soa->particulars)->sum('charges'), 2) }}</td>
             <td></td>
         </tr>
     </table>
@@ -183,8 +168,8 @@
             <th>Received by:</th>
         </tr>
         <tr class="center">
-            <td><img src="{{ asset($soa->preparedBy->signature) }}" width="120px"></td>
-            <td><img src="{{ asset($soa->approvedBy->signature) }}" width="120px"></td>
+            <td><img src="{{ public_path($soa->preparedBy->signature) }}" width="120px"></td>
+            <td><img src="{{ public_path($soa->approvedBy->signature) }}" width="120px"></td>
             <td>____________________</td>
         </tr>
         <tr class="center">
@@ -197,30 +182,10 @@
     <!-- Footer -->
     <table class="no-border">
         <tr>
-            <td class="center"><img src="{{ asset('/Assets/doc_footer.png') }}" width="100%"></td>
+            <td class="center"><img src="{{ public_path('/Assets/doc_footer.png') }}" width="100%"></td>
         </tr>
     </table>
 
 </body>
 
 </html>
-</x-main-layout>
-
-<script>
-    function filterTable() {
-        let input = document.getElementById("searchInput").value.toLowerCase();
-        let tableBody = document.getElementById("tableBody");
-        let rows = tableBody.getElementsByTagName("tr");
-
-        for (let row of rows) {
-            let title = row.getElementsByTagName("td")[0]?.textContent.toLowerCase();
-            let assignedBy = row.getElementsByTagName("td")[1]?.textContent.toLowerCase();
-
-            if (title.includes(input) || assignedBy.includes(input)) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none";
-            }
-        }
-    }
-</script>

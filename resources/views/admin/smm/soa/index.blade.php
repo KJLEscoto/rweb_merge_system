@@ -79,15 +79,16 @@
                                 </form>
                             @endif
 
+                            {{Auth::user()->role}}
                             <a href="#">
                                 <button
-                                    class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-blue-700 rounded hover:bg-blue-800">
+                                    class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white {{Auth::user()->role == 'sales_assistant' && $soa->status == 'pending' ? "bg-yellow-600 rounded hover:bg-yellow-600" : "hidden"}}">
                                     Edit
                                 </button>
                             </a>
-                            <a href="#">
+                            <a href="{{ route('admin.smm.soa.show', $soa->id) }}">
                                 <button
-                                    class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
+                                    class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-blue-700 rounded hover:bg-blue-800">
                                     Show
                                 </button>
                             </a>
