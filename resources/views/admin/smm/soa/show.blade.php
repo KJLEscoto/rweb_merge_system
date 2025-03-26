@@ -10,6 +10,13 @@
 <html lang="en">
 
 <head>
+    <div class="w-fit">
+        <a href="{{ route('admin.smm.soa') }}">
+            <div class="w-fit px-4 py-1 bg-gray-400 rounded-md text-white custom-shadow custom-hover-shadow">
+                Back
+            </div>
+        </a>
+    </div>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statement of Account</title>
@@ -183,13 +190,25 @@
             <th>Received by:</th>
         </tr>
         <tr class="center">
-            <td><img src="{{ asset($soa->preparedBy->signature) }}" width="120px"></td>
-            <td><img src="{{ asset($soa->approvedBy->signature) }}" width="120px"></td>
+            <td>@if (!$soa->preparedBy?->signature)
+                <p>Not signed yet</p>
+                @else
+                <img src="{{ asset($soa->preparedBy->signature) }}" width="120px">
+                
+            @endif
+            </td>
+            <td>
+                @if ($soa->approvedBy?->signature)
+                <img src="{{ asset($soa->approvedBy->signature) }}" width="120px">
+                @else
+                <p>Not signed yet</p>
+                @endif
+            </td>
             <td>____________________</td>
         </tr>
         <tr class="center">
-            <td>{{ $soa->preparedBy->name }}<br><i>Accounting Staff</i></td>
-            <td>{{ $soa->approvedBy->name}}<br><i>General Manager</i></td>
+            <td>{{ $soa->preparedBy?->name }}<br><i>Accounting Staff</i></td>
+            <td>{{ $soa->approvedBy?->name}}<br><i>General Manager</i></td>
             <td>Received by:</td>
         </tr>
     </table>
