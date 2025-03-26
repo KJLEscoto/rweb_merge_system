@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JobDraft;
 use App\Models\RwebDetail;
 use App\Models\Soa;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\SoaParticular;
 use Illuminate\Http\Request;
 
@@ -71,6 +72,7 @@ class SoaController extends Controller
         // Update SOA record
         $soa = Soa::findOrFail($id);
         $soa->update([
+            'status' => 'Submitted to Top Mangement',
             'billing_date' => $validatedData['billing_date'],
             'due_date' => $validatedData['due_date'],
             'prepared_by' => auth()->user()->id
@@ -116,5 +118,18 @@ class SoaController extends Controller
         ]);
 
         return redirect()->route('admin.smm.soa')->with('Success', 'SOA Approved Successfully');
+    }
+
+    public function downloadPDF($id)
+    {
+        //Subject to remove
+        $rweb_details = RwebDetail::with('paymentMethods')->first();
+        $soa = Soa::with('jobDraft', 'preparedBy', 'approvedBy', 'particulars')->find($id);
+
+        $pdf = Pdf::loadView('admin.smm.soa.pdf', compact('rweb_details', 'soa'));
+
+        return $pdf->download(
+            'soa' . $id . '.pdf'
+        );
     }
 }
