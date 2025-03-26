@@ -58,7 +58,7 @@
                         <td class="px-6 py-3">{{ $soa->company }}</td>
 
                         <td class="px-4 py-3 text-center flex gap-1">
-                            @if (Auth::user()->role == 'accounting')
+                            @if (Auth::user()->role == 'accounting' && $soa->status == 'pending')
                                 <a href="{{ route('admin.smm.soa.create_particulars', $soa->id) }}">
 
                                     <button
@@ -67,7 +67,7 @@
                                     </button>
                                 </a>
                             @endif
-                            @if (Auth::user()->role == 'top_management')
+                            @if (Auth::user()->role == 'top_management' && $soa->status == 'Submitted to Top Management')
                                 <form action="{{ route('admin.smm.soa.approve', $soa->id) }}" method="POST"
                                     class="inline">
                                     @csrf
@@ -89,21 +89,24 @@
                                     $editRoute = route('admin.smm.soa.edit_particulars', $soa->id);
                                 }
                             @endphp
-
-                            <a href="{{ $editRoute }}">
-                                <button
-                                    class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white 
-               {{ Auth::user()->role == 'sales_assistant' && $soa->status == 'pending' ? 'bg-yellow-600 rounded hover:bg-yellow-600' : 'hidden' }}">
-                                    Edit
-                                </button>
-                            </a>
-
-                            <a href="{{ route('admin.smm.soa.show', $soa->id) }}">
-                                <button
-                                    class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-blue-700 rounded hover:bg-blue-800">
-                                    Show
-                                </button>
-                            </a>
+                            @if (
+                                (Auth::user()->role == 'accounting' && $soa->status != 'pending') ||
+                                    (Auth::user()->role == 'sales_assistant' && $soa->status != 'Approved by Top Management'))
+                                <a href="{{ $editRoute }}">
+                                    <button
+                                        class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-yellow-600 rounded hover:bg-yellow-600">
+                                        Edit
+                                    </button>
+                                </a>
+                            @endif
+                            @if (Auth::user()->role != 'sales_assistant')
+                                <a href="{{ route('admin.smm.soa.show', $soa->id) }}">
+                                    <button
+                                        class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-blue-700 rounded hover:bg-blue-800">
+                                        Show
+                                    </button>
+                                </a>
+                            @endif
                             <form action="{{ route('admin.smm.soa.destroy', $soa->id) }}" method="POST" class="inline"
                                 onsubmit="return confirm('Are you sure you want to delete this SOA?');">
                                 @csrf
