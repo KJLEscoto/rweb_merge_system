@@ -55,7 +55,30 @@
                 <div class="lg:col-span-1 font-semibold">Google Drive Link:</div>
                 <div class="lg:col-span-4">
                     <div id="draftContent" class="max-h-[300px] rounded-lg overflow-y-auto break-all">
-
+                        @if ($web_project_channel->type == 'web_designer')
+                            <div class="mb-4">
+                                <strong class="block text-sm font-medium text-gray-700">Google Drive Link:</strong>
+                                <div id="draftContent"
+                                    class="mt-1 max-h-[200px] overflow-y-auto rounded-md border border-gray-200 p-3 text-sm text-gray-900 break-all">
+                                    <div>
+                                        {{ $web_project_channel->type == 'web_designer' ?
+        "Site Map: " . ($web_project_channel->where('sub_status', 'like', '%Site Map%')->first()->draft ?? 'N/A') : '' }}
+                                    </div>
+                                    <div>
+                                        {{ $web_project_channel->type == 'web_designer' ?
+        "Draft Homepage Approval: " . ($web_project_channel->where('sub_status', 'like', '%Draft Homepage Approval%')->first()->draft ?? 'On Progress') : '' }}
+                                    </div>
+                                    <div>
+                                        {{ $web_project_channel->type == 'web_designer' ?
+        "Draft Homepage Approval: " . ($web_project_channel->where('sub_status', 'like', '%Final Homepage Approval%')->first()->draft ?? 'On Progress') : '' }}
+                                    </div>
+                                    <div>
+                                        {{ $web_project_channel->type == 'web_designer' ?
+        "Draft Homepage Approval: " . ($web_project_channel->where('sub_status', 'like', '%All Pages Approval%')->first()->draft ?? 'On Progress') : '' }}
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
@@ -73,45 +96,43 @@
                     Blade
                     
                     @php
-                        $user = Auth::user();
-                        $rolePosition = $user->roles->position ?? null;
-                        $isDisabled = true; // Default to disabled
+$user = Auth::user();
+$rolePosition = $user->roles->position ?? null;
+$isDisabled = true; // Default to disabled
 
-                        if ($rolePosition) {
-                            switch ($rolePosition) {
-                                case 'operations_supervisor':
-                                    $isDisabled = $web_project_channel->status != 'Submitted to Operations Supervisor';
-                                    break;
-                                case 'top_management':
-                                    $isDisabled = $web_project_channel->status != 'Submitted to Top Management';
-                                    break;
-                                case 'client':
-                                    $isDisabled = $web_project_channel->status != 'Submitted to Client';
-                                    break;
-                                case 'assistant_supervisor':
-                                    $isDisabled = $web_project_channel->status != 'Submitted to Assistant Supervisor';
-                                    break;
-                                default:
-                                    // Check for privilege and page in the default case
-                                    $approvalPage = \App\Models\Page::where('description', 'like', '%approvals%')->first();
-                                    $approvalPrivilege = \App\Models\Privilege::where('description', 'like', '%can_approve%')->first();
+if ($rolePosition) {
+    switch ($rolePosition) {
+        case 'operations_supervisor':
+            $isDisabled = $web_project_channel->status != 'Submitted to Operations Supervisor';
+            break;
+        case 'top_management':
+            $isDisabled = $web_project_channel->status != 'Submitted to Top Management';
+            break;
+        case 'client':
+            $isDisabled = $web_project_channel->status != 'Submitted to Client';
+            break;
+        case 'assistant_supervisor':
+            $isDisabled = $web_project_channel->status != 'Submitted to Assistant Supervisor';
+            break;
+        default:
+            // Check for privilege and page in the default case
+            $approvalPage = \App\Models\Page::where('description', 'like', '%approvals%')->first();
+            $approvalPrivilege = \App\Models\Privilege::where('description', 'like', '%can_approve%')->first();
 
-                                    if ($approvalPage && $approvalPrivilege) {
-                                        $hasPrivilege = $user->role_channels()
-                                            ->where('page_id', $approvalPage->id)
-                                            ->where('privilege_id', $approvalPrivilege->id)
-                                            ->exists(); // Check if the record exists
+            if ($approvalPage && $approvalPrivilege) {
+                $hasPrivilege = $user->role_channels()
+                    ->where('page_id', $approvalPage->id)
+                    ->where('privilege_id', $approvalPrivilege->id)
+                    ->exists(); // Check if the record exists
 
-                                        if ($hasPrivilege) {
-                                            $isDisabled = false; // Enable if user has privilege and page
-                                        }
-                                    }
-                                    else
-                                    {
-                                        $isDisabled = true; // Disable if approval page or privilege not found
-                                    }
-                            }
-                        }
+                if ($hasPrivilege) {
+                    $isDisabled = false; // Enable if user has privilege and page
+                }
+            } else {
+                $isDisabled = true; // Disable if approval page or privilege not found
+            }
+    }
+}
                     @endphp
 
                     <div class="mt-6 bg-white p-4 rounded-md shadow-md w-fit">

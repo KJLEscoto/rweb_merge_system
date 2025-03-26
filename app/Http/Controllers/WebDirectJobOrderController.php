@@ -99,7 +99,10 @@ class WebDirectJobOrderController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('admin.web.direct-job-order')->with('success', 'Job Order Created Successfully');
+
+            //sent back to the 
+            $web_projects = WebProject::with(['web_project_channels', 'issuer', 'client'])->get();
+            return view('admin.web-development.direct-job-order.index', compact('web_projects'));
         } catch (\Exception $ex) {
             @dd($ex->getMessage());
             DB::rollback();
@@ -235,6 +238,10 @@ class WebDirectJobOrderController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $web_project = WebProject::find($id);
+        $web_project->delete();
+        $web_projects = WebProject::with(['web_project_channels', 'issuer', 'client'])->get();
+
+        return redirect()->route('admin.web.direct-job-order')->with('success', 'Project deleted successfully.');
     }
 }

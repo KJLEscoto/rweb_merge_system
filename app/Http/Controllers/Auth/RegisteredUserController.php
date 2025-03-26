@@ -190,9 +190,10 @@ class RegisteredUserController extends Controller
 
             return redirect()->route('admin.smm.users')->with('Status', 'Users Created Successfully');
         } catch (\Exception $ex) {
-            @dd($ex->getMessage());
+            //@dd($ex->getMessage());
             DB::rollback();
-            return redirect()->route('admin.smm.users')->with('status', $ex->getMessage());
+            //return redirect()->route('admin.smm.users')->with('status', $ex->getMessage());
+            return back()->with('status', $ex->getMessage());
         }
     }
 

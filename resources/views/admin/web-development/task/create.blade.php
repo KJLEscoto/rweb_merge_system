@@ -61,9 +61,25 @@
             @if ($web_project_channel->where('project_id', $web_project_channel->project_id)->where('type', 'like', '%web_designer%')->where('status', 'like', '%Completed%')->exists())
                 <div class="space-y-1 w-full">
                     <h1 class="font-bold text-xs">Web Designer Draft:</h1>
-                    <p class="p-3 rounded-sm border">
-                        {{ $web_project_channel->where('project_id', $web_project_channel->project_id)->where('type', 'like', '%web_designer%')->where('status', 'like', '%Completed%')->first()->draft }}
-                    </p>
+                    @if ($web_project_channel->where('project_id', $web_project_channel->project_id)->where('type', 'like', '%web_designer%')->where('status', 'like', '%accepted%')->where('sub_status', 'like', '%Draft Homepage Approval%')->exists())
+                            <h2 class="font-bold text-xs">Site Map:</h2>
+                            <p class="p-3 rounded-sm border">
+                                {{ $web_project_channel->where('project_id', $web_project_channel->project_id)->where('type', 'like', '%web_designer%')->where('status', 'like', '%Completed%')->first()->draft }}
+                            </p>
+                            <h2 class="font-bold text-xs">Draft Homepage Approval:</h2>
+                            <p class="p-3 rounded-sm border">
+                                {{ $web_project_channel->where('project_id', $web_project_channel->project_id)
+                        ->where('type', 'like', '%web_designer%')
+                        ->where('status', 'like', '%Submitted to Operations Supervisor%')
+                        ->first()
+                        ? $web_project_channel->where('project_id', $web_project_channel->project_id)
+                            ->where('type', 'like', '%web_designer%')
+                            ->where('status', 'like', '%Submitted to Operations Supervisor%')
+                            ->first()->draft
+                        : 'To Submit' }}
+                            </p>
+
+                    @endif
                 </div>
             @endif
             @if ($web_project_channel->where('project_id', $web_project_channel->project_id)->where('type', 'like', '%front_end%')->where('status', 'like', '%Completed%')->exists())
@@ -77,7 +93,8 @@
             <hr class="border border-[#f56d11]">
             <div class="space-y-1 w-full">
                 <h1 class="font-bold text-xs">Draft</h1>
-                <textarea name="draft" id="editor" class="w-full border-gray-200 rounded-lg">{{ old('draft') }}</textarea>
+                <textarea name="draft" id="editor"
+                    class="w-full border-gray-200 rounded-lg">{{ old('draft') }}</textarea>
             </div>
         </div>
 

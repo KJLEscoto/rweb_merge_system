@@ -52,7 +52,8 @@
                         <div class="col-span-4 lg:col-span-1 w-full">
                             <p class="text-sm text-gray-600 border-[#fa7011] border-b-2 w-fit">Date Started</p>
                             <p class="text-xl">
-                                {{ \Carbon\Carbon::parse($job_draft->date_started)->format('Y-m-d') }}</p>
+                                {{ \Carbon\Carbon::parse($job_draft->date_started)->format('Y-m-d') }}
+                            </p>
                         </div>
                         <div class="col-span-4 lg:col-span-1 w-full">
                             <p class="text-sm text-gray-600 border-[#fa7011] border-b-2 w-fit">Date Target</p>
@@ -104,7 +105,7 @@
 </x-main-layout>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         ClassicEditor
             .create(document.querySelector('#editor'))
             .then(editor => {
@@ -114,7 +115,7 @@
                 editor.setData(`{!! addslashes(old('draft', $job_draft->draft ?? '')) !!}`);
 
                 // Before form submission, update the textarea with the editor's data
-                document.querySelector("form").addEventListener("submit", function() {
+                document.querySelector("form").addEventListener("submit", function () {
                     document.querySelector("#editor").value = editor.getData();
                 });
 
@@ -124,5 +125,3 @@
             });
     });
 </script>
-
-@endsection

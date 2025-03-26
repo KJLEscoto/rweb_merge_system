@@ -97,14 +97,14 @@ Route::prefix('/smm')->middleware('auth.redirect')->group(function () {
     Route::get('/graphic', [GraphicApprovalController::class, 'index'])->name('admin.smm.graphic.approve');
     Route::get('/graphic/show/{id}', [GraphicApprovalController::class, 'show'])->name('admin.smm.graphic.show');
     Route::get('/graphic/create/{id}', [GraphicApprovalController::class, 'create'])->name('admin.smm.graphic.create');
-    Route::put('/graphic/store/{id}', [GraphicApprovalController::class, 'store'])->name('graphic.store');
-    Route::get('/graphic/edit/{id}', [GraphicApprovalController::class, 'edit'])->name('graphic.edit');
-    Route::put('/graphic/update/{id}', [GraphicApprovalController::class, 'update'])->name('graphic.update');
-    Route::put('/graphic/accept/{id}', [GraphicApprovalController::class, 'accept'])->name('graphic.accept');
+    Route::put('/graphic/store/{id}', [GraphicApprovalController::class, 'store'])->name('admin.smm.graphic.store');
+    Route::get('/graphic/edit/{id}', [GraphicApprovalController::class, 'edit'])->name('admin.smm.graphic.edit');
+    Route::put('/graphic/update/{id}', [GraphicApprovalController::class, 'update'])->name('admin.smm.graphic.update');
+    Route::put('/graphic/accept/{id}', [GraphicApprovalController::class, 'accept'])->name('admin.smm.graphic.accept');
 
-    Route::get('/graphic/revisions', [GraphicRevisionController::class, 'index'])->name('graphic.revisions');
-    Route::get('/graphic/revisions/edit/{id}', [GraphicRevisionController::class, 'edit']);
-    Route::put('/graphic/revisions/update/{id}', [GraphicRevisionController::class, 'update']);
+    Route::get('/graphic/revisions', [GraphicRevisionController::class, 'index'])->name('admin.smm.graphic.revisions');
+    Route::get('/graphic/revisions/edit/{id}', [GraphicRevisionController::class, 'edit'])->name('admin.smm.graphic.revisions.edit');
+    Route::put('/graphic/revisions/update/{id}', [GraphicRevisionController::class, 'update'])->name('admin.smm.graphic.revisions.update');
 
     Route::get('/graphic/history', [GraphicHistoryController::class, 'index'])->name('admin.smm.graphic.history');
     Route::get('/graphic/history/show/{id}', [GraphicHistoryController::class, 'show'])->name('graphic.history.show');

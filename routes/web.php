@@ -170,8 +170,8 @@ Route::get('/notifications/allCount', [NotificationController::class, 'allCount'
 Route::get('/notifications/unreadCount', [NotificationController::class, 'unreadCount'])->name('user.recieve.notification.unreadCount');
 Route::get('/notifications/totalUnreadCount', [NotificationController::class, 'totalUnreadCount'])->name('user.recieve.notification.totalUnreadCount');
 Route::get('/notifications/archivedCount', [NotificationController::class, 'archivedCount'])->name('user.recieve.notification.archivedCount');
-Route::get('/notifications/unread', [NotificationController::class, 'unread'])->name('user.recieve.notification.archivedCount');
-Route::get('/notifications/archived', [NotificationController::class, 'archived'])->name('user.recieve.notification.archivedCount');
+Route::get('/notifications/unread', [NotificationController::class, 'unread'])->name('user.recieve.notification.unread');
+Route::get('/notifications/archived', [NotificationController::class, 'archived'])->name('user.recieve.notification.archived');
 
 //test routes
 Route::get('/notification-index-test', [NotificationController::class, 'receiveNotificationIndex'])->name('receive.notification');

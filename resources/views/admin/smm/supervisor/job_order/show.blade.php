@@ -146,8 +146,13 @@
                         @endif
                     </td>
                     <td class="signature">
-                        <strong>Operations Supervisor Signature: {{ $supervisor_request->issuer->name }}</strong><br>
-                        <img src="{{ asset($supervisor_request->issuer->signature) }}" alt="Supervisor Signature">
+                        <strong>
+                            {{ ucwords(str_replace('_', ' ', $job_draft->jobOrder->issuer->roles->position)) ?? 'Operations Supervisor: ' }}
+                            Signature:
+                        </strong><br>
+                        <img src="{{
+    \App\Models\Signature::mySignature($job_draft->jobOrder->issuer->id) ? asset(\App\Models\Signature::mySignature($job_draft->jobOrder->issuer->id)->path) :
+    asset($job_draft->signature_supervisor) }}" alt="Supervisor Signature">
                     </td>
                 </tr>
             </table>

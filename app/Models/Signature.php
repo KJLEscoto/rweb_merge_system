@@ -15,4 +15,9 @@ class Signature extends Model
     {
         return $this->hasOne(User::class, 'signature_id');
     }
+
+    public static function mySignature($user_id): File
+    {
+        return File::where('id', Signature::where('id', User::where('id', $user_id)->first()->signature_id)->first()->file_id)->first();
+    }
 }

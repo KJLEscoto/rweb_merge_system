@@ -132,7 +132,7 @@
                                                                                 <span class="basil--eye-solid !w-4 !h-4"></span>
                                                                                 <p>View</p>
                                                                             </a>
-                                                                            {{-- <a href="{{ route('admin.web.track.draft.edit', [1, $direct['id']]) }}"
+                                                                            <a href="{{ route('admin.web.direct-job-order.draft.edit', [$web_project_channel['project_id'], $web_project_channel['id'], $web_project_channel['user_id']]) }}"
                                                                                 class="hover:scale-105 transition px-2 py-1 font-medium bg-blue-500 text-white rounded flex items-center justify-center gap-1">
                                                                                 <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
                                                                                 <p>Edit</p>
@@ -141,7 +141,7 @@
                                                                                 class="hover:scale-105 transition px-2 py-1 font-medium bg-red-500 text-white rounded flex items-center justify-center gap-1">
                                                                                 <span class="material-symbols-light--delete w-4 h-4"></span>
                                                                                 <p>Delete</p>
-                                                                            </a> --}}
+                                                                            </a>
                                                                         </div>
                                                                     </td>
                                                                 </tr>

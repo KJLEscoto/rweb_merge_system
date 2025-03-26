@@ -69,6 +69,9 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
   Route::get('/direct-job-order/{id}/showProjectChannels', [WebDirectJobOrderController::class, 'showProjectChannels'])->name('admin.web.direct-job-order.showProjectChannels');
   Route::get('/direct-job-order/{id}/edit', [WebDirectJobOrderController::class, 'edit'])->name('admin.web.direct-job-order.edit');
   Route::put('/direct-job-order/{id}/edit', [WebDirectJobOrderController::class, 'editProjectChannels'])->name('admin.web.direct-job-order.edit.post');
+  Route::post('/direct-job-order/{id}/delete', [WebDirectJobOrderController::class, 'destroy'])->name('admin.web.direct-job-order.delete');
+  Route::get('/direct-job-order/track/{project_id}/draft/{project_channel_id}/user/{user_id}/edit', [WebtrackController::class, 'showEditDraft'])->name('admin.web.direct-job-order.draft.edit');
+  Route::get('/direct-job-order/track/{id}', [WebTrackController::class, 'show'])->name('admin.web.direct-job-order.track.show');
   // Route::view('/direct-job-order/{id}/edit', 'admin.web-development.direct-job-order.edit')->name('admin.web.direct-job-order.edit');
 
   // operation job order pages
@@ -113,8 +116,10 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
   // track pages
   Route::get('/track', [WebTrackController::class, 'index'])->name('admin.web.track');
   Route::get('/track/{id}', [WebTrackController::class, 'show'])->name('admin.web.track.show');
-  Route::view('/track/{track_id}/draft/{draft_id}', 'admin.web-development.track.draft.show')->name('admin.web.track.draft.show');
-  Route::view('/track/{track_id}/draft/{draft_id}/edit', 'admin.web-development.track.draft.edit')->name('admin.web.track.draft.edit');
+  Route::get('/track/{track_id}/draft/{draft_id}', [WebtrackController::class, 'showDraft'])->name('admin.web.track.draft.show');
+  Route::get('/track/{project_id}/draft/{project_channel_id}/user/{user_id}/edit', [WebtrackController::class, 'showEditDraft'])->name('admin.web.track.draft.edit');
+  Route::post('/track/{project_id}/draft/{project_channel_id}/user/{user_id}/edit', [WebtrackController::class, 'editDraft'])->name('admin.web.track.draft.edit.post');
+  Route::put('/track/{project_id}/draft/{project_channel_id}/edit', [WebtrackController::class, 'editDraft'])->name('admin.web.track.draft.edit.post');
 
   // downloadables pages
   Route::view('/downloadables', 'admin.web-development.downloadables.index')->name('admin.web.downloadables');
@@ -125,8 +130,9 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
   // incoming request pages
   Route::get('/incoming-requests', [WebRequestController::class, 'index'])->name('admin.web.incoming-requests');
   Route::put('/incoming-requests/{id}/accept', [WebRequestController::class, 'accept'])->name('admin.web.incoming-requests.accept');
-  Route::post('/incoming-requests/{id}', [WebRequestController::class, 'show'])->name('admin.web.incoming-requests.show');
-  Route::get('/incoming-requests/create', [WebRequestController::class, 'create'])->name('admin.web.incoming-requests.create');
+  Route::get('/incoming-requests/{id}', [WebRequestController::class, 'show'])->name('admin.web.incoming-requests.show');
+  Route::get('/incoming-requests/create/{id}', [WebRequestController::class, 'create'])->name('admin.web.incoming-requests.create');
+  Route::get('/incoming-requests/store', [WebRequestController::class, 'store'])->name('admin.web.incoming-requests.store');
 
   // profile pages
   Route::view('/profile', 'admin.web-development.profile.index')->name('admin.web.profile');
