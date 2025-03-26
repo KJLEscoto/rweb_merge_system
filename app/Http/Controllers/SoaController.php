@@ -103,6 +103,18 @@ class SoaController extends Controller
         return view('admin.smm.soa.show', compact('soa', 'rweb_details'));
     }
 
+    public function edit($id)
+    {
+        $soa = Soa::with('jobDraft', 'preparedBy', 'approvedBy', 'particulars')->find($id);
+        return view('admin.smm.soa.edit', compact('soa'));
+    }
+
+    public function edit_particulars($id)
+    {
+        $soa = Soa::with('jobDraft', 'preparedBy', 'approvedBy', 'particulars')->find($id);
+        return view('admin.smm.soa.edit_particulars', compact('soa'));
+    }
+
     public function destroy($id)
     {
         $soa = Soa::find($id);
