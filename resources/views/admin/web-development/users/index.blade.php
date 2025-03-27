@@ -45,23 +45,22 @@
 
                         <div class="w-auto h-auto">
                             <div class="w-24 h-24 rounded-full border border-[#F57D11] overflow-hidden">
-                                {{-- <x-image className="w-full h-full"
-                                            path="{{ optional(\App\Models\File::find(optional(\App\Models\Profile::find($user->profile_id))->file_id))->path .
-                                                '?t=' .
-                                                time() ??
-                                                'resources/img/default-male.png' }}" /> --}}
+                                {{-- <x-image className="w-full h-full" path="{{ optional(\App\Models\File::find(optional(\App\Models\Profile::find($user->profile_id))->file_id))->path .
+                                                                        '?t=' .
+                                                                        time() ??
+                                                                        'resources/img/default-male.png' }}" /> --}}
                                 <img src="{{ asset('resources/img/male-profile.jpg') }}" class="w-full h-full"
                                     alt="profile pic">
                             </div>
                         </div>
 
                         <div class="text-center mx-auto w-full">
-                            <h1
-                                class="text-sm font-semibold group-hover:text-[#F57D11] animate-transition truncate capitalize">
+                            <h1 class="text-sm font-semibold group-hover:text-[#F57D11] animate-transition truncate capitalize">
                                 {{ $usr['name'] }}
                             </h1>
                             <p class="text-gray-500 truncate">
-                                {{-- {{ \App\Models\School::where('id', $user->school_id)->first()->description ?? 'No school' }} --}}
+                                {{-- {{ \App\Models\School::where('id', $user->school_id)->first()->description ?? 'No school'
+                                }} --}}
                                 {{ $usr['role'] }}
                             </p>
                         </div>
@@ -74,20 +73,20 @@
 
             <!-- Pagination Controls -->
             {{-- <section class="flex lg:flex-row flex-col gap-3 items-center justify-between w-full">
-            <p class="text-sm text-gray-500">
-                Showing <span id="first-item">1</span> - <span id="last-item">10</span> of <span
-                    id="total-items">{{ count($users) }}</span>
-            </p>
+                <p class="text-sm text-gray-500">
+                    Showing <span id="first-item">1</span> - <span id="last-item">10</span> of <span id="total-items">{{
+                        count($users) }}</span>
+                </p>
 
-            <div class="flex gap-3 items-center">
-                <button id="prev-page"
-                    class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 hover:bg-[#F57D11] hover:text-white animate-transition disabled:hover:bg-gray-300 disabled:hover:text-current"
-                    disabled>Prev</button>
-                <span id="page-info">Page 1 of </span>
-                <button id="next-page"
-                    class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 hover:bg-[#F57D11] hover:text-white animate-transition disabled:hover:bg-gray-300 disabled:hover:text-current">Next</button>
-            </div>
-        </section> --}}
+                <div class="flex gap-3 items-center">
+                    <button id="prev-page"
+                        class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 hover:bg-[#F57D11] hover:text-white animate-transition disabled:hover:bg-gray-300 disabled:hover:text-current"
+                        disabled>Prev</button>
+                    <span id="page-info">Page 1 of </span>
+                    <button id="next-page"
+                        class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 hover:bg-[#F57D11] hover:text-white animate-transition disabled:hover:bg-gray-300 disabled:hover:text-current">Next</button>
+                </div>
+            </section> --}}
         </div>
     @else
         <div class="w-full h-auto flex items-center justify-center flex-col gap-10">

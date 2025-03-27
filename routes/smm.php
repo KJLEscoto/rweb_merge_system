@@ -23,6 +23,7 @@ use App\Http\Controllers\OperationRevisionController;
 use App\Http\Controllers\OperationTaskController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectEndorsementFormController;
+use App\Http\Controllers\RenewalController;
 use App\Http\Controllers\RequestFormController;
 use App\Http\Controllers\RevisionController;
 use App\Http\Controllers\SignatureController;
@@ -275,5 +276,10 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
     Route::get('/supervisor/revision', [SupervisorRevisionController::class, 'index'])->name('supervisor.revision');
     Route::get('/supervisor/revision/edit/{id}', [SupervisorRevisionController::class, 'edit'])->name('supervisor.edit');
     Route::put('/supervisor/revision/update/{id}', [SupervisorRevisionController::class, 'update'])->name('supervisor.update');
+  });
+
+  Route::middleware(['auth', 'role:operations_supervisor, "stop"',])->group(function () {
+    Route::get('/operation/renewal/track/', [RenewalController::class, 'track'])->name('admin.smm.operation.renewal.track');
+    Route::get('/supervisor/renewal/track', [RenewalController::class, 'track'])->name('admin.smm.supervisor.renewal.track');
   });
 });

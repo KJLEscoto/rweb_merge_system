@@ -1,12 +1,9 @@
 <head>
     <title>{{ env('APP_NAME') }} | SMM | Edit Profile</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
-
 </head>
 
 <x-main-layout breadcumb="SMM / Profile" page="Edit Profile">
-
     @if (session('Status'))
         <div id="toast" class="fixed top-4 right-4 z-50">
             <div id="success-message" class="bg-green-500 text-white p-4 rounded-md shadow-lg">
@@ -32,9 +29,14 @@
                         <div
                             class="col-span-3 px-4 lg:col-span-1 h-fit pb-10 bg-white shadow-md rounded-md pt-10 border border-[#e1e1e1]">
                             <div class="w-full flex justify-center items-center">
-                                <img id="profileImage" class="rounded-full w-32 h-32 object-cover"
-                                    src="{{ \App\Models\File::where('id', Auth::user()->profiles->file_id)->first()->path . '?t=' . time() . '?s=100' }}"
-                                    alt="Profile Picture">
+                                @if (Auth::user()->profile && Auth::user()->profile->file && Auth::user()->profile->file->path)
+                                    <img id="profileImage" class="rounded-full w-32 h-32 object-cover"
+                                        src="{{ asset(Auth::user()->profile->file->path) }}" alt="Profile Picture">
+                                @else
+                                    <img id="profileImage" class="rounded-full w-32 h-32 object-cover"
+                                        src="{{ asset('/Assets/user-profile-profilepage.png') }}"
+                                        alt="Default Profile Picture">
+                                @endif
                             </div>
                             <div class="text-center">
                                 <h1>{{ $user->name }}</h1>
@@ -56,16 +58,15 @@
                             </div>
                             <div class="w-full flex justify-center items-center">
                                 @if ($user->signature)
-                                    <img class="object-fill w-full"
-                                        src="{{ \App\Models\File::where('id', Auth::user()->signatures->file_id)->first()->path . '?t=' . time() . '?s=100' }}"
+                                    <img class="object-fill w-full" src="{{ asset($user->signature) }}"
                                         alt="User Signature">
                                 @else
                                     <p>No Signature Added</p>
                                 @endif
                             </div>
                             <div class="flex items-center justify-center gap-2 text-white mt-4">
-                                <button type="button" id="usePad"
-                                    class="px-4 py-1 bg-[#fa7011] rounded-md text-sm">Draw Signature</button>
+                                <button type="button" id="usePad" class="px-4 py-1 bg-[#fa7011] rounded-md text-sm">Draw
+                                    Signature</button>
                                 <button type="button" id="useUpload"
                                     class="px-4 py-1 bg-[#fa7011] rounded-md text-sm">Upload Signature</button>
                             </div>
@@ -149,8 +150,7 @@
                                 class="pl-4 col-span-2 w-full border rounded-md py-1 border-[#e1e1e1]">
                             @if (session('errors'))
                                 @if (session('errors')->has('current_password'))
-                                    <span
-                                        class="text-red-700">{{ session('errors')->first('current_password') }}</span>
+                                    <span class="text-red-700">{{ session('errors')->first('current_password') }}</span>
                                 @endif
                             @endif
                         </div>
@@ -177,8 +177,9 @@
                         </div>
                     </div>
                 </div>
-            </form>
         </div>
+        </form>
+    </div>
     </div>
 
 </x-main-layout>
@@ -209,7 +210,7 @@
     }
 
     // Auto-hide the session toast (if present) after 3 seconds
-    setTimeout(function() {
+    setTimeout(function () {
         var toast = document.getElementById('toast');
         if (toast) {
             toast.style.transition = "opacity 0.5s";
@@ -219,12 +220,12 @@
     }, 3000);
 
     // Trigger file input when "Change Profile" is clicked
-    document.getElementById("changeProfileBtn").addEventListener("click", function() {
+    document.getElementById("changeProfileBtn").addEventListener("click", function () {
         document.getElementById("profileImageInput").click();
     });
 
     // Preview the selected image and validate its file size
-    document.getElementById("profileImageInput").addEventListener("change", function(event) {
+    document.getElementById("profileImageInput").addEventListener("change", function (event) {
         let file = event.target.files[0];
         const maxFileSize = 2097152; // 2MB in bytes
         if (file) {
@@ -235,7 +236,7 @@
                 return;
             }
             let reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 document.getElementById("profileImage").src = e.target.result;
             };
             reader.readAsDataURL(file);
@@ -320,4 +321,3 @@
         });
     });
 </script>
-{{-- @endsection --}}

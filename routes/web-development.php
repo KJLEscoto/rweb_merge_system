@@ -112,6 +112,7 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
   Route::post('/users/store', [WebUserController::class, 'store'])->name('admin.web.users.store');
   Route::get('/users/{id}', [WebUserController::class, 'show'])->name('admin.web.users.show');
   Route::get('/users/edit/{id}', [WebUserController::class, 'edit'])->name('admin.web.users.edit');
+  Route::put('/users/edit/{id}/update', [WebUserController::class, 'update'])->name('admin.web.users.edit.post');
 
   // track pages
   Route::get('/track', [WebTrackController::class, 'index'])->name('admin.web.track');

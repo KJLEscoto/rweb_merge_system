@@ -65,7 +65,17 @@ class SupervisorJobOrderController extends Controller
     public function show($id)
     {
         $supervisor_request = ModelsRequest::with('issuer', 'assignee')->find($id);
-        return view('admin.smm.supervisor.job_order.show', compact('supervisor_request'));
+        $job_order = JobOrder::with('issuer', 'assignee')->find($id);
+
+        if (!$supervisor_request) {
+            return back()->with('error', 'The associated Supervisor Request could not be found.');
+        }
+
+        if (!$job_order) {
+            return back()->with('error', 'The associated Job Order could not be found.');
+        }
+
+        return view('admin.smm.supervisor.job_order.show', compact('supervisor_request', 'job_order'));
     }
 
     public function edit($id)

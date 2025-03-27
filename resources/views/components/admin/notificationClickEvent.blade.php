@@ -26,7 +26,6 @@
                         );
                     });
 
-                    debugger;
                 } else {
                     const noNotificationsDiv = document.createElement("div");
                     noNotificationsDiv.className =
@@ -38,7 +37,6 @@
                 console.error("Error fetching unread notifications:", error);
             }
 
-            debugger;
         }
 
         // Event listener for the "Unread" tab click

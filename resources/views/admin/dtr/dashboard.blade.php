@@ -248,7 +248,7 @@
                                     <div class="w-auto h-auto">
                                         <div class="w-12 h-12 rounded-full border border-[#F57D11] overflow-hidden">
                                             <x-image className="w-full h-full"
-                                                path="{{ \App\Models\File::where('id', $user['profiles']['file_id'])->first()->path . '?t=' . time() }}" />
+                                                path="{{ $user['profiles']->file ? $user['profiles']->file->path . '?t=' . time() : asset('resources/img/default_female.png') }}" />
                                         </div>
                                     </div>
 

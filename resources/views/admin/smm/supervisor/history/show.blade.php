@@ -145,16 +145,18 @@
             <tr>
                 <td class="signature">
                     <strong>Assigned Personnel Signature:</strong><br>
-                    @if (file_exists(public_path($job_draft->signature_worker)))
-                        <img src="{{ public_path($job_draft->signature_worker) }}" alt="Worker Signature">
+                    @if($worker_signed)
+                        <img src="{{ $worker_signed ? $worker_signed->path : public_path($job_draft->signature_worker) }}"
+                            alt="Worker Signature">
                     @else
                         <p>Signature not found in directory</p>
                     @endif
                 </td>
                 <td class="signature">
                     <strong>Operations Supervisor Signature:</strong><br>
-                    @if (file_exists(public_path($job_draft->signature_supervisor)))
-                        <img src="{{ public_path($job_draft->signature_supervisor) }}" alt="Supervisor Signature">
+                    @if($signature_supervisor)
+                        <img src="{{ $signature_supervisor ? $signature_supervisor->path : public_path($job_draft->signature_supervisor) }}"
+                            alt="Supervisor Signature">
                     @else
                         <p>Signature not found in directory</p>
                     @endif

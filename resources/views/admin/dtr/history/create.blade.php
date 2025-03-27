@@ -60,15 +60,15 @@
                     <label class="block text-sm font-medium text-gray-700">Select Intern</label>
 
                     @php
-                        $not_intern_roles = [
-                            'admin',
-                            'assistant_supervisor',
-                            'top_management',
-                            'operations_supervisor',
-                            'content_writer',
-                            'accounting',
-                            'graphic_designer',
-                        ];
+$not_intern_roles = [
+    'admin',
+    'assistant_supervisor',
+    'top_management',
+    'operations_supervisor',
+    'content_writer',
+    'accounting',
+    'graphic_designer',
+];
                     @endphp
 
                     <select id="userSelect" name="user_fullname[]"
@@ -78,11 +78,11 @@
                         @foreach ($users as $user)
                             @if (!in_array($user->roles->position, $not_intern_roles))
                                 @php
-                                    $userImg =
-                                        optional(\App\Models\File::find($user->profiles->file_id))->path .
-                                            '?t=' .
-                                            time() ??
-                                        '';
+        $userImg =
+            optional(\App\Models\File::find($user->profiles->file_id))->path .
+            '?t=' .
+            time() ??
+            '';
                                 @endphp
                                 <option value="{{ $user->id }}" data-img="{{ $userImg }}">
                                     {{ $user->firstname }} {{ $user->lastname }}
@@ -106,11 +106,11 @@
                                 @foreach ($users as $user)
                                     @if ($user->role != 'admin')
                                         @php
-                                            $userImg =
-                                                optional(\App\Models\File::find($user->profiles->file_id))->path .
-                                                    '?t=' .
-                                                    time() ??
-                                                '';
+        $userImg =
+            optional(\App\Models\File::find($user->profiles->file_id))->path .
+            '?t=' .
+            time() ??
+            '';
                                         @endphp
                                         <option value="{{ $user->id }}" data-img="{{ $userImg }}">
                                             {{ $user->firstname }} {{ $user->lastname }}
@@ -135,7 +135,7 @@
                     let userId = event.target.value;
                     let selectedOption = event.target.options[event.target.selectedIndex];
                     let userName = selectedOption.text;
-                    let userImg = selectedOption.getAttribute("data-img") || "";
+                    let userImg = "{{ asset('') }}" + selectedOption.getAttribute("data-img") || "";
 
                     let imgElement = event.target.previousElementSibling;
                     if (imgElement) {
@@ -205,7 +205,7 @@
                 $(document).ready(function() {
                     function formatUser(user) {
                         if (!user.id) return user.text;
-                        let img = $(user.element).data("img") || "https://via.placeholder.com/40";
+                        let img = "{{ asset('') }}" + $(user.element).data("img") || "https://via.placeholder.com/40";
                         return $(
                             `<span class="flex items-center gap-2">
                                 <img src="${img}" class="w-12 h-12 rounded-full" />

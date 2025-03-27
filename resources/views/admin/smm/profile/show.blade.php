@@ -1,8 +1,6 @@
 <head>
     <title>{{ env('APP_NAME') }} | SMM | Downloadables</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
-
     @php
         $roles = [
             1 => 'Client',
@@ -18,29 +16,18 @@
 </head>
 
 <x-main-layout breadcumb="SMM" page="Profile">
-
-    {{-- Middle Part --}}
-
     <div class=" text-white">
-        {{-- <div class="w-full flex justify-end items-end mb-4 cursor-pointer"
-            onclick="window.location.assign('{{ url('/admin/smm/') }}')">
-            <div class="w-fit px-4 py-1 bg-[#f68e12] rounded-md">Go Back</div>
-        </div> --}}
         <div class="grid mt-10 grid-cols-3 h-80 gap-6 text-black">
             <div class="space-y-10 col-span-3 lg:col-span-1">
                 <div class="px-10 col-span-3 lg:col-span-1 bg-white shadow-md rounded-md pt-10 py-10">
                     <div class="w-full flex justify-center items-center">
-                        {{-- <img class="rounded-full w-32 h-32 object-cover"
-                            src="{{ file_exists(public_path($user->image)) && $user->image ? asset($user->image) : asset('/Assets/user-profile-profilepage.png') }}"
-                            alt="User Image"> --}}
-                        <img class="rounded-full w-32 h-32 object-cover"
-                            src="{{ \App\Models\File::where(
-                                'id',
-                                \App\Models\Profile::where('id', Auth::user()->profile_id)->first()->file_id,
-                            )->first()->path .
-                                '?=s100?t=' .
-                                time() }}"
-                            alt="User Image">
+                        @if ($user->profile && $user->profile->file && $user->profile->file->path)
+                            <img class="rounded-full w-32 h-32 object-cover" src="{{ asset($user->profile->file->path) }}"
+                                alt="User Image">
+                        @else
+                            <img class="rounded-full w-32 h-32 object-cover"
+                                src="{{ asset('/Assets/user-profile-profilepage.png') }}" alt="Default User Image">
+                        @endif
                     </div>
                     <div class="text-center mt-4">
                         <h1 class="font-semibold">{{ $user->name }}</h1>
@@ -53,16 +40,10 @@
                     </div>
                 </div>
 
-
                 <div class="px-10 col-span-3 w-full lg:col-span-3 bg-white shadow-md rounded-md pt-10 py-10">
                     <div class="w-full flex justify-center items-center ">
-                        {{-- <img class="rounded-full w-32 h-32 object-cover"
-                            src="{{ file_exists(public_path($user->image)) && $user->image ? asset($user->image) : asset('/Assets/user-profile-profilepage.png') }}"
-                            alt="User Image"> --}}
                         @if ($user->signature)
-                            <img class="object-fill w-full"
-                                src="{{ \App\Models\File::where('id', Auth::user()->signatures->file_id)->first()->path . '?t=' . time() . '?s=100' }}"
-                                alt="User Image">
+                            <img class="object-fill w-full" src="{{ asset($user->signature) }}" alt="User Signature">
                         @else
                             <p>No Signature Added.</p>
                         @endif
@@ -112,7 +93,4 @@
             </div>
         </div>
     </div>
-
-
 </x-main-layout>
-{{-- @endsection --}}

@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 class File extends Model
 {
     use HasFactory, Notifiable;
-    
+
     protected $table = 'files';
     protected $guarded = [];
     //
@@ -19,8 +19,8 @@ class File extends Model
         return $this->hasOne(School::class, 'file_id');
     }
 
-    public function profiles(){
-        return $this->hasOne(Profile::class, 'file_id');
+    public function profiles()
+    {
+        return $this->hasOne(Profile::class, 'profile_id');
     }
 }
-

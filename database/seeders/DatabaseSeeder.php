@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        echo "DatabaseSeeder started.\n";
+
         $this->call([
             SchoolSeeder::class,
             RoleSeeder::class,
@@ -36,17 +38,21 @@ class DatabaseSeeder extends Seeder
             RWebSeeder::class,
         ]);
 
+        echo "Seeder classes called.\n";
+
         // Fetch the admin role ID
         $adminRole = '2';
 
         if (!$adminRole) {
+            echo "Admin role not found! Exiting.\n";
             throw new \Exception("Admin role not found! Ensure RoleSeeder is seeded correctly.");
         }
 
         $authController = app(AuthController::class);
+        echo "AuthController initialized.\n";
 
         // Simulate a request with user registration data
-        $request = new Request([
+        $request1 = new Request([
             'firstname' => 'Perl Ace Jayme',
             'lastname' => 'Benigno',
             'middlename' => 'Manansala',
@@ -65,6 +71,8 @@ class DatabaseSeeder extends Seeder
             'emergency_contact_address' => 'Test Emergency Address',
             'role_id' => 1,
         ]);
+
+        echo "Admin user request created.\n";
 
         $request = new Request([
             'firstname' => 'Perl Ace Jayme',
@@ -86,10 +94,16 @@ class DatabaseSeeder extends Seeder
             'role_id' => 6,
         ]);
 
+        echo "Ace user request created.\n";
+
         // Call the register method
         $authController->adminRegister($request, app(FileController::class));
 
+        echo "Admin user registered.\n";
+
         $user_id = User::where('email', 'like', '%ace@email.com%')->first()->id;
+
+        echo "Ace user ID retrieved: " . $user_id . "\n";
 
         //get all the privileges for the admin2
         foreach (Page::get() as $page) {
@@ -99,7 +113,10 @@ class DatabaseSeeder extends Seeder
                     'privilege_id' => $priv->id,
                     'page_id' => $page->id,
                 ]);
+                echo "RoleChannel created for user " . $user_id . ", privilege " . $priv->id . ", page " . $page->id . "\n";
             }
         }
+
+        echo "DatabaseSeeder completed.\n";
     }
 }

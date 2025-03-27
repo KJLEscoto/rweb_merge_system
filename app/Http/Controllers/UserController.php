@@ -562,7 +562,7 @@ class UserController extends Controller
         return view('users.edit', compact('user'));
     }
 
-    public function update(Request $request, FileController $fileController)
+    public function updateGdrive(Request $request, FileController $fileController)
     {
         try {
 
@@ -676,7 +676,117 @@ class UserController extends Controller
         }
     }
 
-    public function adminUpdate(Request $request, FileController $fileController)
+    public function update(Request $request, FileController $fileController)
+    {
+        try {
+
+            DB::beginTransaction();
+
+            $data = $request->validate([
+                'file' => 'nullable|image|max:5120',
+            ]);
+
+            $user = User::find($request->user_id);
+            if (!$user) {
+                return back()->with('invalid', 'The input is invalid. Please try again!');
+            }
+
+            // Handle image upload
+            if ($request->hasFile('file')) {
+                $request->validate([
+                    'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                ]);
+
+                $profile = $user->profiles;
+                if (!$profile) {
+                    return back()->with('invalid', 'Profile not found.');
+                }
+
+                $fileRecord = $profile->file;
+                if (!$fileRecord) {
+                    return back()->with('invalid', 'File record not found.');
+                }
+
+                // Delete old image if exists
+                if ($fileRecord->path && file_exists(public_path($fileRecord->path))) {
+                    unlink(public_path($fileRecord->path));
+                    echo "Old image deleted for user: " . $user->id . "\n";
+                }
+
+
+
+                $file = $request->file('file');
+                $file_name = time() . '.' . $file->getClientOriginalExtension();
+                $destination = public_path('uploads');
+
+                // Update the file table BEFORE moving the file.
+                $fileController->edit(new Request(['file' => $file]), $fileRecord->id);
+                echo "File table updated for user image: " . $user->id . "\n";
+
+                // Move the file AFTER updating the file table.
+                $file->move($destination, $file_name);
+                $newImagePath = 'uploads/' . $file_name;
+
+                // Update the profile file path.
+                $fileRecord->path = $newImagePath;
+                $fileRecord->save();
+                echo "Profile file path updated for user: " . $user->id . "\n";
+
+                // Update user's image URL directly (if you have a separate 'image' column in the users table)
+                if (isset($user->image)) {
+                    $user->image = $newImagePath;
+                    $user->save();
+                    echo "User image URL updated directly for user: " . $user->id . "\n";
+                }
+            }
+
+            $updateData = [
+                'firstname' => $request['firstname'],
+                'lastname' => $request['lastname'],
+                'middlename' => $request['middlename'],
+                'email' => $request['email'],
+                'phone' => $request['phone'],
+                'gender' => $request['gender'],
+                'address' => $request['address'],
+                'student_no' => $request['student_no'],
+                'emergency_contact_number' => $request['emergency_contact_number'],
+                'emergency_contact_fullname' => $request['emergency_contact_fullname'],
+                'emergency_contact_address' => $request['emergency_contact_address'],
+                'status' => $request['status'] ?? 'active',
+            ];
+
+            if (!empty($request['starting_date'])) {
+                $updateData['starting_date'] = $request['starting_date'];
+            }
+
+            if (!empty($request['expiry_date'])) {
+                $updateData['expiry_date'] = $request['expiry_date'];
+            }
+
+            $user->update($updateData);
+
+            if (!empty($request['school'])) {
+                $school = School::where('description', $request['school'])->first();
+
+                if ($school) {
+                    $user->update([
+                        'school' => $school->description,
+                        'school_id' => $school->id,
+                    ]);
+                } else {
+                    return back()->withErrors(['school' => 'Selected school does not exist.']);
+                }
+            }
+
+            DB::commit();
+            return redirect()->back()->with('update', 'Updated Successfully! The uploaded image will take a minute to render.');
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return back()->with('invalid', $ex->getMessage());
+        }
+    }
+
+    public function adminUpdateGdrive(Request $request, FileController $fileController)
     {
         try {
 
@@ -814,6 +924,144 @@ class UserController extends Controller
             //return back()->with('update', 'Updated Successfully!')->with(['image_url' => $image_url]);
         } catch (\Exception $ex) {
             // @dd($ex->getMessage());
+            DB::rollBack();
+            return back()->with('invalid', $ex->getMessage());
+        }
+    }
+
+    public function adminUpdate(Request $request, FileController $fileController)
+    {
+        try {
+            $data = $request->validate([
+                'file' => 'nullable|image|max:2048', // Adjusted max size to match your example
+                'password' => 'nullable|string|confirmed|min:8',
+            ]);
+
+            DB::beginTransaction();
+
+            if ($request['type'] === 'removeProfile') {
+                $user = Auth::user();
+
+                $fileRecord = File::find(optional($user->profiles)->file_id);
+
+                $profile_image = ($user->gender === 'male')
+                    ? resource_path('img/default_male.jpg')
+                    : resource_path('img/default_female.jpg');
+
+                if (!$fileRecord) {
+                    return back()->with('invalid', 'File record not found');
+                }
+
+                try {
+                    $fileContent = file_get_contents($profile_image);
+
+                    if ($fileContent === false) {
+                        return back()->with('invalid', 'Failed to read local image file.');
+                    }
+
+                    $tempFilePath = tempnam(sys_get_temp_dir(), 'profile_');
+                    file_put_contents($tempFilePath, $fileContent);
+
+                    $file = new \Illuminate\Http\UploadedFile(
+                        $tempFilePath,
+                        basename($profile_image),
+                        'image/jpeg',
+                        null,
+                        true
+                    );
+
+                    $fileName = time() . '.' . $file->getClientOriginalExtension();
+                    $destination = public_path('uploads');
+
+                    $fileController->edit(new Request(['file' => $file]), $fileRecord->id);
+                    echo "File table updated for user image: " . $user->id . "\n";
+
+                    $file->move($destination, $fileName);
+                    $newImagePath = 'uploads/' . $fileName;
+
+                    $fileRecord->update([
+                        'path' => $newImagePath,
+                    ]);
+
+                    echo "Profile file path updated for user: " . $user->id . "\n";
+                } catch (\Exception $e) {
+                    return back()->with('invalid', 'File processing failed: ' . $e->getMessage());
+                }
+
+                return back()->with('update', 'Profile reset to default successfully.');
+            }
+
+            $user = User::find(Auth::user()->id);
+            if (!$user) {
+                return back()->with('invalid', 'The input is invalid. Please try again!');
+            }
+
+            if ($request->hasFile('file')) {
+                $request->validate([
+                    'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                ]);
+
+                $file = $request->file('file');
+
+                $profile = Profile::where('id', $user->profile_id)->first();
+                if (!$profile) {
+                    return back()->with('invalid', 'Profile not found');
+                }
+
+                $file_id = $profile->file_id;
+                $fileRecord = File::find($file_id);
+                if (!$fileRecord) {
+                    return back()->with('invalid', 'File not found');
+                }
+
+                // Delete old image if exists
+                if ($fileRecord->path && file_exists(public_path($fileRecord->path))) {
+                    unlink(public_path($fileRecord->path));
+                    echo "Old image deleted for user: " . $user->id . "\n";
+                }
+
+                $file_name = time() . '.' . $file->getClientOriginalExtension();
+                $destination = public_path('uploads');
+
+                $fileController->edit(new Request(['file' => $file]), $fileRecord->id);
+                echo "File table updated for user image: " . $user->id . "\n";
+
+                $file->move($destination, $file_name);
+                $newImagePath = 'uploads/' . $file_name;
+
+                $fileRecord->update([
+                    'path' => $newImagePath,
+                ]);
+
+                echo "Profile file path updated for user: " . $user->id . "\n";
+
+                // Redundancy: Update user's image URL directly (if you have an 'image' column in the users table)
+                if (isset($user->image)) {
+                    $user->image = $newImagePath;
+                    $user->save();
+                    echo "User image URL updated directly for user: " . $user->id . "\n";
+                }
+            }
+
+            $updateData = [
+                'firstname' => $request['firstname'],
+                'lastname' => $request['lastname'],
+                'middlename' => $request['middlename'],
+                'email' => $request['email'],
+                'phone' => $request['phone'],
+                'gender' => $request['gender'],
+                'address' => $request['address'],
+            ];
+
+            if (!empty($request['password'])) {
+                $updateData['password'] = Hash::make($request['password']);
+            }
+
+            $user->update($updateData);
+
+            DB::commit();
+            return redirect()->back()->with('update', 'Updated Successfully! The uploaded image will take a minute to render.');
+        } catch (\Exception $ex) {
             DB::rollBack();
             return back()->with('invalid', $ex->getMessage());
         }

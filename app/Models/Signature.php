@@ -20,4 +20,10 @@ class Signature extends Model
     {
         return File::where('id', Signature::where('id', User::where('id', $user_id)->first()->signature_id)->first()->file_id)->first();
     }
+
+    // In the Signature model
+    public function file()
+    {
+        return $this->belongsTo(File::class, 'file_id');
+    }
 }

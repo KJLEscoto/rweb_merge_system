@@ -31,7 +31,7 @@
                         <div class="w-auto h-auto">
                             <div class="w-32 h-32 overflow-hidden rounded-full">
                                 <img id="imagePreview" class="w-full h-full object-cover"
-                                    src="{{ optional(\App\Models\File::find(optional(\App\Models\Profile::find($user->profile_id))->file_id))->path .
+                                    src="{{ asset($user->profiles->file->path) .
                                         '?t=' .
                                         time() ??
                                         'resources/img/default-male.png' }}"

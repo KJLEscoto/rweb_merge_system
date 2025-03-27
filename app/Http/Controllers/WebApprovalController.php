@@ -258,7 +258,7 @@ class WebApprovalController extends Controller
         }
     }
 
-    private function handleSignatures(Request $request, array $data, User $user, FileController $fileController): void
+    private function handleSignaturesGdrive(Request $request, array $data, User $user, FileController $fileController): void
     {
         if ($request->signature_pad) {
             $file = $this->convertBase64ToUploadedFile($data['signature_pad']);
@@ -270,6 +270,22 @@ class WebApprovalController extends Controller
 
         if ($request->signature_admin && $user->signatures && $user->signatures->file_id) {
             $fileId = File::where('id', $user->signatures->file_id)->value('description');
+            $fileController->edit(new Request(['file' => $data['signature_admin']]), $fileId);
+        }
+    }
+
+    private function handleSignatures(Request $request, array $data, User $user, FileController $fileController): void
+    {
+        if ($request->signature_pad) {
+            $file = $this->convertBase64ToUploadedFile($data['signature_pad']);
+            if ($user->signatures && $user->signatures->file_id) {
+                $fileId = File::where('id', $user->signatures->file_id)->value('id'); // Use 'id' instead of 'description'
+                $fileController->edit(new Request(['file' => $file]), $fileId);
+            }
+        }
+
+        if ($request->signature_admin && $user->signatures && $user->signatures->file_id) {
+            $fileId = File::where('id', $user->signatures->file_id)->value('id'); // Use 'id' instead of 'description'
             $fileController->edit(new Request(['file' => $data['signature_admin']]), $fileId);
         }
     }

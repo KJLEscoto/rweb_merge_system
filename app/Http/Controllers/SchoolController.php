@@ -49,7 +49,7 @@ class SchoolController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, FileController $fileController)
+    public function storeGdrive(Request $request, FileController $fileController)
     {
         try {
 
@@ -86,6 +86,46 @@ class SchoolController extends Controller
             DB::commit();
 
             return redirect()->route('admin.dtr.schools')->with('success', 'School added successfully!');
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return redirect()->back()->with('invalid', $ex->getMessage());
+        }
+    }
+
+    public function store(Request $request, FileController $fileController)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->validate([
+                'name' => 'required|string|max:255',
+                'is_featured' => 'nullable',
+                'file' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:5120', // 5MB limit
+            ]);
+
+            // Send the image to the FileController for storage
+            $file_records = $fileController->store($request);
+
+
+            if ($file_records->getStatusCode() === 200) { // Check for success (200 OK)
+                // Access the file data from the response
+                $fileData = $file_records->getData()->file; // Use getData() to access the JSON decoded data
+
+                $school_record = School::create([
+                    'description' => $request->name,
+                    'image' => $fileData->id, // Store the file ID
+                    'is_featured' => $request->is_featured ?? 'off',
+                    'file_id' => $fileData->id, // Store the file ID
+                ]);
+
+                DB::commit();
+
+                return redirect()->route('admin.dtr.schools')->with('success', 'School added successfully!');
+            } else {
+                // Handle the error response
+                DB::rollBack();
+                return redirect()->back()->with('invalid', $file_records->getData()->message ?? 'File upload failed'); // Handle the error as needed
+            }
         } catch (\Exception $ex) {
             DB::rollBack();
             return redirect()->back()->with('invalid', $ex->getMessage());
@@ -140,7 +180,7 @@ class SchoolController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id, FileController $fileController)
+    public function updateGdrive(Request $request, $id, FileController $fileController)
     {
         try {
 
@@ -190,7 +230,103 @@ class SchoolController extends Controller
             DB::commit();
 
             return redirect()->back()->with('update', 'Updated Successfully! The uploaded image will take a minute to render.');
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return back()->with('invalid', $ex->getMessage());
+        }
+    }
 
+    public function update(Request $request, $id, FileController $fileController)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Validate input
+            $data = $request->validate([
+                'name' => 'required|string|max:255',
+                'is_featured' => 'nullable',
+                'file' => 'nullable|image|max:2048', // Adjusted max size to match your example
+            ]);
+
+            // Retrieve the school model properly
+            $school = School::with('files')->find($id);
+
+            if (!$school) {
+                return back()->with('invalid', 'The input is invalid. Please try again!');
+            }
+
+            // Handle file upload if present
+            if ($request->hasFile('file')) {
+                $request->validate([
+                    'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                ]);
+
+                $file = $request->file('file');
+
+                // Check if school has an existing file
+                if ($school->file_id !== null) {
+                    // School has an existing file, update it
+                    $fileRecord = File::find($school->file_id);
+
+                    if (!$fileRecord) {
+                        return back()->with('invalid', 'Associated file record not found.');
+                    }
+
+                    // Delete old image if exists
+                    if ($fileRecord->path && file_exists(public_path($fileRecord->path))) {
+                        unlink(public_path($fileRecord->path));
+                        echo "Old image deleted for school: " . $school->id . "\n";
+                    }
+
+                    $file_name = time() . '.' . $file->getClientOriginalExtension();
+                    $destination = public_path('uploads');
+
+                    // Update the file table BEFORE moving the file.
+                    $fileController->edit(new Request(['file' => $file]), $fileRecord->id);
+                    echo "File table updated for school image: " . $school->id . "\n";
+
+                    // Move the file AFTER updating the file table.
+                    $file->move($destination, $file_name);
+                    $newImagePath = 'uploads/' . $file_name;
+
+                    // Update the file record with the new data
+                    $fileRecord->update([
+                        'path' => $newImagePath,
+                    ]);
+
+                    echo "School file path updated for school: " . $school->id . "\n";
+                } else {
+                    // School does not have an existing file, create a new one
+                    $fileFormat = $fileController->store(new Request(['file' => $file]));
+
+                    if ($fileFormat->getStatusCode() === 200) {
+                        $file_id = $fileFormat->getData()->file->id;
+                        $image_url = $fileFormat->getData()->file->path;
+
+                        // Update the school's file_id
+                        $school->file_id = $file_id;
+                        $school->save();
+
+                        // Update the file record with the new data
+                        File::where('id', $file_id)->update([
+                            'description' => $file_id,
+                            'path' => $image_url,
+                        ]);
+                        echo "New File record created for school id: " . $school->id . "\n";
+                    } else {
+                        throw new \Exception('FileController failed to store image: ' . $fileFormat->getContent());
+                    }
+                }
+            }
+
+            $school->update([
+                'description' => $request['name'],
+                'is_featured' => $request['is_featured'],
+            ]);
+
+            DB::commit();
+
+            return redirect()->back()->with('update', 'Updated Successfully! The uploaded image will take a minute to render.');
         } catch (\Exception $ex) {
             DB::rollBack();
             return back()->with('invalid', $ex->getMessage());

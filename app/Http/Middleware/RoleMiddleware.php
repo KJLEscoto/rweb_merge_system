@@ -15,11 +15,18 @@ class RoleMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, $role, $type = null)
     {
         // Check if user is authenticated
         if (!Auth::check()) {
             return redirect('/login');
+        }
+
+        if ($type != null) {
+            $admin_roles = ['admin', 'operations_supervisor', 'assistant_supervisor', 'top_management'];
+            if (!in_array(Auth::user()->roles->position, $admin_roles)) {
+                abort(403, 'Unauthorized action.');
+            }
         }
         // Check if user has the correct role
 

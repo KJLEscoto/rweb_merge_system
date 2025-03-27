@@ -97,7 +97,6 @@
             actionDiv.appendChild(archiveButtonDiv);
         }
 
-        debugger;
         if (parseInt(notificationData.is_read) == 0) {
             let unreadIndicator = document.createElement("span");
             unreadIndicator.className = "bg-[#F57D11] w-2 h-2 rounded-full";
@@ -232,7 +231,7 @@
                         }
                     } else if (apiUrl === "/notifications/archived") {
                         // Fetch archived notifications
-                        debugger;
+
                         try {
                             response = await axios.get(`${apiUrl}?page=${page}`);
                             // Process response.data for archived notifications
@@ -266,7 +265,7 @@
                         }
 
                         if (response.length > 0) {
-                            debugger;
+
                             response.forEach((notification) => {
                                 appendNotification(notification, containerId, "");
                             });
@@ -314,7 +313,7 @@
                     }
                     isLoading = false;
 
-                    debugger;
+
                 }
             });
         } else {

@@ -1,12 +1,9 @@
 <head>
     <title>{{ env('APP_NAME') }} | SMM | Job Order</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
-
 </head>
 
 <x-main-layout breadcumb="SMM" page="Job Order">
-
     {{-- Success Message Component --}}
     @if (session('Status'))
         <x-success />
@@ -48,50 +45,59 @@
             </thead>
             <tbody id="tableBody" class="overflow-y-auto">
                 @forelse ($supervisor_requests as $supervisor_request)
-                    <tr class="border-b">
-                        <td class="w-[30%] px-4 py-3">{{ $supervisor_request->title }}</td>
-                        <td class="w-[20%] px-4 py-3">{{ $supervisor_request->assignee->name }}</td>
-                        <td class="px-4 py-3 text-wrap">
-                            {{ $supervisor_request->status }}
-                            <br />
-                            @if ($supervisor_request->deadline < now())
-                                <!-- Check if deadline has passed -->
-                                <span class="text-sm font-bold text-red-500">{{ $supervisor_request->deadline }}
-                                    LATE</span>
-                            @else
-                                <span class="text-sm font-bold text-green-500">{{ $supervisor_request->deadline }}
-                                    ONGOING</span>
-                            @endif
-                        </td>
-                        <td class="px-4 py-3 flex gap-2">
-                            <a href="{{ url('/admin/smm/supervisor/joborder/edit/' . $supervisor_request->id) }}">
-                                @if ($supervisor_request->status == 'pending' || $supervisor_request->status == 'Waiting for Operation Approval')
-                                    <button
-                                        class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
-                                        Edit
-                                    </button>
-                                @else
-                                    <button disabled
-                                        class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-gray-500 bg-gray-300 rounded cursor-not-allowed">
-                                        Edit
-                                    </button>
-                                @endif
-                            </a>
+                                <tr class="border-b">
+                                    <td class="w-[30%] px-4 py-3">{{ $supervisor_request->title }}</td>
+                                    <td class="w-[20%] px-4 py-3">{{ $supervisor_request->assignee->name }}</td>
+                                    <td class="px-4 py-3 text-wrap">
+                                        {{ $supervisor_request->status }}
+                                        <br />
+                                        @if ($supervisor_request->deadline < now())
+                                            <span class="text-sm font-bold text-red-500">{{ $supervisor_request->deadline }}
+                                                LATE</span>
+                                        @else
+                                            <span class="text-sm font-bold text-green-500">{{ $supervisor_request->deadline }}
+                                                ONGOING</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-3 flex gap-2">
+                                        <a href="{{ url('/admin/smm/supervisor/joborder/edit/' . $supervisor_request->id) }}">
+                                            @php
+                                                // Check if a related job draft exists
+                                                $jobDraftExists = \App\Models\JobDraft::where('job_order_id', $supervisor_request->id)->exists();
+                                            @endphp
 
-                            <a href="{{ url('/admin/smm/supervisor/joborder/show/' . $supervisor_request->id) }}">
-                                <button
-                                    class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
-                                    Show
-                                </button>
-                            </a>
-                            <a href="{{ url('/admin/smm/supervisor/joborder/delete/' . $supervisor_request->id) }}">
-                                <button
-                                    class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-red-700 rounded hover:bg-red-800">
-                                    Delete
-                                </button>
-                            </a>
-                        </td>
-                    </tr>
+                                            @if ($supervisor_request->status == 'pending' || $supervisor_request->status == 'Waiting for Operation Approval')
+                                                <button
+                                                    class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
+                                                    Edit
+                                                </button>
+                                            @elseif ($jobDraftExists)
+                                                <button
+                                                    class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-gray-500 bg-gray-300 rounded cursor-not-allowed">
+                                                    Edit
+                                                </button>
+                                            @else
+                                                <button
+                                                    class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
+                                                    Edit
+                                                </button>
+                                            @endif
+                                        </a>
+
+                                        <a href="{{ url('/admin/smm/supervisor/joborder/show/' . $supervisor_request->id) }}">
+                                            <button
+                                                class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
+                                                Show
+                                            </button>
+                                        </a>
+                                        <a href="{{ url('/admin/smm/supervisor/joborder/delete/' . $supervisor_request->id) }}">
+                                            <button
+                                                class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-red-700 rounded hover:bg-red-800">
+                                                Delete
+                                            </button>
+                                        </a>
+                                    </td>
+                                </tr>
                 @empty
                     <tr class="h-[400px]">
                         <td colspan="3" class="px-6 py-3">
@@ -110,7 +116,6 @@
     <div class="mt-4">
         {{-- {{ $list_of_projects->links('vendor.pagination.custom') }} --}}
     </div>
-
 </x-main-layout>
 
 <script>
@@ -131,5 +136,3 @@
         }
     }
 </script>
-
-{{-- @endsection --}}

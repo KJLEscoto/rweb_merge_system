@@ -62,12 +62,14 @@
                             <!-- Visible input for showing Job Order name -->
                             <input type="text" id="selected-job_draft-name"
                                 value="{{ old('job_draft_id') ? optional($job_drafts->firstWhere('id', old('job_draft_id')))->name ?? 'Select a Job Order' : 'Select a Job Order' }}"
-                                class="w-full border px-3 py-2 border-gray-200 rounded-lg cursor-pointer" readonly onclick="openModal()">
+                                class="w-full border px-3 py-2 border-gray-200 rounded-lg cursor-pointer" readonly
+                                onclick="openModal()">
 
                             <!-- Hidden input for passing Job Order ID in the form -->
-                            <input type="hidden" name="job_draft_id" id="selected-job_draft_id" value="{{ old('job_draft_id') }}">
+                            <input type="hidden" name="job_draft_id" id="selected-job_draft_id"
+                                value="{{ old('job_draft_id') }}">
 
-                        
+
                         </div>
                         @error('job_draft_id')
                             <p class="text-red-600 text-sm">{{ $message }}</p>
@@ -286,7 +288,7 @@
 </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const contentCheckbox = document.getElementById("content-checkbox");
         const contentInput = document.getElementById("selected-content-writer-name");
 
@@ -305,11 +307,11 @@
             }
         }
 
-        contentCheckbox.addEventListener("change", function() {
+        contentCheckbox.addEventListener("change", function () {
             toggleInput(contentCheckbox, contentInput, "openContentWriterModal");
         });
 
-        graphicCheckbox.addEventListener("change", function() {
+        graphicCheckbox.addEventListener("change", function () {
             toggleInput(graphicCheckbox, graphicInput, "openGraphicDesignerModal");
         });
 
@@ -320,11 +322,11 @@
 </script>
 
 <script>
-    document.getElementById('imageUpload').addEventListener('change', function(event) {
+    document.getElementById('imageUpload').addEventListener('change', function (event) {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 const preview = document.getElementById('imagePreview');
                 preview.src = e.target.result;
                 preview.classList.remove('hidden');

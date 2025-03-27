@@ -63,7 +63,6 @@
             const buttonCountDiv = dropdownButton.querySelector("div div p");
             if (buttonCountDiv) {
                 console.log("UnRead Count:", unreadCount);
-                debugger;
                 if (unreadCount <= 99) {
                     buttonCountDiv.textContent = unreadCount;
                 } else {
@@ -437,7 +436,6 @@
                 );
 
                 if (response.status === 200) {
-                    debugger;
                     updateNotificationCount();
                     await fetchAndDisplayUnreadNotifications();
                     await fetchAndDisplayArchivedNotifications();

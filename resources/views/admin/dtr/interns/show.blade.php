@@ -28,14 +28,12 @@
             <section class="flex items-end gap-5 mt-3">
                 <div class="w-auto h-auto">
                     <div class="w-32 h-32 overflow-hidden rounded-full">
-                        <img class="w-full h-full object-center"
-                            src="
-                                {{ optional(\App\Models\File::find(optional(\App\Models\Profile::find($user->profile_id))->file_id))->path .
-                                    '?t=' .
-                                    time() ??
-                                    'resources/img/default-male.png' }}
-                            "
-                            alt="user profile">
+                        <img class="w-full h-full object-center" src="
+                                {{ asset($user->profiles->file->path) .
+    '?t=' .
+    time() ??
+    'resources/img/default-male.png' }}
+                            " alt="user profile">
                     </div>
                 </div>
 
@@ -224,8 +222,7 @@
                                         </p>
                                     </div>
                                 @else
-                                    <div
-                                        class="text-red-500 flex items-center gap-1 select-none text-sm font-semibold">
+                                    <div class="text-red-500 flex items-center gap-1 select-none text-sm font-semibold">
                                         <p>Time out</p>
                                     </div>
                                 @endif

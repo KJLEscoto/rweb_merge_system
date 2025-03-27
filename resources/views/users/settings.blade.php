@@ -33,7 +33,7 @@
                         <div class="h-auto w-auto">
                             <div
                                 class="lg:!w-80 md:!w-60 w-40 lg:!h-80 md:!h-60 h-40 border border-[#F57D11] shadow rounded-full overflow-hidden">
-                                <img id="imagePreview" src="{{ $image_url . '?t=' . time() }}" alt="Profile Image"
+                                <img id="imagePreview" src="{{ asset($image_url) . '?t=' . time() }}" alt="Profile Image"
                                     class="w-full h-full" />
                             </div>
                         </div>

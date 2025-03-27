@@ -88,6 +88,11 @@ class User extends Authenticatable
         return $this->belongsTo(Profile::class, 'profile_id');
     }
 
+    public function profile() // Changed from profiles to profile
+    {
+        return $this->belongsTo(Profile::class, 'profile_id');
+    }
+
     public function schools()
     {
         return $this->belongsTo(School::class, 'school_id');
@@ -161,7 +166,7 @@ class User extends Authenticatable
     }
 
 
-    //Front end relations
+    //Web Development relations
     public function role_channels()
     {
         return $this->hasMany(RoleChannel::class, 'user_id');
@@ -214,5 +219,19 @@ class User extends Authenticatable
     public function issued_by()
     {
         return $this->hasOne(WebRequest::class, 'assigned_by');
+    }
+
+    public function RoleChannelPages()
+    {
+        return $this->role_channels->map(function ($roleChannel) {
+            return $roleChannel->pages;
+        })->toArray();
+    }
+
+    public function RoleChannelPrivileges()
+    {
+        return $this->role_channels->map(function ($roleChannel) {
+            return $roleChannel->privileges; // Return the Privilege model directly
+        })->toArray();
     }
 }

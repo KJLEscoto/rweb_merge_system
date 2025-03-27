@@ -49,7 +49,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request, FileController $filecontroller): RedirectResponse
+    public function storeGdrive(Request $request, FileController $filecontroller): RedirectResponse
     {
 
         try {
@@ -190,9 +190,151 @@ class RegisteredUserController extends Controller
 
             return redirect()->route('admin.smm.users')->with('Status', 'Users Created Successfully');
         } catch (\Exception $ex) {
-            //@dd($ex->getMessage());
+            @dd($ex->getMessage());
             DB::rollback();
             //return redirect()->route('admin.smm.users')->with('status', $ex->getMessage());
+            return back()->with('status', $ex->getMessage());
+        }
+    }
+
+    public function store(Request $request, FileController $filecontroller): RedirectResponse
+    {
+        try {
+            DB::beginTransaction();
+
+            $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'role_id' => ['required'],
+                'phone' => ['required'],
+                'address' => ['required'],
+                'image' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|file|max:2048',
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            ]);
+
+            $picturePath = null;
+            $file_id = null;
+
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $file_records = $filecontroller->store(new Request(['file' => $request['image']]));
+
+                if ($file_records->getStatusCode() === 200) {
+                    $picturePath = $file_records->getData()->file->path;
+                    $file_id = $file_records->getData()->file->id;
+                } else {
+                    throw new \Exception('FileController failed to store image: ' . $file_records->getContent());
+                }
+            } else {
+                $defaultImage = 'resources/img/default_female.png';
+                $picturePath = $defaultImage;
+
+                $file_records = $filecontroller->store(new Request(['image_url' => asset($defaultImage)]));
+                if ($file_records->getStatusCode() === 200) {
+                    $file_id = $file_records->getData()->file->id;
+                } else {
+                    throw new \Exception('FileController failed to store default image: ' . $file_records->getContent());
+                }
+            }
+
+            $profile = Profile::create([
+                'description' => 'User ' . $request->name,
+                'file_id' => $file_id,
+            ]);
+
+            $user = User::create([
+                'name' => $request->name,
+                'role_id' => $request->role_id,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'image' => $picturePath,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'firstname' => $request->name,
+                'middlename' => $request->name,
+                'lastname' => $request->name,
+                'student_no' => rand(),
+                'emergency_contact_number' => rand(),
+                'emergency_contact_fullname' => Str::random(),
+                'emergency_contact_address' => rand(),
+                'profile_id' => $profile->id,
+                'role' => Role::where('id', $request->role_id)->first()->position,
+            ]);
+
+            // Role and permission logic remains the same...
+            $top_management_role = [
+                'top_management',
+                'operations_supervisor',
+                'assistant_supervisor',
+            ];
+
+            $employee_role = [
+                'content_writer',
+                'client',
+                'graphic_designer',
+                'accounting',
+            ];
+
+            $role_pages = [
+                'top_management' => Page::all(),
+                'operations_supervisor' => Page::all(),
+                'assistant_supervisor' => [
+                    'dashboard',
+                    'task',
+                    'revision',
+                    'approvals',
+                    'track',
+                    'users',
+                    'instructions_manual',
+                    'incoming_requests',
+                    'profile',
+                    'downloadables',
+                    'users',
+                ],
+                'employee' => [
+                    'dashboard',
+                    'task',
+                    'revision',
+                    'approvals',
+                    'track',
+                    'profile',
+                ],
+            ];
+
+            $pages = null;
+            $privileges = null;
+
+            if (isset($role_pages[$user->role])) {
+                if (is_array($role_pages[$user->role])) {
+                    $pages = Page::whereIn('description', $role_pages[$user->role])->get();
+                    $privileges = Privilege::all();
+                } else {
+                    $pages = Page::all();
+                    $privileges = Privilege::all();
+                }
+            } elseif (in_array($user->role, $employee_role)) {
+                $pages = Page::whereIn('description', $role_pages['employee'])->get();
+                $privileges = Privilege::all();
+            }
+
+            if ($pages && $privileges) {
+                foreach ($pages as $page) {
+                    foreach ($privileges as $privilege) {
+                        RoleChannel::create([
+                            'user_id' => $user->id,
+                            'page_id' => $page->id,
+                            'privilege_id' => $privilege->id,
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('admin.smm.users')->with('Status', 'Users Created Successfully');
+        } catch (\Exception $ex) {
+            @dd($ex->getMessage());
+            DB::rollback();
             return back()->with('status', $ex->getMessage());
         }
     }
@@ -209,7 +351,7 @@ class RegisteredUserController extends Controller
         return view('admin.smm.users.edit', compact('user'));
     }
 
-    public function update(Request $request, $id, FileController $filecontroller)
+    public function updateGdrive(Request $request, $id, FileController $filecontroller)
     {
         $user = User::findOrFail($id);
 
@@ -264,6 +406,79 @@ class RegisteredUserController extends Controller
             // $request->files->set('file', $file);
 
             $file_records = $filecontroller->edit(new Request(['file' => $file]), File::find(User::find($id)->profiles->id)->description);
+        }
+
+        // Prepare the update array
+        $updateData = [
+            'name' => $request->name ?? $user->name,
+            'phone' => $request->phone ?? $user->phone,
+            'role_id' => $request->role_id ?? $user->role_id,
+            'address' => $request->address ?? $user->address,
+            'image' => $picturePath,
+            'email' => $request->email ?? $user->email,
+        ];
+
+        // Only update the password if a new one is provided
+        if ($request->filled('password')) {
+            $updateData['password'] = Hash::make($request->password);
+        }
+
+        // Update user
+        $user->update($updateData);
+
+        return redirect()->route('admin.smm.users')->with('Status', 'User Updated Successfully');
+    }
+
+    public function update(Request $request, $id, FileController $filecontroller)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'name' => ['sometimes', 'string', 'max:255'],
+            'role_id' => ['sometimes'],
+            'phone' => ['sometimes'],
+            'address' => ['sometimes'],
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'email' => [
+                'sometimes',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->id) // Ignore the current user's email
+            ],
+            'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+            'type' => 'nullable|string',
+        ]);
+
+        $picturePath = $user->image; // Preserve existing image if not updating
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $file_records = $filecontroller->edit(new Request(['file' => $request['image']]), File::find(User::find($id)->profiles->file_id)->id);
+
+            $file_name = time() . '.' . $file->getClientOriginalExtension();
+            $destination = public_path('uploads');
+            $file->move($destination, $file_name);
+            $picturePath = 'uploads/' . $file_name;
+        } else if ($request->type == 'removeProfile') {
+            $profile_image = 'https://lh3.googleusercontent.com/d/1x1vyLdfoXxUjCTmab_5fGSDXU_zVJ3RI'; // Image in the public/images folder
+            $response = Http::get($profile_image);
+            if ($response->failed()) {
+                return back()->with('Status', 'Failed to download file: ' . $response->body());
+            }
+
+            $tempFilePath = tempnam(sys_get_temp_dir(), 'profile_');
+            file_put_contents($tempFilePath, $response->body());
+
+            $file = new \Illuminate\Http\UploadedFile(
+                $tempFilePath,
+                'profile.jpg',
+                'image/jpeg',
+                null,
+                true,
+            );
+
+            $file_records = $filecontroller->edit(new Request(['file' => $file]), File::find(User::find($id)->profiles->file_id)->id);
         }
 
         // Prepare the update array

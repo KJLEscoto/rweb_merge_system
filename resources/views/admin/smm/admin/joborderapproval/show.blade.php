@@ -96,89 +96,86 @@
                         </div>
 
                         <form action="{{ url('/admin/smm/operation/update/' . $job_draft->id) }}" method="POST"
-                            enctype="multipart/form-data" id="approvalForm">
-                            @csrf
-                            @method('PUT')
+      enctype="multipart/form-data" id="approvalForm">
+    @csrf
+    @method('PUT')
 
-                            {{-- File Upload --}}
-                            <div id="uploadSection" class="{{ Auth::user()->signature ? 'hidden' : '' }}">
-                                <input type="file" name="signature_admin" accept="image/*"
-                                    class="mt-2 border p-2 w-full rounded-md" id="signatureInput"
-                                    {{ $isDisabled || $isSigned ? 'disabled' : '' }}>
-                                <div
-                                    class="mt-4 w-52 h-32 border border-gray-300 rounded-md overflow-hidden flex items-center justify-center bg-gray-100">
-                                    <img id="imagePreview"
-                                        src="{{ $isSigned ? asset($job_draft->signature_admin) : '' }}"
-                                        alt="Selected Image"
-                                        class="{{ $isSigned ? 'block' : 'hidden' }} w-full h-full object-cover">
-                                </div>
-                            </div>
+    {{-- File Upload --}}
+    <div id="uploadSection" class="{{ Auth::user()->signature ? 'hidden' : '' }}">
+        <input type="file" name="signature_admin" accept="image/*"
+               class="mt-2 border p-2 w-full rounded-md" id="signatureInput"
+               {{ $isDisabled || $isSigned ? 'disabled' : '' }}>
+        <div
+            class="mt-4 w-52 h-32 border border-gray-300 rounded-md overflow-hidden flex items-center justify-center bg-gray-100">
+            <img id="imagePreview"
+                 src="{{ $isSigned ? asset($job_draft->signature_admin) : '' }}"
+                 alt="Selected Image"
+                 class="{{ $isSigned ? 'block' : 'hidden' }} w-full h-full object-cover">
+        </div>
+    </div>
 
-                            {{-- Signature Pad --}}
-                            <div id="padSection" class="hidden">
-                                <canvas id="signature-pad" class="w-[300px] lg:w-[400px]"
-                                    style="height:200px; {{ $isSigned ? 'pointer-events:none;opacity:0.5;' : '' }}"></canvas>
-                                <div class="mt-2 flex">
-                                    <button type="button" id="clearPad"
-                                        class="bg-gray-500 text-white px-2 py-1 rounded mr-2"
-                                        {{ $isSigned ? 'disabled' : '' }}>
-                                        Clear
-                                    </button>
-                                </div>
-                                <input type="hidden" name="signature_pad" id="signaturePadData"
-                                    value="{{ old('signature_pad') }}">
-                            </div>
+    {{-- Signature Pad --}}
+    <div id="padSection" class="hidden">
+        <canvas id="signature-pad" class="w-[300px] lg:w-[400px]"
+                style="height:200px; {{ $isSigned ? 'pointer-events:none;opacity:0.5;' : '' }}"></canvas>
+        <div class="mt-2 flex">
+            <button type="button" id="clearPad"
+                    class="bg-gray-500 text-white px-2 py-1 rounded mr-2"
+                    {{ $isSigned ? 'disabled' : '' }}>
+                Clear
+            </button>
+        </div>
+        <input type="hidden" name="signature_pad" id="signaturePadData"
+               value="{{ old('signature_pad') }}">
+    </div>
 
-                            {{-- Saved Signature Section --}}
-                            <div id="savedPadSection" class="{{ Auth::user()->signature ? '' : 'hidden' }}">
-                                @if (Auth::user()->signature)
-                                    <img id="new-signature-pad-main" class="w-[300px] lg:w-[400px]"
-                                        style="height:200px;"
-                                        src="{{ \App\Models\File::where('id', Auth::user()->signatures->file_id)->first()->path . '?t=' . time() . '?s=100' }}"
-                                        alt="Your Saved Signature">
-                                @endif
-                                <div class="mt-2 flex">
-                                    <input type="hidden" name="new_signature_pad" id="savedSignatureData"
-                                        value="{{ asset(Auth::user()->signature) }}">
-                                </div>
-                            </div>
+    {{-- Saved Signature Section --}}
+    <div id="savedPadSection" class="{{ Auth::user()->signature ? '' : 'hidden' }}">
+        @if (Auth::user()->signature)
+            <img id="new-signature-pad-main" class="w-[300px] lg:w-[400px]"
+                 style="height:200px;"
+                 src="{{ asset(\App\Models\File::where('id', Auth::user()->signatures->file_id)->first()->path) }}"
+                 alt="Your Saved Signature">
+        @endif
+        <div class="mt-2 flex">
+            <input type="hidden" name="new_signature_pad" id="savedSignatureData"
+                   value="{{ \App\Models\File::where('id', Auth::user()->signatures->file_id)->first()->path }}">
+        </div>
+    </div>
 
-                            @if ($errors->has('signature_admin') || $errors->has('signature_pad'))
-                                <p class="text-sm text-red-600">
-                                    {{ $errors->first('signature_admin') ?: $errors->first('signature_pad') }}
-                                </p>
-                            @endif
+    @if ($errors->has('signature_admin') || $errors->has('signature_pad'))
+        <p class="text-sm text-red-600">
+            {{ $errors->first('signature_admin') ?: $errors->first('signature_pad') }}
+        </p>
+    @endif
 
-                            {{-- Agreement Checkbox --}}
-                            <div class="mt-4 flex items-center space-x-2">
-                                <input type="checkbox" id="agree" required {{ $isSigned ? 'disabled' : '' }}>
-                                <label for="agree">I agree to the terms and conditions.</label>
-                            </div>
+    {{-- Agreement Checkbox --}}
+    <div class="mt-4 flex items-center space-x-2">
+        <input type="checkbox" id="agree" required {{ $isSigned ? 'disabled' : '' }}>
+        <label for="agree">I agree to the terms and conditions.</label>
+    </div>
 
-                            @if ($errors->any())
-                                @foreach ($errors->all() as $error)
-                                    <p class="text-red-600">{{ $error }}</p>
-                                @endforeach
-                            @endif
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <p class="text-red-600">{{ $error }}</p>
+        @endforeach
+    @endif
 
-                            {{-- Approve and Decline Buttons --}}
-                            <div class="mt-4 flex space-x-4">
-                                <button type="submit"
-                                    class="px-4 py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    id="submitBtn" {{ $isSigned ? 'disabled' : '' }}>
-                                    Submit Approval
-                                </button>
+    {{-- Approve and Decline Buttons --}}
+    <div class="mt-4 flex space-x-4">
+        <button type="submit"
+                class="px-4 py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                id="submitBtn" {{ $isSigned ? 'disabled' : '' }}>
+            Submit Approval
+        </button>
 
-                                <button type="button"
-                                    class="px-4 py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    id="declineBtn" {{ $isSigned ? 'disabled' : '' }} onclick="openDeclineModal()">
-                                    Decline
-                                </button>
-
-
-                            </div>
-
-                        </form>
+        <button type="button"
+                class="px-4 py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                id="declineBtn" {{ $isSigned ? 'disabled' : '' }} onclick="openDeclineModal()">
+            Decline
+        </button>
+    </div>
+</form>
                     </div>
                 </div>
 

@@ -25,9 +25,8 @@
                     <div class="w-auto h-auto">
                         <div class="w-32 h-32 overflow-hidden rounded-full">
                             <img id="imagePreview" class="w-full h-full object-center"
-                                src="{{ \App\Models\File::where('id', $user->profiles->file_id)->first()->path }}
-                            "
-                                alt="user profile">
+                                 src="{{ asset(\App\Models\File::where('id', $user->profiles->file_id)->first()->path) }}"
+                                 alt="user profile">
                         </div>
                     </div>
 
@@ -85,7 +84,6 @@
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Gender</h1>
                     <div class="flex items-center gap-4">
-                        <!-- Female Option -->
                         <label for="female" class="flex items-center gap-1 cursor-pointer">
                             <input type="radio" id="female" name="gender" value="female" class="peer hidden"
                                 {{ $user->gender === 'female' ? 'checked' : '' }}>
@@ -100,7 +98,6 @@
                             <p class="text-gray-600">Female</p>
                         </label>
 
-                        <!-- Male Option -->
                         <label for="male" class="flex items-center gap-1 cursor-pointer">
                             <input type="radio" id="male" name="gender" value="male" class="peer hidden"
                                 {{ $user->gender === 'male' ? 'checked' : '' }}>
@@ -117,7 +114,6 @@
                     </div>
                 </div>
 
-
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Email</h1>
                     <input type="email" name="email" id="email" value="{{ $user->email }}"
@@ -128,21 +124,6 @@
                     <input type="text" name="phone" id="phone" value="{{ $user->phone }}"
                         class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
                 </div>
-                {{-- <div class="space-y-1 hidden">
-                    <h1 class="font-bold text-xs">Country</h1>
-                    <input type="text" name="country" id="country" value="Philippines"
-                        class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
-                </div>
-                <div class="space-y-1 hidden disabled">
-                    <h1 class="font-bold text-xs">City</h1>
-                    <input type="text" name="city" id="city" value="Makati"
-                        class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
-                </div>
-                <div class="space-y-1 hidden">
-                    <h1 class="font-bold text-xs">Postal Code</h1>
-                    <input type="text" name="postal_code" id="postal_code" value="1200"
-                        class="border border-gray-300 px-2 py-1 rounded-sm w-full outline-none focus:ring-2 focus:ring-[#f56d11] focus:outline-none">
-                </div> --}}
 
                 <div class="space-y-1">
                     <h1 class="font-bold text-xs">Address</h1>
@@ -177,17 +158,15 @@
         </form>
     </main>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const uploadButton = document.querySelector("#uploadButton");
             const imagePreview = document.querySelector("#imagePreview");
 
-
-            uploadButton.addEventListener("change", function(event) {
-                debugger
+            uploadButton.addEventListener("change", function (event) {
                 const file = event.target.files[0];
                 if (file) {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         imagePreview.src = e.target.result;
                     };
                     reader.readAsDataURL(file);

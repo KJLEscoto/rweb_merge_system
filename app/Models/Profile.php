@@ -13,11 +13,23 @@ class Profile extends Model
     protected $guarded = [];
 
 
-    public function users(){
+    public function users()
+    {
         return $this->hasOne(User::class, 'profile_id');
     }
 
-    public function files(){
-        return $this->belongsTo(File::class, 'file_id');
+    public function files()
+    {
+        return $this->belongsTo(File::class, 'profile_id');
+    }
+
+    public function file() // Changed from files to file
+    {
+        return $this->belongsTo(File::class, 'file_id'); // Corrected foreign key
+    }
+
+    public function profiles()
+    {
+        return $this->hasOne(Profile::class, 'profile_id');
     }
 }

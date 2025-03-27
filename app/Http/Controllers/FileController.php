@@ -7,6 +7,7 @@ use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class FileController extends Controller
@@ -33,7 +34,7 @@ class FileController extends Controller
     /**
      * Store a file in Google Drive.
      */
-    public function store(Request $request)
+    public function storeGdrive(Request $request)
     {
         try {
             DB::beginTransaction();
@@ -166,6 +167,72 @@ class FileController extends Controller
         }
     }
 
+    public function store(Request $request)
+    {
+        try {
+            $request->validate([
+                'file' => 'nullable|file|max:2048', // Adjust max file size as needed
+                'image_url' => 'nullable|string',
+            ]);
+
+            if ($request->hasFile('file')) {
+                $file = $request->file('file'); // Use $request->file('file')
+                $fileName = Str::random(20) . '.' . $file->getClientOriginalExtension();
+                // Store file information in the database
+                $fileRecord = File::create([
+                    'description' => $fileName, // Or a more descriptive name
+                    'path' => 'uploads/' . $fileName, // Store the relative path
+                    'type' => $file->getClientMimeType(),
+                    'size' => $file->getSize(),
+                ]);
+                $filePath = public_path('uploads') . '/' . $fileName;
+
+
+                // Move the uploaded file to the public/uploads directory
+                $file->move(public_path('uploads'), $fileName);
+
+
+                return response()->json(['success' => 'File uploaded successfully', 'file' => $fileRecord]);
+            } elseif ($request->has('image_url')) {
+                $imageUrl = $request->input('image_url');
+
+
+                // Validate that the image_url is a local file path
+                $localImagePath = public_path(ltrim(parse_url($imageUrl, PHP_URL_PATH), '/'));
+
+                if (!file_exists($localImagePath)) {
+                    return response()->json(['error' => 'Local image file not found'], 400);
+                }
+
+                // Get file information
+                $fileName = basename($localImagePath);
+                $mimeType = mime_content_type($localImagePath);
+                $fileSize = filesize($localImagePath);
+
+                // Copy the local file to the uploads directory
+                $newFileName = Str::random(20) . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
+                $newFilePath = public_path('uploads/') . $newFileName;
+                copy($localImagePath, $newFilePath);
+
+                // Store file information in the database
+                $fileRecord = File::create([
+                    'description' => $newFileName,
+                    'path' => 'uploads/' . $newFileName,
+                    'type' => $mimeType,
+                    'size' => $fileSize,
+                ]);
+
+                return response()->json(['success' => 'Local image URL processed successfully', 'file' => $fileRecord]);
+            } else {
+                return response()->json(['error' => 'No file or image_url provided'], 400);
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['error' => 'Validation failed', 'messages' => $e->errors()], 422);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => 'File upload/processing failed', 'message' => $e->getMessage()], 500);
+        }
+    }
+
 
     /**
      * Retrieve list of files from Google Drive.
@@ -205,7 +272,7 @@ class FileController extends Controller
     /**
      * Edit/Rename a file in Google Drive.
      */
-    public function edit(Request $request, $fileId)
+    public function editGdrive(Request $request, $fileId)
     {
         $data = $request->validate([
             'file' => 'required|file', // Ensure a file is provided
@@ -283,6 +350,65 @@ class FileController extends Controller
                     : null,
                 'download_url' => $fileData['webContentLink'] ?? null, // Direct download link
             ]
+        ]);
+    }
+
+    public function edit(Request $request, $fileId)
+    {
+        try {
+            $request->validate([
+                'file' => 'required|file',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            dd($e->errors()); // Inspect validation errors
+            return response()->json(['error' => 'Validation failed', 'messages' => $e->errors()], 422);
+        }
+
+        //$file = $request->file('file'); // Use $request->file('file') - correct for modern Laravel
+        $file = $request->file;
+
+        if (!$file) {
+            // File is not present, do not proceed
+            dd('File not found using $request->file()', $request->all()); // Corrected message
+        }
+
+        // dd($file, $request->all()); // Debugging after defining $file - redundant, moved above
+
+        if (!$file->isValid()) {
+            return response()->json(['error' => 'Uploaded file is not valid'], 400);
+        }
+
+        // Find the existing file record
+        $existingFile = File::find($fileId);
+
+        if (!$existingFile) {
+            return response()->json(['error' => 'File not found'], 404);
+        }
+
+        // Delete the old file from storage
+        if (Storage::exists($existingFile->path)) {
+            Storage::delete($existingFile->path);
+        }
+
+        // Store the new file
+        $path = $file->store('uploads'); // Store in the 'uploads' directory
+
+        // Update the file record in the database
+        $existingFile->update([
+            'path' => $path,
+            'description' => $file->getClientOriginalName(), // Update description
+        ]);
+
+        return response()->json([
+            'message' => 'File updated successfully',
+            'data' => [
+                'id' => $existingFile->id,
+                'name' => basename($path), // Return the new name
+                'description' => $file->getClientOriginalName(),
+                'mimeType' => $existingFile->type,
+                'path' => $existingFile->path,
+                'size' => $existingFile->size,
+            ],
         ]);
     }
 

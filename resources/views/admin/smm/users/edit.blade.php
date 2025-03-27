@@ -1,12 +1,9 @@
 <head>
     <title>{{ env('APP_NAME') }} | SMM | Edit Users</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
-
 </head>
+
 <x-main-layout breadcumb="SMM / Users" page="Edit Users">
-
-
     @if (session('status'))
         <div id="success-message" class="bg-green-500 text-white p-4 rounded-md mb-4">
             {{ session('status') }}
@@ -14,7 +11,7 @@
     @endif
 
     <div class="h-auto">
-        <div class=" text-white">
+        <div class="text-white">
             <div class="w-full flex justify-end items-end mb-4 cursor-pointer"
                 onclick="window.location.assign('{{ url('admin/smm/users') }}')">
                 <div class="w-fit px-4 py-1 bg-[#f68e12] rounded-md">Go Back</div>
@@ -29,7 +26,7 @@
                         class="col-span-3 px-4 lg:col-span-1 h-fit pb-10 bg-white shadow-md rounded-md pt-10 border border-[#e1e1e1]">
                         <div class="w-full flex justify-center items-center">
                             <img id="profileImage" class="rounded-full w-32 h-32 object-cover"
-                                src="{{ $user->image ? \App\Models\File::find($user->profiles->id)->path . '?t=' . time() . 's=100' : asset('/Assets/user-profile-profilepage.png') }}"
+                                src="{{ $user->image ? asset($user->profiles->file->path . '?t=' . time() . 's=100') : asset('assets/user-profile-profilepage.png') }}"
                                 alt="Profile Picture">
                         </div>
                         <div class="text-center">
@@ -92,8 +89,7 @@
                                         Operations Supervisor</option>
                                     <option value="7" {{ old('role_id', $user->role_id) == 7 ? 'selected' : '' }}>
                                         Accounting</option>
-                                    <option value="12"
-                                        {{ old('role_id', $user->role_id) == 12 ? 'selected' : '' }}>
+                                    <option value="12" {{ old('role_id', $user->role_id) == 12 ? 'selected' : '' }}>
                                         Sales Assistant</option>
                                 </select>
                                 @error('role_id')
@@ -151,11 +147,10 @@
             </form>
         </div>
     </div>
-
 </x-main-layout>
 
 <script>
-    setTimeout(function() {
+    setTimeout(function () {
         var message = document.getElementById('success-message');
         if (message) {
             message.style.transition = "opacity 0.5s";
@@ -164,15 +159,15 @@
         }
     }, 3000);
 
-    document.getElementById("changeProfileBtn").addEventListener("click", function() {
+    document.getElementById("changeProfileBtn").addEventListener("click", function () {
         document.getElementById("profileImageInput").click();
     });
 
-    document.getElementById("profileImageInput").addEventListener("change", function(event) {
+    document.getElementById("profileImageInput").addEventListener("change", function (event) {
         let file = event.target.files[0];
         if (file) {
             let reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 // Update only the image inside the form
                 document.getElementById("profileImage").src = e.target.result;
             };
@@ -180,9 +175,5 @@
         }
     });
 
-    document.getElementById("removeProfileBtn").addEventListener("click", function() {
-        document.getElementById("profileImageInput").value = "";
-        document.getElementById("profileImage").src = "{{ asset('/Assets/user-profile-profilepage.png') }}";
-    });
+    // Removed removeProfileBtn, as it was not defined in the blade file.
 </script>
-{{-- @endsection --}}

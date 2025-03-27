@@ -23,7 +23,7 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    public function register(Request $request, FileController $fileController)
+    public function registerGdrive(Request $request, FileController $fileController)
     {
         try {
 
@@ -98,12 +98,100 @@ class AuthController extends Controller
 
             return redirect()->route('show.login')->with('success', 'Congratulations! You are now registered!');
         } catch (\Exception $ex) {
+            @dd($ex->getMessage());
             DB::rollBack();
             return back()->with('invalid', $ex->getMessage());
         }
     }
 
-    public function adminRegister(Request $request, FileController $fileController)
+    public function register(Request $request, FileController $fileController)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->validate([
+                'firstname' => 'required|string|max:255',
+                'middlename' => 'required|string|max:255',
+                'lastname' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'phone' => 'required|string|max:255',
+                'gender' => 'required|string|max:255',
+                'address' => 'required|string|max:255',
+                'school' => 'required|string|max:255',
+                'student_no' => 'required|string|max:255',
+                'emergency_contact_fullname' => 'required|string|max:255',
+                'emergency_contact_number' => 'required|string|max:255',
+                'emergency_contact_address' => 'required|string|max:255',
+                'password' => 'required|string|min:8|confirmed',
+                'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image file
+            ]);
+
+            // Generate QR Code
+            $qr_code = 'QR_' . Str::random(10) . '_' . Str::random(10);
+
+            // Determine default profile image based on gender
+            $profile_image = '/resources/img/default_' . ($data['gender'] === 'male' ? 'male' : 'female') . '.png';
+
+            // Store the image using FileController even if it's local
+            $file_records = null;
+            if ($request->hasFile('profile_image')) {
+                $file_records = $fileController->store(new Request(['file' => $request->file('profile_image')]));
+                if ($file_records->getStatusCode() === 200) {
+                    $profile_image = $file_records->getData()->file->path;
+                } else {
+                    throw new \Exception('FileController failed to store profile image: ' . $file_records->getContent());
+                }
+            } else {
+                $file_records = $fileController->store(new Request(['image_url' => asset($profile_image)]));
+                if ($file_records->getStatusCode() === 200) {
+                    $profile_image = $file_records->getData()->file->path;
+                } else {
+                    throw new \Exception('FileController failed to store default profile image: ' . $file_records->getContent());
+                }
+            }
+
+            $file_id = $file_records->getData()->file->id;
+
+            $profile_record = Profile::create([
+                'description' => 'User ' . $data['lastname'] . ' ' . substr($data['firstname'], 0, 1) . '. \'s profile',
+                'file_id' => $file_id, // Store file_id from FileController
+            ]);
+
+            $user = User::create([
+                'firstname' => $data['firstname'],
+                'middlename' => $data['middlename'],
+                'lastname' => $data['lastname'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'phone' => $data['phone'],
+                'gender' => $data['gender'],
+                'address' => $data['address'],
+                'school' => \App\Models\School::where('id', $data['school'] + 1)->first()->description,
+                'student_no' => $data['student_no'],
+                'emergency_contact_fullname' => $data['emergency_contact_fullname'],
+                'emergency_contact_number' => $data['emergency_contact_number'],
+                'emergency_contact_address' => $data['emergency_contact_address'],
+                'qr_code' => $qr_code,
+                'profile_id' => $profile_record->id,
+                'school_id' => $request->school + 1,
+                'expiry_date' => Carbon::now()->addMonths(3),
+                'role_id' => Role::where('position', 'like', 'user')->first()->id,
+                'role' => 'user',
+                'name' => $data['firstname'] . ' ' . $data['middlename'] . ' ' . $data['lastname'],
+                'image' => $profile_image, // Store relative path from file controller
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('show.login')->with('success', 'Congratulations! You are now registered!');
+        } catch (\Exception $ex) {
+            @dd($ex->getMessage());
+            DB::rollBack();
+            return back()->with('invalid', $ex->getMessage());
+        }
+    }
+
+    public function adminRegisterGdrive(Request $request, FileController $fileController)
     {
         $data = $request->validate([
             'firstname' => 'required|string|max:255',
@@ -179,6 +267,99 @@ class AuthController extends Controller
         return redirect()->route('show.login')->with('success', 'Congratulations! You are now registered!');
     }
 
+    public function adminRegister(Request $request, FileController $fileController)
+    {
+        echo "adminRegister function started.\n";
+
+        $data = $request->validate([
+            'firstname' => 'required|string|max:255',
+            'middlename' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'required|string|max:255',
+            'gender' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'school' => 'nullable|string|max:255',
+            'student_no' => 'required|string|max:255',
+            'role' => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            'role_id' => 'required',
+            'emergency_contact_fullname' => 'required|string|max:255',
+            'emergency_contact_number' => 'required|string|max:255',
+            'emergency_contact_address' => 'required|string|max:255',
+            'password' => 'required|string|min:8|confirmed',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image file
+        ]);
+
+        echo "Data validated.\n";
+
+        // Generate QR Code
+        $qr_code = 'QR_' . Str::random(10) . '_' . Str::random(10);
+
+        echo "QR code generated: " . $qr_code . "\n";
+
+        // Determine profile image path
+        $profile_image = '/resources/img/default_' . ($data['gender'] === 'male' ? 'male' : 'female') . '.png';
+
+        echo "Default profile image path: " . $profile_image . "\n";
+
+        // Store the image using FileController even if it's local
+        $file_records = null;
+        if ($request->hasFile('profile_image')) {
+            echo "Profile image file found.\n";
+            $file_records = $fileController->store(new Request(['file' => $request->file('profile_image')]));
+            echo "FileController store called with file.\n";
+            $profile_image = $file_records->getData()->file->path;
+            echo "Profile image path from FileController: " . $profile_image . "\n";
+        } else {
+            // Handle the case where the default image file does not exist
+            echo "Default image file not found.\n";
+            // You might want to set a fallback or return an error response here
+            // For example, you could store a placeholder image or use a default URL
+            $file_records = $fileController->store(new Request(['image_url' => '/resources/img/default_female.png']));
+            $profile_image = $file_records->getData()->file->path;
+        }
+
+        echo "File records retrieved.\n";
+
+        $file_id = $file_records->getData()->file->id;
+
+        echo "File ID retrieved: " . $file_id . "\n";
+
+        $profile_record = Profile::create([
+            'description' => 'User ' . $data['lastname'] . ' ' . substr($data['firstname'], 0, 1) . '. \'s profile',
+            'file_id' => $file_id, // Store file_id from FileController
+        ]);
+
+        echo "Profile record created.\n";
+
+        $user = User::create([
+            'role' => $data['role'],
+            'role_id' => $data['role_id'],
+            'name' => $data['firstname'] . ' ' . $data['middlename'] . ' ' . $data['lastname'],
+            'firstname' => $data['firstname'],
+            'middlename' => $data['middlename'],
+            'lastname' => $data['lastname'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'phone' => $data['phone'],
+            'gender' => $data['gender'],
+            'address' => $data['address'],
+            'student_no' => $data['student_no'],
+            'emergency_contact_fullname' => $data['emergency_contact_fullname'],
+            'emergency_contact_number' => $data['emergency_contact_number'],
+            'emergency_contact_address' => $data['emergency_contact_address'],
+            'qr_code' => $qr_code,
+            'profile_id' => $profile_record->id,
+            'image' => $profile_image, // Store relative path
+        ]);
+
+        echo "User record created.\n";
+
+        echo "adminRegister function completed.\n";
+
+        return redirect()->route('show.login')->with('success', 'Congratulations! You are now registered!');
+    }
 
     public function showLogin()
     {
@@ -360,7 +541,7 @@ class AuthController extends Controller
         return view('admin.dtr.interns.create');
     }
 
-    public function showAdminUsersCreatePost(Request $request, FileController $fileController)
+    public function showAdminUsersCreatePostGdrive(Request $request, FileController $fileController)
     {
         try {
             DB::beginTransaction();
@@ -443,6 +624,94 @@ class AuthController extends Controller
             return back()->with([
                 'success' => 'Account Created Successfully!',
             ]);
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            @dd($ex->getMessage());
+        }
+    }
+
+    public function showAdminUsersCreatePost(Request $request, FileController $fileController)
+    {
+        try {
+            DB::beginTransaction();
+            $data = $request->validate([
+                'firstname' => 'required|string|max:255',
+                'middlename' => 'required|string|max:255',
+                'lastname' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'phone' => 'required|string|max:255',
+                'gender' => 'required|string|max:255',
+                'address' => 'required|string|max:255',
+                'school' => 'required|string|max:255',
+                'student_no' => 'required|string|max:255',
+                'emergency_contact_fullname' => 'required|string|max:255',
+                'emergency_contact_number' => 'required|string|max:255',
+                'emergency_contact_address' => 'required|string|max:255',
+                'password' => 'required|string|min:8|confirmed',
+                'profile_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:5120', // Add validation for profile image
+            ]);
+
+            if ($request->hasFile('profile_image')) {
+                $file_records = $fileController->store($request);
+                if ($file_records->getStatusCode() !== 200) {
+                    DB::rollBack();
+                    return back()->with('invalid', $file_records->getData()->message ?? 'Image upload failed');
+                }
+                $file_id = $file_records->getData()->file->id;
+            } else {
+                // Default profile image based on gender
+                $profile_image = ($data['gender'] === 'male')
+                    ? '/resources/img/default_male.png'
+                    : '/resources/img/default_female.png';
+
+                $defaultFile = \App\Models\File::create([
+                    'description' => 'Default Profile Image',
+                    'path' => $profile_image,
+                    'type' => 'image/png',
+                    'size' => 0, // Set size to 0 or appropriate default
+                ]);
+
+                $file_id = $defaultFile->id;
+            }
+
+            $profile_record = Profile::create([
+                'description' => 'User ' . $data['lastname'] . ' ' . substr($data['firstname'], 0, 1) . '. \'s profile',
+                'file_id' => $file_id,
+            ]);
+
+            $qr_code = 'QR' . '_' . Str::random(10) . '_' . Str::random(10);
+
+            $school_id = null;
+            if ($data['school'] != null) {
+                $school_id = \App\Models\School::where('description', $data['school'])->first()->id;
+            }
+
+            $user = User::create([
+                'firstname' => $data['firstname'],
+                'middlename' => $data['middlename'],
+                'lastname' => $data['lastname'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'phone' => $data['phone'],
+                'gender' => $data['gender'],
+                'address' => $data['address'],
+                'school' => \App\Models\School::where('description', $data['school'])->first()->description,
+                'student_no' => $data['student_no'],
+                'emergency_contact_fullname' => $data['emergency_contact_fullname'],
+                'emergency_contact_number' => $data['emergency_contact_number'],
+                'emergency_contact_address' => $data['emergency_contact_address'],
+                'qr_code' => $qr_code,
+                'expiry_date' => Carbon::now()->addMonths(3),
+                'school_id' => $school_id,
+                'profile_id' => $profile_record->id,
+                'role' => 'user',
+                'role_id' => Role::where('position', 'user')->first()->id,
+                'name' => $data['firstname'] . ' ' . $data['middlename'] . ' ' . $data['lastname'],
+            ]);
+
+            DB::commit();
+
+            return back()->with(['success' => 'Account Created Successfully!']);
         } catch (\Exception $ex) {
             DB::rollBack();
             @dd($ex->getMessage());

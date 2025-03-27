@@ -22,10 +22,11 @@ class SchoolSeeder extends Seeder
     public function run()
     {
         try {
-
             DB::beginTransaction();
+            echo "Transaction started.\n";
 
             $fileController = new FileController();
+            echo "FileController initialized.\n";
 
             $schoolsData = [
                 ['description' => 'STI College Davao', 'image' => '/resources/img/logos/sti.png'],
@@ -38,9 +39,11 @@ class SchoolSeeder extends Seeder
             $schoolsToInsert = [];
 
             foreach ($schoolsData as $school) {
+                echo "Processing school: " . $school['description'] . "\n";
                 $imagePath = public_path($school['image']); // Ensure correct path
 
                 if (file_exists($imagePath)) {
+                    echo "Image file found at: " . $imagePath . "\n";
                     // Create an UploadedFile instance
                     $imageFile = new UploadedFile(
                         $imagePath,
@@ -50,9 +53,9 @@ class SchoolSeeder extends Seeder
                         true // Set as test file (prevents move issues)
                     );
 
-
                     // Check if the file is valid
                     if (!$imageFile->isValid()) {
+                        echo "Image file is invalid. Skipping.\n";
                         continue; // Skip this file if invalid
                     }
 
@@ -61,34 +64,47 @@ class SchoolSeeder extends Seeder
 
                     // Store the file using FileController
                     $fileResponse = $fileController->store($request);
+                    echo "FileController store called.\n";
 
                     // Handle response
                     if ($fileResponse instanceof JsonResponse) {
                         $fileRecord = $fileResponse->getData();
+                        echo "FileController response is JsonResponse.\n";
                     } else {
                         $fileRecord = $fileResponse;
+                        echo "FileController response is not JsonResponse.\n";
                     }
 
                     // Ensure we have a valid file path
                     if (!empty($fileRecord->file->path)) {
+                        echo "File path found: " . $fileRecord->file->path . "\n";
                         $schoolsToInsert[] = [
                             'description' => $school['description'],
                             'image' => $school['image'], // Use stored file path
                             'is_featured' => 'on',
                             'file_id' => $fileRecord->file->id,
                         ];
+                        echo "School data added to insert array.\n";
+                    } else {
+                        echo "File path is empty. Skipping.\n";
                     }
+                } else {
+                    echo "Image file not found at: " . $imagePath . "\n";
                 }
             }
 
             // Insert only if data exists
             if (!empty($schoolsToInsert)) {
                 DB::table('schools')->insert($schoolsToInsert);
+                echo "Schools data inserted into database.\n";
+            } else {
+                echo "No schools data to insert.\n";
             }
 
             DB::commit(); // Commit transaction if everything is successful
+            echo "Transaction committed.\n";
         } catch (Exception $e) {
-            @dd($e->getMessage());
+            echo "Exception caught: " . $e->getMessage() . "\n";
             DB::rollBack(); // Rollback transaction if there's an error
             return response()->json(['error' => $e->getMessage()], 500);
         }

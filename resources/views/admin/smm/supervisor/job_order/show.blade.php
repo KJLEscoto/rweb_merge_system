@@ -88,7 +88,6 @@
     </style>
 </head>
 
-
 <x-main-layout breadcumb="SMM / Job Order" page="Show Job Order">
 
     <div id="container-pdf">

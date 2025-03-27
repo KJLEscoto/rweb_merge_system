@@ -97,8 +97,7 @@
 
                 @if ($web_request->status !== 'pending')
                     <a href="{{ url('/admin/smm/operation/request/create/' . $web_request->id) }}">
-                        <div
-                            class="w-fit px-4 py-1 bg-[#fa7011] rounded-md text-white custom-shadow custom-hover-shadow">
+                        <div class="w-fit px-4 py-1 bg-[#fa7011] rounded-md text-white custom-shadow custom-hover-shadow">
                             Create Draft
                         </div>
                     </a>
@@ -155,7 +154,6 @@
                                 @else
                                     <img src="{{ asset($web_request->issued_to->signature) }}" alt="Admin Signature">
                                 @endif
-
                             </td>
                             <td class="signature">
                                 <strong>Operations Supervisor Signature: {{ $web_request->assigned_by }}</strong><br>
