@@ -196,7 +196,6 @@ class FileController extends Controller
             } elseif ($request->has('image_url')) {
                 $imageUrl = $request->input('image_url');
 
-
                 // Validate that the image_url is a local file path
                 $localImagePath = public_path(ltrim(parse_url($imageUrl, PHP_URL_PATH), '/'));
 

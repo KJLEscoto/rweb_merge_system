@@ -226,10 +226,11 @@ class RegisteredUserController extends Controller
                     throw new \Exception('FileController failed to store image: ' . $file_records->getContent());
                 }
             } else {
-                $defaultImage = 'resources/img/default_female.png';
+                $defaultImage = '/resources/img/default_female.png';
                 $picturePath = $defaultImage;
 
                 $file_records = $filecontroller->store(new Request(['image_url' => asset($defaultImage)]));
+
                 if ($file_records->getStatusCode() === 200) {
                     $file_id = $file_records->getData()->file->id;
                 } else {

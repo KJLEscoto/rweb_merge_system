@@ -3,18 +3,7 @@
 </head>
 
 <x-main-layout breadcumb="DTR" page="Interns">
-    @php
-        $not_intern_roles = [
-            'content_writer',
-            'graphic_designer',
-            'client',
-            'operations_supervisor',
-            'assistant_supervisor',
-            'top_management',
-            'accounting',
-            'admin',
-        ];
-    @endphp
+
     <div class="w-full h-auto flex flex-col gap-5">
         @if ($users->whereNotIn('role', $not_intern_roles)->first())
             <section class="flex md:flex-row flex-col-reverse items-center lg:justify-between w-full gap-5">

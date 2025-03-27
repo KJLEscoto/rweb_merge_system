@@ -144,7 +144,7 @@
                         <div class="overflow-x-auto bg-white rounded shadow-md overflow-y-auto max-h-[20rem]">
                             <table id="recordsTable" class="w-full border-collapse border border-gray-300">
                                 <thead>
-                                    <tr
+                                    {{-- <tr
                                         class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-gray-200 *:text-black *:text-nowrap">
                                         <th colspan="2">
                                             <button id="toggleSelection">
@@ -153,12 +153,8 @@
                                                     Select All
                                                 </div>
                                             </button>
-                                            {{-- <button id="toggleSelection"
-                                                class="px-4 py-2 bg-blue-500 text-white rounded">
-                                                Select All
-                                            </button> --}}
                                         </th>
-                                    </tr>
+                                    </tr> --}}
                                     <tr
                                         class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-gray-200 *:text-black *:text-nowrap">
                                         <th>Page Access</th>
@@ -275,9 +271,11 @@
             pageCheckbox.addEventListener("change", function () {
                 const pageId = this.value; // Get the page description (unique value)
                 const privilegeCheckboxes = document.querySelectorAll(
-                    `input[name="privileges[${pageId}][]"]`);
+                    `input[name="privileges[${pageId}][]"]`
+                );
                 const canReadCheckbox = document.querySelector(
-                    `input[name="privileges[${pageId}][]"][value="can_read"]`);
+                    `input[name="privileges[${pageId}][]"][value="can_read"]`
+                );
 
                 if (this.checked) {
                     // Enable all privileges
@@ -312,28 +310,37 @@
                         // If "can_read" is unchecked and it's the last checked privilege, uncheck and disable the page checkbox
                         if (!canReadCheckbox.checked && privilegeList.length === 0) {
                             pageCheckbox.checked = false;
-                            pageCheckbox.dispatchEvent(new Event(
-                                "change")); // Trigger change event to disable everything
+                            pageCheckbox.dispatchEvent(new Event("change")); // Trigger change event to disable everything
                         }
                     });
-                });
+                }
+            );
 
             // Trigger change event on page load to set the correct state
             pageCheckbox.dispatchEvent(new Event("change"));
+
+            // Check if any privilege is already checked, if so, do not disable.
+            const initialPrivilegeCheck = document.querySelectorAll(`input[name="privileges[${pageCheckbox.value}][]"]:checked`);
+            if (initialPrivilegeCheck.length > 0) {
+                document.querySelectorAll(`input[name="privileges[${pageCheckbox.value}][]"]`).forEach(privilegeCheckbox => {
+                    privilegeCheckbox.disabled = false;
+                });
+            }
+
         });
     });
 </script>
 <script>
-    document.getElementById('toggleSelection').addEventListener('click', function (event) {
-        event.preventDefault(); // Prevent form submission if inside a form
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('toggleSelection').addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent form submission if inside a form
 
-        let checkboxes = document.querySelectorAll('.page-checkbox, .privilege-checkbox');
-        let allChecked = [...checkboxes].every(checkbox => checkbox.checked);
+            let checkboxes = document.querySelectorAll('.page-checkbox, .privilege-checkbox');
+            let allChecked = [...checkboxes].every(checkbox => checkbox.checked);
 
-        checkboxes.forEach(checkbox => checkbox.checked = !allChecked);
+            checkboxes.forEach(checkbox => checkbox.checked = !allChecked);
 
-        this.textContent = allChecked ? "Select All" : "Deselect All";
-
-
+            this.textContent = allChecked ? "Select All" : "Deselect All";
+        });
     });
 </script>

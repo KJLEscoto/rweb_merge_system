@@ -36,7 +36,6 @@
                 </span>
             </section>
 
-
             <section class="grid lg:!grid-cols-4 md:grid-cols-3 grid-cols-2 gap-5" id="user-container">
                 @foreach ($user as $usr)
                     {{-- @if (!in_array($user->roles->position, $not_intern_roles)) --}}
@@ -45,10 +44,12 @@
 
                         <div class="w-auto h-auto">
                             <div class="w-24 h-24 rounded-full border border-[#F57D11] overflow-hidden">
-                                {{-- <x-image className="w-full h-full" path="{{ optional(\App\Models\File::find(optional(\App\Models\Profile::find($user->profile_id))->file_id))->path .
-                                                                        '?t=' .
-                                                                        time() ??
-                                                                        'resources/img/default-male.png' }}" /> --}}
+                                {{-- <x-image className="w-full h-full"
+                                    path="{{ optional(\App\Models\File::find(optional(\App\Models\Profile::find($user->profile_id))->file_id))->path .
+                                                                                                '?t=' .
+                                                                                                time() ??
+                                                                                                'resources/img/default-male.png' }}" />
+                                --}}
                                 <img src="{{ asset('resources/img/male-profile.jpg') }}" class="w-full h-full"
                                     alt="profile pic">
                             </div>

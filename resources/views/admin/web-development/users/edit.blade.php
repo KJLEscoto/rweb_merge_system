@@ -156,21 +156,6 @@
                                             <thead>
                                                 <tr
                                                     class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-gray-200 *:text-black *:text-nowrap">
-                                                    <th colspan="2">
-                                                        <button id="toggleSelection">
-                                                            <div
-                                                                class="w-fit px-4 py-1 bg-[#fa7011] rounded-md text-white custom-shadow custom-hover-shadow">
-                                                                Select All
-                                                            </div>
-                                                        </button>
-                                                        {{-- <button id="toggleSelection"
-                                                            class="px-4 py-2 bg-blue-500 text-white rounded">
-                                                            Select All
-                                                        </button> --}}
-                                                    </th>
-                                                </tr>
-                                                <tr
-                                                    class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-gray-200 *:text-black *:text-nowrap">
                                                     <th>Page Access</th>
                                                     <th>Privileges</th>
                                                 </tr>
@@ -281,10 +266,11 @@
                                 @enderror
                             </div>
 
-                            <div class="flex items-center mt-4">
-                                <input type="checkbox" id="is_client" name="is_client" value="1" {{ old('is_client', $user->is_client) ? 'checked' : '' }}>
+                            {{-- <div class="flex items-center mt-4">
+                                <input type="checkbox" id="is_client" name="is_client" value="1" {{ old('is_client',
+                                    $user->is_client) ? 'checked' : '' }}>
                                 <label for="is_client" class="checkbox-label">Is Client</label>
-                            </div>
+                            </div> --}}
 
                         </div>
                         <div class="w-full flex justify-end items-end mt-4">
@@ -345,9 +331,11 @@
                 pageCheckbox.addEventListener("change", function () {
                     const pageId = this.value; // Get the page description (unique value)
                     const privilegeCheckboxes = document.querySelectorAll(
-                        `input[name="privileges[${pageId}][]"]`);
+                        `input[name="privileges[${pageId}][]"]`
+                    );
                     const canReadCheckbox = document.querySelector(
-                        `input[name="privileges[${pageId}][]"][value="can_read"]`);
+                        `input[name="privileges[${pageId}][]"][value="can_read"]`
+                    );
 
                     if (this.checked) {
                         // Enable all privileges
@@ -382,14 +370,23 @@
                             // If "can_read" is unchecked and it's the last checked privilege, uncheck and disable the page checkbox
                             if (!canReadCheckbox.checked && privilegeList.length === 0) {
                                 pageCheckbox.checked = false;
-                                pageCheckbox.dispatchEvent(new Event(
-                                    "change")); // Trigger change event to disable everything
+                                pageCheckbox.dispatchEvent(new Event("change")); // Trigger change event to disable everything
                             }
                         });
-                    });
+                    }
+                );
 
                 // Trigger change event on page load to set the correct state
                 pageCheckbox.dispatchEvent(new Event("change"));
+
+                // Check if any privilege is already checked, if so, do not disable.
+                const initialPrivilegeCheck = document.querySelectorAll(`input[name="privileges[${pageCheckbox.value}][]"]:checked`);
+                if (initialPrivilegeCheck.length > 0) {
+                    document.querySelectorAll(`input[name="privileges[${pageCheckbox.value}][]"]`).forEach(privilegeCheckbox => {
+                        privilegeCheckbox.disabled = false;
+                    });
+                }
+
             });
         });
     </script>
@@ -414,8 +411,6 @@
             const selectedPages = @json($myPages);
             const selectedPrivileges = @json($myRoleChannels);
 
-            debugger;
-
             console.log("Pages:", pages);
             console.log("Privileges:", privileges);
             console.log("Selected Pages:", selectedPages);
@@ -437,7 +432,6 @@
                 }
             });
 
-            debugger;
             privilegeCheckboxes.forEach(checkbox => {
                 const pageDescription = checkbox.name.match(/privileges\[(.*?)\]/)[1];
                 const privilegeDescription = checkbox.value;
@@ -448,40 +442,22 @@
 
                 console.log(`Checking privilege: ${pageDescription} - ${privilegeDescription}`);
 
-                // Find matching page and privilege dynamically
                 const page = pages.find(p => p.description === pageDescription);
                 const privilege = privileges.find(p => p.description === privilegeDescription);
 
-                // if (page && privilege) {
-                //     let matchingRoleChannel = false;
-
-                //     // Loop through all pages and privileges dynamically
-                //     for (const currentPage of pages) {
-                //         for (const currentPrivilege of privileges) {
-                //             if (currentPage.id === page.id && currentPrivilege.id === privilege.id) {
-                //                 console.log(`Matching role_channel found for Page ID: ${page.id}, Privilege ID: ${privilege.id}`);
-                //                 matchingRoleChannel = true;
-                //                 break; // Stop checking once found
-                //             }
-                //         }
-                //         if (matchingRoleChannel) break;
-                //     }
-
-                //     checkbox.checked = matchingRoleChannel;
-                //     console.log(`Privilege: ${pageDescription} - ${privilegeDescription} is ${matchingRoleChannel ? "checked" : "not checked"}`);
-                // } else {
-                //     checkbox.checked = false;
-                //     console.log(`Privilege: ${pageDescription} - ${privilegeDescription} is not checked (page or privilege not found).`);
-                // }
-
                 if (page && privilege) {
-                    // Check if there's an entry in the dataset that matches the page_id and privilege_id
                     const hasAccess = selectedPrivileges.some(entry =>
                         entry.page_id === page.id && entry.privilege_id === privilege.id
                     );
 
-                    // Set checkbox state dynamically
                     checkbox.checked = hasAccess;
+
+                    if (hasAccess) {
+                        checkbox.disabled = false; // Disable if already checked
+                    }
+                    else {
+                        checkbox.disabled = true; // Disable if already checked
+                    }
                 }
             });
 
@@ -495,7 +471,9 @@
                 });
 
                 privilegeCheckboxes.forEach(checkbox => {
-                    checkbox.checked = !allChecked;
+                    if (!checkbox.disabled) {
+                        checkbox.checked = !allChecked;
+                    }
                 });
             });
         });

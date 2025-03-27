@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DtrDownloadRequest;
 use App\Models\Histories;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,7 @@ use App\Mail\EmailShiftNotification;
 use App\Models\File;
 use App\Models\Profile;
 use App\Models\School;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -218,6 +220,7 @@ class UserController extends Controller
     public function showUsers()
     {
         $users = User::all();
+
         return view('admin.users', compact('users'));
     }
 
@@ -236,14 +239,24 @@ class UserController extends Controller
         $rankingController = new RankingController();
         $ranking = $rankingController->getRankings();
 
-
         $history = new HistoryController();
         $totalScan = $history->TotalScan();
         $totalTimeIn = $history->TotalTimeIn();
         $totalTimeOut = $history->TotalTimeOut();
         $totalRegister = $history->TotalRegister();
         $dailyAttendance = $history->AllUserDailyAttendance();
-        $recentlyAddedUser = $history->AllMonthlyUsers();
+        //$recentlyAddedUser = $history->AllMonthlyUsers();
+        $recentlyAddedUser = $history->AllMonthlyUsers()->map(function ($item) {
+            if ($item['role'] == 'user') {
+                return [
+                    'id' => $item['id'],
+                    'profiles' => $item['profiles'],
+                    'fullname' => $item['fullname'],
+                    'role' => $item['role'],
+                    'ago' => $item['ago'],
+                ];
+            }
+        })->filter()->toArray(); // Added filter to remove null entries
 
         return view('admin.dtr.dashboard', [
             'user' => $users,
@@ -507,6 +520,16 @@ class UserController extends Controller
 
     public function showAdminUsers(RankingController $rankingController, HistoryController $historyController)
     {
+        // Assuming you have a way to fetch roles from your database (e.g., using Eloquent's get())
+        $roles = Role::get();
+
+        // Using map()
+        $not_intern_roles = $roles->map(function ($role) {
+            if ($role->position != 'user') {
+                return $role->position;
+            }
+        })->toArray();
+
         $users = User::get();
 
         $ranking = $rankingController->getRankings();
@@ -516,6 +539,7 @@ class UserController extends Controller
             'users' => $users,
             'ranking' => $ranking,
             'array_daily' => $array_daily,
+            'not_intern_roles' => $not_intern_roles,
         ]);
     }
 
