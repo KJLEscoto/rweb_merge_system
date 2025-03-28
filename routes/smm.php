@@ -11,6 +11,7 @@ use App\Http\Controllers\ContentApprovalController;
 use App\Http\Controllers\ContentHistoryController;
 use App\Http\Controllers\ContentRevisionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DirectJobOrderController;
 use App\Http\Controllers\GraphicApprovalController;
 use App\Http\Controllers\GraphicHistoryController;
 use App\Http\Controllers\GraphicRevisionController;
@@ -36,10 +37,19 @@ use App\Http\Controllers\SupervisorRenewalController;
 use App\Http\Controllers\SupervisorRevisionController;
 use App\Http\Controllers\SupervisorTaskController;
 use App\Http\Controllers\TopApprovalController;
+use App\Http\Controllers\TopDirectJobOrderController;
+use App\Http\Controllers\TopHistoryController;
+use App\Http\Controllers\TopJobOrderController;
+use App\Http\Controllers\TopRenewalController;
+use App\Http\Controllers\TopRevisionController;
+use App\Http\Controllers\TopTaskController;
 use App\Models\ProjectEndorsementForm;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('/smm')->middleware('auth.redirect')->group(function () {
+Route::prefix('/smm')->middleware(['auth.redirect', 'signature'])->group(function () {
+
+  //for now its static lang sa
+
   Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.smm.dashboard');
   });
@@ -120,12 +130,16 @@ Route::prefix('/smm')->middleware('auth.redirect')->group(function () {
   });
 });
 
-Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
+Route::prefix('/admin/smm')->middleware(['auth'])->group(function () {
+  Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.smm.dashboard');
+  Route::put('/signature/store', [SignatureController::class, 'store'])->name('signature.store');
+});
+
+Route::prefix('/admin/smm')->middleware(['auth.redirect', 'signature'])->group(function () {
 
   //smm routes
   Route::middleware(['auth'])->group(function () {
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.smm.dashboard');
     Route::get('/revision', [RevisionController::class, 'index'])->name('admin.smm.revision');
     Route::get('/revision/show/{id}', [RevisionController::class, 'show'])->name('admin.smm.revision.show');
     Route::get('/revision/edit/{id}', [RevisionController::class, 'edit'])->name('admin.smm.revision.edit');
@@ -138,9 +152,6 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
       Route::get('/track/edit/draft/{id}', [JobOrderTrackerController::class, 'editDraft'])->name('track.editDraft');
       Route::delete('/track/delete/draft/{id}', [JobOrderTrackerController::class, 'destroyDraft'])->name('track.destroyDraft');
     });
-
-
-    Route::put('/signature/store', [SignatureController::class, 'store'])->name('signature.store');
 
     Route::get('requestForm/history', [RequestFormController::class, 'history'])->name('admin.smm.requestForm.history');
     Route::get('requestForm/create', [RequestFormController::class, 'create'])->name('admin.smm.requestForm');
@@ -167,7 +178,7 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
     Route::get('/client_documents/show/{id}', [ClientHistoryController::class, 'show'])->name('admin.smm.client_documents.show');
   });
 
-  Route::middleware('auth')->group(function () {
+  Route::middleware(['auth'])->group(function () {
     Route::get('/profile/show', [ProfileController::class, 'index'])->name('admin.smm.profile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('admin.smm.profile.edit');
     Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
@@ -224,13 +235,56 @@ Route::prefix('/admin/smm')->middleware('auth.redirect')->group(function () {
     Route::view('/operation/letter', 'admin.smm.letter.index')->name('admin.smm.letter.index');
   });
 
-  Route::middleware(['auth', 'role:top_management'])->group(function () {
+  Route::middleware(['auth', 'role:top_management', 'signature'])->group(function () {
     Route::get('/topmanager', [TopApprovalController::class, 'index'])->name('admin.smm.topmanager.approve');
     Route::get('/topmanager/show/{id}', [TopApprovalController::class, 'show'])->name('admin.smm.topmanager.show');
     Route::get('/topmanager/edit/{id}', [TopApprovalController::class, 'edit'])->name('topmanager.edit');
     Route::put('/topmanager/update/{id}', [TopApprovalController::class, 'update'])->name('topmanager.update');
     Route::get('/topmanager/decline/{id}', [TopApprovalController::class, 'declineForm']);
     Route::post('/topmanager/decline/{id}', [TopApprovalController::class, 'decline']);
+
+    Route::get('/topmanager/directjob', [DirectJobOrderController::class, 'index'])->name('admin.smm.topmanager.directjob');
+    Route::get('/topmanager/directjob/create', [DirectJobOrderController::class, 'create'])->name('admin.smm.topmanager.directjob.create');
+    Route::post('/topmanager/directjob/store', [DirectJobOrderController::class, 'store'])->name('admin.smm.topmanager.directjob.store');
+    Route::get('/topmanager/directjob/show/{id}', [DirectJobOrderController::class, 'show'])->name('admin.smm.topmanager.directjob.show');
+    Route::get('/topmanager/directjob/edit/{id}', [DirectJobOrderController::class, 'edit'])->name('admin.smm.topmanager.directjob.edit');
+    Route::put('/topmanager/directjob/update/{id}', [DirectJobOrderController::class, 'update'])->name('admin.smm.topmanager.directjob.update');
+
+    Route::get('/topmanager/joborder', [JobOrderController::class, 'index'])->name('admin.smm.topmanager.joborder');
+    Route::get('/topmanager/joborder/create', [TopJobOrderController::class, 'create'])->name('admin.smm.topmanager.create');
+    Route::post('/topmanager/joborder/store', [TopJobOrderController::class, 'store'])->name('topmanager.store');
+    Route::get('/topmanager/joborder/show/{id}', [TopJobOrderController::class, 'show'])->name('admin.smm.topmanager.show');
+    Route::get('/topmanager/joborder/delete/{id}', [TopJobOrderController::class, 'delete'])->name('admin.smm.topmanager.delete');
+    Route::get('/topmanager/joborder/edit/{id}', [TopJobOrderController::class, 'edit'])->name('admin.smm.topmanager.edit');
+    Route::put('/topmanager/joborder/update/{id}', [TopJobOrderController::class, 'update'])->name('topmanager.update');
+
+    Route::get('/topmanager/approve', [TopApprovalController::class, 'index'])->name('admin.smm.topmanager.approve');
+    Route::get('/topmanager/approve/show/{id}', [TopApprovalController::class, 'show'])->name('admin.smm.topmanager.show');
+    Route::get('/topmanager/approve/edit/{id}', [TopApprovalController::class, 'edit'])->name('topmanager.edit');
+    Route::put('/topmanager/approve/update/{id}', [TopApprovalController::class, 'update'])->name('topmanager.update');
+    Route::get('/topmanager/approve/declineForm/{id}', [TopApprovalController::class, 'declineForm'])->name('topmanager.declineForm');
+    Route::put('/topmanager/approve/decline/{id}', [TopApprovalController::class, 'decline'])->name('topmanager.decline');
+
+    Route::get('/topmanager/history', [TopHistoryController::class, 'index'])->name('admin.smm.topmanager.history');
+    Route::get('/topmanager/history/show/{id}', [TopHistoryController::class, 'show'])->name('topmanager.history.show');
+    Route::get('/topmanager/history/download/{id}', [TopHistoryController::class, 'downloadPDF'])->name('topmanager.history.download');
+
+    Route::get('/topmanager/renewal', [TopRenewalController::class, 'index'])->name('admin.smm.topmanager.renewal');
+    Route::post('/topmanager/update/{id}', [TopRenewalController::class, 'update'])->name('topmanager.update');
+
+    //Create "My Task" tab for topmanager DONE
+    Route::get('/topmanager/task', [TopTaskController::class, 'index'])->name('admin.smm.topmanager.task');
+    Route::get('/topmanager/task/show/{id}', [TopTaskController::class, 'show'])->name('admin.smm.topmanager.task.show');
+    Route::get('/topmanager/task/create/{id}', [TopTaskController::class, 'create'])->name('admin.smm.topmanager.task.create');
+    Route::put('/topmanager/task/store/{id}', [TopTaskController::class, 'store'])->name('topmanager.task.store');
+    Route::get('/topmanager/task/edit/{id}', [TopTaskController::class, 'edit'])->name('admin.smm.topmanager.task.edit');
+    Route::put('/topmanager/task/update/{id}', [TopTaskController::class, 'update'])->name('topmanager.task.update');
+    Route::put('/topmanager/task/accept/{id}', [TopTaskController::class, 'accept'])->name('topmanager.task.accept');
+
+    //Create "My Revisions" tab for Supervisor  DONE
+    Route::get('/topmanager/revision', [TopRevisionController::class, 'index'])->name('topmanager.revision');
+    Route::get('/topmanager/revision/edit/{id}', [SupervisorRevisionController::class, 'edit'])->name('topmanager.edit');
+    Route::put('/topmanager/revision/update/{id}', [SupervisorRevisionController::class, 'update'])->name('topmanager.update');
   });
 
   Route::middleware(['auth', 'role:operations_supervisor'])->group(function () {

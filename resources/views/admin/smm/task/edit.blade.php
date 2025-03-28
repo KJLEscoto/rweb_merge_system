@@ -1,5 +1,5 @@
 <head>
-    <title>{{ env('APP_NAME') }} | SMM | Create Supervisor Task</title>
+    <title>{{ env('APP_NAME') }} | SMM | Edit Supervisor Task</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -24,11 +24,8 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 </head>
 
-@php
-    $role = Auth::user()->roles->position;
-@endphp
 
-<x-main-layout breadcumb="SMM / List {{$role}} Task" page="Create Supervisor Task">
+<x-main-layout breadcumb="SMM / List Supervisor Task" page="Edit Supervisor Task">
 
     <div class="w-full px-6 py-10 mx-auto rounded-lg bg-white custom-shadow">
         <div>
@@ -38,7 +35,7 @@
                 </div>
             </a>
         </div>
-        <form action="{{ url('admin/smm/supervisor/task/store/' . $job_draft->id) }}" method="POST">
+        <form action="{{ url('admin/smm/supervisor/task/update/' . $job_draft->id) }}" method="POST">
             @csrf
             @method('PUT')
             <h1 class="text-xl font-bold mt-4">Create Draft</h1>
@@ -107,7 +104,7 @@
 </x-main-layout>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         ClassicEditor
             .create(document.querySelector('#editor'))
             .then(editor => {
@@ -117,7 +114,7 @@
                 editor.setData(`{!! addslashes(old('draft', $job_draft->draft ?? '')) !!}`);
 
                 // Before form submission, update the textarea with the editor's data
-                document.querySelector("form").addEventListener("submit", function () {
+                document.querySelector("form").addEventListener("submit", function() {
                     document.querySelector("#editor").value = editor.getData();
                 });
 

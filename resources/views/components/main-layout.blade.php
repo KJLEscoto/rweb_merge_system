@@ -111,10 +111,12 @@
         </div>
 
         {{-- intern layout --}}
-    @elseif (Request::routeIs('users.dashboard*') ||
-            Request::routeIs('users.settings*') ||
-            Request::routeIs('users.dtr*') ||
-            Request::routeIs('users.request*'))
+    @elseif (
+    Request::routeIs('users.dashboard*') ||
+    Request::routeIs('users.settings*') ||
+    Request::routeIs('users.dtr*') ||
+    Request::routeIs('users.request*')
+)
         <div class="h-full w-full lg:grid lg:grid-cols-12">
             <section class="sticky h-auto lg:hidden top-0 w-full bg-white shadow-lg py-4 z-50">
                 <div class="flex items-center justify-between w-full lg:px-10 px-5 gap-5">
@@ -132,8 +134,8 @@
             </section>
 
             @php
-                $profile = \App\Models\Profile::where('id', Auth::user()->profile_id)->first();
-                $file = \App\Models\File::where('id', $profile->file_id)->first();
+    $profile = \App\Models\Profile::where('id', Auth::user()->profile_id)->first();
+    $file = \App\Models\File::where('id', $profile->file_id)->first();
             @endphp
 
             <!-- Sidebar Menu (Hidden on Large Screens) -->
@@ -329,86 +331,87 @@
                 {{-- admin web-development navbar --}}
                 @if (Request::routeIs('admin.web*'))
                     @php
-                        $userId = Auth::id();
-                        $canReadPrivilegeId = \App\Models\Privilege::where('description', 'like', '%can_read%')->value(
-                            'id',
-                        );
+        $userId = Auth::id();
+        $canReadPrivilegeId = \App\Models\Privilege::where('description', 'like', '%can_read%')->value(
+            'id',
+        );
                     @endphp
 
                     @if ($canReadPrivilegeId)
                         @php
-                            $pages = [
-                                'dashboard' => [
-                                    'icon' => 'ic--baseline-space-dashboard',
-                                    'label' => 'Dashboard',
-                                    'route' => 'admin.web.dashboard',
-                                ],
-                                'direct_job_order' => [
-                                    'icon' => 'carbon--direction-loop-right-filled',
-                                    'label' => 'Direct Job Order',
-                                    'route' => 'admin.web.direct-job-order',
-                                ],
-                                'operation_job_order' => [
-                                    'icon' => 'clarity--directory-solid-badged',
-                                    'label' => 'Operation Job Order',
-                                    'route' => 'admin.web.operation-job-order',
-                                ],
-                                'task' => [
-                                    'icon' => 'fluent--clipboard-text-edit-48-filled',
-                                    'label' => 'Task',
-                                    'route' => 'admin.web.task',
-                                ],
-                                'revision' => [
-                                    'icon' => 'mdi--file-cog',
-                                    'label' => 'Revision',
-                                    'route' => 'admin.web.revision',
-                                ],
-                                'approvals' => [
-                                    'icon' => 'mdi--clipboard-text-history',
-                                    'label' => 'Approvals',
-                                    'route' => 'admin.web.approvals',
-                                ],
-                                'users' => ['icon' => 'fa--users', 'label' => 'Users', 'route' => 'admin.web.users'],
-                                'track' => [
-                                    'icon' => 'ic--round-date-range',
-                                    'label' => 'Track',
-                                    'route' => 'admin.web.track',
-                                ],
-                                'downloadables' => [
-                                    'icon' => 'tdesign--file-download-filled',
-                                    'label' => 'Downloadables',
-                                    'route' => 'admin.web.downloadables',
-                                ],
-                                'instructions_manual' => [
-                                    'icon' => 'streamline--manual-book-solid',
-                                    'label' => 'Instructions Manual',
-                                    'route' => 'admin.web.instructions-manual',
-                                ],
-                                'incoming_requests' => [
-                                    'icon' => 'fa--user',
-                                    'label' => 'Incoming Requests',
-                                    'route' => 'admin.web.incoming-requests',
-                                ],
-                                'profile' => [
-                                    'icon' => 'fa--user',
-                                    'label' => 'Profile',
-                                    'route' => 'admin.web.profile',
-                                ],
-                            ];
+            $pages = [
+                'dashboard' => [
+                    'icon' => 'ic--baseline-space-dashboard',
+                    'label' => 'Dashboard',
+                    'route' => 'admin.web.dashboard',
+                ],
+                'direct_job_order' => [
+                    'icon' => 'carbon--direction-loop-right-filled',
+                    'label' => 'Direct Job Order',
+                    'route' => 'admin.web.direct-job-order',
+                ],
+                'operation_job_order' => [
+                    'icon' => 'clarity--directory-solid-badged',
+                    'label' => 'Operation Job Order',
+                    'route' => 'admin.web.operation-job-order',
+                ],
+                'task' => [
+                    'icon' => 'fluent--clipboard-text-edit-48-filled',
+                    'label' => 'Task',
+                    'route' => 'admin.web.task',
+                ],
+                'revision' => [
+                    'icon' => 'mdi--file-cog',
+                    'label' => 'Revision',
+                    'route' => 'admin.web.revision',
+                ],
+                'approvals' => [
+                    'icon' => 'mdi--clipboard-text-history',
+                    'label' => 'Approvals',
+                    'route' => 'admin.web.approvals',
+                ],
+                'users' => ['icon' => 'fa--users', 'label' => 'Users', 'route' => 'admin.web.users'],
+                'track' => [
+                    'icon' => 'ic--round-date-range',
+                    'label' => 'Track',
+                    'route' => 'admin.web.track',
+                ],
+                'downloadables' => [
+                    'icon' => 'tdesign--file-download-filled',
+                    'label' => 'Downloadables',
+                    'route' => 'admin.web.downloadables',
+                ],
+                'instructions_manual' => [
+                    'icon' => 'streamline--manual-book-solid',
+                    'label' => 'Instructions Manual',
+                    'route' => 'admin.web.instructions-manual',
+                ],
+                'incoming_requests' => [
+                    'icon' => 'fa--user',
+                    'label' => 'Incoming Requests',
+                    'route' => 'admin.web.incoming-requests',
+                ],
+                'profile' => [
+                    'icon' => 'fa--user',
+                    'label' => 'Profile',
+                    'route' => 'admin.web.profile',
+                ],
+            ];
                         @endphp
 
                         @foreach ($pages as $pageDescription => $pageData)
                             @php
-                                $pageId = \App\Models\Page::where(
-                                    'description',
-                                    'like',
-                                    '%' . $pageDescription . '%',
-                                )->value('id');
+                $pageId = \App\Models\Page::where(
+                    'description',
+                    'like',
+                    '%' . $pageDescription . '%',
+                )->value('id');
                             @endphp
 
                             @if (
-                                $pageId &&
-                                    Auth::user()->role_channels->where('page_id', $pageId)->where('privilege_id', $canReadPrivilegeId)->isNotEmpty())
+                    $pageId &&
+                    Auth::user()->role_channels->where('page_id', $pageId)->where('privilege_id', $canReadPrivilegeId)->isNotEmpty()
+                )
                                 <x-admin.sidebar-menu :icon="$pageData['icon']" :label="$pageData['label']" :routeName="$pageData['route']" />
                             @endif
                         @endforeach
@@ -474,8 +477,23 @@
                 @elseif (Request::routeIs('admin.smm*') && Auth::user()->roles->position === 'top_management')
                     <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
                         routeName="admin.smm.dashboard" />
+
+                    {{-- START Room for change --}}    
+                    <x-admin.sidebar-menu icon="clarity--directory-solid-badged" label="Operation Job Order"
+                        routeName="admin.smm.topmanager.joborder" />
+                    <x-admin.sidebar-menu icon="carbon--direction-loop-right-filled" label="Direct Job Order"
+                        routeName="admin.smm.topmanager.directjob" />
                     <x-admin.sidebar-menu icon="mdi--clipboard-text-history" label="Approval"
                         routeName="admin.smm.topmanager.approve" />
+                    <x-admin.sidebar-menu icon="fluent--clipboard-text-edit-48-filled" label="My Task"
+                    routeName="admin.smm.topmanager.task" />
+                    <x-admin.sidebar-menu icon="mdi--file-cog" label="My Revision" routeName="admin.smm.revision" />
+                    <x-admin.sidebar-menu icon="mdi--file-check" label="Renewal"
+                            routeName="admin.smm.topmanager.renewal" />
+                    <x-admin.sidebar-menu icon="streamline--manual-book-solid" label="Downloadables"
+                        routeName="admin.smm.topmanager.history" />
+                    {{-- END Room for change --}}  
+
                     <x-admin.sidebar-menu icon="mdi--clipboard-text-history" label="Endorsement Approval"
                         routeName="admin.smm.endorsement" />
                     <x-admin.sidebar-menu icon="ic--round-date-range" label="Track Job Order"
@@ -549,9 +567,12 @@
                         @if (Request::routeIs('admin.web*'))
                             <x-admin.sidebar-menu icon="ic--baseline-space-dashboard" label="Dashboard"
                                 routeName="admin.web.dashboard" />
-                            @if (Auth::user()->role_channels->where(
-                                        'page_id',
-                                        \App\Models\Page::where('description', 'like', '%direct_job_order%')->first()->id)->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first())
+                            @if (
+            Auth::user()->role_channels->where(
+                'page_id',
+                \App\Models\Page::where('description', 'like', '%direct_job_order%')->first()->id
+            )->where('privilege_id', \App\Models\Privilege::where('description', 'like', '%can_read%')->first()->id)->first()
+        )
                                 <x-admin.sidebar-menu icon="carbon--direction-loop-right-filled"
                                     label="Direct Job Order" routeName="admin.web.direct-job-order" />
                             @endif

@@ -35,7 +35,6 @@ class RegisteredUserController extends Controller
         $authuser = auth()->user();
         $users = User::all();
 
-
         return view('admin.smm.users.users', ['users' => $users]);
     }
 

@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'role' => \App\Http\Middleware\RoleMiddleware::class,
         'auth.redirect' => \App\Http\Middleware\RedirectIfNotAuthenticated::class,
         'role_channel' => \App\Http\Middleware\RolesChannel::class,
+        'signature' => \App\Http\Middleware\RedirectOnMissingSignature::class,
     ];
 }

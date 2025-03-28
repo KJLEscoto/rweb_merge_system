@@ -6,10 +6,10 @@
 </head>
 
 @php
-    $role = Auth::user()->roles->position;
+$role = Auth::user()->roles->position;
 @endphp
 
-<x-main-layout breadcumb="SMM" page="List {{$role}} Task">
+<x-main-layout breadcumb="SMM" page="List {{ ucwords(str_replace('_', ' ', $role)) }} Task">
 
     {{-- Success Message Component --}}
     @if (session('Status') === 'Job Order Accepted Successfully')
@@ -17,7 +17,7 @@
     @endif
 
     @if (session('Status') === 'No Signature Found' && !Auth::user()->signature)
-        <form action="{{ url('signature/store') }}" method="POST" id="modalSignatureForm">
+        <form action="{{ route('signature/store') }}" method="POST" id="modalSignatureForm">
             @csrf
             @method('PUT')
             <x-save-signature />
@@ -25,13 +25,13 @@
     @endif
 
     {{-- Search Bar --}}
-    {{-- <a href="{{ url('admin/smm/joborder/create') }}">
+    {{-- <a href="{{ route('admin/smm/joborder/create') }}">
         <div class="bg-[#fa7011] w-fit block text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center lg:hidden">
             <i class="fa-solid fa-plus"></i>
         </div>
     </a> --}}
     <div class="w-full h-fit flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-        {{-- <a href="{{ url('admin/smm/joborder/create') }}">
+        {{-- <a href="{{ route('admin/smm/joborder/create') }}">
             <div class="bg-[#fa7011] hidden text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#D95F0E] transition text-center w-full md:w-auto lg:block">
                 Create New Job Order
             </div>
@@ -108,7 +108,7 @@
         $job_draft->status == 'Waiting for Graphic Designer Approval'
     )
                                 @if ($job_draft->status == 'pending')
-                                    <a href="{{ url('admin/smm/supervisor/task/create/' . $job_draft->id) }}">
+                                    <a href="{{ route('admin.smm.topmanager.task.create' . $job_draft->id) }}">
                                         <button
                                             class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
                                             Create
@@ -118,7 +118,7 @@
             $job_draft->status == 'Waiting for Content Writer Approval' ||
             $job_draft->status == 'Waiting for Graphic Designer Approval'
         )
-                                    <form action="{{ url('admin/smm/supervisor/task/accept/' . $job_draft->id) }}"
+                                    <form action="{{ route('topmanager.task.accept' . $job_draft->id) }}"
                                         method="POST" class="inline">
                                         @csrf
                                         @method('PUT')
@@ -128,33 +128,33 @@
                                         </button>
                                     </form>
                                 @endif
-                                <a href="{{ url('admin/smm/supervisor/task/show/' . $job_draft->id) }}">
+                                <a href="{{ route('admin.smm.topmanager.task.show' . $job_draft->id) }}">
                                     <button
                                         class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
                                         Show
                                     </button>
                                 </a>
                             @elseif ($job_draft->status == 'Submitted to Assistant Supervisor')
-                                <a href="{{ url('admin/smm/supervisor/task/edit/' . $job_draft->id) }}">
+                                <a href="{{ route('admin.smm.topmanager.task.edit' . $job_draft->id) }}">
                                     <button
                                         class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-blue-500 rounded hover:bg-blue-600">
                                         Edit
                                     </button>
                                 </a>
-                                <a href="{{ url('admin/smm/supervisor/task/show/' . $job_draft->id) }}">
+                                <a href="{{ route('admin.smm.topmanager.task.show' . $job_draft->id) }}">
                                     <button
                                         class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
                                         Show
                                     </button>
                                 </a>
                             @else
-                                <a href="{{ url('admin/smm/supervisor/task/create/' . $job_draft->id) }}">
+                                <a href="{{ route('admin.smm.topmanager.create' . $job_draft->id) }}">
                                     <button disabled
                                         class="px-2 py-1 mb-2 cursor-not-allowed lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-gray-500 rounded hover:bg-gray-600">
                                         Edit
                                     </button>
                                 </a>
-                                <a href="{{ url('admin/smm/supervisor/task/show/' . $job_draft->id) }}">
+                                <a href="{{ route('admin.smm.topmanager.task.show' . $job_draft->id) }}">
                                     <button
                                         class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
                                         Show

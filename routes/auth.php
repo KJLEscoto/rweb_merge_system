@@ -34,7 +34,7 @@ Route::middleware('guest')->group(function () {
         ->name('admin.smm.password.store');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'signature'])->group(function () {
     Route::get('admin/smm/users', [RegisteredUserController::class, 'index'])
         ->name('admin.smm.users');
 

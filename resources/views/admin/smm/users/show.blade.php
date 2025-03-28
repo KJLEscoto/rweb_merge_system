@@ -88,7 +88,5 @@
             </div>
         </div>
     </div>
-
-
 </x-main-layout>
 {{-- @endsection --}}
