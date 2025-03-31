@@ -31,28 +31,49 @@ class NotificationController extends Controller
     public function index(Request $request)
     {
         $user_id = Auth::user()->id;
+
         $notifications = Notification::with('users')
             ->orderBy('created_at', 'desc')
             ->where('user_id', $user_id)
             ->select([
                 'notifications.*',
                 DB::raw("(SELECT files.path 
-                  FROM files 
-                  WHERE files.id = 
-                        (SELECT profiles.file_id 
-                         FROM profiles 
-                         WHERE profiles.id = 
-                               (SELECT users.profile_id 
-                                FROM users 
-                                WHERE users.id = notifications.from_user_id
-                                LIMIT 1)
-                         LIMIT 1)
-                  LIMIT 1) AS file_path")
+                FROM files 
+                WHERE files.id = 
+                    (SELECT profiles.file_id 
+                        FROM profiles 
+                        WHERE profiles.id = 
+                            (SELECT users.profile_id 
+                            FROM users 
+                            WHERE users.id = notifications.from_user_id
+                            LIMIT 1)
+                        LIMIT 1)
+                LIMIT 1) AS file_path")
             ])
             ->where('is_archive', 0)
             ->paginate(10);
 
         return compact('notifications');
+    }
+
+    public function seeAllIndex(Request $request)
+    {
+        $user_id = Auth::user()->id;
+        $tab = $request->query('tab', 'all');
+        $page = $request->query('page', 1);
+
+        $query = Notification::with('users')
+            ->orderBy('created_at', 'desc')
+            ->where('user_id', $user_id)
+            ->where('is_archive', 0);
+
+        if ($tab == 'unread') {
+            $query->where('is_read', 0);
+        }
+
+        $notifications = $query->paginate(10, ['*'], 'page', $page);
+
+        return response()->json(['notifications' => $notifications->items()]);
     }
 
     public function show($id)
@@ -449,6 +470,33 @@ class NotificationController extends Controller
 
             DB::commit();
             return back()->with(['success' => 'The message has been archived!']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function seeAllNotifications()
+    {
+        DB::beginTransaction();
+
+        try {
+
+            $user = Auth::user();
+
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+
+            //this notification will see all notifications from the user
+            $notifications = Notification::find($user->id);
+
+            if (!$notifications) {
+                return response()->json(['error' => 'Notification not found'], 404);
+            }
+
+            DB::commit();
+            return view('admin.notificationSinglePage', compact('notifications'));
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);

@@ -60,7 +60,7 @@
                             <div class="lg:col-span-1 font-semibold">Google Drive Link:</div>
                             <div class="lg:col-span-4">
                                 <div id="draftContent" class="max-h-[300px] rounded-lg overflow-y-auto break-all">
-                                    {!! $job_draft->draft !!}
+                                    {!! preg_replace('/<a href="(?!https?:\/\/)(.*?)"/i', '<a href="https://$1"', $job_draft->draft) !!}
                                 </div>
                             </div>
                         </div>

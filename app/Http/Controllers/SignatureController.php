@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
@@ -93,6 +94,8 @@ class SignatureController extends Controller
                 'new_signature_pad' => 'nullable|string',
             ]);
 
+            DB::beginTransaction(); // Start transaction
+
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
                 $fileName = Str::random(20) . '.' . $file->getClientOriginalExtension();
@@ -106,18 +109,17 @@ class SignatureController extends Controller
                     'size' => $file->getSize(),
                 ]);
 
-                // Create signature record and associate with file
                 $signature = Signature::create([
                     'description' => 'Signature for ' . Auth::user()->name,
                     'file_id' => $fileRecord->id,
                 ]);
 
-                // Associate signature with user and set signature URL
                 $user = Auth::user();
                 $user->signature_id = $signature->id;
-                $user->signature = 'uploads/' . $fileName; // Set signature URL
+                $user->signature = 'uploads/' . $fileName;
                 $user->save();
 
+                DB::commit(); // Commit transaction
                 return response()->json(['success' => 'File uploaded successfully', 'file' => $fileRecord]);
             } elseif ($request->has('image_url')) {
                 $imageUrl = $request->input('image_url');
@@ -142,20 +144,20 @@ class SignatureController extends Controller
                     'size' => $fileSize,
                 ]);
 
-                // Create signature record and associate with file
                 $signature = Signature::create([
                     'description' => 'Signature for ' . Auth::user()->name,
                     'file_id' => $fileRecord->id,
                 ]);
 
-                // Associate signature with user and set signature URL
                 $user = Auth::user();
                 $user->signature_id = $signature->id;
-                $user->signature = 'uploads/' . $newFileName; // Set signature URL
+                $user->signature = 'uploads/' . $newFileName;
                 $user->save();
 
+                DB::commit(); // Commit transaction
                 return response()->json(['success' => 'Local image URL processed successfully', 'file' => $fileRecord]);
             } elseif ($request->has('new_signature_pad')) {
+
                 $base64Data = $request->input('new_signature_pad');
                 $imageData = str_replace('data:image/png;base64,', '', $base64Data);
                 $decodedImage = base64_decode($imageData);
@@ -175,25 +177,26 @@ class SignatureController extends Controller
                     'size' => filesize($filePath),
                 ]);
 
-                // Create signature record and associate with file
                 $signature = Signature::create([
                     'description' => 'Signature for ' . Auth::user()->name,
                     'file_id' => $fileRecord->id,
                 ]);
 
-                // Associate signature with user and set signature URL
                 $user = Auth::user();
                 $user->signature_id = $signature->id;
-                $user->signature = 'uploads/' . $fileName; // Set signature URL
+                $user->signature = 'uploads/' . $fileName;
                 $user->save();
 
+                DB::commit(); // Commit transaction
                 return redirect()->back();
             } else {
                 return response()->json(['error' => 'No file, image_url, or new_signature_pad provided'], 400);
             }
         } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack(); // Rollback on validation failure
             return response()->json(['error' => 'Validation failed', 'messages' => $e->errors()], 422);
         } catch (\Throwable $e) {
+            DB::rollBack(); // Rollback on other errors
             return response()->json(['error' => 'File upload/processing failed', 'message' => $e->getMessage()], 500);
         }
     }

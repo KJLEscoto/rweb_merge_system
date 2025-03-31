@@ -32,4 +32,10 @@ class Profile extends Model
     {
         return $this->hasOne(Profile::class, 'profile_id');
     }
+
+    public static function myProfile($id): File
+    {
+        $user = User::findOrFail($id);
+        return File::where('id', $user->profiles->file_id)->first();
+    }
 }

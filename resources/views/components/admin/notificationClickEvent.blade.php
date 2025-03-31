@@ -227,6 +227,29 @@
             document.getElementById("tab-archived").classList.add("text-gray-500");
         });
 
+        document.getElementById("see-all").addEventListener("click", function () {
+            try {
+                debugger;
+                let route = @json(Route::currentRouteName()); // Get the current route name
+
+                if (route && /^admin\.(dtr|smm|web)\./.test(route)) {
+                    // Match if the route starts with admin.dtr., admin.smm., or admin.web.
+
+                    if (route.startsWith('admin.dtr.')) {
+                        window.location.href = "{{ route(name: 'admin.dtr.notifications.show.all') }}";
+                    } else if (route.startsWith('admin.smm.')) {
+                        window.location.href = "{{ route(name: 'admin.smm.notifications.show.all') }}";
+                    } else if (route.startsWith('admin.web.')) {
+                        window.location.href = "{{ route(name: 'admin.web.notifications.show.all') }}";
+                    }
+
+                }
+
+            } catch (error) {
+                console.error("Error navigating to notifications:", error);
+            }
+        });
+
         //initial load
         fetchAndDisplayAllNotifications();
     });

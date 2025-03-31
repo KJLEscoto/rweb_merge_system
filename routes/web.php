@@ -165,6 +165,7 @@ Route::get('/notification-page', [NotificationController::class, 'readUserNotifi
 
 Route::post('/notifications/{id}/archive', [NotificationController::class, 'archiveAdminNotification'])->name('user.recieve.notification.archive');
 Route::get('/notifications', [NotificationController::class, 'index'])->name('user.recieve.notification.index');
+Route::get('/notifications/seeAll', [NotificationController::class, 'seeAllIndex'])->name('user.recieve.notification.see.all.index');
 Route::get('/notifications/{id}/find', [NotificationController::class, 'show'])->name('user.recieve.notification.find');
 Route::get('/notifications/allCount', [NotificationController::class, 'allCount'])->name('user.recieve.notification.allCount');
 Route::get('/notifications/unreadCount', [NotificationController::class, 'unreadCount'])->name('user.recieve.notification.unreadCount');
@@ -220,6 +221,9 @@ Route::prefix('files')->group(function () {
     Route::delete('/{file}', [FileController::class, 'destroy'])->name('files.destroy');
 });
 
+Route::get('admin/dtr/notifications', [NotificationController::class, 'seeAllNotifications'])->name('admin.dtr.notifications.show.all');
+Route::get('admin/smm/notifications', [NotificationController::class, 'seeAllNotifications'])->name('admin.smm.notifications.show.all');
+Route::get('admin/web/notifications', [NotificationController::class, 'seeAllNotifications'])->name('admin.web.notifications.show.all');
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/smm.php';
