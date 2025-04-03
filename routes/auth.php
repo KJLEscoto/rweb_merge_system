@@ -41,6 +41,8 @@ Route::middleware(['auth', 'signature'])->group(function () {
         ->name('admin.smm.users.edit');
     Route::put('admin/smm/users/update/{id}', [RegisteredUserController::class, 'update'])
         ->name('admin.smm.users.update');
+    Route::delete('admin/smm/users/destroy/{id}', [RegisteredUserController::class, 'destroy'])
+        ->name('admin.smm.users.destroy');
 
     Route::get('admin/smm/register', [RegisteredUserController::class, 'create'])
         ->name('admin.smm.register');

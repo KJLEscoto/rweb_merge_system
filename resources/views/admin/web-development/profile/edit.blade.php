@@ -30,7 +30,7 @@
                     <div class="w-auto h-auto">
                         <div class="w-32 h-32 overflow-hidden rounded-full">
                             <img id="imagePreview" class="w-full h-full object-center"
-                                src="{{ \App\Models\File::where('id', $user->profiles->file_id)->first()->path }}
+                                src="{{ $user->profiles->file ? asset($user->profiles->file->path . '?t=' . time() . '?s=100') : asset('image/default_female.png') }}
                             "
                                 alt="user profile">
                         </div>

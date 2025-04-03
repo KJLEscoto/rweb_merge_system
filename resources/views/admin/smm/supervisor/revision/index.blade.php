@@ -37,35 +37,35 @@
                 </thead>
                 <tbody id="tableBody">
                     @forelse ($job_drafts as $job_draft)
-                        <tr class="project-row border-b">
-                            <td class="w-[35%] px-4 py-3 truncate">{{ $job_draft->jobOrder->title }}</td>
-                            <td class="w-[35%] px-4 py-3 truncate">
-                                @if ($job_draft->type == 'content_writer')
-                                    Content Writer - {{ $job_draft->contentWriter->name }}
-                                @else
-                                    Graphic Designer - {{ $job_draft->graphicDesigner->name }}
-                                @endif
-                            </td>
-                            <td class="w-[20%] px-4 py-3 whitespace-nowrap">
-                                {{ $job_draft->date_target }}
-                            </td>
-                            <td class="px-6 py-3 border-b">
-                                <a href="{{ url('smm/supervisor/revisions/edit/' . $job_draft->id) }}">
-                                    <button
-                                        class="px-4 py-2 text-sm text-white 
-           {{ $job_draft->status != 'Revision' ? 'bg-green-200 cursor-not-allowed' : 'bg-green-500 rounded hover:bg-green-600' }}"
-                                        {{ $job_draft->status != 'Revision' ? 'disabled' : '' }}>
-                                        Edit Draft
-                                    </button>
-                                </a>
-                                <a href="{{ url('smm/supervisor/show/' . $job_draft->id) }}">
+                                    <tr class="project-row border-b">
+                                        <td class="w-[35%] px-4 py-3 truncate">{{ $job_draft->jobOrder->title }}</td>
+                                        <td class="w-[35%] px-4 py-3 truncate">
+                                            @if ($job_draft->type == 'content_writer')
+                                                Content Writer - {{ $job_draft->contentWriter->name }}
+                                            @else
+                                                Graphic Designer - {{ $job_draft->graphicDesigner->name }}
+                                            @endif
+                                        </td>
+                                        <td class="w-[20%] px-4 py-3 whitespace-nowrap">
+                                            {{ $job_draft->date_target }}
+                                        </td>
+                                        <td class="px-6 py-3 border-b">
+                                            <a href="{{ url('smm/supervisor/revisions/edit/' . $job_draft->id) }}">
+                                                <button
+                                                    class="px-4 py-2 text-sm text-white 
+                           {{ $job_draft->status != 'Revision' ? 'bg-green-200 cursor-not-allowed' : 'bg-green-500 rounded hover:bg-green-600' }}"
+                                                    {{ $job_draft->status != 'Revision' ? 'disabled' : '' }}>
+                                                    Edit Draft
+                                                </button>
+                                            </a>
+                                            <a href="{{ url('smm/supervisor/show/' . $job_draft->id) }}">
 
-                                    <button class="px-4 py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
-                                        Show Details
-                                    </button>
-                                </a>
-                            </td>
-                        </tr>
+                                                <button class="px-4 py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
+                                                    Show Details
+                                                </button>
+                                            </a>
+                                        </td>
+                                    </tr>
                     @empty
                         <tr class="h-[400px]">
                             <td colspan="4" class="px-6 py-3">

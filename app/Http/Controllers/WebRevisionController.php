@@ -6,7 +6,9 @@ use App\Models\Revision;
 use App\Models\WebProjectChannel;
 use App\Models\WebRevisions;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class WebRevisionController extends Controller
 {
@@ -39,7 +41,18 @@ class WebRevisionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $web_revision = new WebRevisions();
+            $web_revision->update([
+                'date_submitted' => Carbon::now(),
+                'latest_draft' => $request->draft
+            ]);
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollBack();
+            return back()->with('error', 'Error while saving data. Please try again.');
+        }
     }
 
     /**
@@ -70,7 +83,7 @@ class WebRevisionController extends Controller
         ]);
 
         WebProjectChannel::find($web_revision->web_project_channel->id)->update([
-            'status' => 'Submitted to Assistant Supervisor',
+            'status' => 'Submitted to Operations Supervisor',
             'draft' => $request->draft
         ]);
 

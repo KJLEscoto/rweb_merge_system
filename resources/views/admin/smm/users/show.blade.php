@@ -51,8 +51,22 @@
             <div class="col-span-3 lg:col-span-2 bg-white shadow-md rounded-md p-5">
                 <div class="flex justify-between">
                     <h1 class="text-sm font-semibold">User Information</h1>
-                    <div class="px-4 py-1 bg-[#f68e12] cursor-pointer text-white rounded-md hover:bg-[#e57f0f]"
-                        onclick="window.location.assign('{{ url('admin/smm/users/edit/' . $user->id) }}')">Edit
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="">
+                            <div
+                                class="px-4 py-2 bg-[#f68e12] cursor-pointer text-white rounded-md hover:bg-[#e57f0f] text-center">
+                                <a href="{{ url('admin/smm/users/edit/' . $user->id) }}" class="block w-full">Edit</a>
+                            </div>
+                        </div>
+                        <form action="{{ url('admin/smm/users/destroy/' . $user->id) }}" method="POST"
+                            onsubmit="return confirm('Are you sure you want to delete this user?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="px-4 py-2 bg-red-700 cursor-pointer text-white rounded-md hover:bg-red-800 w-full">
+                                Delete
+                            </button>
+                        </form>
                     </div>
                 </div>
                 <div class="space-y-4 mt-4">

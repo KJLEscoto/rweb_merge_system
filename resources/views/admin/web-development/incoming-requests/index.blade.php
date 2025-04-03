@@ -50,37 +50,64 @@
                         <td class="px-6 py-3">{{ $web_request->status }}</td>
                         <td class="px-6 py-3">
                             @if ($web_request->status == 'pending')
-                                <form action="{{ route('admin.web.incoming-requests.accept', $web_request->id) }}" method="POST"
-                                    class="inline">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit"
-                                        class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-[#fa7011] rounded hover:bg-[#fa7011]">
-                                        Accept
-                                    </button>
-                                </form>
-                                <a href="{{ route('admin.web.incoming-requests.show', $web_request->id) }}">
-                                    <button
-                                        class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
-                                        Show
-                                    </button>
-                                </a>
+                                <div class="flex gap-2">
+                                    <form action="{{ route('admin.web.incoming-requests.accept', $web_request->id) }}"
+                                        method="POST" class="inline">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit"
+                                            class=" px-1 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-[#fa7011]
+                                                                                                                                                                                                                                                                                                                                                    rounded hover:bg-[#fa7011]">
+                                            Accept
+                                        </button>
+                                    </form>
+                                    <a href="{{ route('admin.web.incoming-requests.show', $web_request->id) }}">
+                                        <button
+                                            class="px-1 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
+                                            Show
+                                        </button>
+                                    </a>
+                                    <form action="{{ route('admin.web.incoming-requests.destroy', $web_request->id) }}"
+                                        method="POST"
+                                        onsubmit="return confirm('Are you sure you want to delete this request?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button
+                                            class="px-1 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600"
+                                            type="submit">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
                             @else
-                                <form action="{{ route('admin.web.incoming-requests.accept', $web_request->id) }}" method="POST"
-                                    class="inline">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit" disabled
-                                        class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-gray-400 rounded hover:bg-gray-500 cursor-not-allowed">
-                                        Accept
-                                    </button>
-                                </form>
-                                <a href="{{ route('admin.web.incoming-requests.show', $web_request->id) }}">
-                                    <button
-                                        class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
-                                        Show
-                                    </button>
-                                </a>
+                                <div class="flex gap-2">
+                                    <form action="{{ route('admin.web.incoming-requests.accept', $web_request->id) }}"
+                                        method="POST" class="inline">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" disabled
+                                            class="px-1 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-gray-400 rounded hover:bg-gray-500 cursor-not-allowed">
+                                            Accept
+                                        </button>
+                                    </form>
+                                    <a href="{{ route('admin.web.incoming-requests.show', $web_request->id) }}">
+                                        <button
+                                            class="px-1 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
+                                            Show
+                                        </button>
+                                    </a>
+                                    <form action="{{ route('admin.web.incoming-requests.destroy', $web_request->id) }}"
+                                        method="POST"
+                                        onsubmit="return confirm('Are you sure you want to delete this request?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button
+                                            class="px-1 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600"
+                                            type="submit">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
                             @endif
 
                         </td>

@@ -59,19 +59,26 @@
                         <tr class="border-b">
                             <td class="px-6 py-3">{{ $user->name }}</td>
                             <td class="px-6 py-3">{{ $roles[$user->role_id] ?? 'Unknown' }}</td>
-                            <td class="px-6 py-3">
-                                <a href="{{ url('admin/smm/users/edit/' . $user->id) }}">
-                                    <button
-                                        class="px-2 py-1 mb-2 lg:mb-0 lg:px-4 lg:py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
+                            <td class="px-6 py-3 flex flex-wrap gap-2">
+                                <a href="{{ url('admin/smm/users/edit/' . $user->id) }}" class="inline-block">
+                                    <button class="px-3 py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600">
                                         Edit
                                     </button>
                                 </a>
-                                <a href="{{ url('admin/smm/users/show/' . $user->id) }}">
-                                    <button
-                                        class="px-2 py-1 lg:px-4 lg:py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
+                                <a href="{{ url('admin/smm/users/show/' . $user->id) }}" class="inline-block">
+                                    <button class="px-3 py-2 text-sm text-white bg-gray-700 rounded hover:bg-gray-800">
                                         Show
                                     </button>
                                 </a>
+                                <form action="{{ url('admin/smm/users/destroy/' . $user->id) }}" method="POST"
+                                    onsubmit="return confirm('Are you sure you want to delete this user?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="px-3 py-2 text-sm text-white bg-red-700 rounded hover:bg-red-800">
+                                        Delete
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @endif

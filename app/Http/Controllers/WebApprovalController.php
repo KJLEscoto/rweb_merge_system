@@ -8,11 +8,13 @@ use App\Models\Privilege;
 use App\Models\JobOrder;
 use App\Models\Signature;
 use App\Models\User;
+use App\Models\WebFeedback;
 use App\Models\WebJobOrder;
 use App\Models\WebProject;
 use App\Models\WebProjectChannel;
 use App\Models\WebRevisions;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
@@ -152,6 +154,7 @@ class WebApprovalController extends Controller
      */
     public function show($id)
     {
+
         $user = Auth::user();
         $web_project_channel = null;
 
@@ -243,7 +246,7 @@ class WebApprovalController extends Controller
                 return back()->with('error', 'Web Project Channel not found.');
             }
 
-            $this->processApproval($user, $webProjectChannel);
+            $this->processApproval($user, $webProjectChannel, $request);
 
             $webProjectChannel->save();
             $webProjectChannel->fresh();
@@ -276,164 +279,257 @@ class WebApprovalController extends Controller
 
     private function handleSignatures(Request $request, array $data, User $user, FileController $fileController): void
     {
-        if ($request->signature_pad) {
-            $file = $this->convertBase64ToUploadedFile($data['signature_pad']);
-            if ($user->signatures && $user->signatures->file_id) {
-                $fileId = File::where('id', $user->signatures->file_id)->value('id'); // Use 'id' instead of 'description'
-                $fileController->edit(new Request(['file' => $file]), $fileId);
-            }
-        }
+        DB::beginTransaction();
 
-        if ($request->signature_admin && $user->signatures && $user->signatures->file_id) {
-            $fileId = File::where('id', $user->signatures->file_id)->value('id'); // Use 'id' instead of 'description'
-            $fileController->edit(new Request(['file' => $data['signature_admin']]), $fileId);
+        try {
+            if ($request->signature_pad) {
+                $file = $this->convertBase64ToUploadedFile($data['signature_pad']);
+                if ($user->signatures && $user->signatures->file_id) {
+                    $fileId = File::where('id', $user->signatures->file_id)->value('id');
+                    $fileController->edit(new Request(['file' => $file]), $fileId);
+                }
+            }
+
+            if ($request->signature_admin && $user->signatures && $user->signatures->file_id) {
+                $fileId = File::where('id', $user->signatures->file_id)->value('id');
+                $fileController->edit(new Request(['file' => $data['signature_admin']]), $fileId);
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
         }
     }
 
     private function convertBase64ToUploadedFile(string $base64String): UploadedFile
     {
-        $fileData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64String));
-        $tempPath = storage_path('app/temp_signature.png');
-        file_put_contents($tempPath, $fileData);
+        try {
+            $fileData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64String));
+            $tempPath = storage_path('app/temp_signature.png');
+            file_put_contents($tempPath, $fileData);
 
-        return new UploadedFile(
-            $tempPath,
-            'signature.png',
-            'image/png',
-            null,
-            true
-        );
+            return new UploadedFile(
+                $tempPath,
+                'signature.png',
+                'image/png',
+                null,
+                true
+            );
+        } catch (Exception $e) {
+            // Handle base64 decoding or file writing errors here
+            // You might want to log the error or throw a more specific exception
+            throw $e; // Re-throw the exception to be handled elsewhere
+        }
     }
 
-    private function processApproval(User $user, WebProjectChannel $webProjectChannel): void
+    private function processApproval(User $user, WebProjectChannel $webProjectChannel, $request = null): void
     {
-        $rolePosition = $user->roles->position ?? null;
+        DB::beginTransaction(); // Start a database transaction
 
-        switch ($rolePosition) {
-            case 'operations_supervisor':
-                if ($webProjectChannel->sub_status == 'Site Map') {
+        try {
+            $rolePosition = $user->roles->position ?? null;
+
+            switch ($rolePosition) {
+                case 'operations_supervisor':
+                    if ($webProjectChannel->where('sub_status', 'like', '%Site Map%')->where('status', '!=', 'Completed')->exists()) {
+                        $webProjectChannel->update(['status' => 'Submitted to Client']);
+                        $webProjectChannel->web_job_orders->update(['supervisor_signed_draft_id' => $user->id]);
+                        $webProjectChannel->web_job_orders->update(['client_signed_id' => WebProject::where('id', $webProjectChannel->project_id)->first()->client_id]);
+                        $this->handleClientApproval($webProjectChannel, $user);
+                        $webProjectChannel->update(['status' => 'Completed']);
+                    } elseif ($webProjectChannel->where('sub_status', 'like', '%Alpha Testing%')->where('status', '!=', 'Completed')->exists()) {
+                        $webProjectChannel->update(['status' => 'Submitted to Client']);
+                        $webProjectChannel->web_job_orders->update(['supervisor_signed_draft_id' => $user->id]);
+                        $webProjectChannel->web_job_orders->update(['client_signed_id' => WebProject::where('id', $webProjectChannel->project_id)->first()->client_id]);
+                        $webProjectChannel->update(['sub_status' => 'Beta Testing']);
+                    } else {
+                        $webProjectChannel->update(['status' => 'Submitted to Client']);
+                    }
+                    break;
+
+                case 'top_management':
                     $webProjectChannel->update(['status' => 'Submitted to Client']);
-                    $webProjectChannel->web_job_orders->update(['supervisor_signed_draft_id' => $user->id]);
-                    $webProjectChannel->web_job_orders->update(['client_signed_id' => WebProject::where('id', $webProjectChannel->project_id)->first()->client_id]);
+                    break;
+
+                case 'client':
                     $this->handleClientApproval($webProjectChannel, $user);
-                    $webProjectChannel->update(['status' => 'Completed']);
-                } else {
-                    $webProjectChannel->update(['status' => 'Submitted to Client']);
-                }
-                break;
 
-            case 'top_management':
-                $webProjectChannel->status = 'Submitted to Client';
-                break;
+                    if ($webProjectChannel->where('type', 'like', '%back_end%')->where('sub_status', 'like', '%Beta Testing%')->where('status', 'like', '%Completed%')->exists()) {
 
-            case 'client':
-                $this->handleClientApproval($webProjectChannel, $user);
-                break;
+                        $webFeedBack = WebFeedback::create([
+                            'description' => $request->summary,
+                        ]);
 
-            case 'assistant_supervisor':
-                $webProjectChannel->status = 'Submitted to Operations Supervisor';
-                $webProjectChannel->web_job_orders->update(['operation_signed_draft_id' => $user->id]);
-                break;
+                        $webProjectChannel->feedback_id = $webFeedBack->id;
+                    }
+                    break;
 
-            default:
-                throw new \Exception('Invalid role for approval.');
+                case 'assistant_supervisor':
+                    $webProjectChannel->update(['status' => 'Submitted to Operations Supervisor']);
+                    $webProjectChannel->web_job_orders->update(['operation_signed_draft_id' => $user->id]);
+                    break;
+
+                default:
+                    throw new Exception('Invalid role for approval.');
+            }
+
+            DB::commit(); // Commit the transaction if everything is successful
+        } catch (Exception $e) {
+            DB::rollBack(); // Rollback the transaction if an error occurs
+            throw $e; // Re-throw the exception to be handled elsewhere
         }
     }
 
     private function handleClientApproval(WebProjectChannel $webProjectChannel, User $user): void
     {
-        $subStatus = $webProjectChannel->sub_status;
-        $type = $webProjectChannel->type;
-        if ($type === 'web_designer' && $webProjectChannel->where('type', 'web_designer')->where('status', 'Submitted to Client')->exists()) {
-            if ($subStatus === 'Site Map') {
-                $this->completeAndCreateNext($webProjectChannel, $user, 'Draft Homepage Approval');
-            } elseif ($subStatus === 'Draft Homepage Approval') {
-                $this->completeAndCreateNext($webProjectChannel, $user, 'Final Homepage Approval');
-            } elseif ($subStatus === 'Final Homepage Approval') {
-                $this->completeAndCreateNext($webProjectChannel, $user, 'All Pages Approval');
-            } elseif ($subStatus === 'All Pages Approval') {
+        DB::beginTransaction(); // Start a database transaction
+
+        try {
+            $subStatus = $webProjectChannel->sub_status;
+            $type = $webProjectChannel->type;
+
+            if ($type === 'web_designer' && $webProjectChannel->where('type', 'web_designer')->where('status', 'Submitted to Client')->exists()) {
+                if ($subStatus === 'Site Map') {
+                    $this->completeAndCreateNext($webProjectChannel, $user, 'Draft Homepage Approval');
+                } elseif ($subStatus === 'Draft Homepage Approval') {
+                    $this->completeAndCreateNext($webProjectChannel, $user, 'Final Homepage Approval');
+                } elseif ($subStatus === 'Final Homepage Approval') {
+                    $this->completeAndCreateNext($webProjectChannel, $user, 'All Pages Approval');
+                } elseif ($subStatus === 'All Pages Approval') {
+                    $this->completeAndFinish($webProjectChannel, $user);
+                    $this->startFrontEnd($webProjectChannel);
+                }
+            } elseif ($type === 'front_end' && $webProjectChannel->where('type', 'front_end')->where('status', 'Submitted to Client')->exists()) {
                 $this->completeAndFinish($webProjectChannel, $user);
-                $this->startFrontEnd($webProjectChannel);
+                $this->startBackEnd($webProjectChannel);
+            } elseif ($type === 'back_end' && $webProjectChannel->where('type', 'back_end')->where('status', 'Submitted to Client')->exists()) {
+                $this->completeAndFinish($webProjectChannel, $user);
             }
-        } elseif ($type === 'front_end' && $webProjectChannel->where('type', 'front_end')->where('status', 'Submitted to Client')->exists()) {
-            $this->completeAndFinish($webProjectChannel, $user);
-            $this->startBackEnd($webProjectChannel);
-        } elseif ($type === 'back_end' && $webProjectChannel->where('type', 'back_end')->where('status', 'Submitted to Client')->exists()) {
-            $this->completeAndFinish($webProjectChannel, $user);
+
+            DB::commit(); // Commit the transaction if everything is successful
+        } catch (Exception $e) {
+            DB::rollBack(); // Rollback the transaction if an error occurs
+            throw $e; // Re-throw the exception to be handled elsewhere
         }
     }
 
     private function completeAndCreateNext(WebProjectChannel $webProjectChannel, User $user, string $nextSubStatus): void
     {
-        $this->completeAndFinish($webProjectChannel, $user);
+        DB::beginTransaction(); // Start a database transaction
 
-        $newJobOrder = WebJobOrder::create(['status' => 'Job order for ' . User::find($webProjectChannel->user_id)->name]);
+        try {
+            $this->completeAndFinish($webProjectChannel, $user);
 
-        WebProjectChannel::create([
-            'user_id' => $webProjectChannel->user_id,
-            'web_job_order_id' => $newJobOrder->id,
-            'project_id' => $webProjectChannel->project_id,
-            'status' => 'pending',
-            'sub_status' => $nextSubStatus,
-            'type' => $webProjectChannel->type,
-            'date_started' => Carbon::now(),
-            'date_targeted' => Carbon::now()->addDays(3),
-        ]);
+            $newJobOrder = WebJobOrder::create(['status' => 'Job order for ' . User::find($webProjectChannel->user_id)->name]);
 
-        $this->completeWebDesigners($webProjectChannel, $user, $nextSubStatus);
+            WebProjectChannel::create([
+                'user_id' => $webProjectChannel->user_id,
+                'web_job_order_id' => $newJobOrder->id,
+                'project_id' => $webProjectChannel->project_id,
+                'status' => 'pending',
+                'sub_status' => $nextSubStatus,
+                'type' => $webProjectChannel->type,
+                'date_started' => Carbon::now(),
+                'date_targeted' => Carbon::now()->addDays(3),
+            ]);
+
+            $this->completeWebDesigners($webProjectChannel, $user, $nextSubStatus);
+
+            DB::commit(); // Commit the transaction if everything is successful
+        } catch (Exception $e) {
+            DB::rollBack(); // Rollback the transaction if an error occurs
+            throw $e; // Re-throw the exception to be handled elsewhere
+        }
     }
 
     private function completeAndFinish(WebProjectChannel $webProjectChannel, User $user): void
     {
-        $webProjectChannel->update(['status' => 'Completed', 'date_completed' => Carbon::now()]);
-        $webProjectChannel->web_job_orders->update(['client_signed_id' => $user->id]);
+        DB::beginTransaction();
+
+        try {
+            $webProjectChannel->update(['status' => 'Completed', 'date_completed' => Carbon::now()]);
+            $webProjectChannel->web_job_orders->update(['client_signed_id' => $user->id]);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     private function completeWebDesigners(WebProjectChannel $webProjectChannel, User $user, string $subStatus): void
     {
-        $webDesigners = $webProjectChannel->where('type', 'web_designer')
-            ->where('sub_status', 'like', "%{$subStatus}%")
-            ->whereNotIn('status', ['declined', 'pending', 'completed'])
-            ->get();
+        DB::beginTransaction();
 
-        foreach ($webDesigners as $designer) {
-            if ($webProjectChannel->user_id !== $designer->user_id) {
-                $designer->update(['status' => 'Completed', 'date_completed' => Carbon::now()]);
-                $designer->web_job_orders->update(['client_signed_id' => $user->id]);
-                $newJobOrder = WebJobOrder::create(['status' => 'Job order for ' . User::find($designer->user_id)->name]);
-                WebProjectChannel::create([
-                    'user_id' => $designer->user_id,
-                    'web_job_order_id' => $newJobOrder->id,
-                    'project_id' => $designer->project_id,
-                    'status' => 'pending',
-                    'sub_status' => $subStatus,
-                    'type' => $designer->type,
-                    'date_started' => Carbon::now(),
-                    'date_targeted' => Carbon::now()->addDays(3),
-                ]);
+        try {
+            $webDesigners = $webProjectChannel->where('type', 'web_designer')
+                ->where('sub_status', 'like', "%{$subStatus}%")
+                ->whereNotIn('status', ['declined', 'pending', 'completed'])
+                ->get();
+
+            foreach ($webDesigners as $designer) {
+                if ($webProjectChannel->user_id !== $designer->user_id) {
+                    $designer->update(['status' => 'Completed', 'date_completed' => Carbon::now()]);
+                    $designer->web_job_orders->update(['client_signed_id' => $user->id]);
+                    $newJobOrder = WebJobOrder::create(['status' => 'Job order for ' . User::find($designer->user_id)->name]);
+                    WebProjectChannel::create([
+                        'user_id' => $designer->user_id,
+                        'web_job_order_id' => $newJobOrder->id,
+                        'project_id' => $designer->project_id,
+                        'status' => 'pending',
+                        'sub_status' => $subStatus,
+                        'type' => $designer->type,
+                        'date_started' => Carbon::now(),
+                        'date_targeted' => Carbon::now()->addDays(3),
+                    ]);
+                }
             }
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
         }
     }
 
     private function startFrontEnd(WebProjectChannel $webProjectChannel): void
     {
-        $frontEnds = $webProjectChannel->where('type', 'front_end')->where('status', 'pending')->get();
-        foreach ($frontEnds as $frontEnd) {
-            $frontEnd->update([
-                'date_started' => Carbon::now(),
-                'date_targeted' => Carbon::now()->addDays(3),
-            ]);
+        DB::beginTransaction();
+
+        try {
+            $frontEnds = $webProjectChannel->where('type', 'front_end')->where('status', 'pending')->get();
+            foreach ($frontEnds as $frontEnd) {
+                $frontEnd->update([
+                    'date_started' => Carbon::now(),
+                    'date_targeted' => Carbon::now()->addDays(3),
+                ]);
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
         }
     }
 
     private function startBackEnd(WebProjectChannel $webProjectChannel): void
     {
-        $backEnds = $webProjectChannel->where('type', 'back_end')->where('status', 'pending')->get();
-        foreach ($backEnds as $backEnd) {
-            $backEnd->update([
-                'date_started' => Carbon::now(),
-                'date_targeted' => Carbon::now()->addDays(3),
-            ]);
+        DB::beginTransaction();
+
+        try {
+            $backEnds = $webProjectChannel->where('type', 'back_end')->where('status', 'pending')->get();
+            foreach ($backEnds as $backEnd) {
+                $backEnd->update([
+                    'date_started' => Carbon::now(),
+                    'date_targeted' => Carbon::now()->addDays(3),
+                ]);
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
         }
     }
 }

@@ -59,6 +59,16 @@ class WebTaskController extends Controller
             }
         }
 
+        if ($web_project_channel->type == 'back_end') {
+            switch ($web_project_channel->sub_status) {
+                case null:
+                    $web_project_channel->update([
+                        'sub_status' => 'Alpha Testing',
+                    ]);
+                    break;
+            }
+        }
+
         return redirect()->route('admin.web.task')->with('success', 'Project Submitted Successfully');
     }
 

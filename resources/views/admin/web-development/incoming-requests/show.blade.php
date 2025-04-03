@@ -95,7 +95,7 @@
                     </div>
                 </a>
 
-                @if ($web_request->status ? 'accepted' : 'not accepted' === 'accepted')
+                @if ($web_request->status != 'pending')
                     <a href="{{ route('admin.web.incoming-requests.create', ['id' => $web_request->id]) }}">
                         <div class="w-fit px-4 py-1 bg-[#fa7011] rounded-md text-white custom-shadow custom-hover-shadow">
                             Create Draft

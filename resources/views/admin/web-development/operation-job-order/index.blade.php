@@ -67,29 +67,29 @@
                                 class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-[#F57D11] *:text-white *:text-nowrap">
                                 <th>Title</th>
                                 <th>Issued To</th>
-                                <th class="!text-center">Deadline</th>
+                                <th class="!text-center">Status</th>
                                 <th class="!text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($web_requests as $web_request)
-                                <tr class="border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
-                                    <td class="flex items-center gap-2">
+                                <tr class="text-center border hover:bg-gray-100 *:px-6 *:py-4 *:text-nowrap *:text-sm">
+                                    <td class="">
                                         {{-- <div class="p-2 rounded bg-[#F57D11] text-white">
                                             <span class="mingcute--file-fill w-6 h-6"></span>
                                         </div> --}}
                                         {{ $web_request->title }}
                                     </td>
                                     <td>{{ $web_request->issued_to->name }}</td>
-                                    <td class="flex justify-center items-center">
+                                    <td class="">
                                         {{ $web_request->deadline }}
                                         {{-- @php
-                                            $statusClasses = [
-                                                'approved' => 'text-green-700 bg-green-300',
-                                                'pending' => 'text-yellow-700 bg-yellow-300',
-                                                'review' => 'text-blue-700 bg-blue-300',
-                                                'delayed' => 'text-red-700 bg-red-300',
-                                            ];
+                                        $statusClasses = [
+                                        'approved' => 'text-green-700 bg-green-300',
+                                        'pending' => 'text-yellow-700 bg-yellow-300',
+                                        'review' => 'text-blue-700 bg-blue-300',
+                                        'delayed' => 'text-red-700 bg-red-300',
+                                        ];
                                         @endphp
 
                                         <span
@@ -110,6 +110,19 @@
                                                 <span class="fluent--clipboard-text-edit-48-filled w-4 h-4"></span>
                                                 <p>Edit</p>
                                             </a>
+                                            <form class="pt-3"
+                                                action="{{ route('admin.web.operation-job-order.destroy', $web_request->id) }}"
+                                                method="POST"
+                                                onsubmit="return confirm('Are you sure you want to delete this job order?');">
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="submit"
+                                                    class="delete-btn px-2 py-1 font-medium bg-red-500 text-white rounded flex items-center justify-center gap-1">
+                                                    <span class="material-symbols-light--delete w-4 h-4"></span>
+                                                    <p>Delete</p>
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>

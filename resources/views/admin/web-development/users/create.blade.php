@@ -99,6 +99,7 @@
                     <p class="text-sm text-gray-600">Role</p>
                     <select name="role_id" class="w-full border text-sm border-gray-200 rounded-lg !px-2 !py-1"
                         required>
+
                         <option value="">Select a role</option>
 
                         @php

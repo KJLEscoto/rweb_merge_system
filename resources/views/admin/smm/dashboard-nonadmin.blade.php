@@ -103,7 +103,7 @@
                                                         </button>
                                                     </form>
                                                 @elseif (auth()->user()->role_id == '4' and $job_draft->status == 'pending')
-                                                    <a href="{{ route('graphic.edit', $job_draft->id) }}">
+                                                    <a href="{{ route('admin.smm.graphic.edit', $job_draft->id) }}">
                                                         <p class="text-[#fa7011]">Create</p>
                                                     </a>
                                                 @elseif (auth()->user()->role_id == '5' and $job_draft->status == 'Submitted to Top Management')

@@ -39,33 +39,37 @@
             <section class="grid lg:!grid-cols-4 md:grid-cols-3 grid-cols-2 gap-5" id="user-container">
                 @foreach ($user as $usr)
                     {{-- @if (!in_array($user->roles->position, $not_intern_roles)) --}}
-                    <a href="{{ route('admin.web.users.show', $usr['id']) }}"
-                        class="p-5 border border-gray-200 rounded-xl cursor-pointer group animate-transition hover:border-[#F57D11] flex flex-col gap-5 items-center justify-center h-auto w-full bg-white user-card">
-
-                        <div class="w-auto h-auto">
-                            <div class="w-24 h-24 rounded-full border border-[#F57D11] overflow-hidden">
-                                {{-- <x-image className="w-full h-full"
-                                    path="{{ optional(\App\Models\File::find(optional(\App\Models\Profile::find($user->profile_id))->file_id))->path .
-                                                                                                '?t=' .
-                                                                                                time() ??
-                                                                                                'resources/img/default-male.png' }}" />
-                                --}}
-                                <img src="{{ asset('resources/img/male-profile.jpg') }}" class="w-full h-full"
-                                    alt="profile pic">
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="relative">
+                            <div class="absolute top-0 right-0 text-red-500 p-3">
+                                <form id="deleteForm_{{ $usr['id'] }}"
+                                    action="{{ route('admin.web.users.destroy', $usr['id']) }}" method="POST"
+                                    class="absolute top-0 right-0 text-red-500 p-3">
+                                    @csrf
+                                    @method('DELETE')
+                                    <span class="material-symbols-light--delete w-8 h-8 cursor-pointer"
+                                        onclick="confirmDelete('deleteForm_{{ $usr['id'] }}')"></span>
+                                </form>
                             </div>
+                            <a href="{{ route('admin.web.users.show', $usr['id']) }}"
+                                class="p-5 border border-gray-200 rounded-xl cursor-pointer group transition-colors hover:border-[#F57D11] flex flex-col gap-5 bg-white user-card w-full">
+                                <div class="w-auto flex items-center justify-center">
+                                    <div class="w-24 h-24 rounded-full border border-[#F57D11] overflow-hidden">
+                                        <img src="{{ asset('resources/img/male-profile.jpg') }}" class="w-full h-full"
+                                            alt="profile pic">
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <h1 class="text-sm font-semibold group-hover:text-[#F57D11] truncate capitalize">
+                                        {{ $usr['name'] }}
+                                    </h1>
+                                    <p class="text-gray-500 truncate">
+                                        {{ $usr['role'] }}
+                                    </p>
+                                </div>
+                            </a>
                         </div>
-
-                        <div class="text-center mx-auto w-full">
-                            <h1 class="text-sm font-semibold group-hover:text-[#F57D11] animate-transition truncate capitalize">
-                                {{ $usr['name'] }}
-                            </h1>
-                            <p class="text-gray-500 truncate">
-                                {{-- {{ \App\Models\School::where('id', $user->school_id)->first()->description ?? 'No school'
-                                }} --}}
-                                {{ $usr['role'] }}
-                            </p>
-                        </div>
-                    </a>
+                    </div>
                     {{-- @endif --}}
                     {{-- @endforeach --}}
                 @endforeach
@@ -101,3 +105,11 @@
         </div>
     @endif
 </x-main-layout>
+
+<script>
+    function confirmDelete(formId) {
+        if (confirm('Are you sure you want to delete this request?')) {
+            document.getElementById(formId).submit();
+        }
+    }
+</script>

@@ -501,4 +501,10 @@ class RegisteredUserController extends Controller
 
         return redirect()->route('admin.smm.users')->with('Status', 'User Updated Successfully');
     }
+
+    public function destroy($id)
+    {
+        User::find($id)->delete();
+        return redirect()->route('admin.smm.users')->with('Status', 'User deleted successfully');
+    }
 }

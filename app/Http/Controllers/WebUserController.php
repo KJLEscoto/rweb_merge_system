@@ -9,6 +9,7 @@ use App\Models\Profile;
 use App\Models\Role;
 use App\Models\RoleChannel;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -146,6 +147,7 @@ class WebUserController extends Controller
 
     public function store(Request $request, FileController $filecontroller)
     {
+
         try {
 
             DB::beginTransaction();
@@ -166,6 +168,8 @@ class WebUserController extends Controller
 
             if ($request->hasFile('image')) {
                 $fileResponse = $filecontroller->store(new Request(['file' => $request->file('image')]));
+
+                @dd('stop the car');
 
                 if ($fileResponse->getStatusCode() === 201) {
                     $file_id = $fileResponse->getData()->file->id;
@@ -233,7 +237,7 @@ class WebUserController extends Controller
                 }
             }
 
-            $users = User::all();
+            $user = User::all();
             $pages = Page::all();
             $privileges = Privilege::all();
 
@@ -390,6 +394,15 @@ class WebUserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $user = User::find($id);
+            $user->delete();
+            DB::commit();
+            return redirect()->route('admin.web.users')->with('success', 'User deleted successfully.');
+        } catch (Exception $ex) {
+            DB::rollBack();
+            return back()->with('Status', $ex->getMessage());
+        }
     }
 }

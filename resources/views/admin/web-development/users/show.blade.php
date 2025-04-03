@@ -33,10 +33,23 @@
                 </div>
 
                 <div class="col-span-3 lg:col-span-2 bg-white shadow-md rounded-md p-5">
-                    <div class="flex justify-between">
+                    <div class="flex justify-between items-center">
                         <h1 class="text-sm font-semibold">User Information</h1>
-                        <div class="px-4 py-1 bg-[#f68e12] cursor-pointer text-white rounded-md hover:bg-[#e57f0f]"
-                            onclick="window.location.assign('{{ route('admin.web.users.edit', $user->id) }}')">Edit
+                        <div class="flex gap-2">
+                            <div class="px-4 py-1 h-8 bg-[#f68e12] cursor-pointer text-white rounded-md hover:bg-[#e57f0f]"
+                                onclick="window.location.assign('{{ route('admin.web.users.edit', $user->id) }}')">
+                                Edit
+                            </div>
+                            <form id="deleteForm_{{ $user->id }}"
+                                action="{{ route('admin.web.users.destroy', $user->id) }}" method="POST"
+                                class="px-4 py-1 bg-red-500 cursor-pointer text-white rounded-md hover:bg-red-600"
+                                onclick="confirmDelete({{ $user->id }})">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-full h-full">
+                                    Delete
+                                </button>
+                            </form>
                         </div>
                     </div>
                     <div class="space-y-4 mt-4">
@@ -74,3 +87,10 @@
         </div>
     </div>
 </x-main-layout>
+<script>
+    function confirmDelete(formId) {
+        if (confirm('Are you sure you want to delete this user?')) {
+            document.getElementById(formId).submit();
+        }
+    }
+</script>

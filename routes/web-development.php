@@ -80,8 +80,10 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
   Route::post('/operation-job-order/store', [WebOperationJobOrder::class, 'store'])->name('admin.web.operation-job-order.store');
   // Route::view('/operation-job-order', 'admin.web-development.operation-job-order.index')->name('admin.web.operation-job-order');
   // Route::view('/operation-job-order/create', 'admin.web-development.operation-job-order.create')->name('admin.web.operation-job-order.create');
-  Route::view('/operation-job-order/{id}/edit', 'admin.web-development.operation-job-order.edit')->name('admin.web.operation-job-order.edit');
+  Route::get('/operation-job-order/{id}/edit', [WebOperationJobOrder::class, 'edit'])->name('admin.web.operation-job-order.edit');
+  Route::put('/operation-job-order/{id}/edit/post', [WebOperationJobOrder::class, 'update'])->name('admin.web.operation-job-order.edit.post');
   Route::get('/operation-job-order/{id}/show', [WebOperationJobOrder::class, 'show'])->name('admin.web.operation-job-order.show');
+  Route::delete('/operation-job-order/{id}/destroy', [WebOperationJobOrder::class, 'destroy'])->name('admin.web.operation-job-order.destroy');
 
   // task pages
   Route::get('/task', [WebTaskController::class, 'index'])->name('admin.web.task');
@@ -108,6 +110,7 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
   // users pages
   // Route::view('/users', 'admin.web-development.users.index')->name('admin.web.users');
   Route::get('/users', [WebUserController::class, 'index'])->name('admin.web.users');
+  Route::delete('/users/{id}/destroy', [WebUserController::class, 'destroy'])->name('admin.web.users.destroy');
   Route::get('/users/create', [WebUserController::class, 'create'])->name('admin.web.users.create');
   Route::post('/users/store', [WebUserController::class, 'store'])->name('admin.web.users.store');
   Route::get('/users/{id}', [WebUserController::class, 'show'])->name('admin.web.users.show');
@@ -133,7 +136,8 @@ Route::prefix('/admin/web-development')->group(function () use ($dashboard, $dir
   Route::put('/incoming-requests/{id}/accept', [WebRequestController::class, 'accept'])->name('admin.web.incoming-requests.accept');
   Route::get('/incoming-requests/{id}', [WebRequestController::class, 'show'])->name('admin.web.incoming-requests.show');
   Route::get('/incoming-requests/create/{id}', [WebRequestController::class, 'create'])->name('admin.web.incoming-requests.create');
-  Route::get('/incoming-requests/store', [WebRequestController::class, 'store'])->name('admin.web.incoming-requests.store');
+  Route::post('/incoming-requests/store/{id}', [WebRequestController::class, 'store'])->name('admin.web.incoming-requests.store');
+  Route::delete('/incoming-requests/destroy/{id}', [WebRequestController::class, 'destroy'])->name('admin.web.incoming-requests.destroy');
 
   // profile pages
   Route::view('/profile', 'admin.web-development.profile.index')->name('admin.web.profile');

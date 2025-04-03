@@ -51,31 +51,108 @@
                 <div class="lg:col-span-1 font-semibold">Designation:</div>
                 <div class="lg:col-span-4">{{ Str::title(str_replace('_', ' ', $web_project_channel->type)) }}</div>
 
-                <!-- Google Drive Link -->
                 <div class="lg:col-span-1 font-semibold">Google Drive Link:</div>
+
                 <div class="lg:col-span-4">
                     <div id="draftContent" class="max-h-[300px] rounded-lg overflow-y-auto break-all">
                         @if ($web_project_channel->type == 'web_designer')
                             <div class="mb-4">
                                 <strong class="block text-sm font-medium text-gray-700">Google Drive Link:</strong>
-                                <div id="draftContent"
+                                <div id="googleDriveLinkContent"
                                     class="mt-1 max-h-[200px] overflow-y-auto rounded-md border border-gray-200 p-3 text-sm text-gray-900 break-all">
-                                    <div>
-                                        {{ $web_project_channel->type == 'web_designer' ?
-        "Site Map: " . ($web_project_channel->where('sub_status', 'like', '%Site Map%')->first()->draft ?? 'N/A') : '' }}
-                                    </div>
-                                    <div>
-                                        {{ $web_project_channel->type == 'web_designer' ?
-        "Draft Homepage Approval: " . ($web_project_channel->where('sub_status', 'like', '%Draft Homepage Approval%')->first()->draft ?? 'On Progress') : '' }}
-                                    </div>
-                                    <div>
-                                        {{ $web_project_channel->type == 'web_designer' ?
-        "Draft Homepage Approval: " . ($web_project_channel->where('sub_status', 'like', '%Final Homepage Approval%')->first()->draft ?? 'On Progress') : '' }}
-                                    </div>
-                                    <div>
-                                        {{ $web_project_channel->type == 'web_designer' ?
-        "Draft Homepage Approval: " . ($web_project_channel->where('sub_status', 'like', '%All Pages Approval%')->first()->draft ?? 'On Progress') : '' }}
-                                    </div>
+                                    @if ($web_project_channel->where('sub_status', 'like', '%Site Map%')->where('project_id', $web_project_channel->project_id)->exists())
+                                        <div>
+                                            {!! "Site Map: " . preg_replace('/<a href=\"(?!https?:\/\/)(.*?)\"/i', '<a href=\"https://$1\"', $web_project_channel->draft) !!}
+                                        </div>
+                                    @endif
+                                    @if ($web_project_channel->where('sub_status', 'like', '%Draft Homepage Approval%')->where('project_id', $web_project_channel->project_id)->exists())
+                                        <div>
+                                            {!! "Draft Homepage Approval: " . preg_replace('/<a href=\"(?!https?:\/\/)(.*?)\"/i', '<a href=\"https://$1\"', $web_project_channel->draft) !!}
+                                        </div>
+                                    @endif
+                                    @if ($web_project_channel->where('sub_status', 'like', '%Final Homepage Approval%')->where('project_id', $web_project_channel->project_id)->exists())
+                                        <div>
+                                            {!! "Final Homepage Approval: " . preg_replace('/<a href=\"(?!https?:\/\/)(.*?)\"/i', '<a href=\"https://$1\"', $web_project_channel->draft) !!}
+                                        </div>
+                                    @endif
+                                    @if ($web_project_channel->where('sub_status', 'like', '%All Pages Approval%')->where('project_id', $web_project_channel->project_id)->exists())
+                                        <div>
+                                            {!! "All Pages Approval: " . preg_replace('/<a href=\"(?!https?:\/\/)(.*?)\"/i', '<a href=\"https://$1\"', $web_project_channel->draft) !!}
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @elseif ($web_project_channel->type == 'front_end')
+                            <div class="mb-4">
+                                <strong class="block text-sm font-medium text-gray-700">Site Test Link:</strong>
+                                <div id="googleDriveLinkContent"
+                                    class="mt-1 max-h-[200px] overflow-y-auto rounded-md border border-gray-200 p-3 text-sm text-gray-900 break-all">
+                                    @if ($web_project_channel->where('project_id', $web_project_channel->project_id)->exists())
+                                        <div>
+                                            @php
+        $draftContent = $web_project_channel->draft;
+        $processedContent = preg_replace_callback(
+            '/<a href=\"(.*?)\"/i',
+            function ($matches) {
+                $url = $matches[1];
+                if (strpos($url, 'https://') !== 0) {
+                    return '<a href="https://' . $url . '"';
+                } else {
+                    return '<a href="' . $url . '"';
+                }
+            },
+            $draftContent
+        );
+                                            @endphp
+                                            {!! "Front End Approval: " . $processedContent !!}
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @elseif ($web_project_channel->type == 'back_end')
+                            <div class="mb-4">
+                                <strong class="block text-sm font-medium text-gray-700">Site Test Link:</strong>
+                                <div id="googleDriveLinkContent"
+                                    class="mt-1 max-h-[200px] overflow-y-auto rounded-md border border-gray-200 p-3 text-sm text-gray-900 break-all">
+                                    @if ($web_project_channel->where('sub_status', 'like', 'Alpha Testing')->where('project_id', $web_project_channel->project_id)->exists())
+                                        <div>
+                                            @php
+        $draftContent = $web_project_channel->draft;
+        $processedContent = preg_replace_callback(
+            '/<a href=\"(.*?)\"/i',
+            function ($matches) {
+                $url = $matches[1];
+                if (strpos($url, 'https://') !== 0) {
+                    return '<a href="https://' . $url . '"';
+                } else {
+                    return '<a href="' . $url . '"';
+                }
+            },
+            $draftContent
+        );
+                                            @endphp
+                                            {!! "Alpha Testing Approval: " . $processedContent !!}
+                                        </div>
+                                    @elseif ($web_project_channel->where('sub_status', 'like', 'Beta Testing')->where('project_id', $web_project_channel->project_id)->exists())
+                                        <div>
+                                            @php
+        $draftContent = $web_project_channel->draft;
+        $processedContent = preg_replace_callback(
+            '/<a href=\"(.*?)\"/i',
+            function ($matches) {
+                $url = $matches[1];
+                if (strpos($url, 'https://') !== 0) {
+                    return '<a href="https://' . $url . '"';
+                } else {
+                    return '<a href="' . $url . '"';
+                }
+            },
+            $draftContent
+        );
+                                            @endphp
+                                            {!! "Beta Testing Approval: " . $processedContent !!}
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         @endif
@@ -84,17 +161,26 @@
 
                 <!-- Date -->
                 <div class="lg:col-span-1 font-semibold">Date:</div>
-                <div class="lg:col-span-4">{{ $web_project_channel->date_target }}</div>
+                <div class="lg:col-span-4">{{ $web_project_channel->date_targeted }}</div>
 
-                <!-- Client Name -->
+                <!-- Description -->
                 <div class="lg:col-span-1 font-semibold">Client Name:</div>
                 <div class="lg:col-span-4">{{ $web_project_channel->web_project->client->name }}</div>
+
+                <!-- Description -->
+                @if (
+                    $web_project_channel->where('type', 'like', '%front_end%')->where('project_id', $web_project_channel->project_id)->where('status', '!=', 'Completed')->exists()
+                                    && Auth::user()->roles->where('position', 'like', '%Client%')->exists()
+                )
+                <div class="lg:col-span-1 font-semibold">Description:</div>
+                @foreach ($web_project_channel->where('type', 'like', '%front_end%')->where('project_id', $web_project_channel->project_id) as $project)
+                    <div></div>
+                @endforeach
+                @endif
 
                 <!-- Signature Upload Section (Full Width) -->
                 <div class="hidden lg:block lg:col-span-1"></div>
                 <div class="lg:col-span-4">
-                    Blade
-                    
                     @php
 $user = Auth::user();
 $rolePosition = $user->roles->position ?? null;
@@ -140,7 +226,7 @@ if ($rolePosition) {
                             <h1 class="text-sm font-semibold">Choose Signature Method:</h1>
                             <div class="flex space-x-2">
                                 <button id="useUpload"
-                                    class="px-2 border rounded {{ Auth::user()->signature ? '' : 'bg-gray-200' }}"
+                                    class="px-2 border rounded {{ Auth::user()->signatures->exists() ? '' : 'bg-gray-200' }}"
                                     {{ $isDisabled ? 'disabled' : '' }}>
                                     <i class="fa-solid fa-file-arrow-up" style="color: #fa7011;"></i>
                                 </button>
@@ -148,7 +234,7 @@ if ($rolePosition) {
                                     <i class="fa-solid fa-file-signature" style="color: #fa7011;"></i>
                                 </button>
                                 <button id="useSavedSignature"
-                                    class="px-2 border rounded {{ Auth::user()->signature ? 'bg-gray-200' : '' }}"
+                                    class="px-2 border rounded {{ Auth::user()->signatures->exists() ? 'bg-gray-200' : '' }}"
                                     {{ $isDisabled ? 'disabled' : '' }}>
                                     <i class="fa-solid fa-cloud-arrow-up" style="color: #fa7011;"></i>
                                 </button>
@@ -160,7 +246,7 @@ if ($rolePosition) {
                             @csrf
 
                             {{-- File Upload --}}
-                            <div id="uploadSection" class="{{ Auth::user()->signature ? 'hidden' : '' }}">
+                            <div id="uploadSection" class="{{ Auth::user()->signatures->exists() ? 'hidden' : '' }}">
                                 <input type="file" name="signature_admin" accept="image/*"
                                     class="mt-2 border p-2 w-full rounded-md" id="signatureInput"
                                     {{ $isDisabled || $isDisabled ? 'disabled' : '' }}>
@@ -187,16 +273,15 @@ if ($rolePosition) {
                             </div>
 
                             {{-- Saved Signature Section --}}
-                            <div id="savedPadSection" class="{{ Auth::user()->signature ? '' : 'hidden' }}">
-                                @if (Auth::user()->signature)
+                            <div id="savedPadSection" class="{{ Auth::user()->signatures->exists() ? '' : 'hidden' }}">
+                                @if (Auth::user()->signatures->exists())
                                     <img id="new-signature-pad-main" class="w-[300px] lg:w-[400px]"
                                         style="height:200px;"
-                                        src="{{ \App\Models\File::where('id', Auth::user()->signatures->file_id)->first()->path . '?t=' . time() . '?s=100' }}"
+                                        src="{{ Auth::user()->signatures->exists() ? asset(\App\Models\Signature::mySignature(Auth::user()->id)->path) . '?t=' . time() . '?s=100' : asset('image/default_female.png') }}"
                                         alt="Your Saved Signature">
                                 @endif
                                 <div class="mt-2 flex">
-                                    <input type="hidden" name="new_signature_pad" id="savedSignatureData"
-                                        value="{{ asset(Auth::user()->signature) }}">
+                                    <input type="hidden" name="new_signature_pad" id="savedSignatureData" value="{{ Auth::user()->signatures->exists() ? asset(Auth::user()->signatures->first()->path) : asset('image/default_female.png') }}">
                                 </div>
                             </div>
 
@@ -217,9 +302,45 @@ if ($rolePosition) {
                                     <p class="text-red-600">{{ $error }}</p>
                                 @endforeach
                             @endif
+                            
+                            @if (Auth::user()->roles->where('position', 'like', '%Client%')->exists())
+                                <div class="bg-white rounded-lg shadow-md p-6 space-y-4">
+
+                                    <div class="mb-4">
+                                        <p class="text-lg font-semibold text-gray-800 mb-2">
+                                            Your Feedback Matters!
+                                        </p>
+                                        <p class="text-sm text-gray-600">
+                                            Please share your valuable feedback by filling out our survey:
+                                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeLbQfbwNtX4oOgjcVT2aeTXUWyFRUmToHyoObnI5Xxch1_Ig/viewform"
+                                                target="_blank" class="text-blue-600 hover:underline transition-colors duration-200">
+                                                <span class="inline-flex items-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24"
+                                                        stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                    </svg>
+                                                    Survey Link
+                                                </span>
+                                            </a>
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label for="summaryEditor" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Additional Feedback (Optional):
+                                        </label>
+                                        <textarea id="summaryEditor" name="summary"
+                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                            rows="4" placeholder="Share any additional comments or suggestions here."></textarea>
+                                    </div>
+
+                                </div>
+                            @endif
 
                             {{-- Approve and Decline Buttons --}}
                             <div class="mt-4 flex space-x-4">
+
                                 <button type="submit"
                                     class="px-4 py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
                                     id="submitBtn" {{ $isDisabled ? 'disabled' : '' }}>
@@ -334,7 +455,7 @@ if ($rolePosition) {
         toggleSection("pad");
     });
     document.getElementById("useSavedSignature").addEventListener("click", function() {
-        const userSignature = "{{ Auth::user()->signature }}";
+        const userSignature = "{{ Auth::user()->signatures->exists() ? App\Models\Signature::mySignature(Auth::user()->id)->path : asset('image/default_female.png') }}";
         if (!userSignature) {
             document.getElementById("signatureModal").classList.remove("hidden");
         } else {
@@ -371,7 +492,7 @@ if ($rolePosition) {
         // Reset hidden inputs
         document.getElementById("signaturePadData").value = "";
         document.getElementById("savedSignatureData").value = method === "savedSignature" ?
-            "{{ asset(Auth::user()->signature) }}" : "";
+            "{{ Auth::user()->signatures->exists() ? asset(Auth::user()->signatures->first()->path) : asset('image/default_female.png') }}" : "";
     }
 
     // Signature Pad Clear
